@@ -1,39 +1,28 @@
 package com.healthyfish.healthyfish;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.healthyfish.healthyfish.POJO.BeanBaseKeyAddReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseReq;
-import com.healthyfish.healthyfish.POJO.BeanDoctorListReq;
-import com.healthyfish.healthyfish.api.IApiService;
-import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.adapter.MainVpAdapter;
+import com.healthyfish.healthyfish.ui.fragment.HealthWorkshopFragment;
+import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
+import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
+import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
+import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
+import com.zhy.autolayout.AutoLinearLayout;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
-import static com.healthyfish.healthyfish.constant.constants.CONNECT_TIMEOUT;
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
-import static com.healthyfish.healthyfish.constant.constants.HttpsHealthyFishyUrl;
-import static com.healthyfish.healthyfish.constant.constants.READ_TIMEOUT;
-import static com.healthyfish.healthyfish.constant.constants.WRITE_TIMEOUT;
 
 /**
  * 描述：MyApplication初始化参数
@@ -42,14 +31,169 @@ import static com.healthyfish.healthyfish.constant.constants.WRITE_TIMEOUT;
  * 编辑：
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    @BindView(R.id.fg_viewpage)
+    ViewPager fgViewpage;
+    @BindView(R.id.iv_home)
+    ImageView ivHome;
+    @BindView(R.id.tv_home)
+    TextView tvHome;
+    @BindView(R.id.ly_home)
+    AutoLinearLayout lyHome;
+    @BindView(R.id.iv_interrogation)
+    ImageView ivInterrogation;
+    @BindView(R.id.tv_interrogation)
+    TextView tvInterrogation;
+    @BindView(R.id.ly_interrogation)
+    AutoLinearLayout lyInterrogation;
+    @BindView(R.id.iv_healthy_circle)
+    ImageView ivHealthyCircle;
+    @BindView(R.id.tv_healthy_circle)
+    TextView tvHealthyCircle;
+    @BindView(R.id.ly_healthy_circle)
+    AutoLinearLayout lyHealthyCircle;
+    @BindView(R.id.iv_health_workshop)
+    ImageView ivHealthWorkshop;
+    @BindView(R.id.tv_health_workshop)
+    TextView tvHealthWorkshop;
+    @BindView(R.id.ly_health_workshop)
+    AutoLinearLayout lyHealthWorkshop;
+    @BindView(R.id.iv_personal_center)
+    ImageView ivPersonalCenter;
+    @BindView(R.id.tv_personal_center)
+    TextView tvPersonalCenter;
+    @BindView(R.id.ly_personal_center)
+    AutoLinearLayout lyPersonalCenter;
+    private MainVpAdapter ViewpageAdapter;
+    private List<Fragment> fragments;
+    private HomeFragment homeFragment;
+    private InterrogationFragment interrogationFragment;
+    private HealthyCircleFragment healthyCircleFragment;
+    private HealthWorkshopFragment healthWorkshopFragment;
+    private PersonalCenterFragment personalCenterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        init();
     }
 
+    private void init() {
+        //菜单监听
+        lyHome.setOnClickListener(this);
+        lyInterrogation.setOnClickListener(this);
+        lyHealthyCircle.setOnClickListener(this);
+        lyHealthWorkshop.setOnClickListener(this);
+        lyPersonalCenter.setOnClickListener(this);
+        initpgAdapter();//初始化viewpage
+        setTab(0);
+        fgViewpage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+                int pos = fgViewpage.getCurrentItem();
+                setTab(pos);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+//菜单点击
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ly_home:
+                setTab(0);
+                break;
+            case R.id.ly_interrogation:
+                setTab(1);
+                break;
+            case R.id.ly_healthy_circle:
+                setTab(2);
+                break;
+            case R.id.ly_health_workshop:
+                setTab(3);
+                break;
+            case R.id.ly_personal_center:
+                setTab(4);
+                break;
+            default:
+        }
+    }
+
+    //初始化ViewPage
+    private void initpgAdapter() {
+        fragments = new ArrayList<>();
+        homeFragment = new HomeFragment();
+        interrogationFragment = new InterrogationFragment();
+        healthyCircleFragment = new HealthyCircleFragment();
+        healthWorkshopFragment = new HealthWorkshopFragment();
+        personalCenterFragment = new PersonalCenterFragment();
+        fragments.add(homeFragment);
+        fragments.add(interrogationFragment);
+        fragments.add(healthyCircleFragment);
+        fragments.add(healthWorkshopFragment);
+        fragments.add(personalCenterFragment);
+        ViewpageAdapter = new MainVpAdapter(getSupportFragmentManager()
+                , fragments);
+        fgViewpage.setAdapter(ViewpageAdapter);
+    }
+
+    //重置菜单状态
+    private void reSet() {
+        ivHome.setImageResource(R.mipmap.home_unselected);
+        ivInterrogation.setImageResource(R.mipmap.interrogation_unselect);
+        ivHealthyCircle.setImageResource(R.mipmap.healthy_circle_unselected);
+        ivHealthWorkshop.setImageResource(R.mipmap.health_workshop_unselected);
+        ivPersonalCenter.setImageResource(R.mipmap.personal_center_unselect);
+        tvHome.setTextColor(getResources().getColor(R.color.color_general_and_title));
+        tvInterrogation.setTextColor(getResources().getColor(R.color.color_general_and_title));
+        tvHealthyCircle.setTextColor(getResources().getColor(R.color.color_general_and_title));
+        tvHealthWorkshop.setTextColor(getResources().getColor(R.color.color_general_and_title));
+        tvPersonalCenter.setTextColor(getResources().getColor(R.color.color_general_and_title));
+    }
+
+    private void setTab(int i) {
+        switch (i) {
+            case 0:
+                reSet();
+                ivHome.setImageResource(R.mipmap.home);
+                tvHome.setTextColor(getResources().getColor(R.color.color_primary_dark));
+                fgViewpage.setCurrentItem(0);
+                break;
+            case 1:
+                reSet();
+                ivInterrogation.setImageResource(R.mipmap.interrogation);
+                tvInterrogation.setTextColor(getResources().getColor(R.color.color_primary_dark));
+                fgViewpage.setCurrentItem(1);
+                break;
+            case 2:
+                reSet();
+                ivHealthyCircle.setImageResource(R.mipmap.healthy_circle);
+                tvHealthyCircle.setTextColor(getResources().getColor(R.color.color_primary_dark));
+                fgViewpage.setCurrentItem(2);
+                break;
+            case 3:
+                reSet();
+                ivHealthWorkshop.setImageResource(R.mipmap.health_workshop);
+                tvHealthWorkshop.setTextColor(getResources().getColor(R.color.color_primary_dark));
+                fgViewpage.setCurrentItem(3);
+                break;
+            case 4:
+                reSet();
+                ivPersonalCenter.setImageResource(R.mipmap.personal_center);
+                tvPersonalCenter.setTextColor(getResources().getColor(R.color.color_primary_dark));
+                fgViewpage.setCurrentItem(4);
+                break;
+            default:
+        }
+    }
 }

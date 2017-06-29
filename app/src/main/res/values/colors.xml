@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#019b79</color>
+    <color name="colorPrimaryDark">#019b79</color>
     <color name="colorAccent">#FF4081</color>
+    <!--普通信息字体/普通标题颜色-->
+    <color name="color_primary">#019b79</color>
+    <color name="color_primary_dark">#019b79</color>
+    <color name="color_accent">#FF4081</color>
+    <color name="color_general_and_title">#666666</color>
+    <!--辅助信息字体颜色-->
+    <color name="color_auxiliary_info">#888888</color>
+    <!--分割线颜色-->
+    <color name="color_divider">#cfcfcf</color>
+    <!--内容标题颜色/重要的文字信息-->
+    <color name="color_content_title">#333333</color>
+    <!--内容区底色-->
+    <color name="color_content_area_bg">#333333</color>
+    <!--用于分割模块标题栏底色、动态资源底色-->
+    <color name="color_titlebar_bg">#dbdbdb</color>
+
+    
+
 </resources>
