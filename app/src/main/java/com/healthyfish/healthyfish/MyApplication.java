@@ -6,6 +6,7 @@ import android.content.Context;
 import com.healthyfish.healthyfish.utils.CookieMangerUtils;
 import com.healthyfish.healthyfish.utils.HttpsUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.zhy.autolayout.config.AutoLayoutConifg;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +31,9 @@ public class MyApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        //自适应平屏幕
+        AutoLayoutConifg.getInstance().useDeviceSize();
+
         applicationContext = getApplicationContext();
 
         /**
