@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.zhy.autolayout.AutoRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
@@ -19,66 +19,79 @@
             style="?android:attr/progressBarStyle"
             android:layout_gravity="center_horizontal"
             android:visibility="gone"/>
-    </LinearLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
 
     <ImageView
         android:layout_width="459px"
         android:layout_height="403px"
         android:layout_marginLeft="312px"
         android:layout_marginTop="208px"
-        android:src="@mipmap/ic_logo"/>
-    
-    <RelativeLayout
-        android:layout_width="972px"
-        android:layout_height="257px"
-        android:layout_marginLeft="53px"
+        android:src="@mipmap/ic_logo"
+        android:id="@+id/imageView" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="733px"
-        android:background="@android:color/white">
+        android:layout_marginLeft="53px"
+        android:orientation="vertical">
 
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="972px"
+            android:layout_height="128px"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="44px"
-            android:layout_height="50px"
-            android:layout_marginLeft="43px"
-            android:layout_marginTop="40px"
-            android:src="@mipmap/ic_login_user"/>
+            <ImageView
+                android:layout_width="48px"
+                android:layout_height="58px"
+                android:layout_marginLeft="48px"
+                android:src="@mipmap/ic_login_user"/>
 
-        <EditText
-            android:id="@+id/et_login_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="129px"
-            android:layout_marginTop="30px"
-            android:inputType="textPersonName"
-            android:hint="@string/phone_number"
-            android:textSize="48px"
-            android:background="@null"/>
+            <EditText
+                android:id="@+id/et_login_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="36px"
+                android:hint="@string/phone_number"
+                android:background="@null"
+                android:textSize="48px"
+                android:textColor="@color/color_hint"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="128.5px"
             android:background="@android:color/darker_gray"/>
 
-        <ImageView
-            android:layout_width="44px"
-            android:layout_height="50px"
-            android:layout_marginLeft="43px"
-            android:layout_marginTop="166px"
-            android:src="@mipmap/ic_login_password" />
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="972px"
+            android:layout_height="128px"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/et_login_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="129px"
-            android:layout_marginTop="156px"
-            android:inputType="textPassword"
-            android:hint="@string/password"
-            android:textSize="48px"
-            android:background="@null"/>
+            <ImageView
+                android:layout_width="48px"
+                android:layout_height="58px"
+                android:layout_marginLeft="48px"
+                android:src="@mipmap/ic_login_password"/>
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/et_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="36px"
+                android:hint="@string/password"
+                android:background="@null"
+                android:textSize="48px"
+                android:textColor="@color/color_hint"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
 
     <Button
         android:id="@+id/btn_login"
@@ -103,11 +116,13 @@
         android:id="@+id/btn_register"
         android:layout_width="205px"
         android:layout_height="wrap_content"
+        android:paddingTop="10px"
+        android:paddingBottom="10px"
         android:layout_marginLeft="438px"
-        android:layout_marginTop="1784px"
+        android:layout_marginTop="1780px"
+        android:gravity="center"
         android:text="@string/register"
         android:textSize="48px"
         android:textColor="@color/colorPrimary" />
 
-
-</RelativeLayout>
+</com.zhy.autolayout.AutoRelativeLayout>

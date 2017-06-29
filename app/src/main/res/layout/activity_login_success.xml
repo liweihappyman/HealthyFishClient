@@ -31,7 +31,8 @@
             android:layout_marginTop="50px"
             android:layout_gravity="right"
             android:text="@string/back_home"
-            android:textSize="42px" />
+            android:textSize="42px"
+            android:textColor="@color/color_hint"/>
     </LinearLayout>
 
 </LinearLayout>
