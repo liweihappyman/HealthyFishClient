@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="135px"
+    android:background="@color/color_primary_dark"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/topbar_scan"
+        android:layout_width="57px"
+        android:layout_height="53px"
+        android:layout_marginLeft="32px"
+        android:layout_marginTop="42px"
+        android:background="@mipmap/scan" />
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="840px"
+        android:layout_height="72px"
+        android:layout_marginLeft="30px"
+        android:layout_marginTop="32px"
+        android:background="@mipmap/search_box">
+
+        <ImageView
+            android:id="@+id/topbar_search_iv"
+            android:layout_width="42px"
+            android:layout_height="42px"
+            android:layout_marginLeft="20px"
+            android:layout_marginTop="15px"
+            android:background="@mipmap/search" />
+
+        <EditText
+            android:id="@+id/topbar_search_et"
+            android:layout_width="700px"
+            android:layout_height="72px"
+            android:layout_marginLeft="70px"
+            android:background="@null"
+            android:maxLines="1"
+            android:textColor="@color/color_general_and_title"
+            android:textSize="35px" />
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+    <ImageView
+        android:id="@+id/topbar_info"
+        android:layout_width="44px"
+        android:layout_height="52px"
+        android:layout_marginLeft="40px"
+        android:layout_marginTop="40px"
+        android:background="@mipmap/info" />
+</com.zhy.autolayout.AutoLinearLayout>

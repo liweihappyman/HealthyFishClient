@@ -2,20 +2,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.healthyfish.healthyfish">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+
+
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/healthfis_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+
+        android:theme="@style/AppTheme2">
+
+
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <!--屏幕自适应框架设计稿长宽-->
         <meta-data android:name="design_width" android:value="1080"></meta-data>
         <meta-data android:name="design_height" android:value="1900"></meta-data>
+
 
 
         <activity android:name=".MainActivity">
