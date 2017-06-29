@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#019b79</color>
+
     <color name="colorPrimaryDark">#019b79</color>
     <color name="colorAccent">#FF4081</color>
     <!--普通信息字体/普通标题颜色-->
@@ -18,7 +19,5 @@
     <color name="color_content_area_bg">#333333</color>
     <!--用于分割模块标题栏底色、动态资源底色-->
     <color name="color_titlebar_bg">#dbdbdb</color>
-
-    
 
 </resources>

@@ -1,9 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.healthyfish.healthyfish.ui.activity.Login"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.healthyfish.healthyfish.ui.activity.Login">
+    android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <ProgressBar
+            android:id="@+id/login_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyle"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="459px"
+        android:layout_height="403px"
+        android:layout_marginLeft="312px"
+        android:layout_marginTop="208px"
+        android:src="@mipmap/ic_logo"/>
+    
+    <RelativeLayout
+        android:layout_width="972px"
+        android:layout_height="257px"
+        android:layout_marginLeft="53px"
+        android:layout_marginTop="733px"
+        android:background="@android:color/white">
+
+
+        <ImageView
+            android:layout_width="44px"
+            android:layout_height="50px"
+            android:layout_marginLeft="43px"
+            android:layout_marginTop="40px"
+            android:src="@mipmap/ic_login_user"/>
+
+        <EditText
+            android:id="@+id/et_login_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="129px"
+            android:layout_marginTop="30px"
+            android:inputType="textPersonName"
+            android:hint="@string/phone_number"
+            android:textSize="48px"
+            android:background="@null"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="128.5px"
+            android:background="@android:color/darker_gray"/>
+
+        <ImageView
+            android:layout_width="44px"
+            android:layout_height="50px"
+            android:layout_marginLeft="43px"
+            android:layout_marginTop="166px"
+            android:src="@mipmap/ic_login_password" />
+
+        <EditText
+            android:id="@+id/et_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="129px"
+            android:layout_marginTop="156px"
+            android:inputType="textPassword"
+            android:hint="@string/password"
+            android:textSize="48px"
+            android:background="@null"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="972px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="54px"
+        android:layout_marginTop="1026px"
+        android:text="@string/login"
+        android:textSize="72px"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/tv_forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="863px"
+        android:layout_marginTop="1178px"
+        android:text="@string/forgot_password"
+        android:textSize="36px"/>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="205px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="438px"
+        android:layout_marginTop="1784px"
+        android:text="@string/register"
+        android:textSize="48px"
+        android:textColor="@color/colorPrimary" />
+
+
+</RelativeLayout>
