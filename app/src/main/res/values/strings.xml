@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">HealthyFish</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="forgot_password">忘记密码?</string>
+    <string name="phone_number">手机号</string>
+    <string name="password">密码</string>
+    <string name="welcome_back">欢迎您回来</string>
+    <string name="back_home">回到首页></string>
+
 </resources>
