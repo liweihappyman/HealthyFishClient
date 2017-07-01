@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="25px"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70px"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_marginLeft="55px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/genera_title_text"
+            android:text="@string/health_news"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <ImageView
+            android:background="@mipmap/right"
+            android:layout_marginRight="55px"
+            android:layout_width="26px"
+            android:layout_height="29px" />
+    </com.zhy.autolayout.AutoLinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider"/>
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:descendantFocusability="blocksDescendants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/health_news_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+    </com.zhy.autolayout.AutoRelativeLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider"/>
+    <TextView
+        android:clickable="true"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="70px"
+        style="@style/genera_title_text"
+        android:text="@string/load_more"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

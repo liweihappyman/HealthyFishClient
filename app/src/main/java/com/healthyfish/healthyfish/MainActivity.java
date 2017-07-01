@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void init() {
+
         //菜单监听
         lyHome.setOnClickListener(this);
         lyInterrogation.setOnClickListener(this);
@@ -107,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-//菜单点击
+
+    //菜单点击
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
