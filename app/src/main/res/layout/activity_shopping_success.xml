@@ -26,7 +26,7 @@
         android:layout_marginTop="51px"
         android:text="张宇医生-图文咨询"
         android:textSize="48px"
-        android:textColor="@color/color_small_title"/>
+        android:textColor="@color/color_auxiliary_info"/>
 
     <TextView
         android:id="@+id/tv_service_time"
@@ -35,7 +35,7 @@
         android:layout_marginTop="54px"
         android:text="服务时间为2017年6月30日至2017年7月20日"
         android:textSize="48px"
-        android:textColor="@color/color_small_title"/>
+        android:textColor="@color/color_auxiliary_info"/>
 
     <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"

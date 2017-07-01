@@ -31,7 +31,7 @@
                 android:layout_marginTop="48px"
                 android:text="非凡"
                 style="@style/textSize_66"
-                android:textColor="@color/color_text"/>
+                android:textColor="@color/color_general_and_title"/>
 
             <TextView
                 android:id="@+id/tv_DepartmentAndTitle"
@@ -40,7 +40,7 @@
                 android:layout_marginTop="20px"
                 android:text="中医科  主任医师"
                 style="@style/textSize_48"
-                android:textColor="@color/color_small_title"/>
+                android:textColor="@color/color_auxiliary_info"/>
 
             <TextView
                 android:id="@+id/tv_doctorCompany"
@@ -49,7 +49,7 @@
                 android:layout_marginTop="11px"
                 android:text="柳州市中医院"
                 style="@style/textSize_48"
-                android:textColor="@color/color_small_title"/>
+                android:textColor="@color/color_auxiliary_info"/>
 
             <!--android:layout_marginTop="33px"
                 android:layout_marginBottom="24px"-->
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:text="图文咨询"
                 style="@style/textSize_54"
-                android:textColor="@color/color_name_title"/>
+                android:textColor="@color/color_content_title"/>
 
             <ImageView
                 android:id="@+id/img_pictureConsulting"
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:text="私人医生"
                 style="@style/textSize_54"
-                android:textColor="@color/color_name_title"/>
+                android:textColor="@color/color_content_title"/>
 
             <ImageView
                 android:id="@+id/img_prvivateDoctor"
@@ -191,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:text="预约挂号"
                 style="@style/textSize_54"
-                android:textColor="@color/color_name_title"/>
+                android:textColor="@color/color_content_title"/>
 
             <ImageView
                 android:id="@+id/img_appointment"

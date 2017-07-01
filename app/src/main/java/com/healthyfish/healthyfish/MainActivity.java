@@ -1,6 +1,5 @@
 package com.healthyfish.healthyfish;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -155,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ivHealthyCircle.setImageResource(R.mipmap.healthy_circle_unselected);
         ivHealthWorkshop.setImageResource(R.mipmap.health_workshop_unselected);
         ivPersonalCenter.setImageResource(R.mipmap.personal_center_unselect);
-        tvHome.setTextColor(getResources().getColor(R.color.color_general_and_title));
-        tvInterrogation.setTextColor(getResources().getColor(R.color.color_general_and_title));
-        tvHealthyCircle.setTextColor(getResources().getColor(R.color.color_general_and_title));
-        tvHealthWorkshop.setTextColor(getResources().getColor(R.color.color_general_and_title));
-        tvPersonalCenter.setTextColor(getResources().getColor(R.color.color_general_and_title));
+        tvHome.setTextColor(getResources().getColor(R.color.color_general_and_titl));
+        tvInterrogation.setTextColor(getResources().getColor(R.color.color_general_and_titl));
+        tvHealthyCircle.setTextColor(getResources().getColor(R.color.color_general_and_titl));
+        tvHealthWorkshop.setTextColor(getResources().getColor(R.color.color_general_and_titl));
+        tvPersonalCenter.setTextColor(getResources().getColor(R.color.color_general_and_titl));
     }
 
     private void setTab(int i) {

@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:text="某某用户"
             style="@style/textSize_42"
-            android:textColor="@color/color_text"/>
+            android:textColor="@color/color_general_and_title"/>
 
         <TextView
             android:id="@+id/tv_satisfaction_degree"
@@ -38,6 +38,6 @@
         android:ellipsize="end"
         android:text="这是一条特别有诚意的评价"
         style="@style/textSize_42"
-        android:textColor="@color/color_small_title"/>
+        android:textColor="@color/color_auxiliary_info"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

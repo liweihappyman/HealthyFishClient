@@ -11,7 +11,7 @@
         android:layout_marginTop="30px"
         android:text="实名信息"
         android:textSize="42px"
-        android:textColor="@color/color_small_title"/>
+        android:textColor="@color/color_auxiliary_info"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:paddingBottom="30px"
             android:hint="姓名  *必填"
             android:textSize="60px"
-            android:textColor="@color/color_text"
+            android:textColor="@color/color_general_and_title"
             android:textColorHint="@color/color_hint"
             android:background="@null"/>
 
@@ -49,7 +49,7 @@
             android:paddingBottom="30px"
             android:hint="性别  *必填"
             android:textSize="60px"
-            android:textColor="@color/color_text"
+            android:textColor="@color/color_general_and_title"
             android:textColorHint="@color/color_hint"
             android:background="@null"/>
 
@@ -69,7 +69,7 @@
             android:paddingBottom="30px"
             android:hint="年龄  *必填"
             android:textSize="60px"
-            android:textColor="@color/color_text"
+            android:textColor="@color/color_general_and_title"
             android:textColorHint="@color/color_hint"
             android:background="@null"/>
 
@@ -89,7 +89,7 @@
             android:paddingBottom="30px"
             android:hint="身高"
             android:textSize="60px"
-            android:textColor="@color/color_text"
+            android:textColor="@color/color_general_and_title"
             android:textColorHint="@color/color_hint"
             android:background="@null"/>
 
@@ -109,7 +109,7 @@
             android:paddingBottom="30px"
             android:hint="体重"
             android:textSize="60px"
-            android:textColor="@color/color_text"
+            android:textColor="@color/color_general_and_title"
             android:textColorHint="@color/color_hint"
             android:background="@null"/>
 
@@ -129,7 +129,7 @@
         android:layout_marginTop="30px"
         android:text="常用手机号（方便医生联系您）"
         android:textSize="42px"
-        android:textColor="@color/color_small_title"/>
+        android:textColor="@color/color_auxiliary_info"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
@@ -147,7 +147,7 @@
             android:paddingBottom="30px"
             android:hint="手机号"
             android:textSize="60px"
-            android:textColor="@color/color_text"
+            android:textColor="@color/color_general_and_title"
             android:textColorHint="@color/color_hint"
             android:background="@null"/>
 

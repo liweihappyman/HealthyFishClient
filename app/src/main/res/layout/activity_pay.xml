@@ -29,7 +29,7 @@
                 android:paddingBottom="55px"
                 android:paddingTop="55px"
                 android:text="张宇医生-送心意"
-                android:textColor="@color/color_text"
+                android:textColor="@color/color_general_and_title"
                 android:textSize="54px" />
 
             <TextView
@@ -54,7 +54,7 @@
         android:layout_marginLeft="55px"
         android:layout_marginTop="97px"
         android:text="选择支付方式"
-        android:textColor="@color/color_small_title"
+        android:textColor="@color/color_auxiliary_info"
         android:textSize="42px" />
 
     <android.support.v7.widget.CardView
@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="余额支付"
-                    android:textColor="@color/color_text"
+                    android:textColor="@color/color_general_and_title"
                     android:textSize="48px" />
 
                 <TextView
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15px"
                     android:text="剩余金额数为100元"
-                    android:textColor="@color/color_small_title"
+                    android:textColor="@color/color_auxiliary_info"
                     android:textSize="36px" />
 
             </com.zhy.autolayout.AutoLinearLayout>
@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:text="支付宝支付"
                     android:textSize="48px"
-                    android:textColor="@color/color_text"/>
+                    android:textColor="@color/color_general_and_title"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -158,7 +158,7 @@
                     android:layout_marginTop="15px"
                     android:text="推荐支付宝用户使用"
                     android:textSize="36px"
-                    android:textColor="@color/color_small_title"/>
+                    android:textColor="@color/color_auxiliary_info"/>
 
             </com.zhy.autolayout.AutoLinearLayout>
 
