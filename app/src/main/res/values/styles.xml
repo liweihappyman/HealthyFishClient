@@ -8,4 +8,24 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="textSize_36">
+        <item name="android:textSize">36px</item>
+    </style>
+
+    <style name="textSize_48">
+        <item name="android:textSize">48px</item>
+    </style>
+
+    <style name="textSize_66">
+        <item name="android:textSize">66px</item>
+    </style>
+
+    <style name="textSize_42">
+        <item name="android:textSize">42px</item>
+    </style>
+
+    <style name="textSize_54">
+        <item name="android:textSize">54px</item>
+    </style>
+
 </resources>

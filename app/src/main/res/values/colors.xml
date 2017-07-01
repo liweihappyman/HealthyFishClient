@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="color_orange">#ec6941</color>
     <color name="color_hint">#cccccc</color>
+    <color name="color_small_title">#888888</color>
+    <color name="color_small_content">#999999</color>
+    <color name="color_text">#666666</color>
+    <color name="color_name_title">#333333</color>
 </resources>

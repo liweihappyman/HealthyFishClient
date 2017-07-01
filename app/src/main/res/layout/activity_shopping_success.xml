@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <ImageView
+        android:layout_width="316px"
+        android:layout_height="316px"
+        android:layout_marginTop="200px"
+        android:src="@mipmap/ic_login_success"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="66px"
+        android:textSize="72px"
+        android:textColor="@color/colorPrimary"
+        android:text="您已购买成功"/>
+
+    <TextView
+        android:id="@+id/tv_name_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="51px"
+        android:text="张宇医生-图文咨询"
+        android:textSize="48px"
+        android:textColor="@color/color_small_title"/>
+
+    <TextView
+        android:id="@+id/tv_service_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="54px"
+        android:text="服务时间为2017年6月30日至2017年7月20日"
+        android:textSize="48px"
+        android:textColor="@color/color_small_title"/>
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="35px"
+            android:paddingBottom="35px"
+            android:layout_alignParentBottom="true"
+            android:text="下一步"
+            android:textSize="54px"
+            android:textColor="@android:color/white"
+            android:background="@color/colorPrimary"/>
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>
