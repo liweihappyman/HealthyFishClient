@@ -48,6 +48,49 @@
 
     </android.support.v7.widget.CardView>
 
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36px"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="54px"
+            android:text="套餐选择"
+            style="@style/textSize_36"
+            android:textColor="@color/color_general_and_title"/>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36px"
+            android:paddingLeft="55px"
+            android:paddingRight="55px"
+            android:orientation="horizontal"
+            android:background="@android:color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="服务到期时间"
+                style="@style/textSize_36"
+                android:textColor="@color/color_auxiliary_info"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tv_expiration_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2016年11月28日"
+                style="@style/textSize_36"
+                android:textColor="@color/color_auxiliary_info"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
