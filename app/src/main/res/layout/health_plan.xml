@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="25px"
+    android:background="@color/color_white"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        style="@style/genera_title_text"
+        android:text="@string/date"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_height="70px" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider"/>
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/health_plan_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+    </com.zhy.autolayout.AutoRelativeLayout>
+    <TextView
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="240px"
+        android:paddingTop="25px"
+        android:paddingLeft="60px"
+        style="@style/big_content_title_text"
+        android:text="@string/mobile_monitoring_equipment"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider"/>
+    <TextView
+        android:clickable="true"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="70px"
+        style="@style/genera_title_text"
+        android:text="@string/load_more"/>
+</com.zhy.autolayout.AutoLinearLayout>

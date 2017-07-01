@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_height="243px">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="240px"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/item_health_news_img"
+            android:layout_width="219px"
+            android:layout_height="198px"
+            android:layout_marginLeft="55px"
+            android:layout_marginTop="18px"
+            android:src="@mipmap/remote_monitoring" />
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="55px"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_health_news_title"
+                style="@style/content_title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px"
+                android:text="按时休息以及吃蛋炒饭对于养生的重要性（置顶）" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_health_news_category"
+                    style="@style/genera_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/category" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/item_health_news_timestamp"
+                    style="@style/genera_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="70px"
+                    android:text="@string/timestamp" />
+            </com.zhy.autolayout.AutoLinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

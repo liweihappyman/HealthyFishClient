@@ -17,6 +17,12 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <!--toolbar使用的主题-->
+    <style name="Toolbartheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+    </style>
     <!--下方导航栏布局属性-->
     <style name="bottom_title_barlayout" >
         <item name="android:clickable">true</item>
@@ -44,6 +50,19 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">42px</item>
+        <item name="android:textColor">@color/color_content_title</item>
+    </style>
+    <!--普通标题文字颜色及大小-->
+    <style name="genera_title_text">
+        <item name="android:textSize">36px</item>
+        <item name="android:textColor">@color/color_general_and_title</item>
+    </style>
+    <style name="content_title_text">
+        <item name="android:textSize">43px</item>
+        <item name="android:textColor">@color/color_content_title</item>
+    </style>
+    <style name="big_content_title_text">
+        <item name="android:textSize">55px</item>
         <item name="android:textColor">@color/color_content_title</item>
     </style>
 

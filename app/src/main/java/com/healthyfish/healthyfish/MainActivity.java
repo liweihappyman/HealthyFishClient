@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 
 
 /**
- * 描述：MyApplication初始化参数
+ * 描述：首页
  * 作者：Wayne on 2017/6/26 14:51
  * 邮箱：liwei_happyman@qq.com
  * 编辑：wkj
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void init() {
+
         //菜单监听
         lyHome.setOnClickListener(this);
         lyInterrogation.setOnClickListener(this);
@@ -106,7 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-//菜单点击
+
+    //菜单点击
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
