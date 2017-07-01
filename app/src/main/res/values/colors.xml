@@ -3,6 +3,7 @@
     <color name="colorPrimary">#019b79</color>
     <color name="colorPrimaryDark">#019b79</color>
     <color name="colorAccent">#FF4081</color>
+
     <!--普通信息字体/普通标题颜色-->
     <color name="color_primary">#019b79</color>
     <color name="color_primary_dark">#019b79</color>
@@ -20,5 +21,8 @@
     <color name="color_titlebar_bg">#dbdbdb</color>
     <color name="color_white">#ffffff</color>
     <color name="color_red">@android:color/holo_red_light</color>
+
+    <color name="color_orange">#ec6941</color>
+    <color name="color_hint">#cccccc</color>
 
 </resources>
