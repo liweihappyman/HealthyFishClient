@@ -10,7 +10,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
@@ -20,16 +20,22 @@
             <cn.bingoogolapple.bgabanner.BGABanner
                 android:id="@+id/banner_guide_content"
                 android:layout_width="match_parent"
-                android:layout_height="360px"
-                app:banner_pageChangeDuration="1000"
-                app:banner_pointAutoPlayAble="false"
+                android:layout_height="450px"
+                app:banner_pageChangeDuration="2000"
+                app:banner_pointAutoPlayAble="true"
                 app:banner_pointContainerBackground="@android:color/transparent"
                 app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
                 app:banner_pointTopBottomMargin="18px"
                 app:banner_transitionEffect="alpha" />
-        <include layout="@layout/home_function_menu"/>
+            <include layout="@layout/home_function_menu" />
+           <include layout="@layout/health_plan"/>
+            <include layout="@layout/health_news" />
+
 
         </com.zhy.autolayout.AutoLinearLayout>
+
+
+
     </ScrollView>
 
 

@@ -33,19 +33,28 @@
         <EditText
             android:id="@+id/topbar_search_et"
             android:layout_width="700px"
-            android:layout_height="72px"
+            android:layout_height="75px"
             android:layout_marginLeft="70px"
             android:background="@null"
-            android:maxLines="1"
+            android:singleLine="true"
             android:textColor="@color/color_general_and_title"
             android:textSize="35px" />
     </com.zhy.autolayout.AutoRelativeLayout>
 
-    <ImageView
+    <com.zhy.autolayout.AutoRelativeLayout
         android:id="@+id/topbar_info"
-        android:layout_width="44px"
-        android:layout_height="52px"
-        android:layout_marginLeft="40px"
-        android:layout_marginTop="40px"
-        android:background="@mipmap/info" />
+        android:layout_width="90px"
+        android:layout_height="100px"
+        android:layout_marginTop="10px">
+
+        <ImageView
+
+            android:layout_width="50px"
+            android:layout_height="58px"
+            android:layout_marginLeft="40px"
+            android:layout_marginTop="25px"
+            android:background="@mipmap/info" />
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
 </com.zhy.autolayout.AutoLinearLayout>
