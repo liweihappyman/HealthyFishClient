@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="72px"
+        android:elevation="5px"
+        app:cardCornerRadius="4px">
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="1020px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="70px"
+                android:paddingBottom="55px"
+                android:paddingTop="55px"
+                android:text="张宇医生-送心意"
+                android:textColor="@color/color_general_and_title"
+                android:textSize="54px" />
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="65px"
+                android:paddingBottom="55px"
+                android:paddingTop="55px"
+                android:text="5元"
+                android:textColor="@color/color_orange"
+                android:textSize="54px" />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="55px"
+        android:layout_marginTop="97px"
+        android:text="选择支付方式"
+        android:textColor="@color/color_auxiliary_info"
+        android:textSize="42px" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_balance_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20px"
+        app:cardCornerRadius="4px">
+        
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="1020px"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@android:color/white">
+            
+            <ImageView
+                android:layout_width="72px"
+                android:layout_height="72px"
+                android:layout_marginLeft="60px"
+                android:src="@mipmap/ic_balance_pay"/>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="41px"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="45px"
+                android:paddingTop="45px">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="余额支付"
+                    android:textColor="@color/color_general_and_title"
+                    android:textSize="48px" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15px"
+                    android:text="剩余金额数为100元"
+                    android:textColor="@color/color_auxiliary_info"
+                    android:textSize="36px" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <RadioButton
+                android:id="@+id/rbtn_balance_pay"
+                android:layout_width="57px"
+                android:layout_height="57px"
+                android:layout_marginRight="33px"
+                android:button="@null"
+                android:background="@drawable/selector_pay"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_alipay_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:cardCornerRadius="4px">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="1020px"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:layout_width="72px"
+                android:layout_height="72px"
+                android:layout_marginLeft="60px"
+                android:src="@mipmap/ic_alipay_pay"/>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="45px"
+                android:paddingBottom="45px"
+                android:layout_marginLeft="41px"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="支付宝支付"
+                    android:textSize="48px"
+                    android:textColor="@color/color_general_and_title"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15px"
+                    android:text="推荐支付宝用户使用"
+                    android:textSize="36px"
+                    android:textColor="@color/color_auxiliary_info"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <RadioButton
+                android:id="@+id/rbtn_alipay_pay"
+                android:layout_width="57px"
+                android:layout_height="57px"
+                android:layout_marginRight="33px"
+                android:button="@null"
+                android:background="@drawable/selector_pay"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </android.support.v7.widget.CardView>
+    
+    <Button
+        android:id="@+id/btn_pay_confirm"
+        android:layout_width="978px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50px"
+        android:padding="35px"
+        android:layout_gravity="center"
+        android:text="确认支付"
+        android:textSize="54px"
+        android:textColor="@android:color/white"
+        android:background="@color/color_orange"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

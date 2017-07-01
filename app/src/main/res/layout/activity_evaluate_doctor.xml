@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="25px"
+        android:orientation="horizontal"
+        android:background="@android:color/white">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="120px"
+            android:layout_height="120px"
+            android:layout_marginLeft="49px"
+            android:layout_marginTop="49px"
+            android:src="@drawable/ic_male_select"
+            android:layout_gravity="center"/>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="207px"
+            android:paddingTop="37px"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_doctorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="赵倩"
+                style="@style/textSize_66"
+                android:textColor="@color/color_content_title"/>
+
+            <TextView
+                android:id="@+id/tv_doctorDepartment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="45px"
+                android:text="中医科"
+                style="@style/textSize_48"
+                android:textColor="@color/color_auxiliary_info"/>
+
+            <TextView
+                android:id="@+id/tv_doctorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="45px"
+                android:text="主任医师"
+                style="@style/textSize_48"
+                android:textColor="@color/color_auxiliary_info"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:id="@+id/tv_hospital"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="202px"
+            android:layout_marginTop="115px"
+            android:text="柳州市中医院"
+            style="@style/textSize_48"
+            android:textColor="@color/color_auxiliary_info"/>
+
+        <TextView
+            android:id="@+id/tv_doctorInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="199px"
+            android:layout_marginTop="201px"
+            android:maxLines="2"
+            android:ellipsize="end"
+            style="@style/textSize_48"
+            android:textColor="@color/color_small_content"
+            android:text="擅长：消化系统疾病、口腔溃疡、阴虚、肾阳虚、阳虚、虚火"/>
+
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36px"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/rGp_evaluate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39px"
+            android:layout_marginLeft="121px"
+            android:layout_marginRight="121px"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbtn_dissatisfied"
+                android:layout_width="118px"
+                android:layout_height="117px"
+                android:button="@null"
+                android:background="@drawable/selector_dissatisfied" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/rbtn_satisfied"
+                android:layout_width="118px"
+                android:layout_height="117px"
+                android:button="@null"
+                android:background="@drawable/selector_satisfied" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/rbtn_verySatisfied"
+                android:layout_width="118px"
+                android:layout_height="117px"
+                android:button="@null"
+                android:background="@drawable/selector_very_satisfied"/>
+
+        </RadioGroup>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="58px">
+
+            <CheckBox
+                android:id="@+id/ck_dissatisfied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="109px"
+                android:button="@null"
+                android:text="不满意"
+                style="@style/textSize_48"
+                android:textColor="@color/selector_satisfaction_degree"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+
+            <CheckBox
+                android:id="@+id/ck_satisfied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:layout_gravity="center_horizontal"
+                android:text="满意"
+                style="@style/textSize_48"
+                android:textColor="@color/selector_satisfaction_degree"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <CheckBox
+                android:id="@+id/ck_very_satisfied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="85px"
+                android:button="@null"
+                android:text="非常满意"
+                style="@style/textSize_48"
+                android:textColor="@color/selector_satisfaction_degree"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34px"
+        android:layout_marginLeft="49px"
+        android:text="医生评价"
+        style="@style/textSize_36"
+        android:textColor="@color/color_general_and_title"/>
+    
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="980px"
+        android:layout_height="360px"
+        android:layout_marginTop="32px"
+        android:layout_gravity="center_horizontal">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            app:cardElevation="0px"
+            app:cardCornerRadius="6px">
+
+            <EditText
+                android:id="@+id/et_evaluate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="35px"
+                android:paddingBottom="35px"
+                android:paddingLeft="53px"
+                android:paddingRight="53px"
+                android:background="@null"
+                style="@style/textSize_42"
+                android:textColor="@color/color_general_and_title"
+                android:hint="写下您对医生的评价"
+                android:textColorHint="@color/color_hint"/>
+
+        </android.support.v7.widget.CardView>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>
