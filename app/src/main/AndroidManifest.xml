@@ -33,11 +33,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--登录页面-->
         <activity android:name=".ui.activity.Login" />
+        <!--注册页面-->
         <activity android:name=".ui.activity.Register" />
-        <activity android:name=".ui.activity.AllMedRec"
-            >
-        </activity>
+        <!--病历夹页面-->
+        <activity android:name=".ui.activity.AllMedRec" />
     </application>
 
 </manifest>
