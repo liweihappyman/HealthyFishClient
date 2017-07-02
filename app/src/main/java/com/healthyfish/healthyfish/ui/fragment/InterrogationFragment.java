@@ -4,7 +4,6 @@ package com.healthyfish.healthyfish.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.healthyfish.healthyfish.DividerGridItemDecoration;
+import com.healthyfish.healthyfish.utils.DividerGridItemDecoration;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
 import com.healthyfish.healthyfish.listener.InterrogationRvlistener;

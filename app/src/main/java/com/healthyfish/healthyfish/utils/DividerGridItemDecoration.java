@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish;
+package com.healthyfish.healthyfish.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
