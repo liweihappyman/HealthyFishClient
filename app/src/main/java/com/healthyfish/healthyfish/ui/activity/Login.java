@@ -23,7 +23,7 @@ import butterknife.OnClick;
  * 描述：登录Activity
  * 作者：Wayne on 2017/6/28 16:11
  * 邮箱：liwei_happyman@qq.com
- * 编辑：
+ * 编辑：LYQ
  */
 
 public class Login extends AutoLayoutActivity implements ILoginView {

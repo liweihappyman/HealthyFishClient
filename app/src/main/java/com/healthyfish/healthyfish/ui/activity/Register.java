@@ -9,7 +9,7 @@ import com.healthyfish.healthyfish.R;
  * 描述：注册Activity
  * 作者：Wayne on 2017/6/28 16:11
  * 邮箱：liwei_happyman@qq.com
- * 编辑：
+ * 编辑：LYQ
  */
 
 public class Register extends AppCompatActivity {
