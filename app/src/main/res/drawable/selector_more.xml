@@ -3,9 +3,9 @@
     <item
         android:state_enabled="true"
         android:state_checked="true"
-        android:drawable="@drawable/ic_more_vertical"/>
+        android:drawable="@mipmap/ic_more_vertical"/>
     <item
         android:state_enabled="true"
         android:state_checked="false"
-        android:drawable="@drawable/ic_more_horizontal"/>
+        android:drawable="@mipmap/ic_more_horizontal"/>
 </selector>

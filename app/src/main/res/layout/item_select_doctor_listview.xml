@@ -10,7 +10,7 @@
         android:layout_height="120px"
         android:layout_marginLeft="30px"
         android:layout_marginTop="40px"
-        android:src="@drawable/ic_male_select"
+        android:src="@mipmap/ic_male_select"
         android:layout_gravity="center"/>
 
     <com.zhy.autolayout.AutoLinearLayout
