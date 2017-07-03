@@ -35,7 +35,7 @@
             android:layout_height="198px"
             android:layout_marginTop="81px"
             android:layout_marginLeft="51px"
-            android:src="@drawable/ic_male_select"/>
+            android:src="@mipmap/ic_male_select"/>
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
@@ -327,7 +327,7 @@
                 android:layout_width="29px"
                 android:layout_height="29px"
                 android:layout_marginRight="50px"
-                android:background="@drawable/ic_more_horizontal"/>
+                android:background="@mipmap/ic_more_horizontal"/>
 
         </com.zhy.autolayout.AutoLinearLayout>
 

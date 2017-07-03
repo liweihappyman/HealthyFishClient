@@ -7,14 +7,14 @@
     <item android:state_pressed="true">
         <shape>
             <corners android:radius="4dp" />
-            <solid android:color="@color/color_orange" />
+            <solid android:color="@color/color_secondary" />
         </shape>
     </item>
 
     <item>
         <shape>
             <!-- 描边 -->
-            <stroke android:width="2dp" android:color="@color/color_orange" />
+            <stroke android:width="2dp" android:color="@color/color_secondary" />
             <!-- 圆角 -->
             <corners android:radius="4dp" />
         </shape>

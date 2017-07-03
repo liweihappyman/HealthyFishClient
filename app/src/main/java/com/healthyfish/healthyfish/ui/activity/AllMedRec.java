@@ -12,6 +12,12 @@ import com.healthyfish.healthyfish.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 描述：电子病历
+ * 作者：WKJ on 2017/6/30.
+ * 邮箱：
+ * 编辑：WKJ
+ */
 public class AllMedRec extends AppCompatActivity {
 
     @BindView(R.id.toolbar)

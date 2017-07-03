@@ -3,9 +3,9 @@
     <item
         android:state_enabled="true"
         android:state_checked="true"
-        android:drawable="@drawable/orange_rounded_rectangle"/>
+        android:drawable="@drawable/shape_secondary_color_rounded_rectangle"/>
 
     <item
         android:state_checked="false"
-        android:drawable="@drawable/orange_rounded_lineframe"/>
+        android:drawable="@drawable/shape_secondary_color_rounded_lineframe"/>
 </selector>
