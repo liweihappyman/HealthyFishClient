@@ -117,22 +117,30 @@ public class ChoiceService extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_attention:
+                //加关注和取消关注
                 break;
             case R.id.btn_sendTheMind:
+                //跳转到送心意页面
                 Intent intent = new Intent(this, SendMind.class);
                 startActivity(intent);
                 break;
             case R.id.line_pictureConsulting:
+                //点击购买图文咨询服务
                 break;
             case R.id.line_privateDoctor:
+                //点击购买私人医生服务
                 break;
             case R.id.line_appointment:
+                //点击进行预约挂号
                 break;
             case R.id.line_moreDoctorInfo:
+                //点击显示更多医生介绍
                 break;
             case R.id.btn_moreUserEvaluation:
+                //点击展示更多用户评价
                 break;
             case R.id.line_moreUserEvaluation:
+                //点击展示更多用户评价
                 break;
         }
     }

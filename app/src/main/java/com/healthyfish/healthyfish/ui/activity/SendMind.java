@@ -91,8 +91,10 @@ public class SendMind extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rbt_more_price:
+                //选择更多答谢金额
                 break;
             case R.id.bt_commit:
+                //提交感谢语和支付答谢金额
                 break;
         }
     }
