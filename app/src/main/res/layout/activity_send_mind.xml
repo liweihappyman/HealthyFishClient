@@ -71,7 +71,8 @@
             android:layout_width="1008px"
             android:layout_height="wrap_content"
             android:layout_marginTop="63px"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <RadioButton
                 android:id="@+id/rbt_five_yuan"
@@ -139,7 +140,7 @@
                 android:layout_width="144px"
                 android:layout_height="144px"
                 android:gravity="center"
-                android:text="更多金额"
+                android:text="更多\n金额"
                 android:textColor="@drawable/selector_text_color_money"
                 android:button="@null"
                 android:background="@drawable/selector_background_money"/>
@@ -154,31 +155,34 @@
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="972px"
-            android:layout_height="216px"
-            android:layout_marginTop="42px">
+            android:layout_height="230px"
+            android:layout_marginTop="42px"
+            android:background="@drawable/gray_rectangle">
 
             <EditText
                 android:id="@+id/et_thinks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="34px"
+                android:paddingTop="30px"
                 android:paddingLeft="30px"
-                android:paddingBottom="34px"
+                android:paddingBottom="30px"
                 android:paddingRight="30px"
                 android:background="@null"
-                android:hint="说点感谢医生的话"/>
+                android:hint="说点感谢医生的话"
+                style="@style/textSize_42"
+                android:textColor="@color/color_hint"/>
 
         </com.zhy.autolayout.AutoLinearLayout>
 
         <Button
             android:id="@+id/bt_commit"
             android:layout_width="720px"
-            android:layout_height="wrap_content"
+            android:layout_height="120px"
             android:layout_marginTop="48px"
             android:text="提交"
             style="@style/textSize_54"
-            android:textColor="@android:color/white"
-            android:background="@color/colorPrimary"/>
+            android:textColor="@color/selector_text_color_from_write_to_primary"
+            android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
 
         <TextView
             android:layout_width="966px"
