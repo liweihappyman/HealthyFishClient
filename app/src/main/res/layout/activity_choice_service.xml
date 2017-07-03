@@ -99,8 +99,8 @@
                     android:layout_marginLeft="60px"
                     android:text="送心意"
                     style="@style/textSize_42"
-                    android:textColor="@color/selector_text_color_from_orange_to_white"
-                    android:background="@drawable/selector_2dp_btn_color_from_white_to_orange"/>
+                    android:textColor="@color/selector_text_color_from_secondary_to_white"
+                    android:background="@drawable/selector_2dp_btn_color_from_white_to_secondary"/>
 
             </LinearLayout>
 
