@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     RecyclerView healthNewsRecyclerview;
     @BindView(R.id.health_plan_recyclerview)
     RecyclerView healthPlanRecyclerview;
-    private Context mContext = getActivity();
+    private Context mContext;
     private View rootView;
 
 
@@ -65,8 +65,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageView fmRegistration;
     @BindView(R.id.fm_fm_inspection_report)
     ImageView fmFmInspectionReport;
-    @BindView(R.id.fm_dossier)
-    ImageView fmDossier;
+    @BindView(R.id.fm_med_rec)
+    ImageView fmMedRec;
     @BindView(R.id.fm_health_management)
     ImageView fmHealthManagement;
     @BindView(R.id.fm_remote_monitoring)
@@ -75,15 +75,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (rootView != null) {
-            return rootView;
-        } else {
-            rootView = inflater.inflate(R.layout.fragment_home, container, false);
-            mContext = getActivity();
-            unbinder = ButterKnife.bind(this, rootView);
-            initAll();
-            return rootView;
-        }
+        mContext = getActivity();
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        unbinder = ButterKnife.bind(this, rootView);
+        initAll();
+        return rootView;
 
     }
 
@@ -168,7 +164,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-
     //测试健康资讯列表
     private void initHealthNews() {
         List<BeanItemNewsAbstract> listNews = new ArrayList<>();
@@ -200,7 +195,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fmInterrogation2.setOnClickListener(this);
         fmRegistration.setOnClickListener(this);
         fmFmInspectionReport.setOnClickListener(this);
-        fmDossier.setOnClickListener(this);
+        fmMedRec.setOnClickListener(this);
         fmHealthManagement.setOnClickListener(this);
         fmRemoteMonitoring.setOnClickListener(this);
     }
@@ -215,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.fm_dossier:
+            case R.id.fm_med_rec:
                 Intent  intent = new Intent(mContext, AllMedRec.class);
                 startActivity(intent);
         }

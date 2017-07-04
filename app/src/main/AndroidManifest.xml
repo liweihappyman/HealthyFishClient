@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme2">
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
 
         <!-- 屏幕自适应框架设计稿长宽 -->
         <meta-data

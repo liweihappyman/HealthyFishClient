@@ -75,21 +75,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
         init();
     }
-
+    //初始化接界面
     private void init() {
-
+        initpgAdapter();//初始化viewpage
+        setTab(0);//初始化界面设置，即指定刚进入是可见的界面
         //菜单监听
         lyHome.setOnClickListener(this);
         lyInterrogation.setOnClickListener(this);
         lyHealthyCircle.setOnClickListener(this);
         lyHealthWorkshop.setOnClickListener(this);
         lyPersonalCenter.setOnClickListener(this);
-        initpgAdapter();//初始化viewpage
-        setTab(0);
         fgViewpage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -106,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
 
     //菜单点击
     @Override
@@ -146,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragments.add(personalCenterFragment);
         ViewpageAdapter = new MainVpAdapter(getSupportFragmentManager()
                 , fragments);
+        //设置ViewPage的缓存页，数字表示预先加载的页面的偏移量，
+        // 现在0的意思是不预先加载，另一个作用是也不销毁生的页面
+        fgViewpage.setOffscreenPageLimit(0);
         fgViewpage.setAdapter(ViewpageAdapter);
     }
 
@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvPersonalCenter.setTextColor(getResources().getColor(R.color.color_general_and_title));
     }
 
+    //设置菜单的选中状态
     private void setTab(int i) {
         switch (i) {
             case 0:
