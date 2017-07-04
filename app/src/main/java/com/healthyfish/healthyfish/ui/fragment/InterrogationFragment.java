@@ -2,10 +2,7 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 
 import android.content.Context;
-<<<<<<< HEAD
-=======
 import android.content.Intent;
->>>>>>> pr/6
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -36,18 +33,8 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class InterrogationFragment extends Fragment {
-<<<<<<< HEAD
     private Context mContext;
     private View rootView;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mContext = getActivity();
-        rootView = inflater.inflate(R.layout.fragment_interrogation, container,false);
-
-        return rootView;
-=======
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.iv_search)
@@ -58,10 +45,7 @@ public class InterrogationFragment extends Fragment {
     RecyclerView rvChoiceDepartment;
     Unbinder unbinder;
 
-    private Context mContext;
-    View rootView;
-    private List<String> mDepartments = new ArrayList<>();
-    private List<Integer> mDepartmentIcons = new ArrayList<>();
+
     private InterrogationRvAdapter mRvAdapter;
 
     public InterrogationFragment() {
@@ -69,19 +53,16 @@ public class InterrogationFragment extends Fragment {
     }
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (rootView != null){
-            return rootView;
-        }else {
-            rootView= inflater.inflate(R.layout.fragment_interrogation, container, false);
-            unbinder = ButterKnife.bind(this, rootView);
-            mContext = getActivity();
-            initData();
-            initRecycleView();
-            rvListener();
-            return rootView;
-        }
+                mContext = getActivity();
+                rootView= inflater.inflate(R.layout.fragment_interrogation, container, false);
+                unbinder = ButterKnife.bind(this, rootView);
+                rvListener();
+                initRecycleView();
+                return rootView;
     }
 
     /**
@@ -102,13 +83,21 @@ public class InterrogationFragment extends Fragment {
                 MyToast.showToast(mContext,"长按"+String.valueOf(position));
             }
         }));
->>>>>>> pr/6
+
     }
 
     /**
      * 初始化RecycleView
      */
     private void initRecycleView() {
+        List<String> mDepartments = new ArrayList<>();
+        List<Integer> mDepartmentIcons = new ArrayList<>();
+        String[] departments = new String[]{"中医科"};
+        int[] icons = new int[]{R.mipmap.ic_chinese_medicine};
+        for (int i = 0;i<departments.length;i++){
+            mDepartments.add(departments[i]);
+            mDepartmentIcons.add(icons[i]);
+        }
         GridLayoutManager gridLayoutManager=new GridLayoutManager(mContext,4);
         rvChoiceDepartment.setLayoutManager(gridLayoutManager);
         mRvAdapter = new InterrogationRvAdapter(mContext,mDepartments,mDepartmentIcons);
@@ -120,6 +109,8 @@ public class InterrogationFragment extends Fragment {
      * 初始化科室数据
      */
     private void initData() {
+        List<String> mDepartments = new ArrayList<>();
+        List<Integer> mDepartmentIcons = new ArrayList<>();
         String[] departments = new String[]{"中医科"};
         int[] icons = new int[]{R.mipmap.ic_chinese_medicine};
         for (int i = 0;i<departments.length;i++){

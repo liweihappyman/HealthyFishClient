@@ -1,12 +1,17 @@
 package com.healthyfish.healthyfish.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
@@ -22,27 +27,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
-<<<<<<< HEAD
- * 描述：病历夹列表
- * 作者：TMXK
- * 编辑：wkj
- */
-
-=======
  * 描述：电子病历
  * 作者：WKJ on 2017/6/30.
  * 邮箱：
  * 编辑：WKJ
  */
->>>>>>> pr/6
-public class AllMedRec extends AppCompatActivity {
+
+public class AllMedRec extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.new_med_rec)
-    AutoLinearLayout newMedRec;
     @BindView(R.id.med_rec_all)
     ListView medRecAll;
+    @BindView(R.id.new_med_rec)
+    AutoLinearLayout newMedRec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +55,7 @@ public class AllMedRec extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
+        newMedRec.setOnClickListener(this);
         init();//初始化布局
 
     }
@@ -149,6 +148,18 @@ public class AllMedRec extends AppCompatActivity {
     }
 
 
+    //初始化空的ListView,提示列表为空
+    private void initNullLV() {
+        TextView emptyView = new TextView(this);
+        emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                400));
+        emptyView.setText("还是空空的呦！");
+        emptyView.setTextSize(20);
+        emptyView.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        emptyView.setVisibility(View.GONE);
+        ((ViewGroup) medRecAll.getParent()).addView(emptyView);
+        medRecAll.setEmptyView(emptyView);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -165,5 +176,14 @@ public class AllMedRec extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.med_rec, menu);
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.new_med_rec:
+                Intent intent = new Intent(this,NewMedRec.class);
+                startActivity(intent);
+        }
     }
 }

@@ -2,15 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_checked="false"
-<<<<<<< HEAD
-        android:drawable="@drawable/ic_dissatisfied_unselected"/>
-    <item
-        android:state_checked="true"
-        android:drawable="@drawable/ic_dissatisfied_selected"/>
-=======
+
         android:drawable="@mipmap/ic_dissatisfied_unselected"/>
     <item
         android:state_checked="true"
         android:drawable="@mipmap/ic_dissatisfied_selected"/>
->>>>>>> pr/6
+
 </selector>

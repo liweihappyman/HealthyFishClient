@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme2">
 
-
         <!-- 屏幕自适应框架设计稿长宽 -->
         <meta-data
             android:name="design_width"
@@ -34,18 +33,24 @@
             </intent-filter>
         </activity>
 
-        <!--登录页面-->
+        <!-- 登录页面 -->
         <activity android:name=".ui.activity.Login" />
-        <!--注册页面-->
+        <!-- 注册页面 -->
         <activity android:name=".ui.activity.Register" />
-        <!--病历夹页面-->
+        <!-- 病历夹页面 -->
         <activity android:name=".ui.activity.AllMedRec" />
-        <!--问诊选择医生页面-->
-        <activity android:name=".ui.activity.ChoiceDoctor"/>
-        <!--问诊选择服务页面-->
-        <activity android:name=".ui.activity.ChoiceService"/>
-        <!--问诊送心意页面-->
-        <activity android:name=".ui.activity.SendMind"/>
+        <!-- 问诊选择医生页面 -->
+        <activity android:name=".ui.activity.ChoiceDoctor" />
+        <!-- 问诊选择服务页面 -->
+        <activity android:name=".ui.activity.ChoiceService" />
+        <!-- 问诊送心意页面 -->
+        <activity android:name=".ui.activity.SendMind" />
+        <!-- 新建病历夹页面 -->
+        <activity
+            android:name=".ui.activity.NewMedRec"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".ui.activity.Lable" />
+        <activity android:name=".ui.activity.PatientInfo"></activity>
     </application>
 
 </manifest>

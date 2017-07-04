@@ -25,8 +25,10 @@
     <string name="item_med_rec_name_sex">姓名1  男  24岁</string>
     <string name="item_med_rec_info">慢性疾病</string>
     <string name="item_med_rec_date_diagnose">2017年7月1日  就诊</string>
-
-
+    <string name="unfilled">（未填写）</string>
+    <string name="new_the_course_of_the_disease">添加病程</string>
+    <string name="basic_information">基本信息</string>
+    <string name="save">保存</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
