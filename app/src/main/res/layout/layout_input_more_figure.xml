@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="#00000000">
+
+        <EditText
+            android:id="@+id/et_more_figure"
+            android:layout_width="1020px"
+            android:layout_height="120px"
+            android:hint="请输入答谢金额"
+            android:paddingLeft="30px"
+            style="@style/textSize_54"
+            android:textColorHint="@color/color_hint"
+            android:background="@drawable/rounded_rectangle_white"/>
+
+        <ImageView
+            android:id="@+id/iv_thinks"
+            android:layout_width="360px"
+            android:layout_height="360px"
+            android:layout_marginTop="30px"
+            android:src="@mipmap/ic_thinks"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

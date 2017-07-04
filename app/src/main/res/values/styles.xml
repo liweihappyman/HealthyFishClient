@@ -86,4 +86,28 @@
         <item name="android:textSize">54px</item>
     </style>
 
+    <style name="textSize_60">
+        <item name="android:textSize">60px</item>
+    </style>
+
+    <!--问诊模块pw动画效果-->
+    <style name="anim_menu_bottomBar">
+        <item name="android:windowEnterAnimation">@anim/menu_bottom_bar_in</item>
+        <item name="android:windowExitAnimation">@anim/menu_bottom_bar_out</item>
+    </style>
+
+    <!--问诊模块弹出购买服务对话框动画-->
+    <style name="AnimBottom" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
+    <!--问诊模块弹出购买服务底部弹框-->
+    <style name="BottomDialog" parent="@style/AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
 </resources>
