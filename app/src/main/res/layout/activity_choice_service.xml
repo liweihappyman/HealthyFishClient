@@ -36,7 +36,6 @@
             android:layout_marginTop="81px"
             android:layout_marginLeft="51px"
             android:src="@mipmap/ic_male_select"/>
-
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +72,8 @@
             <!--android:layout_marginTop="33px"
                 android:layout_marginBottom="24px"-->
 
-            <LinearLayout
+
+            <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -102,7 +102,8 @@
                     android:textColor="@color/selector_text_color_from_secondary_to_white"
                     android:background="@drawable/selector_2dp_btn_color_from_white_to_secondary"/>
 
-            </LinearLayout>
+ </com.zhy.autolayout.AutoLinearLayout>
+
 
         </com.zhy.autolayout.AutoLinearLayout>
 
@@ -158,6 +159,7 @@
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@android:color/darker_gray"/>
+
 
         <com.zhy.autolayout.AutoLinearLayout
             android:id="@+id/line_privateDoctor"

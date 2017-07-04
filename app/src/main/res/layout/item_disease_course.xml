@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="360px"
+
+    android:orientation="vertical">
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_marginTop="20px"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/color_white"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/type"
+            android:text="复诊"
+            android:textSize="36px"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:background="@mipmap/bg_green"
+            android:layout_width="wrap_content"
+            android:layout_height="45px" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/date"
+            style="@style/genera_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2017年12月10日"
+            android:layout_marginRight="20px"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/img_reyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30px">
+        </android.support.v7.widget.RecyclerView>
+</com.zhy.autolayout.AutoLinearLayout>

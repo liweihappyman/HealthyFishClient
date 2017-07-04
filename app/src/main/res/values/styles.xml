@@ -86,4 +86,34 @@
         <item name="android:textSize">54px</item>
     </style>
 
+    <!--病历夹EditText_hint样式-->
+    <style name="EditText_Hint">
+        <item name="android:background">@null</item>
+        <item name="android:layout_marginTop">20px</item>
+        <item name="android:layout_marginLeft">50px</item>
+        <item name="android:layout_marginRight">50px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/unfilled</item>
+        <item name="android:textSize">48px</item>
+    </style>
+    <!--病历夹提示标签样式-->
+    <style name="TextView_Lable">
+        <item name="android:layout_marginTop">10px</item>
+        <item name="android:layout_marginLeft">50px</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">36px</item>
+        <item name="android:textColor">@color/color_primary_dark</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_height">3px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginLeft">50px</item>
+        <item name="android:layout_marginRight">50px</item>
+        <item name="android:layout_marginTop">15px</item>
+        <item name="android:background">@color/color_divider</item>
+    </style>
+
 </resources>

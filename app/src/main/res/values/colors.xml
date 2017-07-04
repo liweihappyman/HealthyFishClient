@@ -47,6 +47,10 @@
 
     <color name="color_orange">#ec6941</color>
     <color name="color_hint">#cccccc</color>
+    <color name="color_light_green">#51e7b3</color>
+    <color name="color_small_content">#999999</color>
+
+
 
     <color name="color_small_content">#999999</color>
 

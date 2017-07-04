@@ -79,7 +79,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/fm_dossier"
+                android:id="@+id/fm_med_rec"
                 android:layout_width="133px"
                 android:layout_height="133px"
                 android:background="@mipmap/dossier" />

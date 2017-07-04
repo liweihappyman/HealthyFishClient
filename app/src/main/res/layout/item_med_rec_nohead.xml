@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white"
+    android:orientation="vertical"
+    >
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="260px"
+        android:orientation="horizontal">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:paddingRight="30px"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_med_rec_name_gender"
+                style="@style/content_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50px"
+                android:layout_marginTop="30px"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/item_med_rec_name_sex" />
+
+            <TextView
+                android:id="@+id/item_med_rec_info"
+                style="@style/content_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50px"
+                android:layout_marginTop="30px"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/item_med_rec_info" />
+
+            <TextView
+                android:id="@+id/item_med_rec_date_diagnose"
+                style="@style/genera_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50px"
+                android:layout_marginTop="30px"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/item_med_rec_date_diagnose" />
+        </com.zhy.autolayout.AutoLinearLayout>
+
+
+        <TextView
+            android:id="@+id/item_med_rec_state"
+            android:layout_width="85px"
+            android:layout_height="72px"
+            android:layout_marginTop="35px"
+            android:background="@mipmap/med_rec_orange_tab"
+            android:gravity="center"
+            android:text="医"
+            android:textColor="@color/color_white" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <ImageView
+        android:background="@color/color_divider"
+        android:layout_width="match_parent"
+        android:layout_height= "3px"/>
+</com.zhy.autolayout.AutoLinearLayout>
