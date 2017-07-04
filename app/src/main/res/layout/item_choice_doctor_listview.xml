@@ -6,6 +6,7 @@
     android:background="@android:color/white">
     
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_doctor_img"
         android:layout_width="120px"
         android:layout_height="120px"
         android:layout_marginLeft="30px"

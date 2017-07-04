@@ -2,7 +2,26 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="110px"
+        android:background="@color/color_primary_dark"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            style="@style/textSize_54"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="选择服务"
+            android:textColor="@android:color/white" />
+
+    </android.support.v7.widget.Toolbar>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
@@ -61,25 +80,27 @@
 
                 <Button
                     android:id="@+id/btn_attention"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="0px"
-                    android:minHeight="0px"
+                    android:layout_width="180px"
+                    android:layout_height="72px"
+                    android:layout_marginTop="33px"
+                    android:layout_marginBottom="24px"
                     android:text="+关注"
                     style="@style/textSize_42"
                     android:textColorHighlight="@android:color/white"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/selector_text_color_from_priamry_to_white"
+                    android:background="@drawable/selector_2dp_select_status_btn_color_from_white_to_priamry"/>
 
                 <Button
                     android:id="@+id/btn_sendTheMind"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="0px"
-                    android:minHeight="0px"
+                    android:layout_width="180px"
+                    android:layout_height="72px"
+                    android:layout_marginTop="33px"
+                    android:layout_marginBottom="24px"
                     android:layout_marginLeft="60px"
                     android:text="送心意"
                     style="@style/textSize_42"
-                    android:textColor="@color/color_orange"/>
+                    android:textColor="@color/selector_text_color_from_secondary_to_white"
+                    android:background="@drawable/selector_2dp_btn_color_from_white_to_secondary"/>
 
             </LinearLayout>
 
@@ -139,7 +160,7 @@
             android:background="@android:color/darker_gray"/>
 
         <com.zhy.autolayout.AutoLinearLayout
-            android:id="@+id/line_prvivateDoctor"
+            android:id="@+id/line_privateDoctor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="19px"
@@ -155,14 +176,14 @@
                 android:textColor="@color/color_content_title"/>
 
             <ImageView
-                android:id="@+id/img_prvivateDoctor"
+                android:id="@+id/img_privateDoctor"
                 android:layout_width="110px"
                 android:layout_height="110px"
                 android:layout_marginTop="32px"
-                android:src="@mipmap/ic_prvivate_doctor_open" />
+                android:src="@mipmap/ic_private_doctor_open" />
 
             <TextView
-                android:id="@+id/tv_prvivateDoctorPrice"
+                android:id="@+id/tv_privateDoctorPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="31px"
@@ -217,61 +238,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30px"
-        android:orientation="vertical"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
         <com.zhy.autolayout.AutoLinearLayout
             android:id="@+id/line_moreDoctorInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
+                style="@style/textSize_42"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14px"
                 android:layout_marginBottom="13px"
                 android:layout_marginLeft="58px"
+                android:layout_marginTop="14px"
                 android:layout_weight="1"
                 android:text="医生详情"
-                style="@style/textSize_42"
-                android:textColor="@color/color_small_content"/>
+                android:textColor="@color/color_small_content" />
 
             <CheckBox
-                android:id="@+id/btn_moreDoctorInfo"
+                android:id="@+id/cb_moreDoctorInfo"
                 android:layout_width="29px"
                 android:layout_height="29px"
+                android:layout_marginRight="50px"
+                android:padding="50px"
                 android:background="@drawable/selector_more"
-                android:button="@null"
-                android:layout_marginRight="50px"/>
+                android:button="@null" />
 
         </com.zhy.autolayout.AutoLinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/tv_doctorInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17px"
+            android:layout_marginBottom="13px"
             android:layout_marginLeft="58px"
             android:layout_marginRight="58px"
-            android:layout_marginBottom="13px"
+            android:layout_marginTop="17px"
             android:maxLines="3" />
 
         <TextView
             android:id="@+id/tv_doctorInfoMore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17px"
+            android:layout_marginBottom="13px"
             android:layout_marginLeft="58px"
             android:layout_marginRight="58px"
-            android:layout_marginBottom="13px"
-            android:visibility="gone"/>
+            android:layout_marginTop="17px"
+            android:visibility="gone" />
 
     </com.zhy.autolayout.AutoLinearLayout>
 
@@ -290,7 +312,6 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/textView"
                 style="@style/textSize_42"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -316,11 +337,12 @@
             android:background="@android:color/darker_gray"/>
 
         <ListView
-            android:id="@+id/listView_userevaluate"
+            android:id="@+id/listView_user_evaluate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="0.5dp">
+
         </ListView>
 
     </com.zhy.autolayout.AutoLinearLayout>
