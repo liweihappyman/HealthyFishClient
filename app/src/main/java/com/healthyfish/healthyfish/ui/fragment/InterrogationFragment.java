@@ -45,18 +45,30 @@ public class InterrogationFragment extends Fragment {
     RecyclerView rvChoiceDepartment;
     Unbinder unbinder;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.iv_search)
+    ImageView ivSearch;
+    @BindView(R.id.et_search)
+    EditText etSearch;
+    @BindView(R.id.rv_choice_department)
+    RecyclerView rvChoiceDepartment;
+    Unbinder unbinder;
+
+    private Context mContext;
+    View rootView;
+    private List<String> mDepartments = new ArrayList<>();
+    private List<Integer> mDepartmentIcons = new ArrayList<>();
+    private InterrogationRvAdapter mRvAdapter;
 
     private InterrogationRvAdapter mRvAdapter;
 
     public InterrogationFragment() {
 
     }
-
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
                 mContext = getActivity();
                 rootView= inflater.inflate(R.layout.fragment_interrogation, container, false);
                 unbinder = ButterKnife.bind(this, rootView);
@@ -84,10 +96,11 @@ public class InterrogationFragment extends Fragment {
             }
         }));
 
+
     }
 
     /**
-     * 初始化RecycleView
+     * 初始化科室数据
      */
     private void initRecycleView() {
         List<String> mDepartments = new ArrayList<>();
@@ -104,20 +117,7 @@ public class InterrogationFragment extends Fragment {
         rvChoiceDepartment.setAdapter(mRvAdapter);
         rvChoiceDepartment.addItemDecoration(new DividerGridItemDecoration(mContext));
     }
-
-    /**
-     * 初始化科室数据
-     */
-    private void initData() {
-        List<String> mDepartments = new ArrayList<>();
-        List<Integer> mDepartmentIcons = new ArrayList<>();
-        String[] departments = new String[]{"中医科"};
-        int[] icons = new int[]{R.mipmap.ic_chinese_medicine};
-        for (int i = 0;i<departments.length;i++){
-            mDepartments.add(departments[i]);
-            mDepartmentIcons.add(icons[i]);
-        }
-    }
+ 
 
     @Override
     public void onDestroyView() {

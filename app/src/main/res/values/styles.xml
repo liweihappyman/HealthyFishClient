@@ -85,6 +85,7 @@
     <style name="textSize_54">
         <item name="android:textSize">54px</item>
     </style>
+
     <!--病历夹EditText_hint样式-->
     <style name="EditText_Hint">
         <item name="android:background">@null</item>

@@ -3,7 +3,6 @@
     <item
         android:state_enabled="true"
         android:state_checked="true"
-
         android:drawable="@mipmap/ic_choice"/>
     <item
         android:state_enabled="true"

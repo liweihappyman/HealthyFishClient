@@ -33,6 +33,7 @@
             </intent-filter>
         </activity>
 
+
         <!-- 登录页面 -->
         <activity android:name=".ui.activity.Login" />
         <!-- 注册页面 -->
@@ -46,11 +47,13 @@
         <!-- 问诊送心意页面 -->
         <activity android:name=".ui.activity.SendMind" />
         <!-- 新建病历夹页面 -->
-        <activity
-            android:name=".ui.activity.NewMedRec"
+        <activity android:name=".ui.activity.NewMedRec"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!--添加病历标签-->
         <activity android:name=".ui.activity.Lable" />
+        <!--用户信息-->
         <activity android:name=".ui.activity.PatientInfo"></activity>
+
     </application>
 
 </manifest>
