@@ -3,9 +3,9 @@
     <item
         android:state_enabled="true"
         android:state_checked="true"
-        android:drawable="@drawable/ic_male_select"
+        android:drawable="@mipmap/ic_male_select"
         />
 
     <item
-        android:drawable="@drawable/ic_male_unselect" />
+        android:drawable="@mipmap/ic_male_unselect" />
 </selector>

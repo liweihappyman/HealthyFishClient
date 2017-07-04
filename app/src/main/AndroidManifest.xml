@@ -33,11 +33,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--登录页面-->
         <activity android:name=".ui.activity.Login" />
+        <!--注册页面-->
         <activity android:name=".ui.activity.Register" />
-        <activity android:name=".ui.activity.AllMedRec"
-            >
-        </activity>
+        <!--病历夹页面-->
+        <activity android:name=".ui.activity.AllMedRec" />
+        <!--问诊选择医生页面-->
+        <activity android:name=".ui.activity.ChoiceDoctor"/>
+        <!--问诊选择服务页面-->
+        <activity android:name=".ui.activity.ChoiceService"/>
+        <!--问诊送心意页面-->
+        <activity android:name=".ui.activity.SendMind"/>
     </application>
 
 </manifest>

@@ -22,11 +22,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+<<<<<<< HEAD
  * 描述：病历夹列表
  * 作者：TMXK
  * 编辑：wkj
  */
 
+=======
+ * 描述：电子病历
+ * 作者：WKJ on 2017/6/30.
+ * 邮箱：
+ * 编辑：WKJ
+ */
+>>>>>>> pr/6
 public class AllMedRec extends AppCompatActivity {
 
     @BindView(R.id.toolbar)

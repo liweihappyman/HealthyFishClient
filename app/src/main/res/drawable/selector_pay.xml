@@ -3,9 +3,17 @@
     <item
         android:state_enabled="true"
         android:state_checked="true"
+<<<<<<< HEAD
         android:drawable="@drawable/ic_choice"/>
     <item
         android:state_enabled="true"
         android:state_checked="false"
         android:drawable="@drawable/ic_not_choice"/>
+=======
+        android:drawable="@mipmap/ic_choice"/>
+    <item
+        android:state_enabled="true"
+        android:state_checked="false"
+        android:drawable="@mipmap/ic_not_choice"/>
+>>>>>>> pr/6
 </selector>
