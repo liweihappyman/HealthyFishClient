@@ -95,13 +95,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
         init();
     }
 
     private void init() {
-
         //菜单监听
         lyHome.setOnClickListener(this);
         lyInterrogation.setOnClickListener(this);

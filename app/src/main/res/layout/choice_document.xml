@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <include layout="@layout/toolbar" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1300px"
+        android:layout_below="@+id/toolbar">
+
+        <ListView
+            android:id="@+id/lv_choice_document"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lv_choice_document"
+        android:layout_marginTop="20px"
+        android:text="添加新档案"
+        style="@style/textSize_48"
+        android:textColor="@color/color_small_content"/>
+
+    <Button
+        android:id="@+id/btn_done"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="完成"
+        android:textSize="20sp"
+        android:textColor="@color/color_white"/>
+
+</com.zhy.autolayout.AutoRelativeLayout>

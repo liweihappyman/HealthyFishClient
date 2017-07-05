@@ -48,6 +48,12 @@
         <activity android:name=".ui.activity.SendMind"/>
         <!--问诊支付页面-->
         <activity android:name=".ui.activity.Pay"/>
+        <!--问诊支付成功页面-->
+        <activity android:name=".ui.activity.PaySuccess"/>
+        <!--问诊购买服务支付成功页面-->
+        <activity android:name=".ui.activity.PayServiceSuccess"/>
+        <!--问诊服务页面-->
+        <activity android:name=".ui.activity.InterrogationService"/>
     </application>
 
 </manifest>

@@ -6,28 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="110px"
-        android:background="@color/color_primary_dark"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
-
-        <TextView
-            style="@style/textSize_54"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="选择服务"
-            android:textColor="@android:color/white" />
-
-    </android.support.v7.widget.Toolbar>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@android:color/darker_gray"/>
+    <include layout="@layout/toolbar" />
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"

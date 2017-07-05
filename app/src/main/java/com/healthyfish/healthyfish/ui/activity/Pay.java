@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.utils.DateUtils;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.zhy.autolayout.AutoLinearLayout;
 
@@ -33,7 +34,7 @@ import butterknife.OnClick;
  * 编辑：LYQ
  */
 
-public class Pay extends AppCompatActivity {
+public class Pay extends BaseActivity {
 
 
     @BindView(R.id.tv_title)
@@ -85,7 +86,7 @@ public class Pay extends AppCompatActivity {
         setContentView(R.layout.activity_pay);
         ButterKnife.bind(this);
         //初始化ToolBar
-        initToolBar();
+        initToolBar(toolbar,tvTitle,"购买服务");
         //获取上个页面传递的数据
         getFormerPagerData();
         //初始化基本数据
@@ -94,22 +95,6 @@ public class Pay extends AppCompatActivity {
         setTitle();
         //根据服务类型设置选择套餐
         ChoicePackage();
-    }
-
-
-    /**
-     * 返回按钮的监听
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-            default:
-                break;
-        }
-        return true;
     }
 
     /**
@@ -145,29 +130,18 @@ public class Pay extends AppCompatActivity {
                     }else if (! cbBalancePay.isChecked() && ! cbAlipayPay.isChecked()){
                         MyToast.showToast(this,"请选择支付方式");
                     }else {
-                        bundleShopType.putString("serviceFinishTime","服务时间为"+ getServiceFinishTime("D",0)+"至"+tvExpirationDate.getText().toString());
-                        //jumpTo();
+                        bundleShopType.putString("serviceFinishTime","服务时间为"+ DateUtils.addAndSubtractDate("D",0)+"至"+tvExpirationDate.getText().toString());
+                        jumpTo(PayServiceSuccess.class);
                     }
                 }else if (! cbBalancePay.isChecked() && ! cbAlipayPay.isChecked()){
                     MyToast.showToast(this,"请选择支付方式");
+                }else if(shopType.equals("送心意")){
+                    jumpTo(PaySuccess.class);
                 }else {
-                    bundleShopType.putString("serviceFinishTime","服务时间为"+ getServiceFinishTime("D",0)+"至"+ getServiceFinishTime("D",serviceData));
-                    //jumpTo();
+                    bundleShopType.putString("serviceFinishTime","服务时间为"+ DateUtils.addAndSubtractDate("D",0)+"至"+ DateUtils.addAndSubtractDate("D",serviceData));
+                    jumpTo(PayServiceSuccess.class);
                 }
                 break;
-        }
-    }
-
-    /**
-     * 初始化ToolBar
-     */
-    private void initToolBar() {
-        toolbar.setTitle("");//设置不显示应用名
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
     }
 
@@ -204,27 +178,6 @@ public class Pay extends AppCompatActivity {
     }
 
     /**
-     * 获取本地时间并计算服务到期时间
-     */
-    public String getServiceFinishTime(String ymd, int count) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-        Date date = new Date(System.currentTimeMillis());
-        Calendar rightNow = Calendar.getInstance();
-        rightNow.setTime(date);
-        if(ymd.equals("Y")){
-            rightNow.add(Calendar.YEAR, count);//日期加1年
-        } else if(ymd.equals("M")) {
-            rightNow.add(Calendar.MONTH, count);//日期加1个月
-        } else if(ymd.equals("D")) {
-            rightNow.add(Calendar.DAY_OF_YEAR, count);//日期加10天
-        }
-        Date dt1=rightNow.getTime();
-        String reStr = sdf.format(dt1);
-        return reStr;
-    }
-
-
-    /**
      * 根据服务类型设置选择套餐
      */
     private void ChoicePackage() {
@@ -236,7 +189,6 @@ public class Pay extends AppCompatActivity {
             //选择套餐后还需设置服务到期时间
         }
     }
-
 
     /**
      * 模拟套餐服务价格
@@ -264,7 +216,7 @@ public class Pay extends AppCompatActivity {
         cbOneYear.setText("一年"+"（"+payPrice05+"元"+"）");
 
         cbOneWeek.setChecked(true);
-        tvExpirationDate.setText(getServiceFinishTime("D",7));
+        tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",7));
 
         cbOneWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,10 +227,10 @@ public class Pay extends AppCompatActivity {
                     cbThreeMonth.setChecked(false);
                     cbHalfYear.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(getServiceFinishTime("D",7));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",7));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(getServiceFinishTime("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
                 }
             }
         });
@@ -292,10 +244,10 @@ public class Pay extends AppCompatActivity {
                     cbThreeMonth.setChecked(false);
                     cbHalfYear.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(getServiceFinishTime("M",1));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("M",1));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(getServiceFinishTime("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
                 }
             }
         });
@@ -307,12 +259,12 @@ public class Pay extends AppCompatActivity {
                     tvPrice.setText(payPrice03 + "元");
                     cbOneMonth.setChecked(false);
                     cbOneWeek.setChecked(false);
-                    cbThreeMonth.setChecked(false);
+                    cbHalfYear.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(getServiceFinishTime("M",3));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("m",3));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(getServiceFinishTime("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
                 }
             }
         });
@@ -326,10 +278,10 @@ public class Pay extends AppCompatActivity {
                     cbOneMonth.setChecked(false);
                     cbOneWeek.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(getServiceFinishTime("M",6));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("M",6));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(getServiceFinishTime("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
                 }
             }
         });
@@ -343,10 +295,10 @@ public class Pay extends AppCompatActivity {
                     cbThreeMonth.setChecked(false);
                     cbHalfYear.setChecked(false);
                     cbOneWeek.setChecked(false);
-                    tvExpirationDate.setText(getServiceFinishTime("Y",1));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("Y",1));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(getServiceFinishTime("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
                 }
             }
         });
