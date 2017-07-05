@@ -95,8 +95,6 @@
 
         </com.zhy.autolayout.AutoLinearLayout>
 
-    </com.zhy.autolayout.AutoLinearLayout>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"

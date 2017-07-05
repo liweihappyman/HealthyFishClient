@@ -107,7 +107,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">true</item>
-
+    </style>
     <!--病历夹EditText_hint样式-->
     <style name="EditText_Hint">
         <item name="android:background">@null</item>
