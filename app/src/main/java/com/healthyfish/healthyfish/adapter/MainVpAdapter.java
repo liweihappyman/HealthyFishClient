@@ -6,12 +6,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.MotionEvent;
 
 import java.util.List;
-
 /**
  * 描述：MainActivity的ViewPage适配器
- * 作者： Administrator on 2017/6/29.
+ * 作者：WKJ on 2017/6/29.
+ * 邮箱：
+ * 编辑：WKJ
  */
-
 public class MainVpAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragmentList;
 

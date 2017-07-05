@@ -36,7 +36,7 @@
             android:layout_marginLeft="60px"
             android:layout_width="600px"
             android:layout_height="48px"
-            android:progress="2"
+            android:progress="6"
             android:max="10"
             style="?android:attr/progressBarStyleHorizontal"
             android:progressDrawable="@drawable/progrssbar"

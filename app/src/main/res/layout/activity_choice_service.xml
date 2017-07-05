@@ -109,7 +109,10 @@
                     android:text="送心意"
                     android:textColor="@color/selector_text_color_from_secondary_to_white" />
 
+
             </com.zhy.autolayout.AutoLinearLayout>
+
+           </com.zhy.autolayout.AutoLinearLayout>
 
         </com.zhy.autolayout.AutoLinearLayout>
 
@@ -165,6 +168,7 @@
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@android:color/darker_gray"/>
+
 
         <com.zhy.autolayout.AutoLinearLayout
             android:id="@+id/line_privateDoctor"
