@@ -3,24 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <android.support.v7.widget.Toolbar
+        android:focusableInTouchMode="true"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="120px"
+        android:layout_height="135px"
         android:background="@color/color_primary_dark"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
-
         <TextView
-            android:id="@+id/tv_title"
-            style="@style/textSize_54"
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text=""
-            android:textColor="@android:color/white" />
-
+            android:text="@string/all_med_rec"
+            style="@style/big_content_title_text"
+            android:textColor="@android:color/white"
+            />
     </android.support.v7.widget.Toolbar>
+
 
 </com.zhy.autolayout.AutoLinearLayout>

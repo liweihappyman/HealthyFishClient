@@ -6,4 +6,5 @@
     <item
         android:state_checked="false"
         android:drawable="@mipmap/ic_not_choice"/>
+
 </selector>

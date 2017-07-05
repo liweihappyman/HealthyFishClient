@@ -14,9 +14,13 @@ import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
 
+
+
 /**
- * 描述：
- * 作者： TMXK on 2017/6/30.
+ * 描述：健康计划
+ * 作者：WKJ on 2017/6/30.
+ * 邮箱：
+ * 编辑：WKJ
  */
 
 public class HealthPlanAdapter extends RecyclerView.Adapter<HealthPlanAdapter.ViewHolder>{
@@ -44,9 +48,9 @@ public class HealthPlanAdapter extends RecyclerView.Adapter<HealthPlanAdapter.Vi
                 +"  "+healthPlanItem.getTodo());
         String progress = healthPlanItem.getProgress();
         String currentProgress = progress.substring(0,progress.indexOf("/"));
-        String maxProgress = progress.substring(progress.indexOf("/")+1,progress.length()-1);
-        holder.progressbar.setMax(Integer.parseInt(currentProgress));
-        holder.progressbar.setProgress(Integer.parseInt(maxProgress));
+        String maxProgress = progress.substring(progress.indexOf("/")+1,progress.length());
+        holder.progressbar.setProgress(Integer.valueOf(currentProgress));
+        holder.progressbar.setMax(Integer.valueOf(maxProgress));
         if (healthPlanItem.isDone()){
             holder.todo.setText("已完成");
             holder.todo.setTextColor(0xffcfcfcf);

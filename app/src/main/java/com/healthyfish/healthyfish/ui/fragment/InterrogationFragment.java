@@ -33,6 +33,17 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class InterrogationFragment extends Fragment {
+    private Context mContext;
+    private View rootView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.iv_search)
+    ImageView ivSearch;
+    @BindView(R.id.et_search)
+    EditText etSearch;
+    @BindView(R.id.rv_choice_department)
+    RecyclerView rvChoiceDepartment;
+    Unbinder unbinder;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -50,24 +61,20 @@ public class InterrogationFragment extends Fragment {
     private List<Integer> mDepartmentIcons = new ArrayList<>();
     private InterrogationRvAdapter mRvAdapter;
 
+    private InterrogationRvAdapter mRvAdapter;
+
     public InterrogationFragment() {
 
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (rootView != null){
-            return rootView;
-        }else {
-            rootView= inflater.inflate(R.layout.fragment_interrogation, container, false);
-            unbinder = ButterKnife.bind(this, rootView);
-            mContext = getActivity();
-            initData();
-            initRecycleView();
-            rvListener();
-            return rootView;
-        }
+
+                mContext = getActivity();
+                rootView= inflater.inflate(R.layout.fragment_interrogation, container, false);
+                unbinder = ButterKnife.bind(this, rootView);
+                rvListener();
+                initRecycleView();
+                return rootView;
     }
 
     /**
@@ -88,30 +95,29 @@ public class InterrogationFragment extends Fragment {
                 MyToast.showToast(mContext,"长按"+String.valueOf(position));
             }
         }));
-    }
 
-    /**
-     * 初始化RecycleView
-     */
-    private void initRecycleView() {
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(mContext,4);
-        rvChoiceDepartment.setLayoutManager(gridLayoutManager);
-        mRvAdapter = new InterrogationRvAdapter(mContext,mDepartments,mDepartmentIcons);
-        rvChoiceDepartment.setAdapter(mRvAdapter);
-        rvChoiceDepartment.addItemDecoration(new DividerGridItemDecoration(mContext));
+
     }
 
     /**
      * 初始化科室数据
      */
-    private void initData() {
+    private void initRecycleView() {
+        List<String> mDepartments = new ArrayList<>();
+        List<Integer> mDepartmentIcons = new ArrayList<>();
         String[] departments = new String[]{"中医科"};
         int[] icons = new int[]{R.mipmap.ic_chinese_medicine};
         for (int i = 0;i<departments.length;i++){
             mDepartments.add(departments[i]);
             mDepartmentIcons.add(icons[i]);
         }
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(mContext,4);
+        rvChoiceDepartment.setLayoutManager(gridLayoutManager);
+        mRvAdapter = new InterrogationRvAdapter(mContext,mDepartments,mDepartmentIcons);
+        rvChoiceDepartment.setAdapter(mRvAdapter);
+        rvChoiceDepartment.addItemDecoration(new DividerGridItemDecoration(mContext));
     }
+ 
 
     @Override
     public void onDestroyView() {

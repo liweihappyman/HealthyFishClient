@@ -54,6 +54,14 @@
         <activity android:name=".ui.activity.PayServiceSuccess"/>
         <!--问诊服务页面-->
         <activity android:name=".ui.activity.InterrogationService"/>
+        <!-- 新建病历夹页面 -->
+        <activity android:name=".ui.activity.NewMedRec"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!--添加病历标签-->
+        <activity android:name=".ui.activity.Lable" />
+        <!--用户信息-->
+        <activity android:name=".ui.activity.PatientInfo"></activity>
+
     </application>
 
 </manifest>
