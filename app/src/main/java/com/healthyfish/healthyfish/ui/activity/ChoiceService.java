@@ -85,7 +85,7 @@ public class ChoiceService extends BaseActivity {
     AutoLinearLayout lineMoreUserEvaluation;
     @BindView(R.id.listView_user_evaluate)
     ListView listViewUserEvaluate;
-    @BindView(R.id.tv_title)
+    @BindView(R.id.toolbar_title)
     TextView tvTitle;
     @BindView(R.id.btn_moreUserEvaluation)
     TextView btnMoreUserEvaluation;

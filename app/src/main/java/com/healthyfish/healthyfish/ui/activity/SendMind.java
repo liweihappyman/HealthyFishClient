@@ -54,7 +54,7 @@ public class SendMind extends BaseActivity {
     EditText etThinks;
     @BindView(R.id.bt_commit)
     Button btCommit;
-    @BindView(R.id.tv_title)
+    @BindView(R.id.toolbar_title)
     TextView tvTitle;
 
     private Context mContext;
