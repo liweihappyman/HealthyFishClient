@@ -2,8 +2,11 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center_horizontal">
+
+    <include layout="@layout/toolbar" />
 
     <ImageView
         android:layout_width="600px"
@@ -29,7 +32,7 @@
         android:gravity="center"
         android:text="确定"
         android:textSize="54px"
-        android:textColor="@android:color/white"
-        android:background="@color/colorPrimary"/>
+        android:textColor="@color/selector_text_color_from_write_to_primary"
+        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

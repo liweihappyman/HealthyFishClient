@@ -30,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * 编辑：LYQ
  */
 
-public class SendMind extends AppCompatActivity {
+public class SendMind extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -54,33 +54,19 @@ public class SendMind extends AppCompatActivity {
     EditText etThinks;
     @BindView(R.id.bt_commit)
     Button btCommit;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
 
     private Context mContext;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_mind);
         ButterKnife.bind(this);
         mContext = this;
-        initToolBar();
+        initToolBar(toolbar,tvTitle,"送心意");
         initData();
-    }
-
-
-    /**
-     * 返回按钮的监听
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-            default:
-                break;
-        }
-        return true;
     }
 
     @OnClick({R.id.rbt_more_price, R.id.bt_commit})
@@ -100,45 +86,33 @@ public class SendMind extends AppCompatActivity {
      * 获取答谢金额数
      */
     private void getFigureAndThinks() {
-        if (findViewById(rgpChoiceFigure.getCheckedRadioButtonId()) != null){
+        if (findViewById(rgpChoiceFigure.getCheckedRadioButtonId()) != null) {
             RadioButton radioButton = (RadioButton) findViewById(rgpChoiceFigure.getCheckedRadioButtonId());
-            if (etThinks.getText().toString() != null){
-                Intent intent = new Intent(this,Pay.class);
+            if (etThinks.getText().toString() != null) {
+                Intent intent = new Intent(this, Pay.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("serviceType","送心意");
-                bundle.putString("name",tvDoctorName.getText().toString());
-                bundle.putString("price",radioButton.getText().toString());
+                bundle.putString("serviceType", "送心意");
+                bundle.putString("name", tvDoctorName.getText().toString());
+                bundle.putString("price", radioButton.getText().toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
-            }else {
-                MyToast.showToast(mContext,"请输入感谢语");
+            } else {
+                MyToast.showToast(mContext, "请输入感谢语");
             }
-        }else {
-            MyToast.showToast(mContext,"请选择答谢金额");
+        } else {
+            MyToast.showToast(mContext, "请选择答谢金额");
         }
     }
 
-    /**
-     * 初始化ToolBar
-     */
-    private void initToolBar() {
-        toolbar.setTitle("");//设置不显示应用名
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
-        }
-    }
 
     /**
      * 初始化数据
      */
     private void initData() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
+        if (bundle != null) {
             Glide.with(mContext).load(bundle.get("imgUrl")).into(civDoctorImg);
-            tvDoctorName.setText(bundle.get("name")+"医生");
+            tvDoctorName.setText(bundle.get("name") + "医生");
         }
     }
 }

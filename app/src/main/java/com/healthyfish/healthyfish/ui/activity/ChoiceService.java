@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.R;
@@ -40,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * 编辑：LYQ
  */
 
-public class ChoiceService extends AppCompatActivity {
+public class ChoiceService extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -86,6 +85,12 @@ public class ChoiceService extends AppCompatActivity {
     AutoLinearLayout lineMoreUserEvaluation;
     @BindView(R.id.listView_user_evaluate)
     ListView listViewUserEvaluate;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.btn_moreUserEvaluation)
+    TextView btnMoreUserEvaluation;
+    @BindView(R.id.layout_choiceService)
+    AutoLinearLayout layoutChoiceService;
 
     private Context mContext;//全局上下文
 
@@ -110,7 +115,7 @@ public class ChoiceService extends AppCompatActivity {
         setContentView(R.layout.activity_choice_service);
         ButterKnife.bind(this);
         mContext = this;
-        initToolBar();
+        initToolBar(toolbar,tvTitle,"选择服务");
         getData();
         initData();
         initListView();
@@ -133,13 +138,13 @@ public class ChoiceService extends AppCompatActivity {
         doctorTitle = "医师";
         doctorCompany = "柳州市中医院";
         pictureConsultingPrice = "30";
-        privateDoctorPrice = "50";
+        privateDoctorPrice = "100";
         appointmentPrice = "10";
         doctorInfo = info;
-        isOpenPictureConsulting = true;
+        isOpenPictureConsulting = false;
         isOpenPrivateDoctor = true;
-        isOpenAppointment = true;
-        isAttention = true;
+        isOpenAppointment = false;
+        isAttention = false;
     }
 
     /**
@@ -194,11 +199,11 @@ public class ChoiceService extends AppCompatActivity {
         ckbAttention.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     //需要访问服务器改变关注的状态
                     ckbAttention.setText("已关注");
                     isAttention = true;
-                }else{
+                } else {
                     //需要访问服务器改变关注的状态
                     ckbAttention.setText("+关注");
                     isAttention = false;
@@ -208,33 +213,19 @@ public class ChoiceService extends AppCompatActivity {
     }
 
     /**
-     * 返回按钮的监听
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
-    /**
      * 所有点击事件的监听
+     *
      * @param view
      */
-    @OnClick({R.id.btn_sendTheMind, R.id.line_pictureConsulting,R.id.line_privateDoctor, R.id.line_appointment, R.id.line_moreDoctorInfo, R.id.line_moreUserEvaluation})
+    @OnClick({R.id.btn_sendTheMind, R.id.line_pictureConsulting, R.id.line_privateDoctor, R.id.line_appointment, R.id.line_moreDoctorInfo, R.id.line_moreUserEvaluation})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_sendTheMind:
                 //跳转到送心意页面，需要传递医生标识
                 Intent intent = new Intent(this, SendMind.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("name",doctorName);
-                bundle.putString("imgUrl",imgDoctorUrl);
+                bundle.putString("name", doctorName);
+                bundle.putString("imgUrl", imgDoctorUrl);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
@@ -256,7 +247,7 @@ public class ChoiceService extends AppCompatActivity {
                 break;
             case R.id.line_moreUserEvaluation:
                 //点击展示更多用户评价
-                MyToast.showToast(this,"没有更多用户评价");
+                MyToast.showToast(this, "没有更多用户评价");
                 break;
         }
     }
@@ -267,40 +258,40 @@ public class ChoiceService extends AppCompatActivity {
     private void initData() {
         Glide.with(mContext).load(imgDoctorUrl).error(R.mipmap.error).into(civDoctor);//设置医生头像
         tvName.setText(doctorName);  //设置医生名字
-        tvDepartmentAndTitle.setText(doctorDepartment+"   "+doctorTitle);  //设置医生的科室和职称
+        tvDepartmentAndTitle.setText(doctorDepartment + "   " + doctorTitle);  //设置医生的科室和职称
         tvDoctorCompany.setText(doctorCompany);  //设置医生工作的医院
         //判断是否已经关注该医生
-        if (isAttention){
+        if (isAttention) {
             ckbAttention.setChecked(true);
             ckbAttention.setText("已关注");
-        }else {
+        } else {
             ckbAttention.setChecked(false);
             ckbAttention.setText("+关注");
         }
         //判断是否已开通图文咨询服务
-        if (isOpenPictureConsulting){
+        if (isOpenPictureConsulting) {
             imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_open);
-            tvPictureConsultingPrice.setText(pictureConsultingPrice+"元/次");
+            tvPictureConsultingPrice.setText(pictureConsultingPrice + "元/次");
             tvPictureConsultingPrice.setTextColor(getResources().getColor(R.color.color_primary));
-        }else {
+        } else {
             imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_not_open);
             tvPictureConsultingPrice.setText("暂未开通");
         }
         //判断是否已开通私人医生服务
-        if (isOpenPrivateDoctor){
+        if (isOpenPrivateDoctor) {
             imgPrivateDoctor.setImageResource(R.mipmap.ic_private_doctor_open);
-            tvPrivateDoctorPrice.setText(privateDoctorPrice+"元/周");
+            tvPrivateDoctorPrice.setText(privateDoctorPrice + "元/周");
             tvPrivateDoctorPrice.setTextColor(getResources().getColor(R.color.color_primary));
-        }else {
+        } else {
             imgPrivateDoctor.setImageResource(R.mipmap.ic_private_doctor_not_open);
             tvPrivateDoctorPrice.setText("暂未开通");
         }
         //判断是否已开通预约挂号服务
-        if (isOpenAppointment){
+        if (isOpenAppointment) {
             imgAppointment.setImageResource(R.mipmap.ic_appointment_open);
-            tvAppointmentPrice.setText(appointmentPrice+"元/次");
+            tvAppointmentPrice.setText(appointmentPrice + "元/次");
             tvAppointmentPrice.setTextColor(getResources().getColor(R.color.color_primary));
-        }else {
+        } else {
             imgAppointment.setImageResource(R.mipmap.ic_appointment_not_open);
             tvAppointmentPrice.setText("暂未开通");
         }
@@ -312,7 +303,7 @@ public class ChoiceService extends AppCompatActivity {
     /**
      * 初始化用户评价ListView
      */
-    public void initListView(){
+    public void initListView() {
         //评价列表适配器
         SimpleAdapter adapter = new SimpleAdapter(this, getLisViewData(), R.layout.item_more_evalutae_listview,
                 new String[]{"username", "satisfaction", "content"},
@@ -321,27 +312,14 @@ public class ChoiceService extends AppCompatActivity {
     }
 
     /**
-     * 初始化ToolBar
-     */
-    private void initToolBar() {
-        toolbar.setTitle("");//设置不显示应用名
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
-        }
-    }
-
-    /**
      * 展开和收起更多医生详情操作
      */
-    public void openAndStopDoctorInfo(){
-        if (tvDoctorInfo.getVisibility() == View.VISIBLE){
+    public void openAndStopDoctorInfo() {
+        if (tvDoctorInfo.getVisibility() == View.VISIBLE) {
             tvDoctorInfo.setVisibility(View.GONE);
             tvDoctorInfoMore.setVisibility(View.VISIBLE);
             cbMoreDoctorInfo.setChecked(true);
-        }else {
+        } else {
             tvDoctorInfoMore.setVisibility(View.GONE);
             tvDoctorInfo.setVisibility(View.VISIBLE);
             cbMoreDoctorInfo.setChecked(false);
@@ -355,13 +333,13 @@ public class ChoiceService extends AppCompatActivity {
         if (isOpenAppointment) {
             BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("serviceType","预约挂号");
-            bundle.putString("name",doctorName);
-            bundle.putString("price",appointmentPrice);
+            bundle.putString("serviceType", "预约挂号");
+            bundle.putString("name", doctorName);
+            bundle.putString("price", appointmentPrice);
             buyServiceFragment.setArguments(bundle);
-            buyServiceFragment.show(getSupportFragmentManager(),"buyServiceFragment");
-        }else {
-            MyToast.showToast(mContext,"该医生暂未开通此服务");
+            buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
+        } else {
+            MyToast.showToast(mContext, "该医生暂未开通此服务");
         }
     }
 
@@ -369,16 +347,16 @@ public class ChoiceService extends AppCompatActivity {
      * 选择私人医生操作
      */
     private void buyPrivateDoctorService() {
-        if (isOpenPrivateDoctor){
+        if (isOpenPrivateDoctor) {
             BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("serviceType","私人医生");
-            bundle.putString("name",doctorName);
-            bundle.putString("price",privateDoctorPrice);
+            bundle.putString("serviceType", "私人医生");
+            bundle.putString("name", doctorName);
+            bundle.putString("price", privateDoctorPrice);
             buyServiceFragment.setArguments(bundle);
-            buyServiceFragment.show(getSupportFragmentManager(),"buyServiceFragment");
-        }else {
-            MyToast.showToast(mContext,"该医生暂未开通此服务");
+            buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
+        } else {
+            MyToast.showToast(mContext, "该医生暂未开通此服务");
         }
     }
 
@@ -389,13 +367,13 @@ public class ChoiceService extends AppCompatActivity {
         if (isOpenPictureConsulting) {
             BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("serviceType","图文咨询");
-            bundle.putString("name",doctorName);
-            bundle.putString("price",pictureConsultingPrice);
+            bundle.putString("serviceType", "图文咨询");
+            bundle.putString("name", doctorName);
+            bundle.putString("price", pictureConsultingPrice);
             buyServiceFragment.setArguments(bundle);
-            buyServiceFragment.show(getSupportFragmentManager(),"buyServiceFragment");
-        }else {
-            MyToast.showToast(mContext,"该医生暂未开通此服务");
+            buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
+        } else {
+            MyToast.showToast(mContext, "该医生暂未开通此服务");
         }
     }
 

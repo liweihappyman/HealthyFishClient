@@ -2,7 +2,6 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
@@ -30,7 +29,7 @@ public class BuyServiceFragment extends DialogFragment {
     private TextView serviceDscribe;
     private TextView servicePrice;
     private Button shopNow;
-    private Bundle bundle;
+    private Bundle bundleServiceType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,20 +51,20 @@ public class BuyServiceFragment extends DialogFragment {
      * 初始化数据
      */
     private void initData() {
-        bundle = getArguments();
-        if (bundle != null) {
-            if (bundle.get("serviceType").equals("图文咨询")){
+        bundleServiceType = getArguments();
+        if (bundleServiceType != null) {
+            if (bundleServiceType.get("serviceType").equals("图文咨询")){
                 serviceImg.setImageResource(R.mipmap.ic_picture_consulting_open);
-                serviceTypeAndDoctorName.setText("图文咨询-"+bundle.get("name"));
-                servicePrice.setText(bundle.get("price")+"元/次");
-            }else if (bundle.get("serviceType").equals("私人医生")){
+                serviceTypeAndDoctorName.setText("图文咨询-"+ bundleServiceType.get("name"));
+                servicePrice.setText(bundleServiceType.get("price")+"元/次");
+            }else if (bundleServiceType.get("serviceType").equals("私人医生")){
                 serviceImg.setImageResource(R.mipmap.ic_private_doctor_open);
-                serviceTypeAndDoctorName.setText("私人医生-"+bundle.get("name"));
-                servicePrice.setText(bundle.get("price")+"元/周");
-            }else if (bundle.get("serviceType").equals("预约挂号")){
+                serviceTypeAndDoctorName.setText("私人医生-"+ bundleServiceType.get("name"));
+                servicePrice.setText(bundleServiceType.get("price")+"元/周");
+            }else if (bundleServiceType.get("serviceType").equals("预约挂号")){
                 serviceImg.setImageResource(R.mipmap.ic_appointment_open);
-                serviceTypeAndDoctorName.setText("预约挂号-"+bundle.get("name"));
-                servicePrice.setText(bundle.get("price")+"元/次");
+                serviceTypeAndDoctorName.setText("预约挂号-"+ bundleServiceType.get("name"));
+                servicePrice.setText(bundleServiceType.get("price")+"元/次");
             }
         }
     }
@@ -110,9 +109,9 @@ public class BuyServiceFragment extends DialogFragment {
                 if (getDialog() != null){
                     Intent intent = new Intent(getActivity(), Pay.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("serviceType",bundle.get("serviceType").toString());
-                    bundle.putString("name",bundle.get("name").toString());
-                    bundle.putString("price",bundle.get("price").toString());
+                    bundle.putString("serviceType",bundleServiceType.get("serviceType").toString());
+                    bundle.putString("name",bundleServiceType.get("name").toString());
+                    bundle.putString("price",bundleServiceType.get("price").toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
                     getDialog().dismiss();

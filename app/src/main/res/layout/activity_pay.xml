@@ -5,30 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="110px"
-        android:background="@color/color_primary_dark"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
-
-        <TextView
-            android:id="@+id/tv_title"
-            style="@style/textSize_54"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="购买服务"
-            android:textColor="@android:color/white" />
-
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/toolbar" />
 
     <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="1020px"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="72px"
+        android:layout_marginTop="50px"
         android:background="@android:color/white"
         android:orientation="horizontal">
 
@@ -38,8 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="70px"
-            android:paddingBottom="55px"
-            android:paddingTop="55px"
+            android:paddingBottom="50px"
+            android:paddingTop="50px"
             android:text="张宇医生-送心意"
             android:textColor="@color/color_general_and_title"
             android:textSize="54px" />
@@ -50,8 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="65px"
-            android:paddingBottom="55px"
-            android:paddingTop="55px"
+            android:paddingBottom="50px"
+            android:paddingTop="50px"
             android:text="5元"
             android:textColor="@color/color_orange"
             android:textSize="54px" />
@@ -63,7 +46,7 @@
         android:id="@+id/lly_choice_package"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36px"
+        android:layout_marginTop="30px"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -169,7 +152,7 @@
             android:layout_marginTop="36px"
             android:paddingLeft="55px"
             android:paddingRight="55px"
-            android:paddingTop="30px"
+            android:paddingTop="25px"
             android:paddingBottom="30px"
             android:orientation="horizontal"
             android:background="@android:color/white">
@@ -198,7 +181,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="55px"
-        android:layout_marginTop="60px"
+        android:layout_marginTop="50px"
         android:text="选择支付方式"
         android:textColor="@color/color_auxiliary_info"
         android:textSize="42px" />
@@ -251,9 +234,10 @@
             android:layout_width="57px"
             android:layout_height="57px"
             android:layout_marginRight="33px"
+            android:clickable="false"
             android:focusable="false"
             android:enabled="false"
-            android:background="@drawable/selector_pay"
+            android:background="@drawable/selector_check"
             android:button="@null" />
 
     </com.zhy.autolayout.AutoLinearLayout>
@@ -310,9 +294,10 @@
             android:layout_width="57px"
             android:layout_height="57px"
             android:layout_marginRight="33px"
+            android:clickable="false"
             android:focusable="false"
             android:enabled="false"
-            android:background="@drawable/selector_pay"
+            android:background="@drawable/selector_check"
             android:button="@null" />
 
     </com.zhy.autolayout.AutoLinearLayout>
@@ -323,10 +308,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="50px"
-        android:background="@color/color_orange"
-        android:padding="35px"
+        android:background="@drawable/selector_btn_color_from_secondary_to_white"
+        android:padding="20px"
         android:text="确认支付"
-        android:textColor="@android:color/white"
+        android:textColor="@color/selector_text_color_from_white_to_secondary"
         android:textSize="54px" />
 
 </com.zhy.autolayout.AutoLinearLayout>

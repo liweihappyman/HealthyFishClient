@@ -33,17 +33,6 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class InterrogationFragment extends Fragment {
-    private Context mContext;
-    private View rootView;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.iv_search)
-    ImageView ivSearch;
-    @BindView(R.id.et_search)
-    EditText etSearch;
-    @BindView(R.id.rv_choice_department)
-    RecyclerView rvChoiceDepartment;
-    Unbinder unbinder;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -57,9 +46,6 @@ public class InterrogationFragment extends Fragment {
 
     private Context mContext;
     View rootView;
-    private List<String> mDepartments = new ArrayList<>();
-    private List<Integer> mDepartmentIcons = new ArrayList<>();
-    private InterrogationRvAdapter mRvAdapter;
 
     private InterrogationRvAdapter mRvAdapter;
 
