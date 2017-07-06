@@ -54,6 +54,10 @@
         <activity android:name=".ui.activity.PayServiceSuccess"/>
         <!--问诊服务页面-->
         <activity android:name=".ui.activity.InterrogationService"/>
+        <!--问诊完善档案页面-->
+        <activity android:name=".ui.activity.PerfectArchives"/>
+        <!--问诊选择档案页面-->
+        <activity android:name=".ui.activity.ChoiceDocument"/>
         <!-- 新建病历夹页面 -->
         <activity android:name=".ui.activity.NewMedRec"
             android:windowSoftInputMode="adjustResize|stateHidden" />

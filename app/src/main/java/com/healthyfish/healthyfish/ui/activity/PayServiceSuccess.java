@@ -17,14 +17,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 描述：
+ * 描述：购买服务支付成功页面
  * 作者：LYQ on 2017/7/5.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
  */
 
 public class PayServiceSuccess extends BaseActivity {
-    @BindView(R.id.tv_title)
+    @BindView(R.id.toolbar_title)
     TextView tvTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -75,11 +75,9 @@ public class PayServiceSuccess extends BaseActivity {
     @OnClick(R.id.btn_next)
     public void onViewClicked() {
         if (shopType.equals("私人医生")){
-            //jumpTo(InquiryPerfectTheArchives.class);
+            jumpTo(PerfectArchives.class);
         }else if (shopType.equals("图文咨询")){
-            //jumpTo(InquiryChooceFileActivity.class);
-        }else if (shopType.equals("送心意")){
-            //jumpTo(InquiryServiceActivity.class);
+            jumpTo(ChoiceDocument.class);
         }
     }
 

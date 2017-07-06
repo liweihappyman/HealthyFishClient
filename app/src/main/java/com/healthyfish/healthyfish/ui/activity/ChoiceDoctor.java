@@ -36,7 +36,7 @@ public class ChoiceDoctor extends BaseActivity {
     Toolbar toolbar;
     @BindView(R.id.lv_choice_doctor)
     ListView lvChoiceDoctor;
-    @BindView(R.id.tv_title)
+    @BindView(R.id.toolbar_title)
     TextView tvTitle;
 
     private Context mContext;

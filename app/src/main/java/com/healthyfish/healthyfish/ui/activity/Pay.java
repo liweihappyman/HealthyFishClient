@@ -37,7 +37,7 @@ import butterknife.OnClick;
 public class Pay extends BaseActivity {
 
 
-    @BindView(R.id.tv_title)
+    @BindView(R.id.toolbar_title)
     TextView tvTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
