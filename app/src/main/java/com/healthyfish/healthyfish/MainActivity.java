@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,13 +15,16 @@ import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
 import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
 
 
 /**
@@ -97,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         init();
+
+
+
     }
     //初始化接界面
     private void init() {
@@ -219,4 +226,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
         }
     }
+
+
+
+
 }

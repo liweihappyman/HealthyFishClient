@@ -39,7 +39,7 @@
     <!--内容标题颜色/重要的文字信息-->
     <color name="color_content_title">#333333</color>
     <!--内容区底色-->
-    <color name="color_content_area_bg">#333333</color>
+    <color name="color_content_area_bg">#f4f4f4</color>
     <!--用于分割模块标题栏底色、动态资源底色-->
     <color name="color_titlebar_bg">#dbdbdb</color>
     <color name="color_white">#ffffff</color>
@@ -49,5 +49,6 @@
     <color name="color_hint">#cccccc</color>
     <color name="color_light_green">#51e7b3</color>
     <color name="color_small_content">#999999</color>
+
 
 </resources>
