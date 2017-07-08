@@ -34,6 +34,10 @@ import butterknife.Unbinder;
  */
 public class InterrogationFragment extends Fragment {
 
+
+    private List<String> mDepartments = new ArrayList<>();
+    private List<Integer> mDepartmentIcons = new ArrayList<>();
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.iv_search)
@@ -46,6 +50,7 @@ public class InterrogationFragment extends Fragment {
 
     private Context mContext;
     View rootView;
+
 
     private InterrogationRvAdapter mRvAdapter;
 

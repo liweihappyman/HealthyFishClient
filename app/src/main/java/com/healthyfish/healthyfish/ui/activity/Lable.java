@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.ui.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.TagAdapter;
+import com.healthyfish.healthyfish.constant.constants;
 import com.healthyfish.healthyfish.ui.widget.FlowLayout;
 import com.healthyfish.healthyfish.ui.widget.TagFlowLayout;
 
@@ -36,8 +40,8 @@ import butterknife.ButterKnife;
  * 邮箱：
  * 编辑：WKJ
  */
-public class Lable extends AppCompatActivity {
-
+public class Lable extends AppCompatActivity implements View.OnClickListener {
+    public static final int FOR_LABLE = 35;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -58,9 +62,8 @@ public class Lable extends AppCompatActivity {
     private EditText editText;//新添加用的
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private List<String> lableStr;//将要保存的textview标签转换为Listview<String>
-    private BeanMedRec beanMedRec = new
-            BeanMedRec();
+    private List<String> listLable;//将要保存的textview标签转换为Listview<String>
+    private BeanMedRec medRec = new BeanMedRec();
 
 
     @Override
@@ -76,34 +79,107 @@ public class Lable extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
+        //偏好设置，保存用户的一些轻量数据，这里保存的是所有的标签
+        // 前面的标记符任意，模式为私有模式，即数据只有自己能用
+        sharedPreferences = getSharedPreferences("lablews", MODE_PRIVATE);
+        editor = sharedPreferences.edit();//用来向sharePrefrence写入数据
+
         //顺序不能乱
         initView();//初始化View,上下两个大布局
         initData();//用来加载本地的标签和数据bean里面的标签
         initEdittext();//初始化默认textview
         initAllLeblLayout();//初始化所有标签布局
+        save.setOnClickListener(this);
     }
 
     /**
      * 初始化数据，初始化上面的标签
      */
     private void initData() {
-        label_list.add("haha");
-        label_list.add("haow");
-        //用于初始化从数据库获取的标签(即显示在上面的标签)
-        for (int i = 0; i < label_list.size(); i++) {
-            editText = new EditText(getApplicationContext());//new 一个EditText
-            editText.setText(label_list.get(i));
-            editText.setMinEms(5);
-            editText.setTextSize(16);
-            addLabel(editText);//添加标签
-        }
-        all_label_List.add("haha");
-        all_label_List.add("haow");
-        all_label_List.add("真的吗");
-        all_label_List.add("你说的都对");
-        all_label_List.add("还好啦");
-        all_label_List.add("你说什么");
+        initAllLable();//下面标签的初始化
+        initlable();//上面标签的初始化
+
+//        label_list.add("haha");
+//        label_list.add("haow");
+//        //用于初始化从数据库获取的标签(即显示在上面的标签)
+//        for (int i = 0; i < label_list.size(); i++) {
+//            editText = new EditText(getApplicationContext());//new 一个EditText
+//            editText.setText(label_list.get(i));
+//            editText.setMinEms(5);
+//            editText.setTextSize(16);
+//            addLabel(editText);//添加标签
+//        }
+//        all_label_List.add("haha");
+//        all_label_List.add("haow");
+//        all_label_List.add("真的吗");
+//        all_label_List.add("你说的都对");
+//        all_label_List.add("还好啦");
+//        all_label_List.add("你说什么");
     }
+
+    private void initlable() {
+        medRec = (BeanMedRec) getIntent().getSerializableExtra("lable");
+        if (medRec.getLables()!=null){
+            label_list = medRec.getLables();
+            //拿到当前的Bean的标签，如果不为空，则执行
+            for (int i = 0; i < label_list.size(); i++) {
+                editText = new EditText(getApplicationContext());//new 一个EditText
+                editText.setText(label_list.get(i));
+                editText.setMinEms(5);
+                editText.setTextSize(16);
+                addLabel(editText);//添加标签
+            }
+        }
+    }
+
+    //初始化所有标签，从sharedPreferences读取出之前保存的标签
+    private void initAllLable() {
+        String allLableJson = sharedPreferences.getString("lable", null);
+        if (allLableJson != null) {
+            all_label_List= (List<String>) JSON.parse(allLableJson);
+        }
+    }
+
+    //对比上下的标签,如果在上面的标签与下面的标签不同,则将该标签添加到所有的标签数组列表里
+    private void getAllLable() {
+        List<TextView> lab = labels;
+        //保存到数据库的标签
+        listLable = new ArrayList<String>();
+        for (int i = 0; i < lab.size(); i++) {
+            String str = labels.get(i).getText().toString();
+            listLable.add(str);
+        }
+        //逐个对比，如果有相同的上面的和所有的有相同，则移除
+        for (int j = 0; j < all_label_List.size(); j++) {
+            for (int i = 0; i < lab.size(); i++) {
+                if (lab.get(i).getText().toString().equals(all_label_List.get(j))) {
+                    lab.remove(i);
+                    break;
+                }
+            }
+        }
+        //将移除后不同的添加到所有标签里
+        for (int k = 0; k < lab.size(); k++) {
+            all_label_List.add(lab.get(k).getText().toString());
+        }
+        //用sharePrefrence保存所有标签()
+        String all_label_ListJson = JSON.toJSONString(all_label_List);
+        editor.clear();
+        editor.putString("lable", all_label_ListJson);
+        editor.commit();//提交编辑结果
+
+//        sharedPreferences=getSharedPreferences("lable",MODE_PRIVATE);
+//        editor=sharedPreferences.edit();
+//        List<String> lable= (List<String>) JSON.parse(all_label_ListJson);
+//       //--------------------------------------------------------------------------------------------
+//        for (int i = 0;i<lable.size();i++){
+//            Log.i("lable",lable.get(i));
+//        }
+
+    }
+
+
+
 
     /**
      * 初始化View，两个流水标签布局
@@ -338,5 +414,21 @@ public class Lable extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.save:
+                getAllLable();
+                //拿到该次的病历夹实例，然后将标签set进去，保存
+               // String lables = JSON.toJSONString(listLable);
+                medRec.setLables(listLable);
+                Intent intent = new Intent(Lable.this,NewMedRec.class);
+                intent.putExtra("forLable",medRec);
+                setResult(FOR_LABLE,intent);
+                finish();
+                break;
+        }
     }
 }

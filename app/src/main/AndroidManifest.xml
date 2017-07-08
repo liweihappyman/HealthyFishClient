@@ -4,8 +4,11 @@
     package="com.healthyfish.healthyfish">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/healthfis_logo"
@@ -26,6 +29,7 @@
         <!-- android:windowSoftInputMode="adjustPan|stateHidden"控制选项菜单不被输入法往上顶 -->
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +38,9 @@
             </intent-filter>
         </activity>
 
-        <!--登录页面-->
+
+        <!-- 登录页面 -->
+
         <activity android:name=".ui.activity.Login" />
         <!--注册页面-->
         <activity android:name=".ui.activity.Register" />
@@ -55,13 +61,23 @@
         <!--问诊服务页面-->
         <activity android:name=".ui.activity.InterrogationService"/>
         <!-- 新建病历夹页面 -->
-        <activity android:name=".ui.activity.NewMedRec"
+        <activity
+            android:launchMode="singleTask"
+            android:name=".ui.activity.NewMedRec"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <!--添加病历标签-->
+        <!-- 添加病历标签 -->
         <activity android:name=".ui.activity.Lable" />
-        <!--用户信息-->
-        <activity android:name=".ui.activity.PatientInfo"></activity>
-
+        <!-- 用户信息 -->
+        <activity android:name=".ui.activity.PatientInfo" />
+        <!-- 图片选择器 -->
+        <activity
+            android:name="com.foamtrace.photopicker.PhotoPickerActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
+        <activity android:name=".ui.activity.CreateCourse" />
+        <activity android:name=".ui.activity.SelectMedRec" />
+        <activity android:name=".ui.activity.SelectDoctor" />
+        <activity android:name=".ui.activity.ShareSuccess"></activity>
     </application>
 
 </manifest>

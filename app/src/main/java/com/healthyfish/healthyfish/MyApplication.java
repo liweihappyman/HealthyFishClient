@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.zhy.autolayout.config.AutoLayoutConifg;
 
+import org.litepal.LitePal;
+
 
 /**
  * 描述：MyApplication初始化参数
@@ -23,7 +25,7 @@ public class MyApplication extends Application{
         AutoLayoutConifg.getInstance().useDeviceSize();
 
         applicationContext = getApplicationContext();
-
+        LitePal.initialize(applicationContext);
     }
 
     /**
