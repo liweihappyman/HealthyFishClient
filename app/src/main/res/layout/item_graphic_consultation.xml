@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/color_white">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="93px"
+        android:layout_marginLeft="81px"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="45px"
+            android:layout_height="45px"
+            android:src="@mipmap/ic_picture_consulting_open"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="37px"
+            android:text="图文咨询"
+            style="@style/textSize_36"
+            android:textColor="@color/color_general_and_title"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"
+        android:layout_marginLeft="54px"
+        android:layout_marginRight="54px"
+        android:background="@android:color/darker_gray"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29px"
+        android:layout_marginLeft="54px"
+        android:layout_marginRight="54px"
+        android:layout_marginBottom="16px"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_last_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="您跟图文咨询的医生进行通话的最后一句留言"
+                android:maxLines="1"
+                android:ellipsize="end"
+                style="@style/textSize_42"
+                android:textColor="@color/color_content_title"/>
+
+                <TextView
+                    android:id="@+id/tv_doctorDepartment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="29px"
+                    android:text="2017年07月05日  |  眼科  |  赵婧"
+                    style="@style/textSize_30"
+                    android:textColor="@color/color_small_content"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:id="@+id/tv_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未回复"
+            style="@style/textSize_36"
+            android:textColor="@color/color_secondary"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

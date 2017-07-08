@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.R;
@@ -29,12 +30,14 @@ import butterknife.ButterKnife;
  * 编辑：LYQ
  */
 
-public class ChoiceDoctor extends AppCompatActivity {
+public class ChoiceDoctor extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.lv_choice_doctor)
     ListView lvChoiceDoctor;
+    @BindView(R.id.toolbar_title)
+    TextView tvTitle;
 
     private Context mContext;
     private ChoiceDoctorLvAdapter mChoiceDoctorLvAdapter;
@@ -46,7 +49,7 @@ public class ChoiceDoctor extends AppCompatActivity {
         setContentView(R.layout.activity_choice_doctor);
         ButterKnife.bind(this);
         mContext = this;
-        initToolBar();
+        initToolBar(toolbar,tvTitle,"选择医生");
         initData();
         initListView();
         lvListener();
@@ -60,8 +63,8 @@ public class ChoiceDoctor extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //跳转到该医生的服务页面,需要传递该医生的唯一标识去服务器访问医生的服务详情
-                MyToast.showToast(mContext,mDoctorInfos.get(position).getName());
-                Intent intent = new Intent(mContext,ChoiceService.class);
+                MyToast.showToast(mContext, mDoctorInfos.get(position).getName());
+                Intent intent = new Intent(mContext, ChoiceService.class);
                 startActivity(intent);
             }
         });
@@ -93,31 +96,4 @@ public class ChoiceDoctor extends AppCompatActivity {
         }
     }
 
-    /**
-     * 初始化ToolBar
-     */
-    private void initToolBar() {
-        toolbar.setTitle("");//设置不显示应用名
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
-        }
-    }
-
-    /**
-     * 返回按钮的监听
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
 }

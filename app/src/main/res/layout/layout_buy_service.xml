@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/iv_service_type"
+            android:layout_width="96px"
+            android:layout_height="96px"
+            android:layout_marginTop="72px"
+            android:layout_marginLeft="69px"
+            android:src="@mipmap/ic_picture_consulting_open"/>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="67px"
+            android:layout_marginTop="34px"
+            android:layout_marginBottom="65px"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_serviceType_and_doctorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="图文咨询-张宇"
+                style="@style/textSize_60"
+                android:textColor="@color/color_content_title"/>
+
+            <TextView
+                android:id="@+id/tv_serviceType_describe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tv_serviceType_and_doctorName"
+                android:layout_marginTop="33px"
+                android:text="通过文字、图片进行咨询"
+                style="@style/textSize_42"
+                android:textColor="@color/color_auxiliary_info"/>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="96px"
+            android:layout_marginRight="66px"
+            android:text="30元/次"
+            style="@style/textSize_48"
+            android:textColor="@color/color_secondary"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <Button
+        android:id="@+id/btn_shopNow"
+        android:layout_width="match_parent"
+        android:layout_height="126px"
+        android:text="立即购买"
+        style="@style/textSize_54"
+        android:textColor="@color/selector_text_color_from_white_to_secondary"
+        android:background="@drawable/selector_btn_color_from_secondary_to_white"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

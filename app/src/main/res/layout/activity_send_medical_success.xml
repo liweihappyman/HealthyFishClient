@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:gravity="center_horizontal">
 
+    <include layout="@layout/toolbar" />
+
     <ImageView
         android:layout_width="316px"
         android:layout_height="316px"

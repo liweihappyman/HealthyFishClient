@@ -5,48 +5,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="110px"
-        android:background="@color/color_primary_dark"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="送心意"
-            style="@style/textSize_54"
-            android:textColor="@android:color/white" />
-
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/toolbar" />
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civ_doctor_img"
             android:layout_width="198px"
             android:layout_height="198px"
-            android:layout_marginTop="51px"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_male_select"/>
+            android:layout_marginTop="51px"
+            android:src="@mipmap/ic_male_select" />
 
         <TextView
             android:id="@+id/tv_doctor_name"
+            style="@style/textSize_66"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="69px"
-            android:layout_marginBottom="38px"
             android:layout_gravity="center"
+            android:layout_marginBottom="38px"
+            android:layout_marginTop="69px"
             android:text="张宇医生"
-            style="@style/textSize_66"
-            android:textColor="@color/color_general_and_title"/>
+            android:textColor="@color/color_general_and_title" />
 
     </com.zhy.autolayout.AutoLinearLayout>
 
@@ -54,104 +38,110 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24px"
-        android:orientation="vertical"
+        android:background="@android:color/white"
         android:gravity="center_horizontal"
-        android:background="@android:color/white">
+        android:orientation="vertical">
 
         <TextView
+            style="@style/textSize_42"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14px"
             android:text="选择答谢金额"
-            style="@style/textSize_42"
-            android:textColor="@color/color_general_and_title"/>
+            android:textColor="@color/color_general_and_title" />
+
 
         <RadioGroup
             android:id="@+id/rgp_choice_figure"
             android:layout_width="1008px"
             android:layout_height="wrap_content"
             android:layout_marginTop="63px"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/rbt_five_yuan"
-                android:layout_width="144px"
-                android:layout_height="144px"
+                style="@style/textSize_54"
+                android:layout_width="140px"
+                android:layout_height="140px"
+                android:background="@drawable/selector_ckb_bg_color_from_white_to_secondary"
+                android:button="@null"
                 android:gravity="center"
                 android:text="5元"
-                style="@style/textSize_54"
-                android:textColor="@drawable/selector_text_color_money"
-                android:button="@null"
-                android:background="@drawable/selector_background_money" />
+                android:textColor="@color/selector_ckb_text_color_from_secondary_to_white" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <RadioButton
                 android:id="@+id/rbt_ten_yuan"
-                android:layout_width="144px"
-                android:layout_height="144px"
-                android:background="@drawable/selector_background_money"
+                style="@style/textSize_54"
+                android:layout_width="140px"
+                android:layout_height="140px"
+                android:background="@drawable/selector_ckb_bg_color_from_white_to_secondary"
                 android:button="@null"
                 android:gravity="center"
                 android:text="10元"
-                android:textColor="@drawable/selector_text_color_money" />
+                android:textColor="@color/selector_ckb_text_color_from_secondary_to_white" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <RadioButton
                 android:id="@+id/rbt_fifteen_yuan"
-                android:layout_width="144px"
-                android:layout_height="144px"
+                style="@style/textSize_54"
+                android:layout_width="140px"
+                android:layout_height="140px"
+                android:background="@drawable/selector_ckb_bg_color_from_white_to_secondary"
+                android:button="@null"
                 android:gravity="center"
                 android:text="15元"
-                android:textColor="@drawable/selector_text_color_money"
-                android:button="@null"
-                android:background="@drawable/selector_background_money"/>
+                android:textColor="@color/selector_ckb_text_color_from_secondary_to_white" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <RadioButton
                 android:id="@+id/rbt_twenty_yuan"
-                android:layout_width="144px"
-                android:layout_height="144px"
+                style="@style/textSize_54"
+                android:layout_width="140px"
+                android:layout_height="140px"
+                android:background="@drawable/selector_ckb_bg_color_from_white_to_secondary"
+                android:button="@null"
                 android:gravity="center"
                 android:text="20元"
-                android:textColor="@drawable/selector_text_color_money"
-                android:button="@null"
-                android:background="@drawable/selector_background_money"/>
+                android:textColor="@color/selector_ckb_text_color_from_secondary_to_white" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <RadioButton
                 android:id="@+id/rbt_more_price"
-                android:layout_width="144px"
-                android:layout_height="144px"
+                style="@style/textSize_54"
+                android:layout_width="140px"
+                android:layout_height="140px"
+                android:background="@drawable/selector_ckb_bg_color_from_white_to_secondary"
+                android:button="@null"
                 android:gravity="center"
                 android:text="更多\n金额"
-                android:textColor="@drawable/selector_text_color_money"
-                android:button="@null"
-                android:background="@drawable/selector_background_money"/>
+                android:textColor="@color/selector_ckb_text_color_from_secondary_to_white" />
 
         </RadioGroup>
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="48px"
-            android:background="@android:color/darker_gray"/>
+            android:background="@android:color/darker_gray" />
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="972px"
@@ -161,37 +151,37 @@
 
             <EditText
                 android:id="@+id/et_thinks"
+                style="@style/textSize_42"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="30px"
-                android:paddingLeft="30px"
-                android:paddingBottom="30px"
-                android:paddingRight="30px"
                 android:background="@null"
                 android:hint="说点感谢医生的话"
-                style="@style/textSize_42"
-                android:textColor="@color/color_hint"/>
+                android:paddingBottom="30px"
+                android:paddingLeft="30px"
+                android:paddingRight="30px"
+                android:paddingTop="30px"
+                android:textColor="@color/color_hint" />
 
         </com.zhy.autolayout.AutoLinearLayout>
 
         <Button
             android:id="@+id/bt_commit"
+            style="@style/textSize_54"
             android:layout_width="720px"
             android:layout_height="120px"
             android:layout_marginTop="48px"
+            android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
             android:text="提交"
-            style="@style/textSize_54"
-            android:textColor="@color/selector_text_color_from_write_to_primary"
-            android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
+            android:textColor="@color/selector_text_color_from_write_to_primary" />
 
         <TextView
+            style="@style/textSize_42"
             android:layout_width="966px"
             android:layout_height="wrap_content"
-            android:layout_marginTop="49px"
             android:layout_marginBottom="29px"
+            android:layout_marginTop="49px"
             android:text="送心意的费用将全部转入该医生的账户，感谢的话会激励医生做得更好哦"
-            style="@style/textSize_42"
-            android:textColor="@color/color_hint"/>
+            android:textColor="@color/color_hint" />
 
     </com.zhy.autolayout.AutoLinearLayout>
 
