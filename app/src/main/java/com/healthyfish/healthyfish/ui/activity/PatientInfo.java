@@ -1,19 +1,24 @@
 package com.healthyfish.healthyfish.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.constant.constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 描述：患者信息页面
@@ -21,8 +26,9 @@ import butterknife.ButterKnife;
  * 邮箱：
  * 编辑：WKJ
  */
-public class PatientInfo extends AppCompatActivity {
-
+public class PatientInfo extends AppCompatActivity implements View.OnClickListener {
+    public static final int FOR_INFO = 34;
+    private BeanMedRec medRec;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -46,6 +52,7 @@ public class PatientInfo extends AppCompatActivity {
     @BindView(R.id.save)
     TextView save;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,20 +62,40 @@ public class PatientInfo extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
-
+        save.setOnClickListener(PatientInfo.this);
+        initData();
     }
 
-
-
-
-
-
-
-
+    private void initData() {
+        medRec = (BeanMedRec) getIntent().getSerializableExtra("info");
+        if (medRec.getName()!=null){
+            name.setText(medRec.getName());
+        }
+        if (medRec.getGender()!=null){
+            gender.setText(medRec.getGender());
+        }
+        if (medRec.getBirthday()!=null){
+            birthday.setText(medRec.getBirthday());
+        }
+        if (medRec.getIDno()!=null){
+            idNumber.setText(medRec.getIDno());
+        }
+        if (medRec.getOccupation()!=null){
+            occupation.setText(medRec.getOccupation());
+        }
+        if (medRec.getMarital_status()!=null){
+            if (medRec.getMarital_status().equals("未婚"))
+            {
+                unmarried.setChecked(true);
+            }else {
+                married.setChecked(true);
+            }
+        }
+    }
 
 
     @Override
@@ -81,4 +108,41 @@ public class PatientInfo extends AppCompatActivity {
         return true;
     }
 
+    public void getInfo() {
+//        String mName = name.getText().toString();
+//        String mGender = gender.getText().toString();
+//        String mBirthday = birthday.getText().toString();
+//        String mId = idNumber.getText().toString();
+//        String mOccupation = occupation.getText().toString();
+//        String maritalStatusString = selectRadioBtn();
+        medRec.setName(name.getText().toString());
+        medRec.setGender(gender.getText().toString());
+        medRec.setBirthday(birthday.getText().toString());
+        medRec.setIDno(idNumber.getText().toString());
+        medRec.setOccupation(occupation.getText().toString());
+        medRec.setMarital_status(selectRadioBtn());
+    }
+
+    //获取婚姻状况控件的内容
+    private String selectRadioBtn() {
+        RadioButton radioButton = (RadioButton) findViewById(maritalStatus.getCheckedRadioButtonId());
+        String maritalStatusString = radioButton.getText().toString();
+        return maritalStatusString;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.save:
+                getInfo();
+                //判断是不是全新的数据，是的话就直接保存，不是的话就更新
+                //medRec.save();
+
+                Intent intent = new Intent(PatientInfo.this,NewMedRec.class);
+                intent.putExtra("forInfo",medRec);
+                setResult(FOR_INFO,intent);
+                finish();
+                break;
+        }
+    }
 }

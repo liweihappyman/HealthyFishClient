@@ -1,5 +1,7 @@
 package com.healthyfish.healthyfish.constant;
 
+import com.healthyfish.healthyfish.POJO.BeanMedRec;
+
 /**
  * 描述：常数
  * 作者：Wayne on 2017/6/27 15:25
@@ -15,6 +17,10 @@ public class constants {
     public final static int READ_TIMEOUT = 5000;
     // OkHttpClient设置写的超时时间
     public final static int WRITE_TIMEOUT = 5000;
+
+    public static int ALL_FLAG = -1;
+    public static  int FLAG_POSITION = -1;
+    public static  String FLAG_STATUE = "save";//和update两种情况
 
     // 网络访问服务器主机地址
     public final static String HttpHealthyFishyUrl = "http://www.kangfish.cn";

@@ -75,8 +75,8 @@ public class MedRecLvAdapter extends BaseAdapter {
             viewHolderHasHead = (ViewHolderHasHead) convertView.getTag();
         }
         viewHolderHasHead.headLayout.setVisibility(View.GONE);
-        String dateOriginal = listMedRec.get(position).getCliniTime();
-        dateCompare = dateOriginal.substring(0, dateOriginal.indexOf("月") + 1);
+        String date = listMedRec.get(position).getClinicalTime();
+        dateCompare = date.substring(0, date.indexOf("月") + 1);
         int count = Collections.frequency(listDate, dateCompare);
         //如果size = 1 的话，说明只有一个元素，直接与现有的date比较，如果size大于1，
         // 判断当前位置是0不是，如果不是0的话，说明有前一项，这样可以跟前项比较
@@ -95,14 +95,14 @@ public class MedRecLvAdapter extends BaseAdapter {
             viewHolderHasHead.headCount.setText(String.valueOf(count));
         }
         viewHolderHasHead.nameGender.setText(beanMedRec.getName() + "  " + beanMedRec.getGender());
-        viewHolderHasHead.info.setText(beanMedRec.getDiseaseInfor());
-        viewHolderHasHead.dateDiagnose.setText(beanMedRec.getCliniTime() + "  " + beanMedRec.getDiagnose());
+        viewHolderHasHead.info.setText(beanMedRec.getDiseaseInfo());
+        viewHolderHasHead.dateDiagnose.setText(beanMedRec.getClinicalTime() + "  " + beanMedRec.getDiagnosis());
         //设置右边标志的颜色和内容
         if (beanMedRec.isState()) {
             viewHolderHasHead.state.setText("医");
             viewHolderHasHead.state.setBackgroundResource(R.mipmap.med_rec_orange_tab);
         } else {
-            viewHolderHasHead.state.setText("医");
+            viewHolderHasHead.state.setText("自");
             viewHolderHasHead.state.setBackgroundResource(R.mipmap.med_rec_green_tab);
         }
         return convertView;
