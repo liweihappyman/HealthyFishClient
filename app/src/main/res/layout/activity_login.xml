@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,16 +26,17 @@
         android:layout_width="459px"
         android:layout_height="403px"
         android:layout_marginLeft="312px"
-        android:layout_marginTop="208px"
+        android:layout_marginTop="140px"
         android:src="@mipmap/ic_logo"
         android:id="@+id/imageView" />
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="733px"
+        android:layout_marginTop="670px"
         android:layout_marginLeft="53px"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/autoLinearLayout">
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="972px"
@@ -96,33 +98,38 @@
     <Button
         android:id="@+id/btn_login"
         android:layout_width="972px"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="54px"
-        android:layout_marginTop="1026px"
+        android:layout_height="120px"
         android:text="@string/login"
         android:textSize="72px"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/selector_text_color_from_priamry_to_white"
+        android:background="@drawable/selector_4dp_btn_color_from_white_to_priamry"
+        android:layout_below="@+id/autoLinearLayout"
+        android:layout_marginTop="36px"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/tv_forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="863px"
-        android:layout_marginTop="1178px"
+        android:layout_marginLeft="860px"
+        android:layout_marginTop="1118px"
+        android:padding="3px"
         android:text="@string/forgot_password"
-        android:textSize="36px"/>
+        style="@style/textSize_36"
+        android:textColor="@color/selector_text_color_from_gray_to_white"/>
 
     <Button
         android:id="@+id/btn_register"
         android:layout_width="205px"
-        android:layout_height="wrap_content"
-        android:paddingTop="10px"
-        android:paddingBottom="10px"
+        android:layout_height="105px"
         android:layout_marginLeft="438px"
-        android:layout_marginTop="1780px"
+        android:layout_marginTop="500px"
+        android:layout_below="@+id/btn_login"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="@string/register"
         android:textSize="48px"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/selector_text_color_from_priamry_to_white"
+        android:background="@drawable/selector_4dp_btn_color_from_white_to_priamry"/>
 
 </com.zhy.autolayout.AutoRelativeLayout>

@@ -6,6 +6,8 @@
     android:orientation="vertical"
     android:gravity="center_horizontal">
 
+    <include layout="@layout/toolbar"/>
+
     <ImageView
         android:layout_width="219px"
         android:layout_height="219px"
@@ -78,9 +80,9 @@
         android:layout_marginTop="130px"
         android:paddingBottom="35px"
         android:paddingTop="35px"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
         android:textSize="54px"
-        android:textColor="@android:color/white"
+        android:textColor="@color/selector_text_color_from_write_to_primary"
         android:text="下一步"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

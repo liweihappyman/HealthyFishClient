@@ -5,7 +5,9 @@
     tools:context="com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment">
 
 
+    <!--未登录时的头部布局-->
     <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/rly_not_login"
         android:layout_width="match_parent"
         android:layout_height="530px"
         android:background="@color/color_primary">
@@ -26,7 +28,7 @@
             android:layout_marginTop="410px"
             android:text="登录/注册"
             style="@style/textSize_60"
-            android:textColor="@color/color_white" />
+            android:textColor="@color/selector_text_color_from_write_to_primary" />
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:id="@+id/rly_mail"
@@ -45,169 +47,234 @@
 
     </com.zhy.autolayout.AutoRelativeLayout>
 
-    <com.zhy.autolayout.AutoLinearLayout
+    <!--已登录时的头部布局-->
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/rly_login"
+        android:layout_width="match_parent"
+        android:layout_height="530px"
+        android:background="@color/color_primary"
+        android:visibility="gone">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_head_portrait_login"
+            android:layout_width="280px"
+            android:layout_height="280px"
+            android:layout_marginLeft="47px"
+            android:layout_marginTop="130px"
+            android:src="@mipmap/ic_logo" />
+
+        <TextView
+            android:id="@+id/tv_name_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="374px"
+            android:layout_marginTop="170px"
+            android:text="小李的健康信息"
+            style="@style/textSize_60"
+            android:textColor="@color/selector_text_color_from_write_to_primary" />
+
+        <TextView
+            android:id="@+id/tv_constitution_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="374px"
+            android:layout_marginTop="300px"
+            android:text="气虚质"
+            android:textStyle="bold"
+            style="@style/textSize_60"
+            android:textColor="@color/selector_text_color_from_write_to_primary" />
+        
+        <ImageView
+            android:id="@+id/iv_go"
+            android:layout_width="42px"
+            android:layout_height="46px"
+            android:layout_marginTop="248px"
+            android:layout_marginRight="77px"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/ic_go_big"/>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:id="@+id/rly_mail_login"
+            android:layout_width="164px"
+            android:layout_height="84px"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="27px">
+
+            <ImageView
+                android:layout_width="86px"
+                android:layout_height="60px"
+                android:layout_marginTop="24px"
+                android:src="@mipmap/ic_mail" />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="566px"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
-        android:background="@color/color_white">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>
+        android:layout_marginTop="566px">
 
         <com.zhy.autolayout.AutoLinearLayout
-            android:id="@+id/lly_personal_information"
             android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:clickable="true"
-                android:text="个人信息"
-                style="@style/textSize_48"
-                android:textColor="@color/color_general_and_title" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/color_white">
 
             <ImageView
-                android:layout_width="34px"
-                android:layout_height="37px"
-                android:layout_marginRight="43px"
-                android:src="@drawable/ic_more_horizontal"/>
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/lly_personal_information"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="54px"
+                    android:text="个人信息"
+                    style="@style/textSize_48"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="34px"
+                    android:layout_height="37px"
+                    android:layout_marginRight="43px"
+                    android:src="@drawable/ic_more_horizontal"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/lly_my_news"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="54px"
+                    android:text="我的消息"
+                    style="@style/textSize_48"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="34px"
+                    android:layout_height="37px"
+                    android:layout_marginRight="43px"
+                    android:src="@drawable/ic_more_horizontal"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/lly_my_concern"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="54px"
+                    android:text="我的关注"
+                    style="@style/textSize_48"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="34px"
+                    android:layout_height="37px"
+                    android:layout_marginRight="43px"
+                    android:src="@drawable/ic_more_horizontal"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/lly_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="54px"
+                    android:text="意见反馈"
+                    style="@style/textSize_48"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="34px"
+                    android:layout_height="37px"
+                    android:layout_marginRight="43px"
+                    android:src="@drawable/ic_more_horizontal"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/lly_set"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="54px"
+                    android:text="设置"
+                    style="@style/textSize_48"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="34px"
+                    android:layout_height="37px"
+                    android:layout_marginRight="43px"
+                    android:src="@drawable/ic_more_horizontal"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
 
         </com.zhy.autolayout.AutoLinearLayout>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:id="@+id/lly_my_news"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:clickable="true"
-                android:text="我的消息"
-                style="@style/textSize_48"
-                android:textColor="@color/color_general_and_title" />
-
-            <ImageView
-                android:layout_width="34px"
-                android:layout_height="37px"
-                android:layout_marginRight="43px"
-                android:src="@drawable/ic_more_horizontal"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:id="@+id/lly_my_concern"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:clickable="true"
-                android:text="我的关注"
-                style="@style/textSize_48"
-                android:textColor="@color/color_general_and_title" />
-
-            <ImageView
-                android:layout_width="34px"
-                android:layout_height="37px"
-                android:layout_marginRight="43px"
-                android:src="@drawable/ic_more_horizontal"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:id="@+id/lly_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:clickable="true"
-                android:text="意见反馈"
-                style="@style/textSize_48"
-                android:textColor="@color/color_general_and_title" />
-
-            <ImageView
-                android:layout_width="34px"
-                android:layout_height="37px"
-                android:layout_marginRight="43px"
-                android:src="@drawable/ic_more_horizontal"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:id="@+id/lly_set"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:clickable="true"
-                android:text="设置"
-                style="@style/textSize_48"
-                android:textColor="@color/color_general_and_title" />
-
-            <ImageView
-                android:layout_width="34px"
-                android:layout_height="37px"
-                android:layout_marginRight="43px"
-                android:src="@drawable/ic_more_horizontal"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"/>
-
-    </com.zhy.autolayout.AutoLinearLayout>
+    </ScrollView>
 
 </com.zhy.autolayout.AutoFrameLayout>
