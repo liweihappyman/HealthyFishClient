@@ -27,7 +27,7 @@ import butterknife.OnClick;
  * 编辑：WKJ
  */
 public class PatientInfo extends AppCompatActivity implements View.OnClickListener {
-    public static final int FOR_INFO = 34;
+    public static final int INFO_RESULT = 34;
     private BeanMedRec medRec;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -70,33 +70,32 @@ public class PatientInfo extends AppCompatActivity implements View.OnClickListen
         initData();
     }
 
+    //初始化页面的显示
     private void initData() {
         medRec = (BeanMedRec) getIntent().getSerializableExtra("info");
-        if (medRec.getName()!=null){
+        if (medRec.getName() != null) {
             name.setText(medRec.getName());
         }
-        if (medRec.getGender()!=null){
+        if (medRec.getGender() != null) {
             gender.setText(medRec.getGender());
         }
-        if (medRec.getBirthday()!=null){
+        if (medRec.getBirthday() != null) {
             birthday.setText(medRec.getBirthday());
         }
-        if (medRec.getIDno()!=null){
+        if (medRec.getIDno() != null) {
             idNumber.setText(medRec.getIDno());
         }
-        if (medRec.getOccupation()!=null){
+        if (medRec.getOccupation() != null) {
             occupation.setText(medRec.getOccupation());
         }
-        if (medRec.getMarital_status()!=null){
-            if (medRec.getMarital_status().equals("未婚"))
-            {
+        if (medRec.getMarital_status() != null) {
+            if (medRec.getMarital_status().equals("未婚")) {
                 unmarried.setChecked(true);
-            }else {
+            } else {
                 married.setChecked(true);
             }
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -108,13 +107,8 @@ public class PatientInfo extends AppCompatActivity implements View.OnClickListen
         return true;
     }
 
+    //获取控件的数据
     public void getInfo() {
-//        String mName = name.getText().toString();
-//        String mGender = gender.getText().toString();
-//        String mBirthday = birthday.getText().toString();
-//        String mId = idNumber.getText().toString();
-//        String mOccupation = occupation.getText().toString();
-//        String maritalStatusString = selectRadioBtn();
         medRec.setName(name.getText().toString());
         medRec.setGender(gender.getText().toString());
         medRec.setBirthday(birthday.getText().toString());
@@ -132,15 +126,12 @@ public class PatientInfo extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.save:
                 getInfo();
-                //判断是不是全新的数据，是的话就直接保存，不是的话就更新
-                //medRec.save();
-
-                Intent intent = new Intent(PatientInfo.this,NewMedRec.class);
-                intent.putExtra("forInfo",medRec);
-                setResult(FOR_INFO,intent);
+                Intent intent = new Intent(PatientInfo.this, NewMedRec.class);
+                intent.putExtra("forInfo", medRec);
+                setResult(INFO_RESULT, intent);
                 finish();
                 break;
         }

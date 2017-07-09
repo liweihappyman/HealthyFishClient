@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
@@ -27,9 +29,10 @@ import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import static com.healthyfish.healthyfish.ui.activity.CreateCourse.CREATE_COURSE_RESULT_SAVE;
+import static com.healthyfish.healthyfish.ui.activity.CreateCourse.CREATE_COURSE_RESULT_UPDATE_OR_DEL;
 
 /**
  * 描述：电子病历
@@ -38,8 +41,9 @@ import butterknife.ButterKnife;
  * 编辑：WKJ
  */
 public class NewMedRec extends AppCompatActivity implements View.OnClickListener {
-    public static final int FOR_ITEM = 38;
-    public static final int COURSE_OF_DISEASE = 33;
+    public static int ID = 0;//记录本次所编辑的病历夹的id
+    public static final int ALL_MED_REC_RESULT = 38;//给AllMedRec页面返回结果的标志
+    public static final int COURSE_OF_DISEASE = 33;//跳转进入病程页面的标志
     public static final int INFO = 34;
     public static final int LABLE = 35;
     @BindView(R.id.toolbar_title)
@@ -57,7 +61,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
     @BindView(R.id.create_course)
     TextView createCourse;
     @BindView(R.id.course_of_disease)
-    RecyclerView courseOfDisease;
+    RecyclerView courseOfDiseaseRecyclerView;
     @BindView(R.id.save)
     TextView save;
     @BindView(R.id.diagnosis)
@@ -68,7 +72,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
     EditText clinicalDepartment;
 
     private CourseOfDiseaseAdapter courseOfDiseaseAdapter;
-    private BeanMedRec medRec;
+    private BeanMedRec medRec = new BeanMedRec();
     private List<String> imagePaths = new ArrayList<>();
     private List<BeanCourseOfDisease> listCourseOfDiseases = new ArrayList<BeanCourseOfDisease>();
 
@@ -86,22 +90,22 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
         initListener();
-        if (constants.ALL_FLAG == -1) {
+        //判断是点击item进来的还是点击新建病历夹进来的，并执行相应的初始化操作
+        if (constants.POSITION_MED_REC == -1) {
             clinicalTime.setText(Utils1.getTime());
             medRec = new BeanMedRec();
         } else {
             initdata();
         }
-
-
+        initList(listCourseOfDiseases,courseOfDiseaseRecyclerView);
     }
 
     private void initdata() {
-        setLableTv();
-        setInfo();
-        int id = getIntent().getIntExtra("id", 0);
-        medRec = DataSupport.find(BeanMedRec.class, id);
+        ID = getIntent().getIntExtra("id", 0);
+        medRec = DataSupport.find(BeanMedRec.class, ID, true);
         listCourseOfDiseases = medRec.getListCourseOfDisease();
+        setLableTv(lable,medRec);
+        setInfo();
         if (medRec.getDiagnosis() != null) {
             diagnosis.setText(medRec.getDiagnosis());
         }
@@ -115,29 +119,23 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
     }
 
     //适配器
-    private void initList(List<BeanCourseOfDisease> beanCourseOfDiseases) {
-        //if (courseOfDiseaseAdapter == null) {
-        courseOfDiseaseAdapter = new CourseOfDiseaseAdapter(this, beanCourseOfDiseases);
+    private void initList(List<BeanCourseOfDisease> beanCourseOfDiseases,RecyclerView recyclerView) {
+        CourseOfDiseaseAdapter courseOfDiseaseAdapter = new CourseOfDiseaseAdapter(this, beanCourseOfDiseases);
         LinearLayoutManager lmg = new LinearLayoutManager(this);
-        courseOfDisease.setLayoutManager(lmg);
-        courseOfDisease.setAdapter(courseOfDiseaseAdapter);
+        recyclerView.setLayoutManager(lmg);
+        recyclerView.setAdapter(courseOfDiseaseAdapter);
         courseOfDiseaseAdapter.setOnItemClickListener(new CourseOfDiseaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                constants.FLAG_STATUE = "update";
-                constants.FLAG_POSITION = position;
+                constants.POSITION_COURSE = position;
                 Intent intent = new Intent(NewMedRec.this, CreateCourse.class);
-                intent.putExtra("CreateCourse", medRec);
+                intent.putExtra("Course", medRec);
                 startActivityForResult(intent, COURSE_OF_DISEASE);
             }
         });
-        //}
     }
 
-
-    /*
-    * 初始化监听
-    * */
+    //初始化监听
     private void initListener() {
         lable.setOnClickListener(this);
         patientInfo.setOnClickListener(this);
@@ -146,6 +144,11 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         save.setOnClickListener(this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.med_rec, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -153,8 +156,22 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.del:
+                deleteAndGoback();
+                break;
         }
         return true;
+    }
+    //执行删除操作并跳转回到AllMedRed页面
+    private void deleteAndGoback() {
+        if (constants.POSITION_MED_REC != -1) {
+            medRec.delete();
+            Intent intent = new Intent(this, AllMedRec.class);
+            setResult(ALL_MED_REC_RESULT, intent);
+            finish();
+        } else {
+            Toast.makeText(this, "没有可删除的病程哦", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -174,82 +191,25 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
                 selectTime();
                 break;
             case R.id.create_course:
-                constants.FLAG_STATUE = "save";
+                constants.POSITION_COURSE = -1;
                 Intent toCreateCourse = new Intent(this, CreateCourse.class);
-                toCreateCourse.putExtra("CreateCourse", medRec);
                 startActivityForResult(toCreateCourse, COURSE_OF_DISEASE);
                 break;
             case R.id.save:
-
-                medRec.setDiagnosis(diagnosis.getText().toString());
-                medRec.setDiseaseInfo(diseaseInfo.getText().toString());
-                medRec.setClinicalDepartement(clinicalDepartment.getText().toString());
-                medRec.setClinicalTime(clinicalTime.getText().toString());
-
-//                if (constants.beanMedRec.isSaved()) {
-//                    constants.beanMedRec.update(constants.beanMedRec.getId());
-//                } else {
-                BeanMedRec beanMedRec = medRec;
-                beanMedRec.saveOrUpdate("id=?", String.valueOf(beanMedRec.getId()));
-                //}
-
-
-//                List<BeanMedRec> l = DataSupport.findAll(BeanMedRec.class,true);
-//                List<BeanCourseOfDisease> lista = l.get(0).getListCourseOfDisease();
-//                int s = l.size();
-//                int a = lista.size();
-
-
-                Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
-                NewMedRec.this.setResult(FOR_ITEM, intent);
-                NewMedRec.this.finish();
-
-
-//                BeanMedRec beanMedRec = new BeanMedRec();
-//                BeanCourseOfDisease beanCourseOfDisease = new BeanCourseOfDisease();
-//                beanCourseOfDisease.setDate("6666666666YYYYYYYY");
-//
-//                if(beanCourseOfDisease.save()){
-//                    Log.i("cg","成功");
-//                }
-//                BeanCourseOfDisease beanCourseOfDisease1 = new BeanCourseOfDisease();
-//                beanCourseOfDisease1.setDate("6666666666YYYYYYYY");
-//                beanCourseOfDisease1.save();
-//
-//
-//                beanMedRec.setName("hahah");
-//                beanMedRec.setCliniTime("00000000");
-//                beanMedRec.getListCourseOfDisease().add(beanCourseOfDisease);
-//                beanMedRec.getListCourseOfDisease().add(beanCourseOfDisease1);
-//                beanMedRec.save();
-//                BeanMedRec beanMedRec = new BeanMedRec();
-//                beanMedRec.setName("hahah");
-//                beanMedRec.save();
-//                BeanCourseOfDisease beanCourseOfDisease = new BeanCourseOfDisease();
-//                beanCourseOfDisease.setDate("6666666666YYYYYYYY");
-//                beanCourseOfDisease.setBeanMedRec(beanMedRec);
-//                if (beanCourseOfDisease.save()) {
-//                    Log.i("cg", "成功");
-//                }
-//                BeanCourseOfDisease beanCourseOfDisease1 = new BeanCourseOfDisease();
-//                beanCourseOfDisease1.setDate("6666666666YYYYYYYY");
-//                beanCourseOfDisease1.setBeanMedRec(beanMedRec);
-//                beanCourseOfDisease1.save();
-//
-//                BeanMedRec beanMedRec2 = DataSupport.find(BeanMedRec.class, 1, true);
-//                Log.i("haha", beanMedRec2.getName());
-//                List<BeanCourseOfDisease> listCourse = beanMedRec2.getListCourseOfDisease();
-//                if (listCourse.size() != 0) {
-//                    for (int i = 0; i < listCourse.size(); i++) {
-//                        String s = listCourse.get(i).getDate();
-//                        Log.i("haha", s);
-//                    }
-//                }
-
-
-                // DataSupport.deleteAll(BeanMedRec.class);
+                saveOrUpdate();
                 break;
         }
+    }
+    //保存操作和更操作并返回AllMedRed页面
+    private void saveOrUpdate() {
+        medRec.setDiagnosis(diagnosis.getText().toString());
+        medRec.setDiseaseInfo(diseaseInfo.getText().toString());
+        medRec.setClinicalDepartement(clinicalDepartment.getText().toString());
+        medRec.setClinicalTime(clinicalTime.getText().toString());
+        medRec.save();
+        Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
+        NewMedRec.this.setResult(ALL_MED_REC_RESULT, intent);
+        NewMedRec.this.finish();
     }
 
     //时间选择对话框
@@ -269,41 +229,70 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
-            case COURSE_OF_DISEASE:
-                BeanMedRec beanMedRec = (BeanMedRec) data.getSerializableExtra("test");
-                medRec = DataSupport.find(BeanMedRec.class, beanMedRec.getId(), true);
-
-
-                listCourseOfDiseases.clear();
-                listCourseOfDiseases = (List<BeanCourseOfDisease>) medRec.getListCourseOfDisease();
-                //medRec.setListCourseOfDisease(listCourseOfDiseases);
-                //listCourseOfDiseases.add((BeanCourseOfDisease) medRec.getListCourseOfDisease());
-                initList(listCourseOfDiseases);
+            case CREATE_COURSE_RESULT_UPDATE_OR_DEL:
+                display();
                 break;
-
-
+            case CREATE_COURSE_RESULT_SAVE:
+                saveCourseOfDiseaseAndDisplay(data);
+                break;
             case INFO:
                 BeanMedRec medRecInfo = (BeanMedRec) data.getSerializableExtra("forInfo");
-                medRec.setName(medRecInfo.getName());
-                medRec.setGender(medRecInfo.getGender());
-                medRec.setBirthday(medRecInfo.getBirthday());
-                medRec.setIDno(medRecInfo.getIDno());
-                medRec.setOccupation(medRecInfo.getOccupation());
-                medRec.setMarital_status(medRecInfo.getMarital_status());
+                updataData(medRecInfo);
                 setInfo();
                 break;
             case LABLE:
                 BeanMedRec medRecLables = (BeanMedRec) data.getSerializableExtra("forLable");
                 medRec.setLables(medRecLables.getLables());
-                setLableTv();
+                setLableTv(lable,medRec);
                 break;
         }
     }
+    //从病程页面执行更新操作后，返回来更新病程列表的显示
+    private void display() {
+        BeanMedRec medRecUpdateOrDel = DataSupport.find(BeanMedRec.class, ID, true);
+        listCourseOfDiseases.clear();
+        listCourseOfDiseases = medRecUpdateOrDel.getListCourseOfDisease();
+        medRec.setListCourseOfDisease(listCourseOfDiseases);
+        initList(listCourseOfDiseases,courseOfDiseaseRecyclerView);
+    }
 
-    //改变lable控件的值
-    private void setLableTv() {
+    //从病程页面编辑完成并点击保存操作后，返回来执行该方法，进行真正的保存并更新病程列表的显示
+    private void saveCourseOfDiseaseAndDisplay(Intent data) {
+        if (!medRec.isSaved()) {
+            //将日期保存下来，防止在AllMedRec做日期排序的时候报错
+            medRec.setClinicalTime(clinicalTime.getText().toString());
+            //如果还没有保存过，先保存一次，因为后面的
+            // 新建的病程做关联病历夹的操作的时候要依赖已经保存的病历夹对象
+            medRec.save();
+        }
+        ID = medRec.getId();//固定该次病历夹操作的id，方便之后的操作
+        //Log.i("lllllli2",String.valueOf(ID));
+        //拿到已经保存的medRec（病历夹对象），然后做病程的保存和关联操作，以免保存出错
+        BeanMedRec medRecSave = DataSupport.find(BeanMedRec.class, ID, true);
+        BeanCourseOfDisease save = (BeanCourseOfDisease) data.getSerializableExtra("saveCourse");
+        save.setBeanMedRec(medRecSave);
+        save.save();
+        listCourseOfDiseases.clear();
+        //从数据库同步获取最新的病程信息
+        listCourseOfDiseases = medRecSave.getListCourseOfDisease();
+        medRec.setListCourseOfDisease(listCourseOfDiseases);
+        initList(listCourseOfDiseases,courseOfDiseaseRecyclerView);
+    }
+
+    //当在患者信息页面编辑并点击保存后，返回来更新medRec里面的值，以免数据丢失
+    private void updataData(BeanMedRec medRecInfo) {
+        medRec.setName(medRecInfo.getName());
+        medRec.setGender(medRecInfo.getGender());
+        medRec.setBirthday(medRecInfo.getBirthday());
+        medRec.setIDno(medRecInfo.getIDno());
+        medRec.setOccupation(medRecInfo.getOccupation());
+        medRec.setMarital_status(medRecInfo.getMarital_status());
+    }
+
+    //设置lable（标签）控件的显示内容
+    private void setLableTv(TextView lable ,BeanMedRec beanMedRec) {
         List<String> lables = new ArrayList<>();
-        lables = (List<String>) medRec.getLables();
+        lables = (List<String>) beanMedRec.getLables();
         String lableText = "";
         if (lables.size() != 0) {
             for (int i = 0; i < lables.size(); i++) {
@@ -313,13 +302,15 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         lable.setText(lableText);
     }
 
-
-    /*
-    * 改变控件name 、patientInfo控件的值
-    * */
+    //设置name（姓名） 、patientInfo（患者信息点击时间的控件，这里用来显示性别）控件的值
     private void setInfo() {
-        name.setText("姓名： " + medRec.getName());
-        patientInfo.setText(medRec.getGender());
+        if (medRec.getName() != null) {
+            name.setText("姓名： " + medRec.getName());
+        }
+        if (medRec.getGender() != null) {
+            patientInfo.setText("性别： " + medRec.getGender());
+        }
     }
+
 
 }

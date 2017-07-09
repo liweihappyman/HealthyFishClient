@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.foamtrace.photopicker.ImageCaptureManager;
 import com.foamtrace.photopicker.PhotoPickerActivity;
@@ -42,10 +44,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.healthyfish.healthyfish.constant.constants.FLAG_POSITION;
 
 public class CreateCourse extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    public static final int FOR_COURSE_OF_DISEASE = 33;//添加病程请求返回标志
+    public static final int CREATE_COURSE_RESULT_UPDATE_OR_DEL = 30;//病程更新返回标志
+    public static final int CREATE_COURSE_RESULT_SAVE = 31;//病程保存返回标志
+    private CreateCourseGridAdapter gridAdapter;//适配器
+    private List<String> imagePaths = new ArrayList<>();//（后面用的）图片的路径list
+    private ImageCaptureManager captureManager; // 相机拍照处理类
+    public static final int REQUEST_CAMERA_CODE = 11;//摄像头拍照的标志
+    public static final int REQUEST_PREVIEW_CODE = 12;//预览的标志
+    private BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
+    private BeanMedRec medRec = new BeanMedRec();
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -62,14 +71,6 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
     TextView date;
     @BindView(R.id.save)
     TextView save;
-    private CreateCourseGridAdapter gridAdapter;//适配器
-    private List<String> imagePaths = new ArrayList<>();//（后面用的）图片的路径list
-    private ImageCaptureManager captureManager; // 相机拍照处理类
-    public static final int REQUEST_CAMERA_CODE = 11;//摄像头拍照的标志
-    public static final int REQUEST_PREVIEW_CODE = 12;//预览的标志
-    private BeanMedRec medRec;
-    private BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
-    private List<BeanCourseOfDisease> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,46 +85,69 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
-
-        initListener();//初始化监听
-
-        medRec= (BeanMedRec) getIntent().getSerializableExtra("CreateCourse");
-        list = medRec.getListCourseOfDisease();
-        if (constants.FLAG_STATUE.equals("save"))
-        {
+        initListener();
+        if (constants.POSITION_COURSE == -1) {
             initData1();
-        }else {
+        } else {
             initData2();
         }
-
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.med_rec, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.del:
+                delete();
+                break;
+        }
+        return true;
+    }
+
+    //删除病程的操所
+    private void delete() {
+        if (constants.POSITION_COURSE != -1) {
+            courseOfDisease.delete(BeanCourseOfDisease.class, courseOfDisease.getId());
+            Intent intent = new Intent(this, NewMedRec.class);
+            setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
+            finish();
+        } else {
+            Toast.makeText(this, "没有可删除的病程哦", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //点击创建病程进来执行的初始化操作
     private void initData1() {
         date.setText(Utils1.getTime());
         refreshAdpater(imagePaths);
     }
-    //如果是点击item进来，那么就要初始化数据，执行这个方法
-    private void initData2(){
-        BeanCourseOfDisease courseOfDisease = medRec.getListCourseOfDisease().get(FLAG_POSITION);
+
+    //如果是点击item进来初始化数据，执行这个方法
+    //根据ID获取当前编辑的medRec的数据，并做相应的处理
+    private void initData2() {
+        medRec = DataSupport.find(BeanMedRec.class, NewMedRec.ID, true);
+        courseOfDisease = medRec.getListCourseOfDisease().get(constants.POSITION_COURSE);
         type.setText(courseOfDisease.getType());
         date.setText(courseOfDisease.getDate());
+        recPatientInfo.setText(courseOfDisease.getRecPatientInfo());
         List<String> paths = courseOfDisease.getImgPaths();
         refreshAdpater(paths);
     }
 
-
-
-
-
+    //初始化控件的监听
     private void initListener() {
         typeLy.setOnClickListener(this);
         date.setOnClickListener(this);
         createCourseImgGridview.setOnItemClickListener(this);
         save.setOnClickListener(this);
-    }
-    private void getData(){
-
     }
 
     @Override
@@ -136,60 +160,47 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
                 showOptions();
                 break;
             case R.id.save://先获取控件数据
-                if (constants.FLAG_STATUE.equals("save"))
-                    {
-                        BeanCourseOfDisease beanCourseOfDisease = new BeanCourseOfDisease();
-                        beanCourseOfDisease.setType(type.getText().toString());
-                        beanCourseOfDisease.setDate(date.getText().toString());
-                        beanCourseOfDisease.setRecPatientInfo(recPatientInfo.getText().toString());
-                        beanCourseOfDisease.setImgPaths(imagePaths);
-                        list.add(beanCourseOfDisease);
-//                        BeanCourseOfDisease beanCourseOfDisease2 = new BeanCourseOfDisease();
-//                        beanCourseOfDisease2.setType(type.getText().toString());
-//                        beanCourseOfDisease2.setDate(date.getText().toString());
-//                        beanCourseOfDisease2.setImgPaths(imagePaths);
-//                        beanCourseOfDisease2.setBeanMedRec(medRec);
-//                        beanCourseOfDisease2.save();
-//                   测试数据库
-//                    List<BeanCourseOfDisease> list = DataSupport.findAll(BeanCourseOfDisease.class);
-//                    for (int j = 0 ; j<list.size();j++) {
-//                        BeanCourseOfDisease b = list.get(j);
-//                        imagePaths = b.getImgPaths();
-//                        Log.i("wkjpath",String.valueOf(b.getId()));
-//                        for (int i = 0; i < imagePaths.size(); i++) {
-//                            String s = imagePaths.get(i);
-//                            Log.i("wkjpath", s);
-//                    }
-//                        }
-                    }else {
-                    //数据库特性，这个定义的id会在保存的时候被赋值，所以可以根据这个id操作
-                    BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
-                    courseOfDisease.setType(type.getText().toString());
-                    courseOfDisease.setDate(date.getText().toString());
-                    courseOfDisease.setRecPatientInfo(recPatientInfo.getText().toString());
-                    courseOfDisease.setImgPaths(imagePaths);
-                    list.remove(FLAG_POSITION);
-                    list.add(courseOfDisease);
-                }
-                medRec.setListCourseOfDisease(list);
-//                List<BeanCourseOfDisease> list = new ArrayList<>();
-//                BeanCourseOfDisease beanCourseOfDisease = new BeanCourseOfDisease();
-//                beanCourseOfDisease.setImgPaths(imagePaths);
-//                list.add(beanCourseOfDisease);
-//                medRec = new BeanMedRec();
-                //beanMedRec.setListCourseOfDisease(list);
-                Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
-                intent.putExtra("test",medRec);
-                CreateCourse.this.setResult(FOR_COURSE_OF_DISEASE, intent);
-                CreateCourse.this.finish();
+                saveOrUpdata();
                 break;
+        }
+    }
+
+    //执行保存或者更新操作，保存操作在NewMedRec活动里执行
+    private void saveOrUpdata() {
+        getInfo();//获取控件的值
+        if (constants.POSITION_COURSE != -1) {//每次更新必须重新关联
+            courseOfDisease.setBeanMedRec(medRec);
+            //更新操作
+            courseOfDisease.update(courseOfDisease.getId());
+            Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
+            intent.putExtra("updateCourse", courseOfDisease);
+            setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
+            finish();
+        } else {
+            //数据库特性，这个定义的id会在保存的时候被赋值，所以可以根据这个id操作
+//                    BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
+//                    courseOfDisease.setType(type.getText().toString());
+//                    courseOfDisease.setDate(date.getText().toString());
+//                    courseOfDisease.setRecPatientInfo(recPatientInfo.getText().toString());
+//                    courseOfDisease.setImgPaths(imagePaths);
+            //将数据返回NewMedRec活动进行保存
+            Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
+            intent.putExtra("saveCourse", courseOfDisease);
+            setResult(CREATE_COURSE_RESULT_SAVE, intent);
+            finish();
 
         }
-
     }
-    /*
-    * 用poppopupwindow+listView+ArrayAdapter实现弹窗选择菜单
-    * */
+
+    //获取控件的值
+    private void getInfo() {
+        courseOfDisease.setType(type.getText().toString());
+        courseOfDisease.setDate(date.getText().toString());
+        courseOfDisease.setRecPatientInfo(recPatientInfo.getText().toString());
+        courseOfDisease.setImgPaths(imagePaths);
+    }
+
+    //用poppopupwindow+listView+ArrayAdapter实现弹窗选择菜单
     private void showOptions() {
         View rootView;
         rootView = LayoutInflater.from(CreateCourse.this).inflate(R.layout.options,
@@ -205,22 +216,11 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         optionns.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Log.i("option",parent.getItemAtPosition(position).toString());
                 type.setText(parent.getItemAtPosition(position).toString());
                 mPopWindow.dismiss();
             }
         });
         mPopWindow.showAsDropDown(typeLy);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return true;
     }
 
     //时间选择对话框
@@ -235,7 +235,6 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         datePicker_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         datePicker_dialog.show();
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
