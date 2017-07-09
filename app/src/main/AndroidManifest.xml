@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/healthfis_logo"
@@ -38,14 +37,14 @@
             </intent-filter>
         </activity>
 
-
         <!-- 登录页面 -->
 
         <activity android:name=".ui.activity.Login" />
-        <!--注册页面-->
+        <!-- 注册页面 -->
         <activity android:name=".ui.activity.Register" />
-        <!--病历夹页面-->
+        <!-- 病历夹页面 -->
         <activity android:name=".ui.activity.AllMedRec" />
+
         <!--问诊选择医生页面-->
         <activity android:name=".ui.activity.ChoiceDoctor"/>
         <!--问诊选择服务页面-->
@@ -64,10 +63,26 @@
         <activity android:name=".ui.activity.PerfectArchives"/>
         <!--问诊选择档案页面-->
         <activity android:name=".ui.activity.ChoiceDocument"/>
+
+        <!-- 问诊选择医生页面 -->
+        <activity android:name=".ui.activity.ChoiceDoctor" />
+        <!-- 问诊选择服务页面 -->
+        <activity android:name=".ui.activity.ChoiceService" />
+        <!-- 问诊送心意页面 -->
+        <activity android:name=".ui.activity.SendMind" />
+        <!-- 问诊支付页面 -->
+        <activity android:name=".ui.activity.Pay" />
+        <!-- 问诊支付成功页面 -->
+        <activity android:name=".ui.activity.PaySuccess" />
+        <!-- 问诊购买服务支付成功页面 -->
+        <activity android:name=".ui.activity.PayServiceSuccess" />
+        <!-- 问诊服务页面 -->
+        <activity android:name=".ui.activity.InterrogationService" />
+
         <!-- 新建病历夹页面 -->
         <activity
-            android:launchMode="singleTask"
             android:name=".ui.activity.NewMedRec"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- 添加病历标签 -->
         <activity android:name=".ui.activity.Lable" />
@@ -108,7 +123,16 @@
         <activity android:name=".ui.activity.CreateCourse" />
         <activity android:name=".ui.activity.SelectMedRec" />
         <activity android:name=".ui.activity.SelectDoctor" />
+
         <activity android:name=".ui.activity.ShareSuccess"></activity>
+
+
+        <activity android:name=".ui.activity.ShareSuccess" />
+        <activity android:name=".ui.activity.HealthyManagement.MainIndexHealthyManagement" />
+        <activity android:name=".ui.activity.HealthyManagement.IndexPhysicalIdentification" />
+        <activity android:name=".ui.activity.HealthyManagement.PhyIdeQuestionnaireTest" />
+        <activity android:name=".ui.activity.HealthyManagement.PhyIdeInfraredTest" />
+        <activity android:name=".ui.activity.HealthyManagement.MakeTotalHealthyScheme"></activity>
 
     </application>
 
