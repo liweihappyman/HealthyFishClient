@@ -76,7 +76,15 @@
         <activity android:name=".ui.activity.SelectMedRec" />
         <activity android:name=".ui.activity.SelectDoctor" />
         <activity android:name=".ui.activity.ShareSuccess" />
+
         <activity android:name=".ui.activity.InspectionReport"></activity>
+
+        <activity android:name=".ui.activity.HealthyManagement.MainIndexHealthyManagement" />
+        <activity android:name=".ui.activity.HealthyManagement.IndexPhysicalIdentification" />
+        <activity android:name=".ui.activity.HealthyManagement.PhyIdeQuestionnaireTest" />
+        <activity android:name=".ui.activity.HealthyManagement.PhyIdeInfraredTest" />
+        <activity android:name=".ui.activity.HealthyManagement.MakeTotalHealthyScheme"></activity>
+
     </application>
 
 </manifest>
