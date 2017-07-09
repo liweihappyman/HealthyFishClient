@@ -18,6 +18,19 @@ public class BeanDoctorInfo {
     private String price;  //医生问诊价格
 
 
+    public BeanDoctorInfo() {
+    }
+
+    public BeanDoctorInfo(String imgUrl, String name, String department, String duties, String hospital, String introduce, String price) {
+        this.imgUrl = imgUrl;
+        this.name = name;
+        this.department = department;
+        this.duties = duties;
+        this.hospital = hospital;
+        this.introduce = introduce;
+        this.price = price;
+    }
+
     public String getImgUrl() {
         return imgUrl;
     }

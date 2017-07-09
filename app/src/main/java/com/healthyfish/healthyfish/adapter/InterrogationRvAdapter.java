@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 描述：
+ * 描述：问诊首页RecyclerView适配器
  * 作者：LYQ on 2017/7/1.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
@@ -27,9 +27,7 @@ public class InterrogationRvAdapter extends RecyclerView.Adapter{
     private List<Integer> departmentIcons = new ArrayList<>();
 
     public InterrogationRvAdapter(Context context, List<String> departmentName, List<Integer> departmentIcon) {
-        //super(context);
         this.context = context;
-        //mBottomCount = 0;
         this.departments = departmentName;
         this.departmentIcons = departmentIcon;
     }
@@ -52,21 +50,6 @@ public class InterrogationRvAdapter extends RecyclerView.Adapter{
         return departments.size();
     }
 
-    /*@Override
-    public RecyclerView.ViewHolder onCreateContentView(ViewGroup parent) {
-        return new ContentViewHolder(mLayoutInflater.inflate(R.layout.layout_choice_department,parent,false));
-    }*/
-
-   /* @Override
-    public RecyclerView.ViewHolder onCreateBottomView(ViewGroup parent) {
-        return null;
-    }
-
-    @Override
-    public int getContentItemCount() {
-        return departments.size();
-    }
-*/
     public class ContentViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         ImageView icon;

@@ -2,23 +2,15 @@ package com.healthyfish.healthyfish.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.util.Attributes;
-import com.healthyfish.healthyfish.POJO.BeanMyConcernDoctorItem;
+import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
+import com.healthyfish.healthyfish.POJO.BeanMyConcernItem;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.adapter.MyConcernRvAdapter;
-import com.healthyfish.healthyfish.listener.InterrogationRvlistener;
-import com.healthyfish.healthyfish.utils.DividerGridItemDecoration;
-import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.adapter.MyConcernLvAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +34,9 @@ public class MyConcern extends BaseActivity {
     @BindView(R.id.lv_my_concern)
     ListView lvMyConcern;
 
+    private final String PrivateDoctor = "PrivateDoctor";
+    private final String HealthConsultation = "HealthConsultation";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +50,17 @@ public class MyConcern extends BaseActivity {
      * 初始化ListView
      */
     private void initRecyclerView() {
-        final List<BeanMyConcernDoctorItem> mData = new ArrayList<>();
-        for (int i=0; i<10; i++){
-            mData.add(new BeanMyConcernDoctorItem("非凡"+i,"中医科","主任医师","http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg","柳州市中医院","擅长：对消化不良的治疗有独特见解"));
+        final List<BeanMyConcernItem> mData = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+
+            mData.add(new BeanMyConcernItem(PrivateDoctor, new BeanDoctorInfo("http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg", "非凡" + i, "中医科", "主任医师", "柳州市中医院", "擅长：对消化不良的治疗有独特见解", null), null));
+
         }
-        MyConcernRvAdapter adapter = new MyConcernRvAdapter(this,mData);
+
+        MyConcernLvAdapter adapter = new MyConcernLvAdapter(this, mData);
         adapter.setMode(Attributes.Mode.Single);//只有一个拖拽打开的时候，其他的关闭
         lvMyConcern.setAdapter(adapter);
         lvMyConcern.setVerticalScrollBarEnabled(false);
+
     }
 }

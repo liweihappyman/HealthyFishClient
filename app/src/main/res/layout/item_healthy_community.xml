@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="180px"
+        android:layout_marginLeft="24px"
+        android:layout_marginRight="24px"
+        android:layout_marginTop="5px"
+        android:layout_marginBottom="5px"
+        android:background="@color/color_white"
+        app:cardElevation="4px"
+        app:cardCornerRadius="4px">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/tv_community_img"
+            android:layout_width="146px"
+            android:layout_height="146px"
+            android:layout_marginLeft="32px"
+            android:layout_marginTop="17px" />
+
+        <TextView
+            android:id="@+id/tv_community_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="213px"
+            android:layout_marginTop="16px"
+            android:text="气虚质养生社区"
+            style="@style/textSize_60"
+            android:textColor="@color/color_general_and_title"/>
+
+        <TextView
+            android:id="@+id/tv_community_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="213px"
+            android:layout_marginTop="118px"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="气虚质板块的主要内容"
+            style="@style/textSize_42"
+            android:textColor="@color/color_small_content"/>
+
+    </android.support.v7.widget.CardView>
+
+</com.zhy.autolayout.AutoLinearLayout>
