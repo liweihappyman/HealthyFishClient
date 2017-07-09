@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_content_area_bg"
+    android:orientation="vertical"
+    tools:context="com.healthyfish.healthyfish.ui.activity.HealthyManagement.IndexPhysicalIdentification">
+
+    <include layout="@layout/toolbar" />
+
+    <!--体质辨识介绍-->
+    <com.healthyfish.healthyfish.ui.widget.AutoCardView
+        android:layout_width="972px"
+        android:layout_height="600px"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        app:cardElevation="2dp">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24px"
+            android:layout_marginRight="24px"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="48px"
+                android:layout_marginTop="44px"
+                android:text="@string/introduce_pyh_ide"
+                android:textColor="@color/color_general_and_title"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:layout_width="588px"
+                android:layout_height="218px"
+                android:layout_marginLeft="94px"
+                android:src="@mipmap/why_using_phy_ide" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+    </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+
+
+    <!--调查问卷与红外皮温-->
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="800px"
+        android:layout_margin="84px"
+        android:orientation="horizontal">
+        <!--调查问卷-->
+        <com.healthyfish.healthyfish.ui.widget.AutoCardView
+            android:layout_width="360px"
+            android:layout_height="720px"
+            android:layout_marginRight="192px"
+            app:cardElevation="2dp">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="214px"
+                    android:layout_height="306px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="34px"
+                    android:background="@mipmap/i_am_questionnaire_phy_ide" />
+
+                <Button
+                    android:id="@+id/btn_questionnaire_begin_test"
+                    android:layout_width="276px"
+                    android:layout_height="84px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40px"
+                    android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+                    android:text="@string/begin_phy_ide_test"
+                    android:textColor="@color/color_white"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="244px"
+                    android:layout_height="106px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40px"
+                    android:background="@mipmap/why_using_questionnaire_phy_ide" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+
+        <!--红外皮温-->
+        <com.healthyfish.healthyfish.ui.widget.AutoCardView
+            android:layout_width="360px"
+            android:layout_height="720px"
+            android:layout_gravity="right"
+            app:cardElevation="2dp">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="214px"
+                    android:layout_height="306px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="34px"
+                    android:background="@mipmap/i_am_infrared_phyide" />
+
+                <Button
+                    android:id="@+id/btn_infrared_begin_test"
+                    android:layout_width="276px"
+                    android:layout_height="84px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40px"
+                    android:background="@drawable/selector_1dp_btn_color_from_secondary_to_white"
+                    android:text="@string/begin_phy_ide_test"
+                    android:textColor="@color/color_white"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="250px"
+                    android:layout_height="164px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40px"
+                    android:background="@mipmap/why_using_infrared_phyide" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+</com.zhy.autolayout.AutoLinearLayout>
