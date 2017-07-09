@@ -33,8 +33,8 @@ public class ComparatorDate implements Comparator {
 
         Date dt1 = null, dt2 = null;
         try {
-            dt1 = df.parse(bean1.getCliniTime());
-            dt2 = df.parse(bean2.getCliniTime());
+            dt1 = df.parse(bean1.getClinicalTime());
+            dt2 = df.parse(bean2.getClinicalTime());
 
         } catch (ParseException e) {
             e.printStackTrace();

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.healthyfish.healthyfish.ui.activity.ShareSuccess">
+    <include layout="@layout/toolbar"/>
+    <ImageView
+        android:background="@mipmap/selected"
+        android:layout_width="320px"
+        android:layout_height="320px"
+        android:layout_marginTop="200px"
+        android:layout_gravity="center_horizontal"/>
+    <TextView
+        style="@style/textSize_48"
+        android:textColor="@color/color_primary_dark"
+        android:text="你的病历已经成功分享给医生"
+        android:layout_marginTop="90px"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        style="@style/textSize_48"
+        android:textColor="@color/color_primary_dark"
+        android:text="等待医生的维护"
+        android:layout_marginTop="20px"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/go_home"
+        style="@style/genera_title_text"
+        android:text="回到首页 >"
+        android:layout_marginTop="60px"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="120px"
+        android:clickable="true"
+        />
+</com.zhy.autolayout.AutoLinearLayout>
