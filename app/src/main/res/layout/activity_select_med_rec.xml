@@ -99,7 +99,7 @@
         <ToggleButton
             android:id="@+id/hide_info"
             android:layout_width="128px"
-            android:layout_height="64px"
+            android:layout_height="22dp"
             android:layout_marginRight="35px"
             android:background="@drawable/switch_togglebtn"
             android:textOff=""
@@ -151,7 +151,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="110px"
-            android:background="@color/color_white"
             android:paddingLeft="55px"
             style="@style/textSize_42"
             android:text="选择需要维护的病历"

@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity.HealthyManagement;
+package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
 /**
  * 描述：健康管理首页
@@ -94,7 +94,8 @@ public class MainIndexHealthyManagement extends AppCompatActivity {
         btnTotalHealthyScheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainIndexHealthyManagement.this, "制定整体计划", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainIndexHealthyManagement.this, MakeTotalHealthyScheme.class);
+                startActivity(intent);
             }
         });
     }

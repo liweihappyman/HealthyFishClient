@@ -4,12 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.SelectDoctor">
+    tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.GetUserCustomScheme">
+
     <include layout="@layout/toolbar" />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/doctor_list"
-        android:layout_marginTop="35px"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
 </com.zhy.autolayout.AutoLinearLayout>

@@ -83,7 +83,6 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         // 前面的标记符任意，模式为私有模式，即数据只有自己能用
         sharedPreferences = getSharedPreferences("lablews", MODE_PRIVATE);
         editor = sharedPreferences.edit();//用来向sharePrefrence写入数据
-
         //顺序不能乱
         initView();//初始化View,上下两个大布局
         initData();//用来加载本地的标签和数据bean里面的标签
@@ -92,34 +91,24 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         save.setOnClickListener(this);
     }
 
-    /**
-     * 初始化数据，初始化上面的标签
-     */
+    //初始化数据，初始化上面的标签
     private void initData() {
         initAllLable();//下面标签的初始化
         initlable();//上面标签的初始化
-
-//        label_list.add("haha");
-//        label_list.add("haow");
-//        //用于初始化从数据库获取的标签(即显示在上面的标签)
-//        for (int i = 0; i < label_list.size(); i++) {
-//            editText = new EditText(getApplicationContext());//new 一个EditText
-//            editText.setText(label_list.get(i));
-//            editText.setMinEms(5);
-//            editText.setTextSize(16);
-//            addLabel(editText);//添加标签
-//        }
-//        all_label_List.add("haha");
-//        all_label_List.add("haow");
-//        all_label_List.add("真的吗");
-//        all_label_List.add("你说的都对");
-//        all_label_List.add("还好啦");
-//        all_label_List.add("你说什么");
     }
 
+    //初始化所有标签，从sharedPreferences读取出之前保存的标签
+    private void initAllLable() {
+        String allLableJson = sharedPreferences.getString("lable", null);
+        if (allLableJson != null) {
+            all_label_List = (List<String>) JSON.parse(allLableJson);
+        }
+    }
+
+    //上面标签的初始化
     private void initlable() {
         medRec = (BeanMedRec) getIntent().getSerializableExtra("lable");
-        if (medRec.getLables()!=null){
+        if (medRec.getLables() != null) {
             label_list = medRec.getLables();
             //拿到当前的Bean的标签，如果不为空，则执行
             for (int i = 0; i < label_list.size(); i++) {
@@ -132,15 +121,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    //初始化所有标签，从sharedPreferences读取出之前保存的标签
-    private void initAllLable() {
-        String allLableJson = sharedPreferences.getString("lable", null);
-        if (allLableJson != null) {
-            all_label_List= (List<String>) JSON.parse(allLableJson);
-        }
-    }
-
-    //对比上下的标签,如果在上面的标签与下面的标签不同,则将该标签添加到所有的标签数组列表里
+    //对比上下的标签,如果在上面的标签与所有标签有不同,则将该标签添加到所有标签列表里
     private void getAllLable() {
         List<TextView> lab = labels;
         //保存到数据库的标签
@@ -149,7 +130,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
             String str = labels.get(i).getText().toString();
             listLable.add(str);
         }
-        //逐个对比，如果有相同的上面的和所有的有相同，则移除
+        //逐个对比，如果上面的标签和所有标签列表的有相同的，则移除
         for (int j = 0; j < all_label_List.size(); j++) {
             for (int i = 0; i < lab.size(); i++) {
                 if (lab.get(i).getText().toString().equals(all_label_List.get(j))) {
@@ -158,7 +139,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         }
-        //将移除后不同的添加到所有标签里
+        //将移除后剩下的不同的添加到所有标签标签列表里
         for (int k = 0; k < lab.size(); k++) {
             all_label_List.add(lab.get(k).getText().toString());
         }
@@ -167,23 +148,9 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         editor.clear();
         editor.putString("lable", all_label_ListJson);
         editor.commit();//提交编辑结果
-
-//        sharedPreferences=getSharedPreferences("lable",MODE_PRIVATE);
-//        editor=sharedPreferences.edit();
-//        List<String> lable= (List<String>) JSON.parse(all_label_ListJson);
-//       //--------------------------------------------------------------------------------------------
-//        for (int i = 0;i<lable.size();i++){
-//            Log.i("lable",lable.get(i));
-//        }
-
     }
 
-
-
-
-    /**
-     * 初始化View，两个流水标签布局
-     */
+    //初始化View，两个流水标签布局
     private void initView() {
         idFlowlayout = (FlowLayout) findViewById(R.id.id_flowlayout);
         idFlowlayoutTwo = (TagFlowLayout) findViewById(R.id.id_flowlayout_two);
@@ -203,9 +170,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         });
     }
 
-    /*
-     * 初始化默认的添加标签
-     */
+    //初始化默认的添加标签
     private void initEdittext() {
         editText = new EditText(getApplicationContext());
         editText.setHint("添加标签");
@@ -237,9 +202,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         });
     }
 
-    /**
-     * 初始化所有标签列表
-     */
+    //初始化所有标签列表
     private void initAllLeblLayout() {
         //初始化适配器
         tagAdapter = new TagAdapter<String>(all_label_List) {
@@ -303,9 +266,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         });
     }
 
-    /**
-     * 添加标签
-     */
+    //添加标签
     private boolean addLabel(EditText editText) {
         String editTextContent = editText.getText().toString();
         //判断输入是否为空
@@ -362,9 +323,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         return true;
     }
 
-    /**
-     * 根据字符删除标签
-     */
+    //根据字符删除标签
     private void delByTest(String text) {
 
         for (int i = 0; i < all_label_List.size(); i++) {
@@ -376,10 +335,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         tagAdapter.setSelectedList(set);//重置选中的标签
     }
 
-
-    /**
-     * 标签恢复到正常状态
-     */
+    //标签恢复到正常状态
     private void tagNormal() {
         //输入文字时取消已经选中的标签
         for (int i = 0; i < labelStates.size(); i++) {
@@ -393,9 +349,7 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    /**
-     * 创建一个正常状态的标签
-     */
+    //创建一个正常状态的标签
     private TextView getTag(String label) {
         TextView textView = new TextView(getApplicationContext());
         textView.setTextSize(16);
@@ -418,15 +372,13 @@ public class Lable extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.save:
                 getAllLable();
-                //拿到该次的病历夹实例，然后将标签set进去，保存
-               // String lables = JSON.toJSONString(listLable);
                 medRec.setLables(listLable);
-                Intent intent = new Intent(Lable.this,NewMedRec.class);
-                intent.putExtra("forLable",medRec);
-                setResult(FOR_LABLE,intent);
+                Intent intent = new Intent(Lable.this, NewMedRec.class);
+                intent.putExtra("forLable", medRec);
+                setResult(FOR_LABLE, intent);
                 finish();
                 break;
         }
