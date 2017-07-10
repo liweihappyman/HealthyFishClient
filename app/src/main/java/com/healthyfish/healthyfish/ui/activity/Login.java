@@ -104,15 +104,15 @@ public class Login extends AutoLayoutActivity implements ILoginView {
      * 跳转到注册界面
      * */
     private void toRegisterActivity() {
-        //Intent intent = new Intent(this, MainActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, Register.class);
+        startActivity(intent);
     }
 
     /**
      * 跳转到重置密码界面
      * */
     private void toResetPasswordActivity() {
-        //Intent intent = new Intent(this, MainActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, ForgetPassword.class);
+        startActivity(intent);
     }
 }

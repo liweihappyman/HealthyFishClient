@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * 描述：
+ * 描述：问诊服务页面的适配器
  * 作者：LYQ on 2017/7/5.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
@@ -107,17 +107,17 @@ public class InterrogationServiceAdapter extends BaseAdapter {
             }
             switch (type) {
                 case TYPE_PictureConsulting:
-                    String flagPictureConsulting[] = new String[]{"title", "time", "departments", "name", "reply"};
+                    String flagPictureConsulting[] = new String[]{"title", "time", "department", "name", "reply"};
                     holderGraphicConsultation.tvLastMessage.setText((String) list.get(position).get(flagPictureConsulting[0]));
-                    holderGraphicConsultation.tvDoctorDepartment.setText((String) list.get(position).get(flagPictureConsulting[1])+"  |  "+
+                    holderGraphicConsultation.tvDoctorDepartment.setText(list.get(position).get(flagPictureConsulting[1])+"  |  "+
                             list.get(position).get(flagPictureConsulting[2])+"  |  "+list.get(position).get(flagPictureConsulting[3]));
                     holderGraphicConsultation.tvReply.setText((String) list.get(position).get(flagPictureConsulting[4]));
                     break;
                 case TYPE_PrivateDoctor:
-                    String flagPrivateDoctor[] = new String[]{"image", "name","department", "duties","position", "hospital", "finishTime"};
+                    String flagPrivateDoctor[] = new String[]{"image", "name","department", "duties", "hospital", "finishTime"};
                     Glide.with(mContext).load(list.get(position).get(flagPrivateDoctor[0])).into(holderPrivateDoctor.civDoctor);
                     holderPrivateDoctor.tvDoctorName.setText((String) list.get(position).get(flagPrivateDoctor[1]));
-                    holderPrivateDoctor.tvDoctorDepartment.setText((String) list.get(position).get(flagPrivateDoctor[2])+"  "+list.get(position).get(flagPrivateDoctor[3]));
+                    holderPrivateDoctor.tvDoctorDepartment.setText(list.get(position).get(flagPrivateDoctor[2])+"  "+list.get(position).get(flagPrivateDoctor[3]));
                     holderPrivateDoctor.tvHospital.setText((String) list.get(position).get(flagPrivateDoctor[4]));
                     holderPrivateDoctor.tvServiceTime.setText((String) list.get(position).get(flagPrivateDoctor[5]));
                     break;

@@ -80,7 +80,7 @@
                     android:gravity="center"
                     android:text="一周（50.00元）"
                     style="@style/textSize_42"
-                    android:textColor="@color/selector_ckb_text_color_from_pray_to_white"
+                    android:textColor="@color/selector_ckb_text_color_from_gray_to_white"
                     android:background="@drawable/selector_ckb_bg_color_from_gray_to_secondary" />
 
                 <CheckBox
@@ -92,7 +92,7 @@
                     android:gravity="center"
                     android:text="三月（450.00元）"
                     style="@style/textSize_42"
-                    android:textColor="@color/selector_ckb_text_color_from_pray_to_white"
+                    android:textColor="@color/selector_ckb_text_color_from_gray_to_white"
                     android:background="@drawable/selector_ckb_bg_color_from_gray_to_secondary" />
 
                 <CheckBox
@@ -104,7 +104,7 @@
                     android:gravity="center"
                     android:text="一年（950.00元）"
                     style="@style/textSize_42"
-                    android:textColor="@color/selector_ckb_text_color_from_pray_to_white"
+                    android:textColor="@color/selector_ckb_text_color_from_gray_to_white"
                     android:background="@drawable/selector_ckb_bg_color_from_gray_to_secondary" />
 
             </com.zhy.autolayout.AutoLinearLayout>
@@ -127,7 +127,7 @@
                     android:gravity="center"
                     android:text="一月（150.00元）"
                     style="@style/textSize_42"
-                    android:textColor="@color/selector_ckb_text_color_from_pray_to_white"
+                    android:textColor="@color/selector_ckb_text_color_from_gray_to_white"
                     android:background="@drawable/selector_ckb_bg_color_from_gray_to_secondary" />
 
                 <CheckBox
@@ -139,7 +139,7 @@
                     android:gravity="center"
                     android:text="半年（750.00元）"
                     style="@style/textSize_42"
-                    android:textColor="@color/selector_ckb_text_color_from_pray_to_white"
+                    android:textColor="@color/selector_ckb_text_color_from_gray_to_white"
                     android:background="@drawable/selector_ckb_bg_color_from_gray_to_secondary" />
 
             </com.zhy.autolayout.AutoLinearLayout>
