@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_content_area_bg"
+    tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.StartingSchemeDate">
+
+    <include layout="@layout/toolbar" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/tv_starting_scheme_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="07 月 10 日 今天"
+            android:layout_gravity="center"
+            android:textSize="24sp"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_below="@+id/tv_starting_scheme_date"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btn_check_scheme_detail"
+            android:layout_width="720px"
+            android:layout_height="160px"
+            android:text="查看计划"
+            android:textColor="@color/color_white"
+            android:textSize="18sp"
+            android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+</com.zhy.autolayout.AutoRelativeLayout>

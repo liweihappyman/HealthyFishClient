@@ -20,9 +20,10 @@ import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HealthPlanAdapter;
+
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
-import com.healthyfish.healthyfish.ui.activity.HealthyManagement.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.registration.RegistrationHome;
+import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity.HealthyManagement;
+package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -14,13 +14,13 @@ import butterknife.ButterKnife;
 
 
 /**
- * 描述：红外皮温测试
+ * 描述：体质测试问卷
  * 作者：Wayne on 2017/7/9 17:13
  * 邮箱：liwei_happyman@qq.com
  * 编辑：
  */
-// FIXME: 2017/7/9 完成红外皮温上传
-public class PhyIdeInfraredTest extends AppCompatActivity {
+// FIXME: 2017/7/9 完成问卷测试
+public class PhyIdeQuestionnaireTest extends AppCompatActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -30,7 +30,7 @@ public class PhyIdeInfraredTest extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_phy_ide_infrared_test);
+        setContentView(R.layout.activity_phy_ide_questionnaire_test);
         ButterKnife.bind(this);
 
         intiToolbarView();
@@ -38,7 +38,7 @@ public class PhyIdeInfraredTest extends AppCompatActivity {
 
     // 初始化toolbar
     private void intiToolbarView() {
-        toolbarTitle.setText("红外皮温");
+        toolbarTitle.setText("体质测试问卷");
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

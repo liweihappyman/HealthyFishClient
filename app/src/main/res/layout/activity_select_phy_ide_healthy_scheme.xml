@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_content_area_bg"
+    android:orientation="vertical"
+    tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.SelectPhyIdeHealthyScheme">
+
+    <include layout="@layout/toolbar" />
+
+    <!--    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>-->
+
+    <com.healthyfish.healthyfish.ui.widget.AutoCardView
+        android:layout_width="match_parent"
+        android:layout_height="480px"
+        android:orientation="vertical"
+        app:cardElevation="2dp">
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_background_phyide_scheme"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/background_phyide_scheme" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <!--计划名称-->
+                <TextView
+                    android:id="@+id/tv_title_phyide_scheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="秋季气虚质养生计划"
+                    android:textColor="@color/color_white"
+                    android:textSize="24sp" />
+
+                <!--计划内容-->
+                <TextView
+                    android:id="@+id/tv_content_phyide_scheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_title_phyide_scheme"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="气虚质 * 养生计划 * 秋分"
+                    android:textColor="@color/color_white"
+                    android:textSize="12sp" />
+
+                <!--参与者人数-->
+                <TextView
+                    android:id="@+id/tv_participiant_phyide_scheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_content_phyide_scheme"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="300人已参加"
+                    android:textColor="@color/color_white"
+                    android:textSize="12sp" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+    </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+
+</com.zhy.autolayout.AutoLinearLayout>
