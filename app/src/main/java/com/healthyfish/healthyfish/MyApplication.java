@@ -25,7 +25,7 @@ public class MyApplication extends Application{
         AutoLayoutConifg.getInstance().useDeviceSize();
 
         applicationContext = getApplicationContext();
-        LitePal.initialize(applicationContext);
+        LitePal.initialize(getApplicationContext());
     }
 
     /**

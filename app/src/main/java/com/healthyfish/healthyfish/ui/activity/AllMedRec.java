@@ -35,6 +35,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.healthyfish.healthyfish.ui.activity.NewMedRec.ALL_MED_REC_RESULT;
+
 /**
  * 描述：电子病历
  * 作者：WKJ on 2017/6/30.
@@ -44,14 +46,14 @@ import butterknife.ButterKnife;
 
 
 public class AllMedRec extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    public static final int ITEM = 38;
+    public static final int TO_NEW_MED_REC = 38;//进入NewMedRec页面的请求标志
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.med_rec_all)
     ListView medRecAll;
     @BindView(R.id.new_med_rec)
     AutoLinearLayout newMedRec;
-    private  List<BeanMedRec> listMecRec = new ArrayList<>();
+    private List<BeanMedRec> listMecRec = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +70,11 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
         newMedRec.setOnClickListener(this);
         medRecAll.setOnItemClickListener(this);
-        //initNullLV();
-        //init();//初始化布局
-
+        init();//初始化布局
     }
 
-    //测试初始化列表
+    //初始化列表
     private void init() {
-
 //        BeanMedRec beanMedRec = new BeanMedRec();
 //        beanMedRec.setName("隔壁老王");
 //        beanMedRec.setGender("男");
@@ -148,11 +147,12 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
         //对list的日期进行的进行排序，降序
         //SQLiteDatabase db = Connector.getDatabase();
-
         listMecRec = DataSupport.findAll(BeanMedRec.class);
-        int l = listMecRec.size();
-
-        if (listMecRec.size() != 0&&listMecRec!=null) {
+        if (listMecRec.size() == 0) {
+            initNullLV();
+        }
+        if (listMecRec.size() > 0) {
+            //将日期按时间先后排序
             ComparatorDate c = new ComparatorDate();
             Collections.sort(listMecRec, c);
             //遍历出日期，格式为：       2017年10月
@@ -167,7 +167,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    //初始化空的ListView,提示列表为空
+    //初始化空的ListView,提示列表为空（没用到）
     private void initNullLV() {
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -177,17 +177,20 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         medRecAll.setEmptyView(imageView);
         imageView.setImageResource(R.mipmap.personal_center);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-
                 finish();
                 break;
             case R.id.share:
-
-                Intent share = new Intent(this,SelectMedRec.class);
+                Intent share = new Intent(this, SelectMedRec.class);
                 AllMedRec.this.startActivity(share);
+                break;
+            case R.id.del:
+                Intent selectDoctor = new Intent(this, SelectDoctor.class);
+                AllMedRec.this.startActivity(selectDoctor);
                 break;
         }
         return true;
@@ -201,26 +204,29 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.new_med_rec:
-                Intent intent = new Intent(this,NewMedRec.class);
-                startActivityForResult(intent,ITEM);
+        switch (v.getId()) {
+            case R.id.new_med_rec://新建病历
+                constants.POSITION_MED_REC = -1;
+                Intent intent = new Intent(this, NewMedRec.class);
+                startActivityForResult(intent, TO_NEW_MED_REC);
                 startActivity(intent);
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(AllMedRec.this,NewMedRec.class);
-        intent.putExtra("id",listMecRec.get(position).getId());
-        startActivityForResult(intent,ITEM);
+        constants.POSITION_MED_REC = position;
+        Intent intent = new Intent(AllMedRec.this, NewMedRec.class);
+        //将选中的病历的id穿到NewMedRec活动
+        intent.putExtra("id", listMecRec.get(position).getId());
+        startActivityForResult(intent, TO_NEW_MED_REC);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
-            case ITEM:
+            case ALL_MED_REC_RESULT:
                 listMecRec.clear();
                 init();
                 break;

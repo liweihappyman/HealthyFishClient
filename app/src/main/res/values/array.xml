@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name = "options">   /数组资源名称为list 与layout中对应
+        <item>红外皮温</item>
         <item>首诊</item>
         <item>出院</item>
         <item>复诊</item>

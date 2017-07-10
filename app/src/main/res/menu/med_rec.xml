@@ -5,8 +5,8 @@
     <item android:id="@+id/share"
         android:title="分享病历"
         app:showAsAction="never"/>
-    <item android:id="@+id/xx"
-        android:title="xxxxx"
+    <item android:id="@+id/del"
+        android:title="shanchu"
         app:showAsAction="never"/>
 
 </menu>

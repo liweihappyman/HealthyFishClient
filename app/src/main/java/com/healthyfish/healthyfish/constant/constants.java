@@ -18,9 +18,11 @@ public class constants {
     // OkHttpClient设置写的超时时间
     public final static int WRITE_TIMEOUT = 5000;
 
-    public static int ALL_FLAG = -1;
-    public static  int FLAG_POSITION = -1;
-    public static  String FLAG_STATUE = "save";//和update两种情况
+    public static int POSITION_MED_REC = -1;//病历夹是从item点击进入，还是点击新建病历夹进入
+    public static String NEW_MED_REC = "save";//标志病历夹是要更新还是直接保存
+    public static int POSITION_COURSE = -1;//标志是否从病程的item进入，item进入可以更新，否则回到病历页面保存
+
+
 
     // 网络访问服务器主机地址
     public final static String HttpHealthyFishyUrl = "http://www.kangfish.cn";
