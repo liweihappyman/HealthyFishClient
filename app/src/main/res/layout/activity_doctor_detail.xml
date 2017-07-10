@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.healthyfish.healthyfish.ui.activity.registration.DoctorDetail">
+    <include layout="@layout/toolbar"/>
+    <include layout="@layout/doctor_detail"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider"/>
+    <TextView
+        android:gravity="center_vertical"
+        android:paddingLeft="50px"
+        android:text="选择预约时间"
+        style="@style/content_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="100px" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

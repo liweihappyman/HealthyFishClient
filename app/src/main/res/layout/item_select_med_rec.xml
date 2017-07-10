@@ -16,21 +16,24 @@
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/name"
-                android:layout_width="wrap_content"
+                android:layout_width="250px"
                 android:layout_height="wrap_content"
                 android:text="小李"
+                android:maxLines="1"
+                android:ellipsize="end"
                 style="@style/content_title_text"
                 android:textSize="36px"
                 android:layout_marginLeft="55px"
 
                 />
+
             <TextView
                 android:id="@+id/date"
+                style="@style/genera_title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/genera_title_text"
-                android:text="2017年6月30日"
-                android:paddingLeft="140px"/>
+                android:paddingLeft="40px"
+                android:text="2017年6月30日" />
         </TableRow>
         <TextView
             android:id="@+id/description"

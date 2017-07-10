@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.PatientInfo">
+    tools:context="com.healthyfish.healthyfish.ui.activity.medicalrecord.PatientInfo">
 
     <include layout="@layout/toolbar" />
 

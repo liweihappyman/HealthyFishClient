@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
@@ -31,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import static com.healthyfish.healthyfish.ui.activity.CreateCourse.CREATE_COURSE_RESULT_SAVE;
-import static com.healthyfish.healthyfish.ui.activity.CreateCourse.CREATE_COURSE_RESULT_UPDATE_OR_DEL;
+import static com.healthyfish.healthyfish.ui.activity.medicalrecord.CreateCourse.CREATE_COURSE_RESULT_SAVE;
+import static com.healthyfish.healthyfish.ui.activity.medicalrecord.CreateCourse.CREATE_COURSE_RESULT_UPDATE_OR_DEL;
 
 /**
  * 描述：电子病历

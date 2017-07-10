@@ -49,6 +49,7 @@
     <color name="color_hint">#cccccc</color>
     <color name="color_light_green">#51e7b3</color>
     <color name="color_small_content">#999999</color>
-
-
+    <color name="color_blue">#0ec0ee</color>
+    <color name="color_blue_dark">#5095bf</color>
+    <color name="color_light_gray">#e7e7e7</color>
 </resources>

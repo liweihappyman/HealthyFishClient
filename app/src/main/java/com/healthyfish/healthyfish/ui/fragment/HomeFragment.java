@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
@@ -21,8 +20,9 @@ import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HealthPlanAdapter;
-import com.healthyfish.healthyfish.ui.activity.AllMedRec;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.ui.activity.HealthyManagement.MainIndexHealthyManagement;
+import com.healthyfish.healthyfish.ui.activity.registration.RegistrationHome;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
@@ -218,6 +218,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.fm_health_management:
                 Intent intent = new Intent(mContext, MainIndexHealthyManagement.class);
                 startActivity(intent);
+                break;
+            case R.id.fm_registration:
+                Intent toRegistration = new Intent(mContext, RegistrationHome.class);
+                startActivity(toRegistration);
                 break;
         }
 

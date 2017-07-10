@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.AllMedRec">
+    tools:context="com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec">
     <include layout="@layout/toolbar"/>
     <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/new_med_rec"

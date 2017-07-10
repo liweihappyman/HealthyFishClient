@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.healthyfish.healthyfish.ui.activity.registration.RegistrationHome">
+
+    <include layout="@layout/toolbar" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:background="@color/color_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="57px"
+            android:layout_height="50px"
+            android:layout_marginLeft="32px"
+            android:background="@mipmap/horn" />
+
+        <TextView
+            style="@style/textSize_36"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:text="当前排号"
+            android:textColor="@color/color_orange" />
+
+        <TextView
+            style="@style/genera_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="50px"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="张静医生  骨科  队伍前还有5个病人在扥带" />
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+    <com.healthyfish.healthyfish.ui.widget.AutoCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35px"
+        app:elevation="8dp">
+
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="540px"
+        android:background="@mipmap/bg_hospital"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/choose_hospital"
+            android:layout_width="880px"
+            android:layout_height="120px"
+            android:text="选择医院"
+            android:textColor="@color/color_white"
+            style="@style/textSize_60"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="270px"
+            android:background="@drawable/selector_1dp_btn_color_from_secondary_to_white"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+    </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+
+    <com.healthyfish.healthyfish.ui.widget.AutoCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35px"
+        app:elevation="8dp">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="540px"
+        android:background="@mipmap/bg_department"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/choose_department"
+            android:layout_width="880px"
+            android:layout_height="120px"
+            android:text="选择科室"
+            android:textColor="@color/color_white"
+            style="@style/textSize_60"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="270px"
+            android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+    </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+</com.zhy.autolayout.AutoLinearLayout>
