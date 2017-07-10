@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_content_area_bg"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.HealthyManagement.MainIndexHealthyManagement">
+    tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement">
 
     <include layout="@layout/toolbar" />
 

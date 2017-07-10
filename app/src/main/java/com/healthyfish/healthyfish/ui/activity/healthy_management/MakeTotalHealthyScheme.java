@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity.HealthyManagement;
+package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,55 +16,44 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 /**
- * 描述：体质辨识首页
- * 作者：Wayne on 2017/7/9 14:50
+ * 描述：定制整体计划
+ * 作者：Wayne on 2017/7/9 16:31
  * 邮箱：liwei_happyman@qq.com
  * 编辑：
  */
-public class IndexPhysicalIdentification extends AppCompatActivity {
+public class MakeTotalHealthyScheme extends AppCompatActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.btn_questionnaire_begin_test)
-    Button btnQuestionnaireBeginTest;
-    @BindView(R.id.btn_infrared_begin_test)
-    Button btnInfraredBeginTest;
+    @BindView(R.id.btn_get_recommended_scheme)
+    Button btnGetRecommendedScheme;
+    @BindView(R.id.btn_get_user_custom_scheme)
+    Button btnGetUserCustomScheme;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_index_physical_identification);
+        setContentView(R.layout.activity_make_total_healthy_scheme);
         ButterKnife.bind(this);
 
         intiToolbarView();
+
     }
 
     // 初始化toolbar
     private void intiToolbarView() {
-        toolbarTitle.setText("体质辨识");
+        toolbarTitle.setText("定制整体计划");
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
-        }
-    }
-
-    @OnClick({R.id.btn_questionnaire_begin_test, R.id.btn_infrared_begin_test})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btn_questionnaire_begin_test:
-                Intent intentQuestionnaire = new Intent(IndexPhysicalIdentification.this, PhyIdeQuestionnaireTest.class);
-                startActivity(intentQuestionnaire);
-                break;
-            case R.id.btn_infrared_begin_test:
-                Intent intentInfrared = new Intent(IndexPhysicalIdentification.this, PhyIdeInfraredTest.class);
-                startActivity(intentInfrared);
-                break;
         }
     }
 
@@ -77,5 +66,19 @@ public class IndexPhysicalIdentification extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @OnClick({R.id.btn_get_recommended_scheme, R.id.btn_get_user_custom_scheme})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_get_recommended_scheme:
+                Intent intentRecommend = new Intent(MakeTotalHealthyScheme.this, GetRecommendedHealthyScheme.class);
+                startActivity(intentRecommend);
+                break;
+            case R.id.btn_get_user_custom_scheme:
+                Intent intentCustom = new Intent(MakeTotalHealthyScheme.this, GetUserCustomScheme.class);
+                startActivity(intentCustom);
+                break;
+        }
     }
 }

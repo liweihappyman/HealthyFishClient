@@ -71,20 +71,26 @@
         <activity
             android:name="com.foamtrace.photopicker.PhotoPickerActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
         <activity android:name=".ui.activity.CreateCourse" />
         <activity android:name=".ui.activity.SelectMedRec" />
         <activity android:name=".ui.activity.SelectDoctor" />
         <activity android:name=".ui.activity.ShareSuccess" />
+        <activity android:name=".ui.activity.InspectionReport" />
 
-        <activity android:name=".ui.activity.InspectionReport"></activity>
+        <!-- 图片预览Activity -->
+        <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
 
-        <activity android:name=".ui.activity.HealthyManagement.MainIndexHealthyManagement" />
-        <activity android:name=".ui.activity.HealthyManagement.IndexPhysicalIdentification" />
-        <activity android:name=".ui.activity.HealthyManagement.PhyIdeQuestionnaireTest" />
-        <activity android:name=".ui.activity.HealthyManagement.PhyIdeInfraredTest" />
-        <activity android:name=".ui.activity.HealthyManagement.MakeTotalHealthyScheme"></activity>
-
+        <!-- 健康管理 -->
+        <activity android:name=".ui.activity.healthy_management.MainIndexHealthyManagement" />
+        <activity android:name=".ui.activity.healthy_management.IndexPhysicalIdentification" />
+        <activity android:name=".ui.activity.healthy_management.PhyIdeQuestionnaireTest" />
+        <activity android:name=".ui.activity.healthy_management.PhyIdeInfraredTest" />
+        <activity android:name=".ui.activity.healthy_management.MakeTotalHealthyScheme" />
+        <activity android:name=".ui.activity.healthy_management.GetRecommendedHealthyScheme" />
+        <activity android:name=".ui.activity.healthy_management.GetUserCustomScheme" />
+        <activity android:name=".ui.activity.healthy_management.SelectPhyIdeHealthyScheme" />
+        <activity android:name=".ui.activity.healthy_management.StartingSchemeDate" />
+        <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme"></activity>
     </application>
 
 </manifest>

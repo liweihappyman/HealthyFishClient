@@ -2,33 +2,35 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/background_make_total_scheme"
-    android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.MakeTotalHealthyScheme">
+    android:background="@color/color_content_area_bg"
+    tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.GetRecommendedHealthyScheme">
 
     <include layout="@layout/toolbar" />
 
+    <!--中医体质-->
     <Button
-        android:id="@+id/btn_get_recommended_scheme"
-        android:layout_width="720px"
+        android:id="@+id/btn_trad_chinese_scheme"
+        android:layout_width="520px"
         android:layout_height="160px"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="472px"
         android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
-        android:text="获取推荐养生计划"
+        android:text="中医体质养生计划"
         android:textColor="@color/color_white"
         android:textSize="16sp" />
 
+    <!--慢性疾病-->
     <Button
-        android:id="@+id/btn_get_user_custom_scheme"
-        android:layout_width="720px"
+        android:id="@+id/btn_chronic_disease_scheme"
+        android:layout_width="520px"
         android:layout_height="160px"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="142px"
         android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
-        android:text="自定义养生计划"
+        android:text="慢性疾病康复计划"
         android:textColor="@color/color_white"
         android:textSize="16sp" />
 

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
@@ -22,7 +21,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HealthPlanAdapter;
 import com.healthyfish.healthyfish.ui.activity.AllMedRec;
-import com.healthyfish.healthyfish.ui.activity.HealthyManagement.MainIndexHealthyManagement;
+import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
