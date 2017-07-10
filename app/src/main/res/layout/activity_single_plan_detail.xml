@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.SinglePlanDetail">
+
+    <include layout="@layout/toolbar" />
+
+    <com.healthyfish.healthyfish.ui.widget.AutoCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="2dp">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/color_white">
+
+            <!--title-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="126px"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:text="益阳罐养生计划"/>
+
+            <include layout="@layout/item_divider" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="134px"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <!--完成次数-->
+                <com.healthyfish.healthyfish.ui.widget.AutoCardView
+                    android:layout_width="400px"
+                    android:layout_height="100px"
+                    app:cardCornerRadius="2dp"
+                    app:cardElevation="2dp">
+
+                    <TextView
+                        android:id="@+id/tv_complete_times"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="已完成15次"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:background="@color/color_divider"/>
+
+                </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <!--小视频展示-->
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="720px"
+                    android:layout_height="540px"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@mipmap/introduction_video"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <!--养生计划介绍-->
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="980px"
+                    android:layout_height="500px"
+                    android:layout_gravity="center_horizontal"
+                    android:text="      中医推拿，是以中医的脏腑、经络学说为理论基础，结合西医的解剖和病理诊断，而用手法作用于人
+体体表的特定部位以调节机体生理、病理状况，达到理疗目的的方法。从性质上来说，它是一种物理的治疗方法。从按摩的治疗上，可分为保健按摩、运动按摩和医疗按摩。"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_weight="1"/>
+    
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="172px"
+        android:layout_gravity="bottom"
+        android:gravity="center">
+        
+        <Button
+            android:layout_width="978px"
+            android:layout_height="126px"
+            android:textColor="@color/color_white"
+            android:textSize="14sp"
+            android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
+            android:text="完成"/>
+        
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

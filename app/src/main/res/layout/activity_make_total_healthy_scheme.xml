@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/background_make_total_scheme"
+    android:background="@color/color_content_area_bg"
     android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.MakeTotalHealthyScheme">
 
@@ -12,22 +12,22 @@
 
     <Button
         android:id="@+id/btn_get_recommended_scheme"
-        android:layout_width="720px"
+        android:layout_width="520px"
         android:layout_height="160px"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="472px"
-        android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+        android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
         android:text="获取推荐养生计划"
         android:textColor="@color/color_white"
         android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_get_user_custom_scheme"
-        android:layout_width="720px"
+        android:layout_width="520px"
         android:layout_height="160px"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="142px"
-        android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+        android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
         android:text="自定义养生计划"
         android:textColor="@color/color_white"
         android:textSize="16sp" />

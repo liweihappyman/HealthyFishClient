@@ -17,7 +17,7 @@
         android:layout_height="160px"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="472px"
-        android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+        android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
         android:text="中医体质养生计划"
         android:textColor="@color/color_white"
         android:textSize="16sp" />
@@ -29,7 +29,7 @@
         android:layout_height="160px"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="142px"
-        android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+        android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
         android:text="慢性疾病康复计划"
         android:textColor="@color/color_white"
         android:textSize="16sp" />

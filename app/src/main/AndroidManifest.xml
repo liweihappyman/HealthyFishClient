@@ -90,7 +90,9 @@
         <activity android:name=".ui.activity.healthy_management.GetUserCustomScheme" />
         <activity android:name=".ui.activity.healthy_management.SelectPhyIdeHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.StartingSchemeDate" />
-        <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme"></activity>
+        <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme" />
+        <activity android:name=".ui.activity.healthy_management.MyHealthyScheme" />
+        <activity android:name=".ui.activity.healthy_management.SinglePlanDetail"></activity>
     </application>
 
 </manifest>

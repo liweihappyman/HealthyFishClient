@@ -41,7 +41,7 @@ public class SelectPhyIdeHealthyScheme extends AppCompatActivity {
 
     // 初始化toolbar
     private void intiToolbarView() {
-        toolbarTitle.setText("开始日期");
+        toolbarTitle.setText("选择养生计划");
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

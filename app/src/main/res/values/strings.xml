@@ -45,6 +45,7 @@
     <string name="introduce_pyh_ide">"此“体质测试”是依据中医国家标准进行开发，虽测试过程繁复，但却能帮助知晓身体情况，洞悉疾病隐患，当常常自检"</string>
     <!--开始测试-->
     <string name="begin_phy_ide_test">开始测试</string>
+    <string name="go_to_single_scheme">去完成</string>
 
 
 </resources>

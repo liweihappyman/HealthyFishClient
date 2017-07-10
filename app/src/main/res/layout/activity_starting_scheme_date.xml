@@ -38,8 +38,8 @@
             android:layout_height="160px"
             android:text="查看计划"
             android:textColor="@color/color_white"
-            android:textSize="20sp"
-            android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"/>
+            android:textSize="18sp"
+            android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"/>
 
     </com.zhy.autolayout.AutoLinearLayout>
 
