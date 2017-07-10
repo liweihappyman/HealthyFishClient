@@ -62,15 +62,15 @@ public class AllCommunityAdapter extends BaseAdapter {
         }else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Glide.with(mContext).load(mList.get(position).getImgUrl()).into(holder.tvCommunityImg);
+        Glide.with(mContext).load(mList.get(position).getImgUrl()).into(holder.civCommunityImg);
         holder.tvCommunityName.setText(mList.get(position).getTitle());
         holder.tvCommunityContent.setText(mList.get(position).getContent());
         return convertView;
     }
 
     static class ViewHolder {
-        @BindView(R.id.tv_community_img)
-        CircleImageView tvCommunityImg;
+        @BindView(R.id.civ_community_img)
+        CircleImageView civCommunityImg;
         @BindView(R.id.tv_community_name)
         TextView tvCommunityName;
         @BindView(R.id.tv_community_content)

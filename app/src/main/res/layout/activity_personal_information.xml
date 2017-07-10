@@ -185,7 +185,8 @@
             android:layout_width="94px"
             android:layout_height="97px"
             android:padding="30px"
-            android:src="@drawable/ic_more_horizontal"/>
+            android:src="@mipmap/ic_more_horizontal"/>
+
 
     </com.zhy.autolayout.AutoLinearLayout>
 

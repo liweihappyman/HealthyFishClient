@@ -122,6 +122,16 @@
         <activity android:name=".ui.activity.HealthyCirclePosting"/>
         <!--健康圈选择社区页面-->
         <activity android:name=".ui.activity.SelectCommunity"/>
+        <!--挂号模块选择科室页面-->
+        <activity android:name=".ui.activity.SelectDepartments"/>
+        <!--挂号模块确认预约信息页面-->
+        <activity android:name=".ui.activity.ConfirmReservationInformation"/>
+        <!--挂号模块新建就诊人页面-->
+        <activity android:name=".ui.activity.NewVisitingPerson"/>
+        <!--挂号模块更换就诊人页面-->
+        <activity android:name=".ui.activity.ChangeVisitingPerson"/>
+        <!--挂号模块根据科室选择医生页面-->
+        <activity android:name=".ui.activity.DepartmentDoctorList"/>
 
     </application>
 

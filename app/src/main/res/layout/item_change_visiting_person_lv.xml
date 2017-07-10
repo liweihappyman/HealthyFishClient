@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="160px"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_name_and_age"
+        style="@style/textSize_60"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="54px"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="就诊人1  24岁"
+        android:textColor="@color/color_general_and_title" />
+
+    <CheckBox
+        android:id="@+id/cb_select"
+        android:layout_width="72px"
+        android:layout_height="72px"
+        android:layout_marginRight="54px"
+        android:background="@drawable/selector_check"
+        android:button="@null"
+        android:clickable="false"
+        android:focusable="false" />
+
+</com.zhy.autolayout.AutoLinearLayout>

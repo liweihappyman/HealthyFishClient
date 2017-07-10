@@ -5,6 +5,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -70,14 +71,14 @@ public class MyCommunityAdapter extends BaseSwipeAdapter {
             }
         });
 
-        holder.cvMyCommunity.setOnClickListener(new View.OnClickListener() {
+        holder.rlyMyCommunity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MyToast.showToast(mContext,mList.get(position).getTitle());
             }
         });
 
-        holder.cvMyCommunity.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.rlyMyCommunity.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 holder.slyMyCommunity.open();
@@ -120,8 +121,8 @@ public class MyCommunityAdapter extends BaseSwipeAdapter {
         TextView tvCommunityName;
         @BindView(R.id.tv_community_content)
         TextView tvCommunityContent;
-        @BindView(R.id.cv_my_community)
-        CardView cvMyCommunity;
+        @BindView(R.id.rly_my_community)
+        RelativeLayout rlyMyCommunity;
         @BindView(R.id.sly_my_community)
         SwipeLayout slyMyCommunity;
 

@@ -4,15 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
-    <ListView
-        android:id="@+id/lv_my_concern"
+    <GridView
+        android:id="@+id/gv_select_departments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="37px"
-        android:divider="#00000000"
-        android:dividerHeight="20px"/>
+        android:layout_marginTop="36px"
+        android:horizontalSpacing="2dp"
+        android:verticalSpacing="2dp"
+        android:numColumns="4">
 
+    </GridView>
 
 </com.zhy.autolayout.AutoLinearLayout>

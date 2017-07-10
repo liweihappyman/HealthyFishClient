@@ -53,8 +53,8 @@ public class AllCommunityFragment extends Fragment {
      * 初始化模拟数据
      */
     private void initData() {
-        for (int i=0; i<5;i++){
-            BeanHealthyCircleItem bean = new BeanHealthyCircleItem(null,"http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg","愉悦社区","这是一个非常有乐趣的社区");
+        for (int i=0; i<10;i++){
+            BeanHealthyCircleItem bean = new BeanHealthyCircleItem(null,"http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg","健康社区"+i,"这是一个非常有乐趣的社区");
             list.add(bean);
         }
     }

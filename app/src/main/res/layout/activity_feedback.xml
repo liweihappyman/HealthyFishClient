@@ -35,7 +35,7 @@
         android:layout_marginTop="60px"
         android:text="提交"
         style="@style/textSize_54"
-        android:textColor="@color/selector_text_color_from_write_to_primary"
+        android:textColor="@color/selector_text_color_from_white_to_primary"
         android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
 
 

@@ -38,6 +38,9 @@ public class SelectCommunity extends BaseActivity {
     @BindView(R.id.lv_select_community)
     ListView lvSelectCommunity;
 
+    private Bundle bundle = null;
+    private String selectedFlag = null;
+
     private final int resultSuccessfulCode = 0;
     private final int resultFailedCode = 2;
 
@@ -64,6 +67,7 @@ public class SelectCommunity extends BaseActivity {
         SimpleAdapter simpleAdapter = new SimpleAdapter(SelectCommunity.this,list,R.layout.item_select_community_lv,str,new int[]{R.id.tv_community_title});
         lvSelectCommunity.setAdapter(simpleAdapter);
         lvSelectCommunity.setVerticalScrollBarEnabled(false);
+        //ListView的item点击监听
         lvSelectCommunity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

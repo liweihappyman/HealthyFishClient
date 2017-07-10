@@ -173,7 +173,7 @@
             android:layout_marginTop="48px"
             android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
             android:text="提交"
-            android:textColor="@color/selector_text_color_from_write_to_primary" />
+            android:textColor="@color/selector_text_color_from_white_to_primary" />
 
         <TextView
             style="@style/textSize_42"

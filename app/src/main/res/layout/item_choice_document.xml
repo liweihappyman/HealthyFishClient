@@ -19,24 +19,24 @@
 
             <TextView
                 android:id="@+id/tv_name_gender_age"
+                style="@style/textSize_60"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="54px"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="54px"
                 android:text="老李（男，50岁）"
-                style="@style/textSize_60"
-                android:textColor="@color/color_general_and_title"/>
+                android:textColor="@color/color_general_and_title" />
 
             <CheckBox
                 android:id="@+id/cb_select"
                 android:layout_width="57px"
                 android:layout_height="57px"
-                android:layout_marginRight="55px"
                 android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="55px"
+                android:background="@drawable/selector_check"
                 android:button="@null"
                 android:clickable="false"
-                android:focusable="false"
-                android:background="@drawable/selector_check" />
+                android:focusable="false" />
 
         </android.support.v7.widget.CardView>
 

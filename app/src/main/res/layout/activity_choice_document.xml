@@ -31,7 +31,7 @@
         android:layout_marginTop="20px"
         android:text="添加新档案"
         style="@style/textSize_48"
-        android:textColor="@color/selector_text_color_from_write_to_primary"
+        android:textColor="@color/selector_text_color_from_white_to_primary"
         android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
 
     <com.zhy.autolayout.AutoRelativeLayout
@@ -48,7 +48,7 @@
             android:gravity="center"
             android:text="完成"
             style="@style/textSize_48"
-            android:textColor="@color/selector_text_color_from_write_to_primary"
+            android:textColor="@color/selector_text_color_from_white_to_primary"
             android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
 
     </com.zhy.autolayout.AutoRelativeLayout>

@@ -81,12 +81,16 @@ public class HealthyCirclePosting extends BaseActivity implements AdapterView.On
                 //选择社区
                 Intent intent = new Intent(this, SelectCommunity.class);
                 startActivityForResult(intent, mRequestCode);
+                //Intent intent = new Intent(this,SelectDepartments.class);
+                //startActivity(intent);
                 break;
             case R.id.lly_select_community:
                 //选择社区
                 break;
             case R.id.tv_release:
                 //点击发布
+                //Intent intent01 = new Intent(this,ConfirmReservationInformation.class);
+                //startActivity(intent01);
                 MyToast.showToast(this, "你确定要发布么");
                 break;
         }
@@ -102,9 +106,9 @@ public class HealthyCirclePosting extends BaseActivity implements AdapterView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // 选择社区的返回结果，根据发送过去的请求来区别
         if (requestCode == mRequestCode) {
             String info = data.getStringExtra("Title");
-            // 根据发送过去的请求来区别
             switch (resultCode) {
                 case 0:
                     //返回成功
@@ -112,14 +116,16 @@ public class HealthyCirclePosting extends BaseActivity implements AdapterView.On
                     break;
                 case 2:
                     //返回失败
-                    tvSelectCommunity.setText("选择社区");
-                    MyToast.showToast(this,"未选择社区");
+                    if(tvSelectCommunity.getText().toString() == "选择社区"){
+                        MyToast.showToast(this,"未选择社区");
+                    }
                     break;
                 default:
                     tvSelectCommunity.setText("选择社区");
                     break;
             }
         }
+        //选择图片的返回结果
         if (resultCode == HealthyCirclePosting.RESULT_OK) {
             switch (requestCode) {
                 // 选择照片
@@ -144,7 +150,9 @@ public class HealthyCirclePosting extends BaseActivity implements AdapterView.On
         }
     }
 
-    //选择图片，设置选择图片的张数
+    /**
+     * 选择图片，设置选择图片的张数
+     */
     protected void selectImg() {
         PhotoPickerIntent intent = new PhotoPickerIntent(this);
         intent.setSelectModel(SelectModel.MULTI);
@@ -155,7 +163,10 @@ public class HealthyCirclePosting extends BaseActivity implements AdapterView.On
         startActivityForResult(intent, REQUEST_CAMERA_CODE);
     }
 
-    //刷新适配器
+    /**
+     * 刷新适配器
+     * @param paths
+     */
     private void refreshAdpater(List<String> paths) {
         // 处理返回照片地址
         if (imagePaths == null) {
@@ -173,6 +184,14 @@ public class HealthyCirclePosting extends BaseActivity implements AdapterView.On
         }
     }
 
+    /**
+     * GridView的点击监听
+     *
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position < 8) {//设置显示图片的数量

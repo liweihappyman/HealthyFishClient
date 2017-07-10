@@ -49,6 +49,6 @@
         android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
         android:text="添加健康档案"
         android:textSize="54px"
-        android:textColor="@color/selector_text_color_from_write_to_primary"/>
+        android:textColor="@color/selector_text_color_from_white_to_primary"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

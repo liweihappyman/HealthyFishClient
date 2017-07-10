@@ -14,14 +14,14 @@
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:background="@color/color_white"
             android:gravity="center_horizontal"
-            android:background="@color/color_white">
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <com.zhy.autolayout.AutoLinearLayout
                 android:id="@+id/lly_message_notification"
@@ -32,26 +32,30 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/textSize_60"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="54px"
                     android:text="消息通知"
-                    style="@style/textSize_60"
                     android:textColor="@color/color_general_and_title" />
 
-                <Switch
+                <ToggleButton
                     android:id="@+id/switch_message_notification"
                     android:layout_width="128px"
                     android:layout_height="64px"
-                    android:layout_marginRight="53px"/>
+                    android:layout_marginRight="53px"
+                    android:background="@drawable/switch_togglebtn"
+                    android:gravity="center_vertical"
+                    android:textOff=""
+                    android:textOn="" />
 
             </com.zhy.autolayout.AutoLinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <com.zhy.autolayout.AutoLinearLayout
                 android:id="@+id/lly_change_password"
@@ -62,12 +66,12 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/textSize_60"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="54px"
                     android:text="修改登录密码"
-                    style="@style/textSize_60"
                     android:textColor="@color/color_general_and_title" />
 
                 <ImageView
@@ -76,14 +80,14 @@
                     android:layout_height="97px"
                     android:layout_marginRight="23px"
                     android:padding="30px"
-                    android:src="@drawable/ic_more_horizontal"/>
+                    android:src="@mipmap/ic_more_horizontal" />
 
             </com.zhy.autolayout.AutoLinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <com.zhy.autolayout.AutoLinearLayout
                 android:id="@+id/lly_update_version"
@@ -94,20 +98,20 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/textSize_60"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="54px"
                     android:text="更新版本"
-                    style="@style/textSize_60"
                     android:textColor="@color/color_general_and_title" />
 
                 <TextView
+                    style="@style/textSize_48"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="当前版本：1.0"
-                    style="@style/textSize_48"
-                    android:textColor="@color/color_general_and_title"/>
+                    android:textColor="@color/color_general_and_title" />
 
                 <ImageView
                     android:id="@+id/iv_update_version"
@@ -115,24 +119,24 @@
                     android:layout_height="97px"
                     android:layout_marginRight="23px"
                     android:padding="30px"
-                    android:src="@drawable/ic_more_horizontal"/>
+                    android:src="@mipmap/ic_more_horizontal" />
 
             </com.zhy.autolayout.AutoLinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <Button
                 android:id="@+id/bt_login_out"
+                style="@style/textSize_54"
                 android:layout_width="882px"
                 android:layout_height="126px"
                 android:layout_marginTop="58px"
+                android:background="@drawable/selector_btn_color_from_secondary_to_white"
                 android:text="退出登录"
-                style="@style/textSize_54"
-                android:textColor="@color/selector_text_color_from_white_to_secondary"
-                android:background="@drawable/selector_btn_color_from_secondary_to_white"/>
+                android:textColor="@color/selector_text_color_from_white_to_secondary" />
 
         </com.zhy.autolayout.AutoLinearLayout>
 
