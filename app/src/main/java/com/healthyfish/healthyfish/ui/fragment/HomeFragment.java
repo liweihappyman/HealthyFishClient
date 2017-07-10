@@ -22,6 +22,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HealthPlanAdapter;
 import com.healthyfish.healthyfish.ui.activity.AllMedRec;
+import com.healthyfish.healthyfish.ui.activity.HealthyManagement.MainIndexHealthyManagement;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
@@ -209,10 +210,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.fm_med_rec:
-                Intent  intent = new Intent(mContext, AllMedRec.class);
+                Intent intent_med_rec = new Intent(mContext, AllMedRec.class);
+                startActivity(intent_med_rec);
+                break;
+            case R.id.fm_health_management:
+                Intent intent = new Intent(mContext, MainIndexHealthyManagement.class);
                 startActivity(intent);
+                break;
         }
 
     }

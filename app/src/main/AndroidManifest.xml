@@ -66,8 +66,8 @@
         <activity android:name=".ui.activity.ChoiceDocument"/>
         <!-- 新建病历夹页面 -->
         <activity
-            android:launchMode="singleTask"
             android:name=".ui.activity.NewMedRec"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- 添加病历标签 -->
         <activity android:name=".ui.activity.Lable" />
@@ -109,6 +109,14 @@
         <activity android:name=".ui.activity.SelectMedRec" />
         <activity android:name=".ui.activity.SelectDoctor" />
         <activity android:name=".ui.activity.ShareSuccess"></activity>
+
+
+
+        <activity android:name=".ui.activity.HealthyManagement.MainIndexHealthyManagement" />
+        <activity android:name=".ui.activity.HealthyManagement.IndexPhysicalIdentification" />
+        <activity android:name=".ui.activity.HealthyManagement.PhyIdeQuestionnaireTest" />
+        <activity android:name=".ui.activity.HealthyManagement.PhyIdeInfraredTest" />
+        <activity android:name=".ui.activity.HealthyManagement.MakeTotalHealthyScheme"></activity>
 
         <!--健康圈发帖页面-->
         <activity android:name=".ui.activity.HealthyCirclePosting"/>
