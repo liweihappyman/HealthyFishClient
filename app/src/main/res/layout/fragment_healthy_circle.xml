@@ -2,9 +2,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment">
 
-    <include layout="@layout/toolbar"/>
+    <android.support.v7.widget.Toolbar
+        android:focusableInTouchMode="true"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="135px"
+        android:background="@color/color_primary_dark"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+        
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="健康社区"
+            style="@style/big_content_title_text"
+            android:textColor="@android:color/white" />
+        
+        <ImageView
+            android:id="@+id/iv_posting"
+            android:layout_width="73px"
+            android:layout_height="73px"
+            android:layout_marginRight="30px"
+            android:layout_gravity="right"
+            android:src="@mipmap/ic_posting"/>
+        
+    </android.support.v7.widget.Toolbar>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"

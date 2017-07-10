@@ -2,11 +2,11 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
+import com.healthyfish.healthyfish.ui.activity.HealthyCirclePosting;
+import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,8 @@ public class HealthyCircleFragment extends Fragment {
     @BindView(R.id.vp_healthy_circle)
     ViewPager vpHealthyCircle;
     Unbinder unbinder;
+    @BindView(R.id.iv_posting)
+    ImageView ivPosting;
 
     private Context mContext;
     private View rootView;
@@ -75,14 +79,22 @@ public class HealthyCircleFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.tv_concern_community, R.id.tv_all_community})
+    @OnClick({R.id.tv_concern_community, R.id.tv_all_community,R.id.iv_posting})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_concern_community:
+                //选择我关注的社区页面
                 vpHealthyCircle.setCurrentItem(0);
                 break;
             case R.id.tv_all_community:
+                //选择所有社区页面
                 vpHealthyCircle.setCurrentItem(1);
+                break;
+            case R.id.iv_posting:
+                //点击发帖按钮
+                MyToast.showToast(getActivity(),"分享你的健康动态让更多人知道吧!");
+                Intent intent = new Intent(getActivity(), HealthyCirclePosting.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -105,6 +117,7 @@ public class HealthyCircleFragment extends Fragment {
                         if (currIndex == 1) {
                             animation = new TranslateAnimation(one2twoLength, 0, 0, 0);
                         }
+                        MyCommunityFragment.adapter.notifyDataSetChanged();
                         reSet();
                         tvConcernCommunity.setTextColor(getResources().getColor(R.color.color_secondary));
                         break;
@@ -113,6 +126,7 @@ public class HealthyCircleFragment extends Fragment {
                         if (currIndex == 0) {
                             animation = new TranslateAnimation(offset, one2twoLength, 0, 0);
                         }
+                        AllCommunityFragment.adapter.notifyDataSetChanged();
                         reSet();
                         tvAllCommunity.setTextColor(getResources().getColor(R.color.color_secondary));
                         break;
@@ -133,7 +147,7 @@ public class HealthyCircleFragment extends Fragment {
     /**
      * 重置头部文字颜色
      */
-    private void reSet(){
+    private void reSet() {
         tvConcernCommunity.setTextColor(getResources().getColor(R.color.color_general_and_title));
         tvAllCommunity.setTextColor(getResources().getColor(R.color.color_general_and_title));
     }
@@ -150,7 +164,7 @@ public class HealthyCircleFragment extends Fragment {
         fragments.add(AllCommunity);
         vpHealthyCircle.setAdapter(new MainVpAdapter(getActivity().getSupportFragmentManager(), fragments));
         vpHealthyCircle.setCurrentItem(currentItem);//设置初始页面
-        if (currentItem == 1){
+        if (currentItem == 1) {
             currIndex = 1;
         }
     }
@@ -162,7 +176,7 @@ public class HealthyCircleFragment extends Fragment {
         WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         int screenWidth = windowManager.getDefaultDisplay().getWidth();  //获取屏幕宽度
         int indicatorWidth = screenWidth / 2;   //计算卡片宽度
-        cursor.getLayoutParams().width  = indicatorWidth;   //设置卡片宽度
+        cursor.getLayoutParams().width = indicatorWidth;   //设置卡片宽度
         cursor.requestLayout();     //通知卡片宽度发生改变
         offset = (screenWidth / 2 - indicatorWidth) / 2;    // 计算偏移量
         one2twoLength = offset * 2 + indicatorWidth;    // 页卡1 -> 页卡2 偏移量

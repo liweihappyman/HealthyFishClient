@@ -35,7 +35,8 @@ public class MyCommunityFragment extends Fragment {
 
     private Context mContext;
     private View rootView;
-
+    public static MyCommunityAdapter adapter ;
+    public List<BeanHealthyCircleItem> list = new ArrayList<>();
 
     @Nullable
     @Override
@@ -43,6 +44,7 @@ public class MyCommunityFragment extends Fragment {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_my_community, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        initData();
         initListView();
         return rootView;
     }
@@ -50,20 +52,18 @@ public class MyCommunityFragment extends Fragment {
     /**
      * 初始化模拟数据
      */
-    private List<BeanHealthyCircleItem> initData() {
-        List<BeanHealthyCircleItem> list = new ArrayList<>();
+    private void initData() {
         for (int i = 0; i < 5; i++) {
             BeanHealthyCircleItem bean = new BeanHealthyCircleItem(null, "http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg", "愉悦社区", "这是一个非常有乐趣的社区");
             list.add(bean);
         }
-        return list;
     }
 
     /**
      * 初始化listView适配器
      */
     private void initListView() {
-        MyCommunityAdapter adapter = new MyCommunityAdapter(mContext,initData());
+        adapter = new MyCommunityAdapter(mContext,list);
         lvMyCommunity.setAdapter(adapter);
         lvMyCommunity.setVerticalScrollBarEnabled(false);
     }

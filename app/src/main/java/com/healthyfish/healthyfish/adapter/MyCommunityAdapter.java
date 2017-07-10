@@ -41,6 +41,9 @@ public class MyCommunityAdapter extends BaseSwipeAdapter {
         this.mLayoutInflater = LayoutInflater.from(mContext);
     }
 
+    public MyCommunityAdapter() {
+    }
+
 
     @Override
     public int getSwipeLayoutResourceId(int position) {

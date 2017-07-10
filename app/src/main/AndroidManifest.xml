@@ -110,6 +110,11 @@
         <activity android:name=".ui.activity.SelectDoctor" />
         <activity android:name=".ui.activity.ShareSuccess"></activity>
 
+        <!--健康圈发帖页面-->
+        <activity android:name=".ui.activity.HealthyCirclePosting"/>
+        <!--健康圈选择社区页面-->
+        <activity android:name=".ui.activity.SelectCommunity"/>
+
     </application>
 
 </manifest>
