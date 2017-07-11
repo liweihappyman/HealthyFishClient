@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.R;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
 
@@ -60,6 +61,8 @@ public class ChoiceDoctorLvAdapter extends BaseAdapter {
             convertView = mLayoutInflater.inflate(R.layout.item_choice_doctor_listview, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+            //对于listView，注意添加这一行，即可在item上使用高度
+            AutoUtils.autoSize(convertView);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

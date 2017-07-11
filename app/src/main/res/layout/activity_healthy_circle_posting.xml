@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:focusableInTouchMode="true"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="135px"
+        android:background="@color/color_primary_dark"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="健康社区"
+            style="@style/big_content_title_text"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_release"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30px"
+            android:layout_gravity="right"
+            android:text="发布"
+            style="@style/textSize_48"
+            android:textColor="@color/selector_text_color_from_white_to_primary"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24px"
+        android:orientation="vertical"
+        android:background="@color/color_white">
+
+        <EditText
+            android:id="@+id/et_share_health_trends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34px"
+            android:layout_marginLeft="24px"
+            android:layout_marginRight="24px"
+            android:maxHeight="440px"
+            android:background="@null"
+            android:hint="分享健康动态"
+            style="@style/textSize_48"
+            android:textColorHint="@color/color_hint"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="450px"
+            android:layout_marginLeft="24px"
+            android:layout_marginRight="24px"
+            android:background="@android:color/darker_gray"/>
+
+        <GridView
+            android:id="@+id/gv_share_health_trends_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="3"
+            android:layout_marginLeft="45px"
+            android:layout_marginRight="45px"
+            android:layout_marginTop="25px"
+            android:layout_marginBottom="30px">
+
+        </GridView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="35px"
+            android:background="@android:color/darker_gray"/>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/lly_select_community"
+            android:layout_width="match_parent"
+            android:layout_height="120px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_select_community"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="54px"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="选择社区"
+                style="@style/textSize_48"
+                android:textColor="@color/color_content_title" />
+
+            <ImageView
+                android:id="@+id/iv_go_select_community"
+                android:layout_width="94px"
+                android:layout_height="97px"
+                android:padding="30px"
+                android:src="@mipmap/ic_more_horizontal"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@android:color/darker_gray"/>
+
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+</com.zhy.autolayout.AutoLinearLayout>

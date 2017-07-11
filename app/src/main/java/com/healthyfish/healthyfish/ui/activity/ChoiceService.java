@@ -141,7 +141,7 @@ public class ChoiceService extends BaseActivity {
         privateDoctorPrice = "100";
         appointmentPrice = "10";
         doctorInfo = info;
-        isOpenPictureConsulting = false;
+        isOpenPictureConsulting = true;
         isOpenPrivateDoctor = true;
         isOpenAppointment = false;
         isAttention = false;

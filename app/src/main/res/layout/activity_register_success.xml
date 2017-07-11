@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:gravity="center_horizontal">
 
+    <include layout="@layout/toolbar"/>
+
     <ImageView
         android:layout_width="316px"
         android:layout_height="316px"
@@ -28,23 +30,25 @@
             android:id="@+id/tv_back_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50px"
+            android:layout_marginTop="45px"
+            android:padding="5px"
             android:layout_gravity="right"
             android:text="返回首页>"
             android:textSize="42px"
-            android:textColor="@color/color_hint"/>
+            android:textColor="@color/selector_text_color_from_hint_to_white"/>
     </com.zhy.autolayout.AutoLinearLayout>
 
     <Button
+        android:id="@+id/bt_add_document"
         android:layout_width="720px"
         android:layout_height="wrap_content"
         android:layout_marginTop="155px"
-        android:paddingBottom="35px"
-        android:paddingTop="35px"
+        android:paddingBottom="30px"
+        android:paddingTop="30px"
         android:gravity="center"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
         android:text="添加健康档案"
         android:textSize="54px"
-        android:textColor="@android:color/white"/>
+        android:textColor="@color/selector_text_color_from_white_to_primary"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

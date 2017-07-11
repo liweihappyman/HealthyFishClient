@@ -173,7 +173,7 @@
         android:gravity="center"
         android:text="完成"
         android:textSize="54px"
-        android:textColor="@android:color/white"
-        android:background="@color/colorPrimary"/>
+        android:textColor="@color/selector_text_color_from_white_to_primary"
+        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

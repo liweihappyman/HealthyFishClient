@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?><!--挂号模块更换修改就诊人页面布局-->
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="135px"
+        android:background="@color/color_primary_dark"
+        android:focusableInTouchMode="true"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            style="@style/big_content_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="更换就诊人"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_new"
+            style="@style/textSize_54"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="36px"
+            android:text="新建"
+            android:textColor="@color/selector_text_color_from_white_to_primary" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/lv_change_visiting_person"
+        android:layout_width="match_parent"
+        android:layout_height="1000px">
+
+    </ListView>
+
+    <Button
+        android:id="@+id/bt_complete"
+        style="@style/textSize_54"
+        android:layout_width="978px"
+        android:layout_height="126px"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="160px"
+        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
+        android:text="完成"
+        android:textColor="@color/selector_text_color_from_white_to_primary" />
+
+</com.zhy.autolayout.AutoLinearLayout>

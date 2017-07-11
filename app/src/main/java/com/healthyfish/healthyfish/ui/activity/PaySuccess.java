@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 描述：
+ * 描述：送心意支付成功页面
  * 作者：LYQ on 2017/7/5.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
