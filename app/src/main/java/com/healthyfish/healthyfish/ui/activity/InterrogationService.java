@@ -90,8 +90,6 @@ public class InterrogationService extends BaseActivity {
                         }
                         reSet();
                         tvCurrentService.setTextColor(getResources().getColor(R.color.color_primary));
-
-                        //listAllService.clear();  //清除全部服务页面中的list数据，不然再次滑动到当前服务页面时数据会重复
                         break;
                     //中间的页面当创建后不会销毁，即它不会再去执行Fragment中的程序，如果要刷新理论上应该在此处理刷新
                     case 1:
@@ -102,11 +100,6 @@ public class InterrogationService extends BaseActivity {
                         }
                         reSet();
                         tvMyDoctor.setTextColor(getResources().getColor(R.color.color_primary));
-
-                        //刷新我的医生服务页面的适配器
-                        //InquiryServiceAdapter adapterInquiryService = InquiryFragmentMyDoctor.adapter;
-                        //adapterInquiryService.notifyDataSetChanged();
-
                         break;
                     //第三个页面当创建后滑动到第二页面不会销毁，滑动到第一页面时会销毁，如果要刷新理论上可以在页面的Fragment中重新加载处理刷新
                     case 2:
@@ -117,8 +110,6 @@ public class InterrogationService extends BaseActivity {
                         }
                         reSet();
                         tvAllService.setTextColor(getResources().getColor(R.color.color_primary));
-
-                        //listCurrentService.clear();//清除当前服务页面中的list数据，不然再次滑动到当前服务页面时数据会重复
                         break;
                 }
                 currIndex = position;

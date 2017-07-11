@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/sly_message_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:splitMotionEvents="false">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="283px"
+            android:clickable="true">
+
+            <TextView
+                android:id="@+id/tv_cancel_attention"
+                style="@style/textSize_60"
+                android:layout_width="180px"
+                android:layout_height="match_parent"
+                android:background="@color/color_secondary"
+                android:gravity="center"
+                android:text="取消\n关注"
+                android:textColor="@color/color_white" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/lly_consultation"
+            android:layout_width="match_parent"
+            android:layout_height="283px"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/item_health_news_img"
+                android:layout_width="219px"
+                android:layout_height="198px"
+                android:layout_marginLeft="32px"
+                android:layout_marginTop="41px"
+                android:src="@mipmap/remote_monitoring" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="50px"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/item_health_news_title"
+                    style="@style/textSize_42"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="46px"
+                    android:text="按时休息以及吃蛋炒饭对于养生的重要性"
+                    android:textColor="@color/color_content_title" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="42px"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/item_health_news_category"
+                        style="@style/textSize_36"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/category"
+                        android:textColor="@color/color_auxiliary_info" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/item_health_news_timestamp"
+                        style="@style/textSize_36"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="95px"
+                        android:text="@string/timestamp"
+                        android:textColor="@color/color_auxiliary_info" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.daimajia.swipe.SwipeLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

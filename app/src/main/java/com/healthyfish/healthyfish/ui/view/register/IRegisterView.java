@@ -8,4 +8,18 @@ package com.healthyfish.healthyfish.ui.view.register;
  */
 
 public interface IRegisterView {
+
+    void showProgressBar();
+
+    void hideProgressBar();
+
+    String getPhoneNumber();
+
+    String getVerificationCode();
+
+    void toActivity();
+
+    void ReadingClauseAndProtocol();
+
+    void showFailedError();
 }

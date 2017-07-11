@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,15 +56,15 @@ public class InterrogationFragment extends Fragment {
     public InterrogationFragment() {
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-                mContext = getActivity();
-                rootView= inflater.inflate(R.layout.fragment_interrogation, container, false);
-                unbinder = ButterKnife.bind(this, rootView);
-                rvListener();
-                initRecycleView();
-                return rootView;
+        mContext = getActivity();
+        rootView = inflater.inflate(R.layout.fragment_interrogation, container, false);
+        unbinder = ButterKnife.bind(this, rootView);
+        rvListener();
+        initRecycleView();
+        return rootView;
     }
 
     /**

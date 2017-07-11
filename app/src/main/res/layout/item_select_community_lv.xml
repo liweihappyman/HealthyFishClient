@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_community_title"
+        android:layout_width="wrap_content"
+        android:layout_height="140px"
+        android:gravity="center_vertical"
+        android:text="健康社区"
+        style="@style/textSize_60"
+        android:textColor="@color/color_general_and_title"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_send_mind"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -172,7 +173,7 @@
             android:layout_marginTop="48px"
             android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
             android:text="提交"
-            android:textColor="@color/selector_text_color_from_write_to_primary" />
+            android:textColor="@color/selector_text_color_from_white_to_primary" />
 
         <TextView
             style="@style/textSize_42"
