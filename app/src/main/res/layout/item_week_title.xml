@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="110px"
+    android:background="@color/color_white">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="138px"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_week"
+            style="@style/textSize_42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="周一" />
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/textSize_30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="11-28" />
+    </com.zhy.autolayout.AutoLinearLayout>
+</com.zhy.autolayout.AutoLinearLayout>
