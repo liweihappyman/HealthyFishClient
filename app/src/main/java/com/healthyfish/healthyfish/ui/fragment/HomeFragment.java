@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -16,14 +17,15 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
+import com.healthyfish.healthyfish.POJO.BeanHealthWorkShop;
 import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.adapter.HealthInfoAadpter;
-import com.healthyfish.healthyfish.adapter.HealthPlanAdapter;
-
+import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
+import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
+import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
+import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.ui.activity.registration.RegistrationHome;
-import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
@@ -46,6 +48,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     RecyclerView healthNewsRecyclerview;
     @BindView(R.id.health_plan_recyclerview)
     RecyclerView healthPlanRecyclerview;
+    @BindView(R.id.work_shop_recyclerview)
+    RecyclerView workShopRecyclerview;
     private Context mContext;
     private View rootView;
 
@@ -90,6 +94,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initFunctionMenu();//初始化菜单监听
         initHealthNews();//初始化健康资讯
         initHealthPlan();//初始化养生计划
+        initHealthWorkShop();//初始化健康工坊
 
         //轮播图
         bannerGuideContent.setAdapter(new BGABanner.Adapter<ImageView, String>() {
@@ -142,8 +147,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         listHealthPlan.add(healthPlan3);
         LinearLayoutManager lmg = new LinearLayoutManager(mContext);
         healthPlanRecyclerview.setLayoutManager(lmg);
-        HealthPlanAdapter healthPlanAdapter = new HealthPlanAdapter(mContext, listHealthPlan);
-        healthPlanRecyclerview.setAdapter(healthPlanAdapter);
+        HomePageHealthPlanAdapter homePageHealthPlanAdapter = new HomePageHealthPlanAdapter(mContext, listHealthPlan);
+        healthPlanRecyclerview.setAdapter(homePageHealthPlanAdapter);
 
     }
 
@@ -187,7 +192,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         listNews.add(itemNews1);
         LinearLayoutManager lmg = new LinearLayoutManager(mContext);
         healthNewsRecyclerview.setLayoutManager(lmg);
-        HealthInfoAadpter healthInfoAdapter = new HealthInfoAadpter(mContext, listNews);
+        HomePageHealthInfoAadpter healthInfoAdapter = new HomePageHealthInfoAadpter(mContext, listNews);
         healthNewsRecyclerview.setAdapter(healthInfoAdapter);
 
     }
@@ -200,6 +205,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fmMedRec.setOnClickListener(this);
         fmHealthManagement.setOnClickListener(this);
         fmRemoteMonitoring.setOnClickListener(this);
+    }
+
+    // 初始化健康工坊
+    private void initHealthWorkShop() {
+        List<BeanHealthWorkShop> listHealthWorkShop = new ArrayList<>();
+        BeanHealthWorkShop commodity1 = new BeanHealthWorkShop();
+        commodity1.setSmallImgCommodity(R.mipmap.image_home_page_work_shop);
+        commodity1.setNameCommodity("中医面膜");
+        commodity1.setHotSale(true);
+
+        BeanHealthWorkShop commodity2 = new BeanHealthWorkShop();
+        commodity2.setSmallImgCommodity(R.mipmap.image_home_page_work_shop);
+        commodity2.setNameCommodity("西医面膜");
+        commodity2.setHotSale(false);
+
+        listHealthWorkShop.add(commodity1);
+        listHealthWorkShop.add(commodity2);
+        listHealthWorkShop.add(commodity1);
+        listHealthWorkShop.add(commodity2);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
+        workShopRecyclerview.setLayoutManager(layoutManager);
+        HomePageHealthWorkShopAdapter adapter = new HomePageHealthWorkShopAdapter(mContext, listHealthWorkShop);
+        workShopRecyclerview.setAdapter(adapter);
     }
 
 

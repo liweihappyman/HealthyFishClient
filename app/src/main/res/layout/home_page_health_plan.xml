@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.healthyfish.healthyfish.ui.widget.AutoCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginTop="25px"
+    android:background="@color/color_white"
+    app:cardElevation="2dp"
+    android:layout_height="match_parent">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            style="@style/genera_title_text"
+            android:text="@string/date"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="100px" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_divider"/>
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/health_plan_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <!--<ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_divider"/>-->
+        <TextView
+            android:clickable="true"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="120px"
+            style="@style/genera_title_text"
+            android:text="@string/load_more"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.healthyfish.healthyfish.ui.widget.AutoCardView>

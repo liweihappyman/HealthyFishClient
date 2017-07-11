@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.healthyfish.healthyfish.ui.widget.AutoCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="540px"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:layout_marginTop="5dp"
+    app:cardElevation="2dp">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:orientation="vertical">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240px"
+            android:orientation="horizontal">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="0dp"
+                android:layout_height="240px"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/fm_interrogation2"
+                    android:layout_width="133px"
+                    android:layout_height="133px"
+                    android:background="@mipmap/interrogation2" />
+
+                <TextView
+                    style="@style/funtion_menu_tv"
+                    android:text="@string/interrogation" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="0dp"
+                android:layout_height="240px"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/fm_registration"
+                    android:layout_width="133px"
+                    android:layout_height="133px"
+                    android:background="@mipmap/registration" />
+
+                <TextView
+                    style="@style/funtion_menu_tv"
+                    android:text="@string/registration" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="0dp"
+                android:layout_height="240px"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/fm_fm_inspection_report"
+                    android:layout_width="133px"
+                    android:layout_height="133px"
+                    android:background="@mipmap/inspection_report" />
+
+                <TextView
+                    style="@style/funtion_menu_tv"
+                    android:text="@string/inspection_report" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240px"
+            android:orientation="horizontal">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="0dp"
+                android:layout_height="240px"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/fm_med_rec"
+                    android:layout_width="133px"
+                    android:layout_height="133px"
+                    android:background="@mipmap/dossier" />
+
+                <TextView
+                    style="@style/funtion_menu_tv"
+                    android:text="@string/dossier" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="0dp"
+                android:layout_height="240px"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/fm_health_management"
+                    android:layout_width="133px"
+                    android:layout_height="133px"
+                    android:background="@mipmap/health_management" />
+
+                <TextView
+                    style="@style/funtion_menu_tv"
+                    android:text="@string/health_management" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="0dp"
+                android:layout_height="240px"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/fm_remote_monitoring"
+                    android:layout_width="133px"
+                    android:layout_height="133px"
+                    android:background="@mipmap/remote_monitoring" />
+
+                <TextView
+                    style="@style/funtion_menu_tv"
+                    android:text="@string/remote_monitoring" />
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.healthyfish.healthyfish.ui.widget.AutoCardView>

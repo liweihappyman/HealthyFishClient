@@ -15,30 +15,27 @@ import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * 描述：
  * 作者： TMXK on 2017/6/30.
  */
 
-public class HealthInfoAadpter extends RecyclerView.Adapter<HealthInfoAadpter.ViewHolder> {
+public class HomePageHealthInfoAadpter extends RecyclerView.Adapter<HomePageHealthInfoAadpter.ViewHolder> {
     private Context mContext;
     private int mPosition;
     private List<BeanItemNewsAbstract> listNews;
 
-    public HealthInfoAadpter(Context mContext, List<BeanItemNewsAbstract> listNews) {
+    public HomePageHealthInfoAadpter(Context mContext, List<BeanItemNewsAbstract> listNews) {
         this.mContext = mContext;
         this.listNews = listNews;
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (mContext == null) {
             mContext = parent.getContext();
         }
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_health_info_rv, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_home_page_health_info_rv, parent, false);
         return new ViewHolder(view);
     }
 
