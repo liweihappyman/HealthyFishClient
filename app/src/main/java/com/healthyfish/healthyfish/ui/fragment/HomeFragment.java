@@ -20,7 +20,9 @@ import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HealthPlanAdapter;
-import com.healthyfish.healthyfish.ui.activity.AllMedRec;
+
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
+import com.healthyfish.healthyfish.ui.activity.registration.RegistrationHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.zhy.autolayout.AutoRelativeLayout;
 
@@ -217,6 +219,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.fm_health_management:
                 Intent intent = new Intent(mContext, MainIndexHealthyManagement.class);
                 startActivity(intent);
+                break;
+            case R.id.fm_registration:
+                Intent toRegistration = new Intent(mContext, RegistrationHome.class);
+                startActivity(toRegistration);
                 break;
         }
 

@@ -5,11 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.medicalrecord.SelectDoctor">
-    <include layout="@layout/toolbar" />
+    tools:context="com.healthyfish.healthyfish.ui.activity.registration.ChooseHospital">
+    <include layout="@layout/toolbar"/>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/doctor_list"
-        android:layout_marginTop="35px"
+        android:layout_marginTop="40px"
+        android:id="@+id/choose_hospital_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
 </com.zhy.autolayout.AutoLinearLayout>

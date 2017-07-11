@@ -137,6 +137,9 @@
         <item name="android:layout_marginTop">15px</item>
         <item name="android:background">@color/color_divider</item>
     </style>
-
+    <style name="PopupRightAnimation" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/popup_anim_right</item>
+        <item name="android:windowExitAnimation">@anim/popup_anim_right_exit</item>
+    </style>
 
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.Lable">
+    tools:context="com.healthyfish.healthyfish.ui.activity.medicalrecord.Lable">
     <include layout="@layout/toolbar"/>
     <LinearLayout
     android:layout_marginTop="20dp"

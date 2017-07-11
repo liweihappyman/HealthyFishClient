@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.TagAdapter;
-import com.healthyfish.healthyfish.constant.constants;
 import com.healthyfish.healthyfish.ui.widget.FlowLayout;
 import com.healthyfish.healthyfish.ui.widget.TagFlowLayout;
 

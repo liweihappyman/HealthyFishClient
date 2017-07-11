@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,11 +14,9 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.constant.constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 描述：患者信息页面

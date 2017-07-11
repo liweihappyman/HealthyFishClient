@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme2">
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
 
         <!-- 屏幕自适应框架设计稿长宽 -->
         <meta-data
@@ -44,8 +44,9 @@
         <activity android:name=".ui.activity.Login" />
         <!--注册页面-->
         <activity android:name=".ui.activity.Register" />
-        <!--病历夹页面-->
-        <activity android:name=".ui.activity.AllMedRec" />
+
+        <!-- 病历夹页面 -->
+        <activity android:name=".ui.activity.medicalrecord.AllMedRec" />
         <!--问诊选择医生页面-->
         <activity android:name=".ui.activity.ChoiceDoctor"/>
         <!--问诊选择服务页面-->
@@ -64,12 +65,18 @@
         <activity android:name=".ui.activity.PerfectArchives"/>
         <!--问诊选择档案页面-->
         <activity android:name=".ui.activity.ChoiceDocument"/>
+
         <!-- 新建病历夹页面 -->
         <activity
-            android:name=".ui.activity.NewMedRec"
+            android:name=".ui.activity.medicalrecord.NewMedRec"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- 添加病历标签 -->
+
+        <activity android:name=".ui.activity.medicalrecord.Lable" />
+        <!-- 用户信息 -->
+        <activity android:name=".ui.activity.medicalrecord.PatientInfo" />
+
         <activity android:name=".ui.activity.Lable" />
 
         <!--用户信息-->
@@ -100,17 +107,26 @@
         <activity android:name=".ui.activity.SetUp"/>
 
 
+
         <!-- 图片选择器 -->
         <activity
             android:name="com.foamtrace.photopicker.PhotoPickerActivity"
             android:configChanges="orientation|screenSize" />
+
+        <activity android:name=".ui.activity.medicalrecord.CreateCourse" />
+        <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
+        <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
+        <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
+        <activity android:name=".ui.activity.InspectionReport" />
+
+        <activity android:name=".ui.activity.registration.RegistrationHome" />
+        <activity android:name=".ui.activity.registration.ChooseHospital" />
+        <activity android:name=".ui.activity.registration.DoctorDetail"></activity>
+
         <activity android:name=".ui.activity.CreateCourse" />
         <activity android:name=".ui.activity.SelectMedRec" />
         <activity android:name=".ui.activity.SelectDoctor" />
 
-       
-
-      
         <!--健康圈发帖页面-->
         <activity android:name=".ui.activity.HealthyCirclePosting"/>
         <!--健康圈选择社区页面-->
@@ -126,11 +142,11 @@
         <!--挂号模块根据科室选择医生页面-->
         <activity android:name=".ui.activity.DepartmentDoctorList"/>
 
-
         <activity android:name=".ui.activity.ShareSuccess" />
         <activity android:name=".ui.activity.InspectionReport" />
 
   
+
         <!-- 健康管理 -->
         <activity android:name=".ui.activity.healthy_management.MainIndexHealthyManagement" />
         <activity android:name=".ui.activity.healthy_management.IndexPhysicalIdentification" />

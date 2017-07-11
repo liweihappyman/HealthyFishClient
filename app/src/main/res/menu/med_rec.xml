@@ -8,5 +8,8 @@
     <item android:id="@+id/del"
         android:title="shanchu"
         app:showAsAction="never"/>
+    <item android:id="@+id/test"
+        android:title="popupWindow"
+        app:showAsAction="never"/>
 
 </menu>

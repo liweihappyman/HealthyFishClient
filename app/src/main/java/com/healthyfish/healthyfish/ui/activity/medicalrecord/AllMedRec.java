@@ -1,12 +1,12 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MedRecLvAdapter;
@@ -24,9 +24,7 @@ import com.healthyfish.healthyfish.constant.constants;
 import com.healthyfish.healthyfish.utils.ComparatorDate;
 import com.zhy.autolayout.AutoLinearLayout;
 
-import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.healthyfish.healthyfish.ui.activity.NewMedRec.ALL_MED_REC_RESULT;
+import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.ALL_MED_REC_RESULT;
 
 /**
  * 描述：电子病历
@@ -53,6 +51,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
     ListView medRecAll;
     @BindView(R.id.new_med_rec)
     AutoLinearLayout newMedRec;
+
     private List<BeanMedRec> listMecRec = new ArrayList<>();
 
     @Override
@@ -192,6 +191,9 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                 Intent selectDoctor = new Intent(this, SelectDoctor.class);
                 AllMedRec.this.startActivity(selectDoctor);
                 break;
+            case R.id.test:
+                showOptions();
+                break;
         }
         return true;
     }
@@ -233,4 +235,29 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
         }
     }
+
+    private void showOptions() {
+        TextView close;
+        View rootView;
+        rootView = LayoutInflater.from(AllMedRec.this).inflate(R.layout.popupwindow_drug_instructions,
+                null);
+        final PopupWindow mPopWindow = new PopupWindow(rootView);
+        mPopWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        mPopWindow.setTouchable(true);
+        mPopWindow.setFocusable(true);
+        mPopWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopWindow.setOutsideTouchable(true);
+        mPopWindow.setAnimationStyle(R.style.PopupRightAnimation);
+        mPopWindow.showAsDropDown(toolbar,380,0);
+        close = (TextView) rootView.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopWindow.dismiss();
+            }
+        });
+    }
+
+
 }
