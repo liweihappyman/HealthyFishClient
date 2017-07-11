@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="263px"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="260px"
+        android:orientation="horizontal">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="260px"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_health_plan_title"
+                style="@style/big_content_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="30px"
+                android:text="中医体质养生计划1#" />
+
+            <TextView
+                android:id="@+id/item_health_plan_pro_content"
+                style="@style/genera_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="20px"
+                android:text="第2/10天  中医院外治 益阳罐" />
+
+            <ProgressBar
+                android:id="@+id/item_health_plan_progressbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="600px"
+                android:layout_height="48px"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="20px"
+                android:max="10"
+                android:progress="6"
+                android:progressDrawable="@drawable/progrssbar" />
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/item_health_plan_todo"
+            android:layout_width="180px"
+            android:layout_height="120px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="60px"
+            android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/go_to_single_scheme"
+            android:textColor="@color/color_white"
+            android:textSize="50px" />
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="60px"
+        android:layout_marginRight="60px"
+        android:background="@color/color_divider" />
+
+
+</com.zhy.autolayout.AutoLinearLayout>

@@ -27,13 +27,17 @@
                 app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
                 app:banner_pointTopBottomMargin="18px"
                 app:banner_transitionEffect="alpha" />
-            <include layout="@layout/home_function_menu" />
-           <include layout="@layout/health_plan"/>
-            <include layout="@layout/health_news" />
+
+            <include layout="@layout/home_page_function_menu" />
+
+            <include layout="@layout/home_page_health_plan" />
+
+            <include layout="@layout/home_page_health_news" />
+
+            <include layout="@layout/home_page_healthy_work_shop" />
 
 
         </com.zhy.autolayout.AutoLinearLayout>
-
 
 
     </ScrollView>

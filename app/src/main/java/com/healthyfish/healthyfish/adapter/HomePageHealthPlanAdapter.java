@@ -23,11 +23,11 @@ import java.util.List;
  * 编辑：WKJ
  */
 
-public class HealthPlanAdapter extends RecyclerView.Adapter<HealthPlanAdapter.ViewHolder>{
+public class HomePageHealthPlanAdapter extends RecyclerView.Adapter<HomePageHealthPlanAdapter.ViewHolder>{
     private Context mContext;
     private List<BeanHealthPlanItemTest> listHealthPlan;
 
-    public HealthPlanAdapter(Context mContext, List<BeanHealthPlanItemTest> listHealthPlan) {
+    public HomePageHealthPlanAdapter(Context mContext, List<BeanHealthPlanItemTest> listHealthPlan) {
         this.mContext = mContext;
         this.listHealthPlan = listHealthPlan;
     }
@@ -36,7 +36,7 @@ public class HealthPlanAdapter extends RecyclerView.Adapter<HealthPlanAdapter.Vi
         if (mContext == null) {
             mContext = parent.getContext();
         }
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_health_plan,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_home_page_health_plan,parent,false);
         return new ViewHolder(view);
     }
 
