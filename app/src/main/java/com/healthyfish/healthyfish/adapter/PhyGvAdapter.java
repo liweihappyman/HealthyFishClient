@@ -45,7 +45,6 @@ public class PhyGvAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(mContext);
     }
 
-
     @Override
     public int getCount() {
         return phyNames.size();
