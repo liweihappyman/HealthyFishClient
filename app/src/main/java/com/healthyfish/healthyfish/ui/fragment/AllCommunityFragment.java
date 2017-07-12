@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +36,7 @@ public class AllCommunityFragment extends Fragment {
 
     private Context mContext;
     private View rootView;
-    public static AllCommunityAdapter adapter;
-    public List<BeanHealthyCircleItem> list = new ArrayList<>();
+    public  AllCommunityAdapter adapter;
 
     @Nullable
     @Override
@@ -44,7 +44,6 @@ public class AllCommunityFragment extends Fragment {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_all_community, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        initData();
         initListView();
         return rootView;
     }
@@ -52,18 +51,20 @@ public class AllCommunityFragment extends Fragment {
     /**
      * 初始化模拟数据
      */
-    private void initData() {
+    private List<BeanHealthyCircleItem> getData() {
+        List<BeanHealthyCircleItem> list = new ArrayList<>();
         for (int i=0; i<10;i++){
             BeanHealthyCircleItem bean = new BeanHealthyCircleItem(null,"http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg","健康社区"+i,"这是一个非常有乐趣的社区");
             list.add(bean);
         }
+        return list;
     }
 
     /**
      * 初始化listView适配器
      */
     private void initListView() {
-        adapter = new AllCommunityAdapter(mContext,list);
+        adapter = new AllCommunityAdapter(mContext,getData());
         lvAllCommunity.setAdapter(adapter);
         lvAllCommunity.setVerticalScrollBarEnabled(false);
     }

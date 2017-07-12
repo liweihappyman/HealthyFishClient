@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.healthyfish.healthyfish.ui.activity.healthy_circle.HealthyCirclePosti
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +57,6 @@ public class HealthyCircleFragment extends Fragment {
     private Context mContext;
     private View rootView;
 
-    private ArrayList fragments;  //Fragment页面数组
     private int offset = 0;  // 动画图片偏移量
     private int currIndex = 0;  // 当前页卡编号
     private int currentItem = 0;  //初始页面
@@ -70,6 +71,7 @@ public class HealthyCircleFragment extends Fragment {
         initImageView();
         initPgAdapter();
         vpListener();
+        Log.e("LYQ","HealthyCircleFragment");
         return rootView;
     }
 
@@ -117,7 +119,6 @@ public class HealthyCircleFragment extends Fragment {
                         if (currIndex == 1) {
                             animation = new TranslateAnimation(one2twoLength, 0, 0, 0);
                         }
-                        MyCommunityFragment.adapter.notifyDataSetChanged();
                         reSet();
                         tvConcernCommunity.setTextColor(getResources().getColor(R.color.color_secondary));
                         break;
@@ -126,7 +127,6 @@ public class HealthyCircleFragment extends Fragment {
                         if (currIndex == 0) {
                             animation = new TranslateAnimation(offset, one2twoLength, 0, 0);
                         }
-                        AllCommunityFragment.adapter.notifyDataSetChanged();
                         reSet();
                         tvAllCommunity.setTextColor(getResources().getColor(R.color.color_secondary));
                         break;
@@ -152,17 +152,17 @@ public class HealthyCircleFragment extends Fragment {
         tvAllCommunity.setTextColor(getResources().getColor(R.color.color_general_and_title));
     }
 
-
     /**
      * 初始化ViewPager
      */
     private void initPgAdapter() {
-        fragments = new ArrayList<Fragment>();
+        List<Fragment> fragments = new ArrayList<Fragment>();  //Fragment页面数组
         Fragment MyCommunity = new MyCommunityFragment();
         Fragment AllCommunity = new AllCommunityFragment();
         fragments.add(MyCommunity);
         fragments.add(AllCommunity);
-        vpHealthyCircle.setAdapter(new MainVpAdapter(getActivity().getSupportFragmentManager(), fragments));
+        //此处应使用getChildFragmentManager()而不是getActivity().getSupportFragmentManager()，fragment嵌套fragment时应使用使用前者,后者是activity嵌套fragment时使用
+        vpHealthyCircle.setAdapter(new MainVpAdapter(getChildFragmentManager(), fragments));
         vpHealthyCircle.setCurrentItem(currentItem);//设置初始页面
         if (currentItem == 1) {
             currIndex = 1;
