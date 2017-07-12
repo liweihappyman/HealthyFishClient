@@ -81,7 +81,7 @@ public class PersonalCenterFragment extends Fragment {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_personal_center, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        isLogin(true);
+        isLogin(false);
         return rootView;
     }
 
