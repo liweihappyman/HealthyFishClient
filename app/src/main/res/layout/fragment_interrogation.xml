@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="110px"
+        android:layout_height="135px"
         android:background="@color/color_primary_dark"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">

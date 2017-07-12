@@ -4,8 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.PhyIdeInfraredTest">
 
     <include layout="@layout/toolbar" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="30px">
+
+        <TextView
+            android:id="@+id/tv_select_phy_title"
+            style="@style/textSize_42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45px"
+            android:text="根据红外热像仪热图报告单选择您的体质"
+            android:textColor="@color/color_content_title" />
+
+        <GridView
+            android:id="@+id/gv_select_phy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="40px"
+            android:numColumns="3"
+            android:verticalSpacing="30px" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20px"
+        android:background="@color/color_white"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/textSize_42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="55px"
+            android:layout_marginTop="24px"
+            android:text="上传您的红外热像仪热图报告单"
+            android:textColor="@color/color_content_title" />
+
+        <GridView
+            android:id="@+id/gv_select_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:numColumns="3"
+            android:padding="40px" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <Button
+        android:id="@+id/bt_complete"
+        style="@style/textSize_54"
+        android:layout_width="972px"
+        android:layout_height="124px"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/selector_btn_color_from_secondary_to_white"
+        android:text="完成"
+        android:textColor="@color/selector_text_color_from_white_to_secondary" />
 
 </com.zhy.autolayout.AutoLinearLayout>

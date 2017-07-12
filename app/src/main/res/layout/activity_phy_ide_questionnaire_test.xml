@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.PhyIdeQuestionnaireTest">
 
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/layout_toolbar"
+        layout="@layout/toolbar" />
 
-</com.zhy.autolayout.AutoLinearLayout>
+    <TextView
+        android:id="@+id/tv_phy_ide_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28px"
+        android:paddingLeft="50px"
+        android:paddingRight="50px"
+        android:layout_below="@+id/layout_toolbar"
+        android:text="@string/phy_ide_title"
+        style="@style/textSize_48"
+        android:textColor="@color/color_content_title"/>
+
+    <ImageView
+        android:id="@+id/iv_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="32px"
+        android:layout_below="@+id/tv_phy_ide_title"
+        android:background="@android:color/darker_gray"/>
+
+    <ListView
+        android:id="@+id/lv_phy_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="126px"
+        android:layout_below="@+id/iv_divider" />
+
+    <Button
+        android:id="@+id/bt_commit_test"
+        android:layout_width="match_parent"
+        android:layout_height="126px"
+        android:layout_alignParentBottom="true"
+        android:text="提交测试"
+        style="@style/textSize_54"
+        android:textColor="@color/selector_text_color_from_white_to_primary"
+        android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"/>
+
+</com.zhy.autolayout.AutoRelativeLayout>

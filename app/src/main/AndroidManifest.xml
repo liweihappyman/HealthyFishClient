@@ -147,6 +147,8 @@
         <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.MyHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.SinglePlanDetail"></activity>
+        <!--健康管理体质报告页面-->
+        <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
 
     </application>
 

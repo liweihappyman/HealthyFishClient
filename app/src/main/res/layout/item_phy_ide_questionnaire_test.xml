@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/textSize_48"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="55px"
+        android:layout_marginTop="24px"
+        android:text="1.您精力充沛吗？"
+        android:textColor="@color/color_general_and_title" />
+
+    <RadioGroup
+        android:id="@+id/rgp_phy_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="48px"
+        android:paddingLeft="48px"
+        android:paddingRight="48px"
+        android:paddingTop="39px"
+        android:visibility="visible">
+
+
+        <RadioButton
+            android:id="@+id/rbt_not"
+            style="@style/textSize_48"
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:background="@drawable/selector_rbt_point_bg_color_from_white_to_green"
+            android:button="@null"
+            android:gravity="center"
+            android:text="没有"
+            android:textColor="@color/selector_rbt_text_color_from_green_to_white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/rbt_little"
+            style="@style/textSize_48"
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:background="@drawable/selector_rbt_point_bg_color_from_white_to_green"
+            android:button="@null"
+            android:gravity="center"
+            android:text="很少"
+            android:textColor="@color/selector_rbt_text_color_from_green_to_white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/rbt_sometimes"
+            style="@style/textSize_48"
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:background="@drawable/selector_rbt_point_bg_color_from_white_to_green"
+            android:button="@null"
+            android:gravity="center"
+            android:text="有时"
+            android:textColor="@color/selector_rbt_text_color_from_green_to_white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/rbt_often"
+            style="@style/textSize_48"
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:background="@drawable/selector_rbt_point_bg_color_from_white_to_green"
+            android:button="@null"
+            android:gravity="center"
+            android:text="经常"
+            android:textColor="@color/selector_rbt_text_color_from_green_to_white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/rbt_always"
+            style="@style/textSize_48"
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:background="@drawable/selector_rbt_point_bg_color_from_white_to_green"
+            android:button="@null"
+            android:gravity="center"
+            android:text="总是"
+            android:textColor="@color/selector_rbt_text_color_from_green_to_white"
+            android:textStyle="bold" />
+
+    </RadioGroup>
+
+</com.zhy.autolayout.AutoLinearLayout>
