@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.registration;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +11,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanDepartmentDoctor;
-import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.adapter.DepartmentDoctorLvAdapter;
-import com.healthyfish.healthyfish.ui.activity.registration.DoctorDetail;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;

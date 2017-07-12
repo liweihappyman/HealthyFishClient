@@ -23,7 +23,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.adapter.PhyGvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
-import com.healthyfish.healthyfish.ui.activity.HealthyCirclePosting;
+import com.healthyfish.healthyfish.ui.activity.healthy_circle.HealthyCirclePosting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +90,7 @@ public class PhyIdeInfraredTest extends BaseActivity implements AdapterView.OnIt
         for (int i=0; i<phyNames.length; i++){
             list.add(phyNames[i]);
         }
-        PhyGvAdapter adapter = new PhyGvAdapter(this, list);
+        PhyGvAdapter adapter = new PhyGvAdapter(this, list,3);  //设置适配器并设置最大可选体质数为3
         gvSelectPhy.setAdapter(adapter);
     }
 

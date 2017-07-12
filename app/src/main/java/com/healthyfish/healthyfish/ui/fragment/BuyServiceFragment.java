@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.ui.activity.Pay;
+import com.healthyfish.healthyfish.ui.activity.interrogation.Pay;
 
 /**
  * 描述：问诊模块选择服务页面点击不同服务弹出的相应购买服务窗口的处理

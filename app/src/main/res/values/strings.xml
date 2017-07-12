@@ -47,7 +47,7 @@
     <string name="begin_phy_ide_test">开始测试</string>
     <string name="go_to_single_scheme">去完成</string>
     <!--体质测试问卷标题-->
-    <string name="phy_ide_title">以下问题根据您最近三个月的身体感受回答，孕妇及16岁以下人群不建议使用本测试</string>
+    <string name="phy_ide_title">以下问题根据您最近三个月的身体感受回答，孕妇及16岁以下人群不建议使用本测试。</string>
 
 
 </resources>

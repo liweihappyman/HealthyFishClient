@@ -33,14 +33,15 @@ public class PhyGvAdapter extends BaseAdapter {
     private List<String> phyNames = new ArrayList<>();
 
     private int selectNum = 0;//已选择的体质数，初始值为0
-    private int maxSelectNum = 9;//最大可选体质数
+    private int maxSelectNum = 3;//最大可选体质数
 
     private List<CheckBox> ckbList = new ArrayList<CheckBox>();
     private List<TextView> tvOrderList = new ArrayList<TextView>();
 
-    public PhyGvAdapter(Context mContext, List<String> phyNames) {
+    public PhyGvAdapter(Context mContext, List<String> phyNames,int maxSelectNum) {
         this.mContext = mContext;
         this.phyNames = phyNames;
+        this.maxSelectNum = maxSelectNum;
         mInflater = LayoutInflater.from(mContext);
     }
 

@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.ui.activity.SelectDepartments;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
-import com.healthyfish.healthyfish.ui.activity.HealthyCirclePosting;
+import com.healthyfish.healthyfish.ui.activity.healthy_circle.HealthyCirclePosting;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;

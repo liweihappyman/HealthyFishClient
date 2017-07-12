@@ -1,18 +1,18 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.registration;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChangeVisitingPersonAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.registration.NewVisitingPerson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 描述：
+ * 描述：挂号更换就诊人页面
  * 作者：LYQ on 2017/7/10.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ

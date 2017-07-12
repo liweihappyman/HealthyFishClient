@@ -1,7 +1,6 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.registration;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -9,13 +8,14 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.registration.ChangeVisitingPerson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
