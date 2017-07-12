@@ -24,16 +24,15 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AppointmentTime extends Fragment {
+public class AppointmentTime3 extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.week_gridview)
     GridView weekGridview;
 
     private View rootView;
-
     private Test test;
 
-    public AppointmentTime() {
+    public AppointmentTime3() {
     }
 
     @Override
@@ -43,7 +42,7 @@ public class AppointmentTime extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_appointment_time, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         Bundle bundle=this.getArguments();
-        test = (Test) bundle.getSerializable("data");
+        test = (Test) bundle.getSerializable("data3");
         Log.i("ttttttt","测试+"+test.getList().get(0).getDate());
 
 

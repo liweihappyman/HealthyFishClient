@@ -73,9 +73,11 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- 添加病历标签 -->
 
-        <activity android:name=".ui.activity.medicalrecord.Lable" />
+        <activity android:name=".ui.activity.medicalrecord.Lable"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!-- 用户信息 -->
-        <activity android:name=".ui.activity.medicalrecord.PatientInfo" />
+        <activity android:name=".ui.activity.medicalrecord.PatientInfo"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!--登录注册忘记密码页面-->
         <activity android:name=".ui.activity.ForgetPassword"/>
         <!--登录注册修改密码页面-->
@@ -108,7 +110,8 @@
             android:name="com.foamtrace.photopicker.PhotoPickerActivity"
             android:configChanges="orientation|screenSize" />
 
-        <activity android:name=".ui.activity.medicalrecord.CreateCourse" />
+        <activity android:name=".ui.activity.medicalrecord.CreateCourse"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
         <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
         <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
