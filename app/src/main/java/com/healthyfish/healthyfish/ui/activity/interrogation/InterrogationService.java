@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.interrogation;
 
 import android.content.Context;
 import android.graphics.Matrix;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.fragment.AllServiceFragment;
 import com.healthyfish.healthyfish.ui.fragment.CurrentServiceFragment;
 import com.healthyfish.healthyfish.ui.fragment.MyDoctorFragment;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 描述：
+ * 描述：问诊服务页面
  * 作者：LYQ on 2017/7/5.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ

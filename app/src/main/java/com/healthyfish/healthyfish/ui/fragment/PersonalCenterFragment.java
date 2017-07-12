@@ -17,12 +17,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.ui.activity.Feedback;
+import com.healthyfish.healthyfish.ui.activity.personal_center.Feedback;
 import com.healthyfish.healthyfish.ui.activity.Login;
-import com.healthyfish.healthyfish.ui.activity.MyConcern;
-import com.healthyfish.healthyfish.ui.activity.MyNews;
-import com.healthyfish.healthyfish.ui.activity.PersonalInformation;
-import com.healthyfish.healthyfish.ui.activity.SetUp;
+import com.healthyfish.healthyfish.ui.activity.personal_center.MyConcern;
+import com.healthyfish.healthyfish.ui.activity.personal_center.MyNews;
+import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformation;
+import com.healthyfish.healthyfish.ui.activity.personal_center.SetUp;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
@@ -81,7 +81,7 @@ public class PersonalCenterFragment extends Fragment {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_personal_center, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        isLogin(true);
+        isLogin(false);
         return rootView;
     }
 

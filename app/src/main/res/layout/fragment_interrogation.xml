@@ -1,4 +1,4 @@
-<com.zhy.autolayout.AutoFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="110px"
+        android:layout_height="135px"
         android:background="@color/color_primary_dark"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
@@ -27,8 +27,8 @@
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="1020px"
         android:layout_height="96px"
-        android:layout_marginLeft="30px"
-        android:layout_marginTop="134px"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24px"
         android:gravity="center_vertical"
         android:background="@drawable/rounded_rectangle_white">
 
@@ -57,7 +57,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="266px"
+        android:layout_marginTop="36px"
         android:layout_marginLeft="30px"
         android:text="按照科室找医生"
         style="@style/textSize_42"
@@ -67,8 +67,8 @@
         android:id="@+id/rv_choice_department"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="326px">
+        android:layout_marginTop="20px">
 
     </android.support.v7.widget.RecyclerView>
 
-</com.zhy.autolayout.AutoFrameLayout>
+</com.zhy.autolayout.AutoLinearLayout>

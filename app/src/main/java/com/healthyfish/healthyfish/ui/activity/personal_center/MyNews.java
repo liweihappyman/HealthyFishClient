@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.personal_center;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.healthyfish.healthyfish.POJO.BeanMyNewsItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MyNewsAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;

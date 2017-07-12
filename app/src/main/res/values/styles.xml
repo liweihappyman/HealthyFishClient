@@ -74,6 +74,10 @@
         <item name="android:textSize">36px</item>
     </style>
 
+    <style name="textSize_52">
+        <item name="android:textSize">52px</item>
+    </style>
+
     <style name="textSize_42">
         <item name="android:textSize">42px</item>
     </style>
