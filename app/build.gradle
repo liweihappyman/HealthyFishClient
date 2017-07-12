@@ -27,7 +27,7 @@ dependencies {
 
 
     compile 'com.jakewharton:butterknife:8.6.0'
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.0@aar'
     compile 'com.alibaba:fastjson:1.2.28'
     compile 'com.zhy:autolayout:1.4.5'
     compile 'q.rorbin:badgeview:1.1.2'

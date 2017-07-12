@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 描述：选择病历页面listview的适配器
+ * 描述：选择预约时间弹窗列表适配器
  * 作者：WKJ on 2017/7/11.
  * 邮箱：
  * 编辑：WKJ

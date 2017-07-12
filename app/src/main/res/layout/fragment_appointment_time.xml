@@ -2,35 +2,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_titlebar_bg"
+    android:background="@color/color_hint"
     android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.fragment.AppointmentTime">
    <GridView
-       android:id="@+id/title_week_gridview"
+       android:id="@+id/week_gridview"
        android:layout_marginLeft="2px"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:numColumns="7"
-       android:verticalSpacing="3px"
-       android:horizontalSpacing="3px"
+       android:verticalSpacing="4px"
+       android:horizontalSpacing="4px"
        android:smoothScrollbar="false"
        ></GridView>
    <ImageView
        android:background="@color/color_divider"
        android:layout_width="match_parent"
        android:layout_height="2px" />
-   <GridView
-       android:id="@+id/item_week_gridview"
-       android:layout_marginLeft="2px"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:numColumns="7"
-       android:verticalSpacing="3px"
-       android:horizontalSpacing="3px"
-       android:smoothScrollbar="false"
-       ></GridView>
-   <ImageView
-       android:background="@color/color_divider"
-       android:layout_width="match_parent"
-       android:layout_height="2px" />
+   <!--<GridView-->
+       <!--android:id="@+id/item_week_gridview"-->
+       <!--android:layout_marginLeft="2px"-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="wrap_content"-->
+       <!--android:numColumns="7"-->
+       <!--android:verticalSpacing="3px"-->
+       <!--android:horizontalSpacing="3px"-->
+       <!--android:smoothScrollbar="false"-->
+       <!--&gt;</GridView>-->
+   <!--<ImageView-->
+       <!--android:background="@color/color_divider"-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="2px" />-->
 </com.zhy.autolayout.AutoLinearLayout>
