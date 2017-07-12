@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="136px"
+    android:layout_height="140px"
+    android:background="@color/color_white">
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/time"
+            style="@style/textSize_48"
+            android:layout_width="136px"
+            android:layout_height="140px"
+            android:text="上午" />
+</com.zhy.autolayout.AutoLinearLayout>

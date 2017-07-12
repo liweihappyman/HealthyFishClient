@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/color_white"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="0dp"
+        android:layout_height="120px"
+        android:layout_weight="1"
+        style="@style/textSize_48"
+        android:gravity="center_vertical"
+        android:text="上午  08:00--08:05"
+        android:textColor="@color/color_auxiliary_info"
+        android:layout_marginLeft="50px"
+        />
+    <CheckBox
+        android:id="@+id/selected_state"
+        android:layout_width="72px"
+        android:layout_height="72px"
+        android:layout_marginRight="50px"
+        android:background="@drawable/select_circle"
+        android:button="@android:color/transparent"
+        android:textOff=""
+        android:textOn=""
+        android:clickable="false"
+        android:focusable="false"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="50px"
+    android:layout_marginRight="50px"
+    android:orientation="vertical">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90px"
+        android:background="@color/color_primary_dark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20px"
+        android:paddingRight="20px">
+
+        <ImageView
+            android:id="@+id/left"
+            android:layout_width="34px"
+            android:layout_height="40px"
+            android:background="@mipmap/left_white" />
+
+        <TextView
+            android:id="@+id/duration"
+            style="@style/textSize_42"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="11月28日-12月4月"
+            android:textColor="@color/color_white" />
+
+        <ImageView
+            android:id="@+id/right"
+            android:layout_width="34px"
+            android:layout_height="40px"
+            android:background="@mipmap/right_white" />
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/appointment_time_vp"
+        android:layout_width="match_parent"
+        android:layout_height="400px"></android.support.v4.view.ViewPager>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/color_divider"/>
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="65px"
+        android:background="@color/color_white"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/first"
+            android:layout_width="24px"
+            android:layout_height="24px"
+            android:background="@drawable/green_point" />
+
+        <ImageView
+            android:id="@+id/second"
+            android:layout_width="24px"
+            android:layout_height="24px"
+            android:layout_marginLeft="10px"
+            android:background="@drawable/white_point_stroke" />
+
+        <ImageView
+            android:id="@+id/third"
+            android:layout_width="24px"
+            android:layout_height="24px"
+            android:layout_marginLeft="10px"
+            android:background="@drawable/white_point_stroke" />
+    </com.zhy.autolayout.AutoLinearLayout>
+</com.zhy.autolayout.AutoLinearLayout>
