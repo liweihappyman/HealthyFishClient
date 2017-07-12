@@ -1,6 +1,7 @@
 package com.healthyfish.healthyfish.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.adapter.DepartmentDoctorLvAdapter;
+import com.healthyfish.healthyfish.ui.activity.registration.DoctorDetail;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
@@ -66,7 +68,10 @@ public class DepartmentDoctorList extends BaseActivity {
         lvDepartmentDoctorList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //进入到医生详情页面，进行预约时间的选择
                 MyToast.showToast(DepartmentDoctorList.this,mDoctorInfos.get(position).getName());
+                Intent test = new Intent(DepartmentDoctorList.this,DoctorDetail.class);
+                startActivity(test);
             }
         });
     }

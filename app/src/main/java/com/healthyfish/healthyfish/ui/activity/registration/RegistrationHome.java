@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.SelectDepartments;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -123,7 +124,7 @@ public class RegistrationHome extends AppCompatActivity {
                 startActivity(toChooseHospital);
                 break;
             case R.id.choose_department:
-                Intent test = new Intent(this,DoctorDetail.class);
+                Intent test = new Intent(this,SelectDepartments.class);
                 startActivity(test);
                 break;
         }

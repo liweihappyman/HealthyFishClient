@@ -2,17 +2,14 @@ package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -27,7 +24,6 @@ import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.adapter.PhyGvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.HealthyCirclePosting;
-import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
 import java.util.List;
