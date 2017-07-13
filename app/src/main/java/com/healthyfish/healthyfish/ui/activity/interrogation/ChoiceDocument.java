@@ -94,6 +94,7 @@ public class ChoiceDocument extends BaseActivity {
         lvChoiceDocument.setChoiceMode(ListView.CHOICE_MODE_SINGLE);//设置单选功能
         mAdapter = new ChoiceDocumentLvAdapter(this,list);
         lvChoiceDocument.setAdapter(mAdapter);
+
     }
 
     /**
