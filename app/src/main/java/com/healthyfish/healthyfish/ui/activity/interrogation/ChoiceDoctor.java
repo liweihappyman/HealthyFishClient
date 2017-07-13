@@ -1,12 +1,9 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.interrogation;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,6 +12,7 @@ import android.widget.TextView;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 描述：按科室分类选择医生
+ * 描述：问诊按科室分类选择医生
  * 作者：LYQ on 2017/7/2.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ

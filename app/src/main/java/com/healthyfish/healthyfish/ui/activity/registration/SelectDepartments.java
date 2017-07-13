@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.registration;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="246px"
+        android:layout_height="114px"
+        android:layout_marginLeft="15px">
+
+        <CheckBox
+            android:id="@+id/ckb_phy"
+            android:layout_width="216px"
+            android:layout_height="84px"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:button="@null"
+            android:background="@drawable/selector_ckb_bg_phy"
+            android:gravity="center"
+            android:text="平和质"
+            android:textColor="@color/selector_text_color_phy_gv"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/tv_order"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/red_point"
+            android:text="0"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false" />
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

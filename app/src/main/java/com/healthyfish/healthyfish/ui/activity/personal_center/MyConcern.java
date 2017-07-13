@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.personal_center;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +11,7 @@ import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanMyConcernItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MyConcernLvAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;

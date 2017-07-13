@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.interrogation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDocumentLvAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
@@ -93,6 +94,7 @@ public class ChoiceDocument extends BaseActivity {
         lvChoiceDocument.setChoiceMode(ListView.CHOICE_MODE_SINGLE);//设置单选功能
         mAdapter = new ChoiceDocumentLvAdapter(this,list);
         lvChoiceDocument.setAdapter(mAdapter);
+
     }
 
     /**

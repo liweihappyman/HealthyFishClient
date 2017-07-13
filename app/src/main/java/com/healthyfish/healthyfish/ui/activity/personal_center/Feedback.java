@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.personal_center;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,45 +8,40 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 描述：
- * 作者：LYQ on 2017/7/10.
+ * 描述：个人中心意见反馈页面
+ * 作者：LYQ on 2017/7/7.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
  */
 
-public class NewVisitingPerson extends BaseActivity {
+public class Feedback extends BaseActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.et_visiting_person_name)
-    EditText etVisitingPersonName;
-    @BindView(R.id.et_ID_number)
-    EditText etIDNumber;
-    @BindView(R.id.et_visiting_card_number)
-    EditText etVisitingCardNumber;
-    @BindView(R.id.et_phone_number)
-    EditText etPhoneNumber;
-    @BindView(R.id.bt_confirm_registration)
-    Button btConfirmRegistration;
+    @BindView(R.id.et_feedback)
+    EditText etFeedback;
+    @BindView(R.id.bt_commit)
+    Button btCommit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_visiting_person);
+        setContentView(R.layout.activity_feedback);
         ButterKnife.bind(this);
-        initToolBar(toolbar,toolbarTitle,"新建就诊人");
+        initToolBar(toolbar,toolbarTitle,"意见反馈");
     }
 
-    @OnClick(R.id.bt_confirm_registration)
+    @OnClick(R.id.bt_commit)
     public void onViewClicked() {
-
+        etFeedback.getText().toString().trim();
     }
 }

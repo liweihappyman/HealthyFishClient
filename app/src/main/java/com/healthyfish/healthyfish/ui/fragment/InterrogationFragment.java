@@ -18,7 +18,7 @@ import com.healthyfish.healthyfish.utils.DividerGridItemDecoration;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
 import com.healthyfish.healthyfish.listener.InterrogationRvlistener;
-import com.healthyfish.healthyfish.ui.activity.ChoiceDoctor;
+import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDoctor;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
