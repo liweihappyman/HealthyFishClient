@@ -112,6 +112,7 @@
 
         <activity android:name=".ui.activity.medicalrecord.CreateCourse"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
         <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
         <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
         <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
