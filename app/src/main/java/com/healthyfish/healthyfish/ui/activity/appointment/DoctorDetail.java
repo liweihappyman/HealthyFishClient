@@ -1,7 +1,5 @@
-package com.healthyfish.healthyfish.ui.activity.registration;
+package com.healthyfish.healthyfish.ui.activity.appointment;
 
-import android.animation.Animator;
-import android.animation.TimeInterpolator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -29,14 +26,8 @@ import com.healthyfish.healthyfish.ui.fragment.AppointmentTime3;
 import com.healthyfish.healthyfish.utils.FixedSpeedScroller;
 import com.healthyfish.healthyfish.utils.Utils1;
 
-import org.w3c.dom.Text;
-
 import java.lang.reflect.Field;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;

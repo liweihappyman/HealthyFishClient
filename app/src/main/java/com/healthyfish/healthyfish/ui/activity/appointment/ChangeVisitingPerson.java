@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity.registration;
+package com.healthyfish.healthyfish.ui.activity.appointment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChangeVisitingPersonAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
-import com.healthyfish.healthyfish.ui.activity.registration.NewVisitingPerson;
 
 import java.util.ArrayList;
 import java.util.List;
