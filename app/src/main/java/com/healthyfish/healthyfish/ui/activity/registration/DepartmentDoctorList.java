@@ -15,6 +15,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.adapter.DepartmentDoctorLvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;

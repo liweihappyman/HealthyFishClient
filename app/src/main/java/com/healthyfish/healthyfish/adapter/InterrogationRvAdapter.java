@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class InterrogationRvAdapter extends RecyclerView.Adapter{
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.tv_department_name);
             icon = (ImageView) itemView.findViewById(R.id.iv_department_img);
+            AutoUtils.autoSize(itemView);
         }
     }
 }
