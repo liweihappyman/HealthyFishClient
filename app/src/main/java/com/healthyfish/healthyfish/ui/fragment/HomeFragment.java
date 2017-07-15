@@ -25,7 +25,7 @@ import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
-import com.healthyfish.healthyfish.ui.activity.registration.RegistrationHome;
+import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
@@ -250,7 +250,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.fm_registration:
-                Intent toRegistration = new Intent(mContext, RegistrationHome.class);
+                Intent toRegistration = new Intent(mContext, AppointmentHome.class);
                 startActivity(toRegistration);
                 break;
         }

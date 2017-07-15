@@ -30,7 +30,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 初始化ToolBar
      */
-    public void initToolBar(Toolbar toolbar, TextView tvTitle,String title) {
+    public void initToolBar(Toolbar toolbar, TextView tvTitle, String title) {
         toolbar.setTitle("");//设置不显示应用名
         tvTitle.setText(title);
         setSupportActionBar(toolbar);

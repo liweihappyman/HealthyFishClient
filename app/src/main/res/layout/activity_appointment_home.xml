@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.registration.RegistrationHome">
+    tools:context="com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome">
 
     <include layout="@layout/toolbar" />
 

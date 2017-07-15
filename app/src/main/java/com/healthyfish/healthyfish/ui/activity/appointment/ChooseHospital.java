@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity.registration;
+package com.healthyfish.healthyfish.ui.activity.appointment;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
