@@ -44,26 +44,7 @@
 
         <!-- 病历夹页面 -->
         <activity android:name=".ui.activity.medicalrecord.AllMedRec" />
-<<<<<<< HEAD
-        <!--问诊选择医生页面-->
-        <activity android:name=".ui.activity.interrogation.ChoiceDoctor"/>
-        <!--问诊选择服务页面-->
-        <activity android:name=".ui.activity.interrogation.ChoiceService"/>
-        <!--问诊送心意页面-->
-        <activity android:name=".ui.activity.interrogation.SendMind"/>
-        <!--问诊支付页面-->
-        <activity android:name=".ui.activity.interrogation.Pay"/>
-        <!--问诊支付成功页面-->
-        <activity android:name=".ui.activity.interrogation.PaySuccess"/>
-        <!--问诊购买服务支付成功页面-->
-        <activity android:name=".ui.activity.interrogation.PayServiceSuccess"/>
-        <!--问诊服务页面-->
-        <activity android:name=".ui.activity.interrogation.InterrogationService"/>
-        <!--问诊完善档案页面-->
-        <activity android:name=".ui.activity.interrogation.PerfectArchives"/>
-        <!--问诊选择档案页面-->
-        <activity android:name=".ui.activity.interrogation.ChoiceDocument"/>
-=======
+
         <!-- 问诊选择医生页面 -->
         <activity android:name=".ui.activity.interrogation.ChoiceDoctor" />
         <!-- 问诊选择服务页面 -->
@@ -82,7 +63,7 @@
         <activity android:name=".ui.activity.interrogation.PerfectArchives" />
         <!-- 问诊选择档案页面 -->
         <activity android:name=".ui.activity.interrogation.ChoiceDocument" />
->>>>>>> pr/13
+
 
         <!-- 新建病历夹页面 -->
         <activity
@@ -95,36 +76,7 @@
             android:name=".ui.activity.medicalrecord.Lable"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <!-- 用户信息 -->
-<<<<<<< HEAD
-        <activity android:name=".ui.activity.medicalrecord.PatientInfo"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <!--登录注册忘记密码页面-->
-        <activity android:name=".ui.activity.ForgetPassword"/>
-        <!--登录注册修改密码页面-->
-        <activity android:name=".ui.activity.ChangePassword"/>
-        <!--登录注册修改密码成功页面-->
-        <activity android:name=".ui.activity.ChangePasswordSuccess"/>
-        <!--登录注册填写昵称密码页面-->
-        <activity android:name=".ui.activity.RegisterPassword"/>
-        <!--登录注册填写身份证号和选择性别页面-->
-        <activity android:name=".ui.activity.RegisterInformation"/>
-        <!--登录注册注册成功页面-->
-        <activity android:name=".ui.activity.RegisterSuccess"/>
-        <!--个人中心我的健康信息页面-->
-        <activity android:name=".ui.activity.personal_center.HealthInformation"/>
-        <!--个人中心个人信息页面-->
-        <activity android:name=".ui.activity.personal_center.PersonalInformation"/>
-        <!--个人中心我的消息页面-->
-        <activity android:name=".ui.activity.personal_center.MyNews"/>
-        <!--个人中心我的关注页面-->
-        <activity android:name=".ui.activity.personal_center.MyConcern"/>
-        <!--个人中心意见反馈页面-->
-        <activity android:name=".ui.activity.personal_center.Feedback"/>
-        <!--个人中心设置页面-->
-        <activity android:name=".ui.activity.personal_center.SetUp"/>
 
-
-=======
         <activity
             android:name=".ui.activity.medicalrecord.PatientInfo"
             android:windowSoftInputMode="adjustPan|stateHidden" />
@@ -152,48 +104,22 @@
         <activity android:name=".ui.activity.personal_center.Feedback" />
         <!-- 个人中心设置页面 -->
         <activity android:name=".ui.activity.personal_center.SetUp" />
->>>>>>> pr/13
+
 
         <!-- 图片选择器 -->
         <activity
             android:name="com.foamtrace.photopicker.PhotoPickerActivity"
             android:configChanges="orientation|screenSize" />
-<<<<<<< HEAD
 
         <activity android:name=".ui.activity.medicalrecord.CreateCourse"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
-=======
-        <activity
-            android:name=".ui.activity.medicalrecord.CreateCourse"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
->>>>>>> pr/13
+
         <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
         <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
         <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
         <activity android:name=".ui.activity.InspectionReport" />
-<<<<<<< HEAD
 
-        <activity android:name=".ui.activity.registration.RegistrationHome" />
-        <activity android:name=".ui.activity.registration.ChooseHospital" />
-        <activity android:name=".ui.activity.registration.DoctorDetail"></activity>
-
-
-        <!--健康圈发帖页面-->
-        <activity android:name=".ui.activity.healthy_circle.HealthyCirclePosting"/>
-        <!--健康圈选择社区页面-->
-        <activity android:name=".ui.activity.healthy_circle.SelectCommunity"/>
-        <!--挂号模块选择科室页面-->
-        <activity android:name=".ui.activity.registration.SelectDepartments"/>
-        <!--挂号模块确认预约信息页面-->
-        <activity android:name=".ui.activity.registration.ConfirmReservationInformation"/>
-        <!--挂号模块新建就诊人页面-->
-        <activity android:name=".ui.activity.registration.NewVisitingPerson"/>
-        <!--挂号模块更换就诊人页面-->
-        <activity android:name=".ui.activity.registration.ChangeVisitingPerson"/>
-        <!--挂号模块根据科室选择医生页面-->
-        <activity android:name=".ui.activity.registration.DepartmentDoctorList"/>
-=======
         <activity android:name=".ui.activity.appointment.AppointmentHome" />
         <activity android:name=".ui.activity.appointment.ChooseHospital" />
         <activity android:name=".ui.activity.appointment.DoctorDetail" />
@@ -212,7 +138,7 @@
         <activity android:name=".ui.activity.appointment.ChangeVisitingPerson" />
         <!-- 挂号模块根据科室选择医生页面 -->
         <activity android:name=".ui.activity.appointment.DepartmentDoctorList" />
->>>>>>> pr/13
+
 
         <!-- 健康管理 -->
         <activity android:name=".ui.activity.healthy_management.MainIndexHealthyManagement" />
@@ -226,17 +152,12 @@
         <activity android:name=".ui.activity.healthy_management.StartingSchemeDate" />
         <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.MyHealthyScheme" />
-<<<<<<< HEAD
-        <activity android:name=".ui.activity.healthy_management.SinglePlanDetail"></activity>
-        <!--健康管理体质报告页面-->
-        <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
 
-=======
         <activity android:name=".ui.activity.healthy_management.SinglePlanDetail" />
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
         <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme"></activity>
->>>>>>> pr/13
+
     </application>
 
 </manifest>
