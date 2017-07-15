@@ -10,7 +10,7 @@
         android:paddingTop="20px"
         android:paddingBottom="20px">
 
-        <android.support.v7.widget.CardView
+        <com.healthyfish.healthyfish.ui.widget.AutoCardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_white"
@@ -38,7 +38,7 @@
                 android:clickable="false"
                 android:focusable="false" />
 
-        </android.support.v7.widget.CardView>
+        </com.healthyfish.healthyfish.ui.widget.AutoCardView>
 
     </com.zhy.autolayout.AutoLinearLayout>
 

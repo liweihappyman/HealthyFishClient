@@ -6,174 +6,200 @@
 
     <include layout="@layout/toolbar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="57px"
-        android:layout_marginTop="30px"
-        android:text="实名信息"
-        android:textSize="42px"
-        android:textColor="@color/color_auxiliary_info"/>
-
-    <com.zhy.autolayout.AutoLinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25px"
-        android:orientation="vertical"
-        android:background="@android:color/white">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/et_name"
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="54px"
-            android:paddingTop="30px"
-            android:paddingBottom="30px"
-            android:hint="姓名  *必填"
-            android:textSize="60px"
-            android:textColor="@color/color_general_and_title"
-            android:textColorHint="@color/color_hint"
-            android:background="@null"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="54px"
-            android:layout_marginRight="54px"
-            android:background="@android:color/darker_gray"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="57px"
+                android:layout_marginTop="30px"
+                android:text="实名信息"
+                android:textSize="42px"
+                android:textColor="@color/color_auxiliary_info"/>
 
-        <EditText
-            android:id="@+id/et_gender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="54px"
-            android:paddingTop="30px"
-            android:paddingBottom="30px"
-            android:hint="性别  *必填"
-            android:textSize="60px"
-            android:textColor="@color/color_general_and_title"
-            android:textColorHint="@color/color_hint"
-            android:background="@null"/>
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25px"
+                android:orientation="vertical"
+                android:background="@android:color/white">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="54px"
-            android:layout_marginRight="54px"
-            android:background="@android:color/darker_gray"/>
+                <EditText
+                    android:id="@+id/et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="54px"
+                    android:paddingTop="30px"
+                    android:paddingBottom="30px"
+                    android:maxLines="1"
+                    android:hint="姓名  *必填"
+                    android:textSize="60px"
+                    android:textColor="@color/color_general_and_title"
+                    android:textColorHint="@color/color_hint"
+                    android:background="@null"/>
 
-        <EditText
-            android:id="@+id/et_age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="54px"
-            android:paddingTop="30px"
-            android:paddingBottom="30px"
-            android:hint="年龄  *必填"
-            android:textSize="60px"
-            android:textColor="@color/color_general_and_title"
-            android:textColorHint="@color/color_hint"
-            android:background="@null"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="54px"
+                    android:layout_marginRight="54px"
+                    android:background="@android:color/darker_gray"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="54px"
-            android:layout_marginRight="54px"
-            android:background="@android:color/darker_gray"/>
+                <EditText
+                    android:id="@+id/et_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="54px"
+                    android:paddingTop="30px"
+                    android:paddingBottom="30px"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:hint="性别  *必填"
+                    android:textSize="60px"
+                    android:textColor="@color/color_general_and_title"
+                    android:textColorHint="@color/color_hint"
+                    android:background="@null"/>
 
-        <EditText
-            android:id="@+id/et_height"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="54px"
-            android:paddingTop="30px"
-            android:paddingBottom="30px"
-            android:hint="身高"
-            android:textSize="60px"
-            android:textColor="@color/color_general_and_title"
-            android:textColorHint="@color/color_hint"
-            android:background="@null"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="54px"
+                    android:layout_marginRight="54px"
+                    android:background="@android:color/darker_gray"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="54px"
-            android:layout_marginRight="54px"
-            android:background="@android:color/darker_gray"/>
+                <EditText
+                    android:id="@+id/et_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="54px"
+                    android:paddingTop="30px"
+                    android:paddingBottom="30px"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:maxLines="1"
+                    android:hint="年龄  *必填"
+                    android:textSize="60px"
+                    android:textColor="@color/color_general_and_title"
+                    android:textColorHint="@color/color_hint"
+                    android:background="@null"/>
 
-        <EditText
-            android:id="@+id/et_weight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="54px"
-            android:paddingTop="30px"
-            android:paddingBottom="30px"
-            android:hint="体重"
-            android:textSize="60px"
-            android:textColor="@color/color_general_and_title"
-            android:textColorHint="@color/color_hint"
-            android:background="@null"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="54px"
+                    android:layout_marginRight="54px"
+                    android:background="@android:color/darker_gray"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="54px"
-            android:layout_marginRight="54px"
-            android:background="@android:color/darker_gray"/>
+                <EditText
+                    android:id="@+id/et_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="54px"
+                    android:paddingTop="30px"
+                    android:paddingBottom="30px"
+                    android:inputType="textVisiblePassword"
+                    android:maxLines="1"
+                    android:hint="身高"
+                    android:textSize="60px"
+                    android:textColor="@color/color_general_and_title"
+                    android:textColorHint="@color/color_hint"
+                    android:background="@null"/>
 
-    </com.zhy.autolayout.AutoLinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="54px"
+                    android:layout_marginRight="54px"
+                    android:background="@android:color/darker_gray"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="57px"
-        android:layout_marginTop="30px"
-        android:text="常用手机号（方便医生联系您）"
-        android:textSize="42px"
-        android:textColor="@color/color_auxiliary_info"/>
+                <EditText
+                    android:id="@+id/et_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="54px"
+                    android:paddingTop="30px"
+                    android:paddingBottom="30px"
+                    android:inputType="textVisiblePassword"
+                    android:maxLines="1"
+                    android:hint="体重"
+                    android:textSize="60px"
+                    android:textColor="@color/color_general_and_title"
+                    android:textColorHint="@color/color_hint"
+                    android:background="@null"/>
 
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
-        android:orientation="vertical"
-        android:background="@android:color/white">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="54px"
+                    android:layout_marginRight="54px"
+                    android:background="@android:color/darker_gray"/>
 
-        <EditText
-            android:id="@+id/et_phoneNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="54px"
-            android:paddingTop="30px"
-            android:paddingBottom="30px"
-            android:hint="手机号"
-            android:textSize="60px"
-            android:textColor="@color/color_general_and_title"
-            android:textColorHint="@color/color_hint"
-            android:background="@null"/>
+            </com.zhy.autolayout.AutoLinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="54px"
-            android:layout_marginRight="54px"
-            android:background="@android:color/darker_gray"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="57px"
+                android:layout_marginTop="30px"
+                android:text="常用手机号（方便医生联系您）"
+                android:textSize="42px"
+                android:textColor="@color/color_auxiliary_info"/>
 
-    </com.zhy.autolayout.AutoLinearLayout>
-    
-    <Button
-        android:id="@+id/btn_done"
-        android:layout_width="978px"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="115px"
-        android:paddingTop="35px"
-        android:paddingBottom="35px"
-        android:gravity="center"
-        android:text="完成"
-        android:textSize="54px"
-        android:textColor="@color/selector_text_color_from_white_to_primary"
-        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px"
+                android:orientation="vertical"
+                android:background="@android:color/white">
+
+                <EditText
+                    android:id="@+id/et_phoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="54px"
+                    android:paddingTop="30px"
+                    android:paddingBottom="30px"
+                    android:inputType="number"
+                    android:maxLength="11"
+                    android:maxLines="1"
+                    android:hint="手机号"
+                    android:textSize="60px"
+                    android:textColor="@color/color_general_and_title"
+                    android:textColorHint="@color/color_hint"
+                    android:background="@null"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="54px"
+                    android:layout_marginRight="54px"
+                    android:background="@android:color/darker_gray"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <Button
+                android:id="@+id/btn_done"
+                android:layout_width="978px"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="115px"
+                android:paddingTop="35px"
+                android:paddingBottom="35px"
+                android:gravity="center"
+                android:text="完成"
+                android:textSize="54px"
+                android:textColor="@color/selector_text_color_from_white_to_primary"
+                android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </ScrollView>
 
 </com.zhy.autolayout.AutoLinearLayout>

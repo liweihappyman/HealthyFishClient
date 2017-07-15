@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.healthyfish.healthyfish.utils.SingleView;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class ChoiceDocumentLvAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final SingleView singleView = new SingleView(mContext);
+        AutoUtils.autoSize(singleView);
         singleView.setTitle(mData.get(position));
         return singleView;
     }

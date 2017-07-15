@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -92,10 +94,34 @@ public class ChoiceDocument extends BaseActivity {
      */
     private void initListView(List<String> list) {
         lvChoiceDocument.setChoiceMode(ListView.CHOICE_MODE_SINGLE);//设置单选功能
-        mAdapter = new ChoiceDocumentLvAdapter(this,list);
+        mAdapter = new ChoiceDocumentLvAdapter(this, list);
         lvChoiceDocument.setAdapter(mAdapter);
-
+        setListViewHeightBasedOnChildren(lvChoiceDocument);
     }
+
+
+    /**
+     * 计算ListView的高度以解决ListView嵌套在ScrollView中出现的高度问题
+     * @param listView
+     */
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
+
 
     /**
      * 根据从完善档案页面传回来的数据进行判断处理
@@ -115,6 +141,7 @@ public class ChoiceDocument extends BaseActivity {
                 case 1:
                     mAdapter.addDataToAdapter(info);
                     mAdapter.notifyDataSetChanged();
+                    setListViewHeightBasedOnChildren(lvChoiceDocument);
                     break;
                 default:
                     break;
