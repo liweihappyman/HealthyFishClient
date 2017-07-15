@@ -25,7 +25,7 @@ public class MyApplication extends Application{
         AutoLayoutConifg.getInstance().useDeviceSize();
 
         applicationContext = getApplicationContext();
-        LitePal.initialize(getApplicationContext());
+        LitePal.initialize(getApplicationContext());//初始化数据库
     }
 
     /**

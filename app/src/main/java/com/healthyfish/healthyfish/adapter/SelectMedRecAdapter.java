@@ -66,7 +66,7 @@ public class SelectMedRecAdapter extends BaseAdapter {
         final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mLayoutInflater.inflate(R.layout.item_select_med_rec, null);//填充Listview的item视图
+            convertView = mLayoutInflater.inflate(R.layout.item_select_med_rec, viewGroup,false);//填充Listview的item视图
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.description = (TextView) convertView.findViewById(R.id.description);
