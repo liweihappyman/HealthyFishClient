@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.activity.registration;
+package com.healthyfish.healthyfish.ui.activity.appointment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +29,7 @@ import butterknife.OnClick;
  */
 
 
-public class RegistrationHome extends AppCompatActivity {
+public class AppointmentHome extends AppCompatActivity {
 
 
     @BindView(R.id.toolbar_title)
@@ -44,7 +44,7 @@ public class RegistrationHome extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration_home);
+        setContentView(R.layout.activity_appointment_home);
         ButterKnife.bind(this);
         toolbar.setTitle("");
         toolbarTitle.setText("挂号");

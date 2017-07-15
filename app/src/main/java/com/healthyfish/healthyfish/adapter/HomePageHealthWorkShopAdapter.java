@@ -44,7 +44,6 @@ public class HomePageHealthWorkShopAdapter extends RecyclerView.Adapter<HomePage
             imageWorkShopCommodity = (ImageView) itemView.findViewById(R.id.image_work_shop_commodity);
             nameWorkShopCommodity = (TextView) itemView.findViewById(R.id.name_work_shop_commodity);
             imageHotSale = (ImageView) itemView.findViewById(R.id.whether_hot_sale);
-            /*imageWorkShopCommodity.setTag(listHealthWorkShop.get(mPosition).getSmallImgCommodity());*/
         }
     }
 

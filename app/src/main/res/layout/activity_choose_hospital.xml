@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.registration.ChooseHospital">
+    tools:context="com.healthyfish.healthyfish.ui.activity.appointment.ChooseHospital">
     <include layout="@layout/toolbar"/>
     <android.support.v7.widget.RecyclerView
         android:layout_marginTop="40px"

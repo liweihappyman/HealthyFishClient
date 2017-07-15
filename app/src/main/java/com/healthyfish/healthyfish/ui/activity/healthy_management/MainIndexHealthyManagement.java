@@ -94,7 +94,7 @@ public class MainIndexHealthyManagement extends AppCompatActivity {
         btnTotalHealthyScheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainIndexHealthyManagement.this, MakeTotalHealthyScheme.class);
+                Intent intent = new Intent(MainIndexHealthyManagement.this, MakeWholeHealthyScheme.class);
                 startActivity(intent);
             }
         });

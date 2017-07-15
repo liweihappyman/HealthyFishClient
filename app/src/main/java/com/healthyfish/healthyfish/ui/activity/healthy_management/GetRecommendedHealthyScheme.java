@@ -57,7 +57,7 @@ public class GetRecommendedHealthyScheme extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_trad_chinese_scheme:
-                Intent intentTradChinese = new Intent(GetRecommendedHealthyScheme.this, SelectPhyIdeHealthyScheme.class);
+                Intent intentTradChinese = new Intent(GetRecommendedHealthyScheme.this, SelectHealthyScheme.class);
                 startActivity(intentTradChinese);
                 break;
             case R.id.btn_chronic_disease_scheme:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="135px"
+    android:layout_height="?attr/actionBarSize"
     android:background="@color/color_primary_dark"
     android:focusable="true"
     android:focusableInTouchMode="true"

@@ -23,7 +23,7 @@ import butterknife.OnClick;
  * 邮箱：liwei_happyman@qq.com
  * 编辑：
  */
-public class MakeTotalHealthyScheme extends AppCompatActivity {
+public class MakeWholeHealthyScheme extends AppCompatActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -72,11 +72,11 @@ public class MakeTotalHealthyScheme extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_get_recommended_scheme:
-                Intent intentRecommend = new Intent(MakeTotalHealthyScheme.this, GetRecommendedHealthyScheme.class);
+                Intent intentRecommend = new Intent(MakeWholeHealthyScheme.this, GetRecommendedHealthyScheme.class);
                 startActivity(intentRecommend);
                 break;
             case R.id.btn_get_user_custom_scheme:
-                Intent intentCustom = new Intent(MakeTotalHealthyScheme.this, GetUserCustomScheme.class);
+                Intent intentCustom = new Intent(MakeWholeHealthyScheme.this, GetUserCustomScheme.class);
                 startActivity(intentCustom);
                 break;
         }
