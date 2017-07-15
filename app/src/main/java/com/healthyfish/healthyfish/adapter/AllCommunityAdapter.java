@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHealthyCircleItem;
 import com.healthyfish.healthyfish.R;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * 描述：
+ * 描述：健康圈所有社区列表适配器
  * 作者：LYQ on 2017/7/9.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
@@ -56,9 +57,10 @@ public class AllCommunityAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null){
-            convertView = mLayoutInflater.inflate(R.layout.item_healthy_community, null);
+            convertView = mLayoutInflater.inflate(R.layout.item_healthy_community, parent,false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+            AutoUtils.autoSize(convertView);
         }else {
             holder = (ViewHolder) convertView.getTag();
         }

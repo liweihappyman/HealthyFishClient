@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanPhyQuestionnaireTest;
 import com.healthyfish.healthyfish.R;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
 
@@ -61,9 +62,10 @@ public class PhyQuestionnaireTestAdapter extends BaseAdapter {
         ViewHolder holder = null;
         BeanPhyQuestionnaireTest beanPhyTest = mList.get(position);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_phy_ide_questionnaire_test, null);
+            convertView = mInflater.inflate(R.layout.item_phy_ide_questionnaire_test, parent,false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+            AutoUtils.autoSize(convertView);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

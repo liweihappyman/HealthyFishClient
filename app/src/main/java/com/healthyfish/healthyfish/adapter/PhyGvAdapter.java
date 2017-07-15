@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +65,10 @@ public class PhyGvAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_select_phy_gv, null);
+            convertView = mInflater.inflate(R.layout.item_select_phy_gv, parent,false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+            AutoUtils.autoSize(convertView);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

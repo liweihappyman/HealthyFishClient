@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.R;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,14 +82,16 @@ public class InterrogationServiceAdapter extends BaseAdapter {
             if (convertView == null) {
                 switch (type) {
                     case TYPE_PictureConsulting:
-                        convertView = inflater.inflate(R.layout.item_graphic_consultation, null);
+                        convertView = inflater.inflate(R.layout.item_graphic_consultation, parent,false);
                         holderGraphicConsultation = new ViewHolderGraphicConsultation(convertView);
                         convertView.setTag(holderGraphicConsultation);
+                        AutoUtils.autoSize(convertView);
                         break;
                     case TYPE_PrivateDoctor:
-                        convertView = inflater.inflate(R.layout.item_private_doctor, null);
+                        convertView = inflater.inflate(R.layout.item_private_doctor, parent,false);
                         holderPrivateDoctor = new ViewHolderPrivateDoctor(convertView);
                         convertView.setTag(holderPrivateDoctor);
+                        AutoUtils.autoSize(convertView);
                         break;
                     default:
                         break;
