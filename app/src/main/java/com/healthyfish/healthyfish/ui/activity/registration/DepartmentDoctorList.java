@@ -53,7 +53,7 @@ public class DepartmentDoctorList extends BaseActivity {
         mContext = this;
         ButterKnife.bind(this);
         getDepartmentName();
-        initToolBar(toolbar, toolbarTitle, departmentName);
+        initToolBar(toolbar,toolbarTitle,departmentName);
         initData();
         initListView();
     }
@@ -69,8 +69,8 @@ public class DepartmentDoctorList extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入到医生详情页面，进行预约时间的选择
-                MyToast.showToast(DepartmentDoctorList.this, mDoctorInfos.get(position).getName());
-                Intent test = new Intent(DepartmentDoctorList.this, DoctorDetail.class);
+                MyToast.showToast(DepartmentDoctorList.this,mDoctorInfos.get(position).getName());
+                Intent test = new Intent(DepartmentDoctorList.this,DoctorDetail.class);
                 startActivity(test);
             }
         });
@@ -81,7 +81,7 @@ public class DepartmentDoctorList extends BaseActivity {
      */
     private void getDepartmentName() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
+        if (bundle != null){
             departmentName = bundle.get("DepartmentName").toString();
         }
     }

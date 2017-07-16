@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.ui.fragment;
+package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -49,6 +49,6 @@ public class SingleHealthySchemeFragment extends Fragment {
         HealthySchemeAdapter adapter = new HealthySchemeAdapter(mContext, listHealthyScheme);
         healthySchemeRecyclerview.setAdapter(adapter);
 
-        return v;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 }
