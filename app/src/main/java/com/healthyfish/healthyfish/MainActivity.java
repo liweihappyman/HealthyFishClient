@@ -51,7 +51,7 @@ import rx.schedulers.Schedulers;
  * 　　　　　┃┫┫　┃┫┫
  * 　　　　　┗┻┛　┗┻┛
  * ━━━━━━感觉萌萌哒━━━━━━
- *
+ * <p>
  * 描述：首页
  * 作者：Wayne on 2017/6/26 14:51
  * 邮箱：liwei_happyman@qq.com
@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initPermision();
         init();
     }
+
     //初始化接界面
     private void init() {
         initpgAdapter();//初始化viewpage
