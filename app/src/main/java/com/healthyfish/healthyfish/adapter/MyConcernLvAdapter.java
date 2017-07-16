@@ -14,6 +14,7 @@ import com.healthyfish.healthyfish.POJO.BeanMyConcernItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.zhy.autolayout.AutoRelativeLayout;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class MyConcernLvAdapter extends BaseSwipeAdapter {
 
     @Override
     public View generateView(final int position, ViewGroup parent) {
-        View viewPrivateDoctor = mLayoutInflater.inflate(R.layout.item_my_concern_doctor, null);
+        View viewPrivateDoctor = mLayoutInflater.inflate(R.layout.item_my_concern_doctor,null);
         return viewPrivateDoctor;
     }
 

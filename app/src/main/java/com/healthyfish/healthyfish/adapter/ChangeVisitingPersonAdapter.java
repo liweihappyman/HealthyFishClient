@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,7 @@ public class ChangeVisitingPersonAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.item_change_visiting_person_lv, this, true);
             ButterKnife.bind(this, view);
+            AutoUtils.autoSize(view);
             return view;
         }
 

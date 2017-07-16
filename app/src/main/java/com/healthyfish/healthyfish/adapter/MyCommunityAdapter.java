@@ -15,6 +15,7 @@ import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.healthyfish.healthyfish.POJO.BeanHealthyCircleItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;

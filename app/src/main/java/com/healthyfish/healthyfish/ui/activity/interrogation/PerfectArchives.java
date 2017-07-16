@@ -4,12 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.InputUtils;
+import com.healthyfish.healthyfish.utils.MyToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +68,9 @@ public class PerfectArchives extends BaseActivity {
         initToolBar(toolbar,toolbarTitle,"个人基本信息");
         getFormerData();
         setFailResult();
+        setTextHintSize(etName,"姓名  *必填");
+        setTextHintSize(etGender,"性别  *必填");
+        setTextHintSize(etAge,"年龄  *必填");
     }
 
 
@@ -71,10 +79,22 @@ public class PerfectArchives extends BaseActivity {
         if (shopType != null){
             if (shopType.equals("图文咨询")){
                 getInputInfo();  //获取输入的信息
-                Intent intent = new Intent();
-                intent.putExtra("privateInfo",name+"（"+gender+"，"+age+"）");
-                PerfectArchives.this.setResult(resultSuccessfulCode, intent);
-                finish();
+                if (!name.isEmpty() && !gender.isEmpty() && !age.isEmpty()){
+                    if (InputUtils.isGender(gender)){
+                        if (InputUtils.isAge(age)){
+                            Intent intent = new Intent();
+                            intent.putExtra("privateInfo",name+"（"+gender+"，"+age+"岁）");
+                            PerfectArchives.this.setResult(resultSuccessfulCode, intent);
+                            finish();
+                        }else {
+                            MyToast.showToast(this,"请认真填写年龄选项噢！");
+                        }
+                   }else {
+                        MyToast.showToast(this,"请认真填写性别选项噢！");
+                    }
+                }else {
+                    MyToast.showToast(this,"您还有必填项没有填写噢！");
+                }
             }
         } else{
             //跳转到聊天界面
@@ -113,6 +133,18 @@ public class PerfectArchives extends BaseActivity {
         height = etHeight.getText().toString().trim();
         weight = etWeight.getText().toString().trim();
         phoneNumber = etPhoneNumber.getText().toString().trim();
+    }
+
+    /**
+     * 设置字体大小
+     */
+    private void setTextHintSize(EditText et,String str) {
+        SpannableStringBuilder spannableString = new SpannableStringBuilder();
+        spannableString.append(str);
+        //设置字体大小
+        AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(50);
+        spannableString.setSpan(absoluteSizeSpan, 2, str.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        et.setHint(spannableString);
     }
 
 }

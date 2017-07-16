@@ -57,7 +57,7 @@ public class DepartmentDoctorLvAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.item_department_doctor_lv, null);
+            convertView = mLayoutInflater.inflate(R.layout.item_department_doctor_lv, parent,false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
             //对于listView，注意添加这一行，即可在item上使用高度
