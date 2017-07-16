@@ -69,7 +69,7 @@
         <activity
             android:name=".ui.activity.medicalrecord.NewMedRec"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <!-- 添加病历标签 -->
 
         <activity

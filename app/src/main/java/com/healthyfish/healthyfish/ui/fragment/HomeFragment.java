@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
@@ -23,9 +24,10 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
+import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
-import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
+import com.healthyfish.healthyfish.utils.Utils1;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.util.ArrayList;
@@ -50,6 +52,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     RecyclerView healthPlanRecyclerview;
     @BindView(R.id.work_shop_recyclerview)
     RecyclerView workShopRecyclerview;
+    @BindView(R.id.date)
+    TextView date;
     private Context mContext;
     private View rootView;
 
@@ -126,6 +130,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     //测试养生计划
     private void initHealthPlan() {
+        date.setText(Utils1.getTime());//初始化时间
         List<BeanHealthPlanItemTest> listHealthPlan = new ArrayList<>();
         BeanHealthPlanItemTest healthPlan = new BeanHealthPlanItemTest();
         healthPlan.setDone(false);

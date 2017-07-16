@@ -52,16 +52,14 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="80px"
                         android:background="@color/color_white"
                         android:text="    整体计划"
                         android:textSize="14sp" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="600px"
-                        android:background="@color/color_forth" />
+                    <include layout="@layout/master_plan"/>
                 </com.zhy.autolayout.AutoLinearLayout>
             </com.healthyfish.healthyfish.ui.widget.AutoCardView>
 
@@ -79,17 +77,25 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="80px"
                         android:background="@color/color_white"
                         android:text="    单项计划"
                         android:textSize="14sp" />
-
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="600px"
-                        android:background="@color/color_third" />
-
+                        android:layout_height="2px"
+                        android:background="@color/color_divider"/>
+                  <com.zhy.autolayout.AutoRelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                    <android.support.v7.widget.RecyclerView
+                      android:id="@+id/rv_single_plan"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                  </android.support.v7.widget.RecyclerView>
+                  </com.zhy.autolayout.AutoRelativeLayout>
                     <TextView
                         android:id="@+id/tv_add_more_single_plan"
                         android:layout_width="match_parent"

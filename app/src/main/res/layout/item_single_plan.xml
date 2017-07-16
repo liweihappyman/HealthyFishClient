@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/color_white"
+    >
+<com.zhy.autolayout.AutoLinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="180px"
+    android:orientation="horizontal"
+    android:paddingLeft="55px"
+    android:background="@color/color_white"
+    >
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_marginTop="30px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/textSize_54"
+                android:text="针灸"
+                android:textColor="@color/color_general_and_title"/>
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30px"
+                style="@style/textSize_42"
+                android:text="中医体质单项养生计划"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/color_auxiliary_info"/>
+        </com.zhy.autolayout.AutoLinearLayout>
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25px"
+            style="@style/textSize_42"
+            android:text="已完成11次"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/color_auxiliary_info"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <Button
+        android:id="@+id/btn_todo"
+        android:layout_width="180px"
+        android:layout_height="120px"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="55px"
+        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
+        android:text="去完成"
+        android:textColor="@color/color_white"
+        android:textSize="48px" />
+</com.zhy.autolayout.AutoLinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/color_divider"/>
+</com.zhy.autolayout.AutoLinearLayout>
