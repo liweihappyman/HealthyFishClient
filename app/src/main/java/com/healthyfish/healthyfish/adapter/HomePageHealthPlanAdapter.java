@@ -57,8 +57,7 @@ public class HomePageHealthPlanAdapter extends RecyclerView.Adapter<HomePageHeal
             holder.todo.setBackgroundResource(R.drawable.gray_rounded_rectangle);
         }else {
             holder.todo.setText("未完成");
-            holder.todo.setTextColor(0xffffffff);
-            holder.todo.setBackgroundResource(R.drawable.green_rounded_rectangle);
+            holder.todo.setBackgroundResource(R.drawable.selector_4dp_btn_color_from_priamry_to_white);
         }
     }
 

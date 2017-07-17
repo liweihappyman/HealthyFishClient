@@ -50,18 +50,16 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <TextView
+        <Button
             android:id="@+id/item_health_plan_todo"
             android:layout_width="180px"
             android:layout_height="120px"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="60px"
-            android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="@string/go_to_single_scheme"
+            android:layout_marginRight="55px"
+            android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
+            android:text="去完成"
             android:textColor="@color/color_white"
-            android:textSize="50px" />
+            android:textSize="48px" />
     </com.zhy.autolayout.AutoLinearLayout>
 
     <ImageView
