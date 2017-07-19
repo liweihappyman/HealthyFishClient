@@ -1,23 +1,39 @@
 package com.healthyfish.healthyfish.ui.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MainActivity;
+import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.eventbus.EmptyMessage;
+import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.ui.presenter.login.LoginPresenter;
 import com.healthyfish.healthyfish.ui.view.login.ILoginView;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLayoutActivity;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 /**
  * 描述：登录Activity
@@ -52,14 +68,14 @@ public class Login extends AutoLayoutActivity implements ILoginView {
 
     @Override
     public void showProgressBar() {
-        if (loginProgressBar.getVisibility() == View.GONE){
+        if (loginProgressBar.getVisibility() == View.GONE) {
             loginProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void hideProgressBar() {
-        if (loginProgressBar.getVisibility() == View.VISIBLE){
+        if (loginProgressBar.getVisibility() == View.VISIBLE) {
             loginProgressBar.setVisibility(View.GONE);
         }
     }
@@ -82,14 +98,15 @@ public class Login extends AutoLayoutActivity implements ILoginView {
 
     @Override
     public void showFailedError() {
-        MyToast.showToast(this,"登录失败");
+        MyToast.showToast(this, "登录失败");
     }
 
     @OnClick({R.id.btn_login, R.id.tv_forgot_password, R.id.btn_register})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                mLoginPresenter.login();
+                //mLoginPresenter.login();
+                login();
                 break;
             case R.id.tv_forgot_password:
                 toResetPasswordActivity();
@@ -101,8 +118,75 @@ public class Login extends AutoLayoutActivity implements ILoginView {
     }
 
     /**
+     *     登录
+     */
+    private void login() {
+        BeanUserLoginReq beanUserLoginReq = new BeanUserLoginReq();
+        beanUserLoginReq.setMobileNo(getUserName());//号码
+        beanUserLoginReq.setAct(BeanUserLoginReq.class.getSimpleName());//设置操作类型，不然服务器不知道
+        beanUserLoginReq.setPwdSHA256(getPassword());//密码
+
+        final String user = JSON.toJSONString(beanUserLoginReq);//如果登录成功，将会由sharepreference保存
+
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserLoginReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(Login.this, "登录失败，请检查网络环境", Toast.LENGTH_LONG).show();
+                    }
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String str = null;
+                        try {
+                            str = responseBody.string();
+                            BeanBaseResp beanBaseResp = JSON.parseObject(str, BeanBaseResp.class);
+                            int code = beanBaseResp.getCode();
+                            judgeAndShowToast(code, user);//根据返回码做出相应的提示
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+    /**
+     *     根据返回码做出相应的提示
+     */
+    private void judgeAndShowToast(int code, String user) {
+        if (code >= 0) {
+            Toast.makeText(Login.this, "登录成功", Toast.LENGTH_LONG).show();
+            saveUserBean(user);  //登录成功由shareprefrence保存
+            EventBus.getDefault().post(new EmptyMessage());//发送消息提醒刷新个人中心的登录状态
+            Intent intent = new Intent(Login.this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (code == -1) {
+            Toast.makeText(Login.this, "用户不存在", Toast.LENGTH_LONG).show();
+        } else if (code == -2||code ==-5||code == -3) {
+            Toast.makeText(Login.this, "密码错误", Toast.LENGTH_LONG).show();
+        } else if (code == -10) {
+            Toast.makeText(Login.this, "操作次数过多", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(Login.this, "登录失败", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     *     登录成功由shareprefrence保存
+     */
+    private void saveUserBean(String user) {
+        SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.putString("user",user);
+        editor.commit();
+    }
+
+    /**
      * 跳转到注册界面
-     * */
+     */
     private void toRegisterActivity() {
         Intent intent = new Intent(this, Register.class);
         startActivity(intent);
@@ -110,9 +194,15 @@ public class Login extends AutoLayoutActivity implements ILoginView {
 
     /**
      * 跳转到重置密码界面
-     * */
+     */
     private void toResetPasswordActivity() {
         Intent intent = new Intent(this, ForgetPassword.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        EventBus.getDefault().post(new EmptyMessage());
     }
 }

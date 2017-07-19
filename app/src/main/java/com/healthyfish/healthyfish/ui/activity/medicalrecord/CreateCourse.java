@@ -44,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
+
 public class CreateCourse extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int CREATE_COURSE_RESULT_UPDATE_OR_DEL = 30;//病程更新返回标志
     public static final int CREATE_COURSE_RESULT_SAVE = 31;//病程保存返回标志

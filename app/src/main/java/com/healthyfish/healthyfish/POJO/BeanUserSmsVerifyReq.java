@@ -6,7 +6,7 @@ public class BeanUserSmsVerifyReq extends BeanBaseReq {
     private String mobileNo;
     private String verifyCode;
 
-    BeanUserSmsVerifyReq(){super(BeanUserSmsAuthReq.class.getSimpleName());}
+    public BeanUserSmsVerifyReq(){super(BeanUserSmsAuthReq.class.getSimpleName());}
 
     public int getType() {return type;}
 	public void setType(int type) {this.type = type;}

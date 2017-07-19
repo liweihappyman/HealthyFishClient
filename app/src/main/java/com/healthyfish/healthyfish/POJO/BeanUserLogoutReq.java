@@ -5,7 +5,7 @@ public class BeanUserLogoutReq extends BeanBaseReq {
     private String  pwdSHA256;
     //...
 
-    BeanUserLogoutReq(){super(BeanUserLoginReq.class.getSimpleName());}
+    public BeanUserLogoutReq(){super(BeanUserLogoutReq.class.getSimpleName());}
 
     public String getMobileNo() {return mobileNo;}
     public void setMobileNo(String mobileNo) {this.mobileNo = mobileNo;}

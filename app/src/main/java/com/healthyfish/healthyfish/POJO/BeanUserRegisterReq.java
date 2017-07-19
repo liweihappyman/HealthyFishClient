@@ -1,13 +1,15 @@
 package com.healthyfish.healthyfish.POJO;
 
-public class BeanUserRegisterReq extends BeanBaseReq {
+import java.io.Serializable;
+
+public class BeanUserRegisterReq extends BeanBaseReq implements Serializable{
 	private int		type; //0-新用户注册；1-修改密码
 	private String  mobileNo;
     private String verifyCode;
 	private String  pwdSHA256;
     //...
 
-    BeanUserRegisterReq(){super(BeanUserRegisterReq.class.getSimpleName());}
+    public BeanUserRegisterReq(){super(BeanUserRegisterReq.class.getSimpleName());}
 
     public int getType() {return type;}
 	public void setType(int type) {this.type = type;}
