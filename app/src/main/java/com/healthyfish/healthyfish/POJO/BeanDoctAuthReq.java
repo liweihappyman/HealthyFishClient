@@ -29,7 +29,7 @@ public class BeanDoctAuthReq extends BeanBaseReq {
 	private String dept;
 	private String doct;
 
-	BeanDoctAuthReq(){super(BeanDoctAuthReq.class.getSimpleName());}
+	public BeanDoctAuthReq(){super(BeanDoctAuthReq.class.getSimpleName());}
 	
 	public String getUid() {
 		return uid;

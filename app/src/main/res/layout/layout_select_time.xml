@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="900px"
+        android:layout_height="850px"
+        android:orientation="vertical"
+        android:background="@color/color_content_area_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40px"
+            android:layout_marginLeft="50px"
+            android:text="设置时间"
+            style="@style/textSize_60"
+            android:textColor="@color/color_primary_light"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="40px"
+            android:background="@color/color_primary_light"/>
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="700px"
+            android:layout_height="560px"
+            android:layout_marginTop="20px"
+            android:layout_gravity="center_horizontal"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="20px"
+            android:background="@android:color/darker_gray"/>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@color/color_white"
+                style="@style/textSize_54"/>
+
+            <ImageView
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="确认"
+                android:textColor="@color/color_white"
+                style="@style/textSize_54"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

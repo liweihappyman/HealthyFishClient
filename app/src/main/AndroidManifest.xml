@@ -157,6 +157,15 @@
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
         <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme"></activity>
+        <!-- 健康管理自定义计划具体安排页面 -->
+        <activity android:name=".ui.activity.healthy_management.ConcreteArrangement" />
+
+        <!-- 首页健康资讯详情页面 -->
+        <activity android:name=".ui.activity.HealthNews" />
+        <!-- 首页更多健康资讯页面 -->
+        <activity android:name=".ui.activity.MoreHealthNews" />
+        <!-- 问诊搜索结果显示页面 -->
+        <activity android:name=".ui.activity.SearchResult" />
 
     </application>
 

@@ -14,20 +14,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
 import com.healthyfish.healthyfish.POJO.BeanHealthWorkShop;
 import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
+import com.healthyfish.healthyfish.POJO.BeanListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
+import com.healthyfish.healthyfish.ui.activity.HealthNews;
+import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
+import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
-import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
+import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +47,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.bingoogolapple.bgabanner.BGABanner;
+import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
+import rx.Subscriber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +63,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     RecyclerView healthPlanRecyclerview;
     @BindView(R.id.work_shop_recyclerview)
     RecyclerView workShopRecyclerview;
+    @BindView(R.id.tv_add_more_plan)
+    TextView tvAddMorePlan;
+    @BindView(R.id.tv_add_more_news)
+    TextView tvAddMoreNews;
+    @BindView(R.id.lly_more_health_news)
+    AutoLinearLayout llyMoreHealthNews;
     private Context mContext;
     private View rootView;
 
@@ -77,6 +96,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageView fmHealthManagement;
     @BindView(R.id.fm_remote_monitoring)
     ImageView fmRemoteMonitoring;
+
+    private HomePageHealthInfoAadpter healthInfoAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,31 +192,100 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    //测试健康资讯列表
+    //健康资讯列表
     private void initHealthNews() {
-        List<BeanItemNewsAbstract> listNews = new ArrayList<>();
-        BeanItemNewsAbstract itemNews1 = new BeanItemNewsAbstract();
-        itemNews1.setTitle("早睡早起对养生的好处");
-        itemNews1.setCategory("资讯");
-        itemNews1.setTimestamp("2017年7月1日");
-        BeanItemNewsAbstract itemNews2 = new BeanItemNewsAbstract();
-        itemNews2.setTitle("枸杞的清肝明目的作用");
-        itemNews2.setCategory("资讯");
-        itemNews2.setTimestamp("2017年7月1日");
-        BeanItemNewsAbstract itemNews3 = new BeanItemNewsAbstract();
-        itemNews3.setTitle("健身操的好处");
-        itemNews3.setCategory("视频");
-        itemNews3.setTimestamp("2017年7月1日");
-        listNews.add(itemNews1);
-        listNews.add(itemNews2);
-        listNews.add(itemNews3);
-        listNews.add(itemNews1);
-        LinearLayoutManager lmg = new LinearLayoutManager(mContext);
-        healthNewsRecyclerview.setLayoutManager(lmg);
-        HomePageHealthInfoAadpter healthInfoAdapter = new HomePageHealthInfoAadpter(mContext, listNews);
-        healthNewsRecyclerview.setAdapter(healthInfoAdapter);
+        final List<BeanItemNewsAbstract> newsList = new ArrayList<>();
+        BeanListReq beanListReq = new BeanListReq();
+        beanListReq.setPrefix("news_");
+        beanListReq.setFrom(0);
+        beanListReq.setTo(7);
+        beanListReq.setNum(8);
+        RetrofitManagerUtils.getInstance(getActivity(), null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanListReq),
+                        new Subscriber<ResponseBody>() {
+                            @Override
+                            public void onCompleted() {
 
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(ResponseBody responseBody) {
+                                if (responseBody != null) {
+                                    String jsonNews = null;
+                                    try {
+                                        jsonNews = responseBody.string();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
+                                    for (String strJsonNews : strJsonNewsList) {
+                                        BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
+                                        newsList.add(bean);
+                                    }
+                                    List<BeanItemNewsAbstract> list = new ArrayList<>();
+                                    for (int i = 0; i < 4; i++) {
+                                        list.add(newsList.get(i));
+                                    }
+                                    LinearLayoutManager lmg = new LinearLayoutManager(mContext);
+                                    healthNewsRecyclerview.setLayoutManager(lmg);
+                                    healthInfoAdapter = new HomePageHealthInfoAadpter(mContext, list);
+                                    healthNewsRecyclerview.setAdapter(healthInfoAdapter);
+                                }
+                            }
+                        });
+
+        //Item的点击监听
+        healthNewsRecyclerview.addOnItemTouchListener(new MyRecyclerViewOnItemListener(mContext, healthNewsRecyclerview,
+                new MyRecyclerViewOnItemListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(mContext, HealthNews.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("HEALTH_NEWS_URL", newsList.get(position).getUrl());
+                        bundle.putString("HEALTH_NEWS_TITLE", newsList.get(position).getTitle());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
+                    }
+                }));
+        //点击加载更多
+        tvAddMoreNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tvAddMoreNews.getText().toString().equals("点击加载更多")) {
+                    for (int i = 4; i < newsList.size(); i++) {
+                        healthInfoAdapter.addData(newsList.get(i));
+                    }
+                    healthInfoAdapter.notifyDataSetChanged();
+                    tvAddMoreNews.setText("收起");
+                } else if (tvAddMoreNews.getText().toString().equals("收起")) {
+                    for (int i = 4; i < newsList.size(); i++) {
+                        healthInfoAdapter.removeData(4);
+                    }
+                    healthInfoAdapter.notifyDataSetChanged();
+                    tvAddMoreNews.setText("点击加载更多");
+                }
+            }
+        });
+        //跳转到更多健康资讯页面
+        llyMoreHealthNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MoreHealthNews.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     //初始化菜单监听
     private void initFunctionMenu() {
