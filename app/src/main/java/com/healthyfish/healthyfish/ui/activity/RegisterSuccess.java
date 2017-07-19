@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.eventbus.EmptyMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -2,6 +2,9 @@ package com.healthyfish.healthyfish.ui.activity.appointment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,9 +13,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.healthyfish.healthyfish.POJO.BeanDoctorListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.widget.AutoVerticalScrollTextView;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +33,9 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
+
 /**
  * 描述：挂号首页
  * 作者：WKJ on 2017/7/10.
@@ -30,8 +45,10 @@ import butterknife.OnClick;
 
 
 public class AppointmentHome extends AppCompatActivity {
+    private String[] strings={"我的剑，就是你的剑!","俺也是从石头里蹦出来得!","我用双手成就你的梦想!","人在塔在!","犯我德邦者，虽远必诛!","我会让你看看什么叫残忍!","我的大刀早已饥渴难耐了!"};
 
-
+    private int number =0;
+    private boolean isRunning=true;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -40,6 +57,8 @@ public class AppointmentHome extends AppCompatActivity {
     Button chooseHospital;
     @BindView(R.id.choose_department)
     Button chooseDepartment;
+    @BindView(R.id.scroll_message)
+    AutoVerticalScrollTextView scrollMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,79 +73,97 @@ public class AppointmentHome extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
-// 测试获取后面的日期是星期几
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");//设置想要的日期格式
-//        String [] str = {"","星期日","星期一","星期二","星期三","星期四","星期五","星期六",};
-//        Calendar calendar = Calendar.getInstance();//获取日历实例
-//        calendar.getTime();
-//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
-//        calendar.add(Calendar.DATE, 1);
-//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
-//        calendar.add(Calendar.DATE, 1);
-//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
-//        calendar.add(Calendar.DATE, 1);
-//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
-//        calendar.add(Calendar.DATE, 1);
-//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
-//        calendar.add(Calendar.DATE, 1);
-//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
-//        calendar.add(Calendar.DATE, 1);
-//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
-//
-//        String date = dateFormat.format(calendar.getTime());//获取日期格式；
-//        Log.i("dateTest",date);
-    }
-    //直接通过日期获取是星期几
-    private String getWeekFromDate(){
-        Calendar calendar = Calendar.getInstance();//获取日历实例
-        Date date1 = calendar.getTime();//获取当前的时间
-        calendar.setTime(date1);//将获取的日期设置成当前的日期
-        int number = calendar.get(Calendar.DAY_OF_WEEK);
-        /*
-        *获取当前日期是星期几
-        * 经测试，星期天是1，星期三是4，星期六是7
-        */
-        String [] str = {"","星期日","星期一","星期二","星期三","星期四","星期五","星期六",};
-        Log.i("testdate",str[number]);
-        return str[number];
-    }
-    //将字符串的日期转化为真正的日期格式，获取该日期是星期几,格式如 ： 2017年7月30日
-    private String getWeekFromStr(String dateStr){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");//设置想要的日期格式
-        Calendar calendar = Calendar.getInstance();//获取日历实例
-        Date date = dateFormat.parse(dateStr, new ParsePosition(0));//反向操作，将字符格式的转化为日期格式
-        calendar.setTime(date);//将转化回来的日期设置成当前的日期
-        int number = calendar.get(Calendar.DAY_OF_WEEK);
-        /*
-        *获取当前日期是星期几
-        * 经测试，number显示： 星期天是1，星期三是4，星期六是7
-        */
-        String [] str = {"","星期日","星期一","星期二","星期三","星期四","星期五","星期六",};
-        Log.i("testdate",str[number]);
-        return str[number];
+        initSrollText();
     }
 
+    private void initSrollText() {
+        scrollMessage.setText(strings[0]);
+        new Thread(){
+            @Override
+            public void run() {
+                while (isRunning){
+                    SystemClock.sleep(3000);
+                    handler.sendEmptyMessage(199);
+                }
+            }
+        }.start();
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            if (msg.what == 199) {
+                scrollMessage.next();
+                number++;
+                scrollMessage.setText(strings[number%strings.length]);
+            }
+
+        }
+    };
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                isRunning=false;
                 finish();
                 break;
         }
         return true;
     }
+
     @OnClick({R.id.choose_hospital, R.id.choose_department})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.choose_hospital:
-                Intent toChooseHospital = new Intent(this,ChooseHospital.class);
-                startActivity(toChooseHospital);
+                requestForHospital();
+//                Intent toChooseHospital = new Intent(this, ChooseHospital.class);
+//                startActivity(toChooseHospital);
                 break;
             case R.id.choose_department:
-                Intent test = new Intent(this,SelectDepartments.class);
+                Intent test = new Intent(this, SelectDepartments.class);
                 startActivity(test);
                 break;
         }
+    }
+
+    private void requestForHospital() {
+        BeanHospDeptDoctListReq beanHospDeptDoctListReq = new BeanHospDeptDoctListReq();
+        BeanHospitalListReq beanHospitalListReq = new BeanHospitalListReq();
+        BeanDoctorListReq beanDoctorListReq = new BeanDoctorListReq();
+
+        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospitalListReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(AppointmentHome.this,"网络错误"+e.toString(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    String str = responseBody.string();
+                    Log.i("hospital","成功"+str);
+                    Toast.makeText(AppointmentHome.this,"成功"+str,Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRunning=false;
     }
 }
 

@@ -2,8 +2,11 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -15,8 +18,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.eventbus.EmptyMessage;
 import com.healthyfish.healthyfish.ui.activity.personal_center.Feedback;
 import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyConcern;
@@ -25,6 +31,10 @@ import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformati
 import com.healthyfish.healthyfish.ui.activity.personal_center.SetUp;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +50,6 @@ import q.rorbin.badgeview.QBadgeView;
  * A simple {@link Fragment} subclass.
  */
 public class PersonalCenterFragment extends Fragment {
-
     @BindView(R.id.civ_head_portrait)
     CircleImageView civHeadPortrait;
     @BindView(R.id.tv_login_or_register)
@@ -81,28 +90,52 @@ public class PersonalCenterFragment extends Fragment {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_personal_center, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        isLogin(false);
+        judgeLoginState();
         return rootView;
     }
+   //登录状态判断初始化相应的控件
+    private void judgeLoginState() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+        String user = sharedPreferences.getString("user",null);
+        if (user!=null){
+            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user,BeanUserLoginReq.class);
+            String numble = beanUserLoginReq.getMobileNo();
+            isLogin(true,numble);
+        }else {
+            isLogin(false,null);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshLoginState(EmptyMessage emptyMessage){
+        judgeLoginState();
+        EventBus.getDefault().unregister(this);
+    }
+
 
     /**
      * 判断是否登录
+     * numble：目前用手机号码表示用户
      */
-    private void isLogin(boolean isLogin) {
+    private void isLogin(boolean isLogin,String numble) {
         if (isLogin) {
             rlyNotLogin.setVisibility(View.GONE);
             rlyLogin.setVisibility(View.VISIBLE);
             //检查有多少未读消息，并显示
-            initInfoPrompt("16");
+            //initInfoPrompt("16");
             Glide.with(getActivity()).load("http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg").into(civHeadPortraitLogin);
-            setTextBold("小李");
+            setTextBold(numble);
             tvConstitutionLogin.setText("阳虚质");
+            rlyNotLogin.setBackgroundResource(R.color.color_primary_dark);
         }else {
             rlyLogin.setVisibility(View.GONE);
             rlyNotLogin.setVisibility(View.VISIBLE);
             rlyMail.setVisibility(View.GONE);
+            rlyNotLogin.setBackgroundResource(R.color.color_divider);
         }
     }
+
+
 
     /**
      * 设置字体为粗体
@@ -153,6 +186,7 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.tv_login_or_register:
                 //点击登录/注册
+                EventBus.getDefault().register(this);
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 break;
@@ -181,6 +215,7 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.lly_set:
                 //点击设置
+                EventBus.getDefault().register(this);
                 Intent intent06 = new Intent(getActivity(), SetUp.class);
                 startActivity(intent06);
                 break;
@@ -203,4 +238,11 @@ public class PersonalCenterFragment extends Fragment {
                 break;
         }
     }
+
+
+
+
+
+
+
 }

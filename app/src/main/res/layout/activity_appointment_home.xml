@@ -30,15 +30,17 @@
             android:text="当前排号"
             android:textColor="@color/color_orange" />
 
-        <TextView
+        <com.healthyfish.healthyfish.ui.widget.AutoVerticalScrollTextView
+            android:id="@+id/scroll_message"
             style="@style/genera_title_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40px"
             android:layout_marginRight="50px"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="张静医生  骨科  队伍前还有5个病人在扥带" />
+            />
+        <!--android:text="张静医生  骨科  队伍前还有5个病人在扥带"-->
     </com.zhy.autolayout.AutoLinearLayout>
 
 
