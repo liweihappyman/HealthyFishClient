@@ -4,8 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.GetUserCustomScheme">
 
     <include layout="@layout/toolbar" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/textSize_36"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70px"
+            android:gravity="center"
+            android:lineSpacingExtra="15px"
+            android:text="点选本周进行养生的日子\n不少于1天"
+            android:textColor="@color/color_general_and_title" />
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="300px">
+
+            <GridView
+                android:id="@+id/gv_week_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="7" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <GridView
+            android:id="@+id/gv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40px"
+            android:gravity="center"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="7"
+            android:verticalSpacing="10px" />
+
+        <TextView
+            android:id="@+id/tv_selected_date_number"
+            style="@style/textSize_36"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70px"
+            android:gravity="center"
+            android:text="已选择 4 个养生日"
+            android:textColor="@color/color_general_and_title" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <Button
+        android:id="@+id/bt_next"
+        android:layout_width="match_parent"
+        android:layout_height="120px"
+        android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+        android:gravity="center"
+        android:text="下一步"
+        android:textColor="@color/selector_text_color_from_white_to_primary" />
 
 </com.zhy.autolayout.AutoLinearLayout>

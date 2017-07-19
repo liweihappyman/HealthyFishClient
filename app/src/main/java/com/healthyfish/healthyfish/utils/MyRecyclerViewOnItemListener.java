@@ -1,4 +1,4 @@
-package com.healthyfish.healthyfish.listener;
+package com.healthyfish.healthyfish.utils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,7 @@ import android.view.View;
  * 编辑：LYQ
  */
 
-public class InterrogationRvlistener implements RecyclerView.OnItemTouchListener {
+public class MyRecyclerViewOnItemListener implements RecyclerView.OnItemTouchListener {
     private GestureDetector mGestureDetector;
     private OnItemClickListener mListener;
 
@@ -24,7 +24,7 @@ public class InterrogationRvlistener implements RecyclerView.OnItemTouchListener
         void onItemLongClick(View view, int position);
     }
 
-    public InterrogationRvlistener(Context context, final RecyclerView recyclerView, OnItemClickListener listener){
+    public MyRecyclerViewOnItemListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener){
         mListener = listener;
         mGestureDetector = new GestureDetector(context,
                 new GestureDetector.SimpleOnGestureListener(){ //这里选择SimpleOnGestureListener实现类，可以根据需要选择重写的方法

@@ -10,7 +10,7 @@ public class BeanSearchReq extends BeanBaseReq {
 	private String type;
 	private String keyword;
 	
-	BeanSearchReq(){super(BeanSearchReq.class.getSimpleName());}
+	public BeanSearchReq(){super(BeanSearchReq.class.getSimpleName());}
 	
 	public String getType() {return type;}
 	public void setType(String type) {this.type = type;}

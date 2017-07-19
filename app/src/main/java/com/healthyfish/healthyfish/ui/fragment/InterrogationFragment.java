@@ -8,16 +8,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.healthyfish.healthyfish.ui.activity.SearchResult;
 import com.healthyfish.healthyfish.utils.DividerGridItemDecoration;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
-import com.healthyfish.healthyfish.listener.InterrogationRvlistener;
+import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDoctor;
 import com.healthyfish.healthyfish.utils.MyToast;
 
@@ -33,10 +37,6 @@ import butterknife.Unbinder;
  */
 public class InterrogationFragment extends Fragment {
 
-
-    private List<String> mDepartments = new ArrayList<>();
-    private List<Integer> mDepartmentIcons = new ArrayList<>();
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.iv_search)
@@ -49,7 +49,6 @@ public class InterrogationFragment extends Fragment {
 
     private Context mContext;
     View rootView;
-
 
     private InterrogationRvAdapter mRvAdapter;
 
@@ -64,14 +63,34 @@ public class InterrogationFragment extends Fragment {
         unbinder = ButterKnife.bind(this, rootView);
         rvListener();
         initRecycleView();
+        searchListener();
         return rootView;
+    }
+
+    /**
+     * 搜索功能
+     */
+    private void searchListener() {
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Intent intent = new Intent(getActivity(), SearchResult.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("SEARCH_KEY",etSearch.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                return true;
+            }
+        });
     }
 
     /**
      * RecyclerView的监听
      */
     private void rvListener() {
-        rvChoiceDepartment.addOnItemTouchListener(new InterrogationRvlistener(mContext, rvChoiceDepartment, new InterrogationRvlistener.OnItemClickListener() {
+        rvChoiceDepartment.addOnItemTouchListener(new MyRecyclerViewOnItemListener(mContext, rvChoiceDepartment, new MyRecyclerViewOnItemListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 //跳转到该科室的医生列表，需要发送科室信息到后台获取科室医生列表信息，传入下一个页面

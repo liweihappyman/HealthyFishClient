@@ -19,6 +19,7 @@ import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.interrogation.SendMind;
 import com.healthyfish.healthyfish.ui.fragment.BuyServiceFragment;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.NestingUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import java.util.ArrayList;
@@ -308,6 +309,7 @@ public class ChoiceService extends BaseActivity {
                 new String[]{"username", "satisfaction", "content"},
                 new int[]{R.id.tv_user, R.id.tv_satisfaction_degree, R.id.tv_evaluate});
         listViewUserEvaluate.setAdapter(adapter);
+        NestingUtils.setListViewHeightBasedOnChildren(listViewUserEvaluate);
     }
 
     /**

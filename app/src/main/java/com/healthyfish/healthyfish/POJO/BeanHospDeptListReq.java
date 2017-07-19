@@ -9,6 +9,6 @@ public class BeanHospDeptListReq extends BeanBaseReq {
 	public void setHosp(String hosp) {
 		this.hosp = hosp;
 	}
-	BeanHospDeptListReq(){super(BeanHospDeptListReq.class.getSimpleName());}
+	public BeanHospDeptListReq(){super(BeanHospDeptListReq.class.getSimpleName());}
 	
 }

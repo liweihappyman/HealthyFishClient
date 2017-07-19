@@ -23,6 +23,6 @@ public class BeanHospDeptDoctInfoReq extends BeanBaseReq {
 	public void setHosp(String hosp) {
 		this.hosp = hosp;
 	}
-	BeanHospDeptDoctInfoReq(){super(BeanHospDeptDoctInfoReq.class.getSimpleName());}
+	public BeanHospDeptDoctInfoReq(){super(BeanHospDeptDoctInfoReq.class.getSimpleName());}
 	
 }
