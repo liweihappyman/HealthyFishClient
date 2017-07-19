@@ -2,7 +2,11 @@ package com.healthyfish.healthyfish.utils;
 
 import android.support.annotation.NonNull;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.MyApplication;
+
 import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 
 import okhttp3.MediaType;

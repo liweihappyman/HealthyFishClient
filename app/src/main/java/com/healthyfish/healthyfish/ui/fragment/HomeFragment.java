@@ -4,10 +4,12 @@ package com.healthyfish.healthyfish.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +20,24 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
 import com.healthyfish.healthyfish.POJO.BeanHealthWorkShop;
+import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideReq;
+import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideResp;
+import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideRespItem;
 import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.POJO.BeanListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
+
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
@@ -36,6 +47,15 @@ import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
+
+import com.healthyfish.healthyfish.api.IApiService;
+import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
+import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.Utils1;
+
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.io.IOException;
@@ -47,10 +67,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.bingoogolapple.bgabanner.BGABanner;
+
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
+
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
+import retrofit2.Retrofit;
+import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,12 +97,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     RecyclerView healthPlanRecyclerview;
     @BindView(R.id.work_shop_recyclerview)
     RecyclerView workShopRecyclerview;
+
     @BindView(R.id.tv_add_more_plan)
     TextView tvAddMorePlan;
     @BindView(R.id.tv_add_more_news)
     TextView tvAddMoreNews;
     @BindView(R.id.lly_more_health_news)
     AutoLinearLayout llyMoreHealthNews;
+
+    @BindView(R.id.date)
+    TextView date;
+
     private Context mContext;
     private View rootView;
 
@@ -96,6 +135,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageView fmHealthManagement;
     @BindView(R.id.fm_remote_monitoring)
     ImageView fmRemoteMonitoring;
+    private String url2 = "http://219.159.248.209/demo/TestServlet";
 
     private HomePageHealthInfoAadpter healthInfoAdapter;
 
@@ -116,7 +156,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initHealthNews();//初始化健康资讯
         initHealthPlan();//初始化养生计划
         initHealthWorkShop();//初始化健康工坊
+        initBannerRequest();//网络访问获取轮播图内容
 
+    }
+    //网络访问获取轮播图内容
+    private void initBannerRequest() {
+        final List<String> imgs =new ArrayList<>();//装载图片
+        final List<String> desc = new ArrayList<>();//装载描述
+        RetrofitManagerUtils.getInstance(getActivity(),null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHomeImgSlideReq()), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+            }
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                String str = null;
+                try {
+                    str = responseBody.string();
+                    BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str,BeanHomeImgSlideResp.class);
+                    for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem :beanHomeImgSlideResp.getImgList()){
+                        imgs.add(HttpHealthyFishyUrl+beanHomeImgSlideRespItem.getImg());
+                        Log.i("imgstr",beanHomeImgSlideRespItem.getImg());
+                        desc.add(beanHomeImgSlideRespItem.getDesc());
+                    }
+                    setbanner(imgs, desc);//给轮播图设置图片
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //Log.i("imgstr",str);
+            }
+        });
+    }
+
+
+
+    /**
+     * 给轮播图设置图片和描述
+     * @param imgs  图片地址链接
+     * @param desc  描述
+     */
+    private void setbanner(List<String> imgs, List<String> desc) {
         //轮播图
         bannerGuideContent.setAdapter(new BGABanner.Adapter<ImageView, String>() {
             @Override
@@ -130,23 +213,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         .into(itemView);
             }
         });
-
-        bannerGuideContent.setData(Arrays.asList("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg",
-                "http://github.com/panxw/android-image-indicator/blob/master/screenshot/guider_00.jpg",
-                "http://github.com/panxw/android-image-indicator/blob/master/screenshot/guider_01.jpg"),
-                Arrays.asList("提示文字1", "提示文字2", "提示文字3"));
-
-
-//加载本地资源
-//        List<View> views = new ArrayList<>();
-//        views.add(BGABannerUtil.getItemImageView(getActivity(), R.mipmap.placeholder));
-//        views.add(BGABannerUtil.getItemImageView(getActivity(), R.mipmap.healthy_circle));
-//        views.add(BGABannerUtil.getItemImageView(getActivity(), R.mipmap.health_workshop));
-//        bannerGuideContent.setData(views);
+        //轮播图设置数据
+        bannerGuideContent.setData(imgs,desc);
     }
 
     //测试养生计划
     private void initHealthPlan() {
+        date.setText(Utils1.getTime());//初始化时间
         List<BeanHealthPlanItemTest> listHealthPlan = new ArrayList<>();
         BeanHealthPlanItemTest healthPlan = new BeanHealthPlanItemTest();
         healthPlan.setDone(false);

@@ -133,9 +133,10 @@
                 style="@style/textSize_54"
                 android:layout_width="882px"
                 android:layout_height="126px"
-                android:layout_marginTop="58px"
+                android:layout_marginTop="40px"
                 android:background="@drawable/selector_btn_color_from_secondary_to_white"
                 android:text="退出登录"
+                android:layout_marginBottom="30px"
                 android:textColor="@color/selector_text_color_from_white_to_secondary" />
 
         </com.zhy.autolayout.AutoLinearLayout>

@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -23,7 +25,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.healthyfish.healthyfish.POJO.BeanSinglePlan;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.adapter.SinglePlanAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +50,8 @@ public class MainIndexHealthyManagement extends AppCompatActivity {
     TextView tvAddMoreSinglePlan;
     @BindView(R.id.btn_total_healthy_scheme)
     Button btnTotalHealthyScheme;
+    @BindView(R.id.rv_single_plan)
+    RecyclerView rvSinglePlan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +112,17 @@ public class MainIndexHealthyManagement extends AppCompatActivity {
     // 初始化单项健康计划
     private void intiSingleHealthyPlan() {
 
+        List<BeanSinglePlan> list = new ArrayList<>();
+        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, true));
+        list.add(new BeanSinglePlan("艾灸", "中医体质单项养生计划", 8, true));
+        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, false));
+        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, true));
+        list.add(new BeanSinglePlan("艾灸", "中医体质单项养生计划", 8, true));
+        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, false));
+        SinglePlanAdapter adapter = new SinglePlanAdapter(this, list);
+        LinearLayoutManager lmg = new LinearLayoutManager(this);
+        rvSinglePlan.setLayoutManager(lmg);
+        rvSinglePlan.setAdapter(adapter);
         // 添加更多单项计划
         tvAddMoreSinglePlan.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -62,5 +62,26 @@ public class Utils1 {
         Log.i("testdate",str[number]);
         return str[number];
     }
+    // 测试获取后面的日期是星期几
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");//设置想要的日期格式
+//        String [] str = {"","星期日","星期一","星期二","星期三","星期四","星期五","星期六",};
+//        Calendar calendar = Calendar.getInstance();//获取日历实例
+//        calendar.getTime();
+//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
+//        calendar.add(Calendar.DATE, 1);
+//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
+//        calendar.add(Calendar.DATE, 1);
+//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
+//        calendar.add(Calendar.DATE, 1);
+//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
+//        calendar.add(Calendar.DATE, 1);
+//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
+//        calendar.add(Calendar.DATE, 1);
+//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
+//        calendar.add(Calendar.DATE, 1);
+//        Log.i("testdate",str[calendar.get(Calendar.DAY_OF_WEEK)]);
+//
+//        String date = dateFormat.format(calendar.getTime());//获取日期格式；
+//        Log.i("dateTest",date);
 
 }

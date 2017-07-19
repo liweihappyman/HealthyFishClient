@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/date"
             android:layout_width="match_parent"
             style="@style/genera_title_text"
             android:text="@string/date"
