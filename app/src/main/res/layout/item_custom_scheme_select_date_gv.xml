@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <CheckBox
+        android:id="@+id/ckb_select_date"
+        android:layout_width="72px"
+        android:layout_height="72px"
+        android:button="@null"
+        android:background="@drawable/selector_ckb_bg_select_date"
+        android:gravity="center"
+        android:text="16"
+        style="@style/textSize_42"
+        android:textColor="@color/color_auxiliary_info" />
+
+</com.zhy.autolayout.AutoLinearLayout>

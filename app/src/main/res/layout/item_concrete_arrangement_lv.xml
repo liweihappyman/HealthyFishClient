@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.healthyfish.healthyfish.ui.widget.AutoCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_white"
+                android:orientation="vertical">
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="63px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_date_and_week"
+                        style="@style/textSize_48"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="55px"
+                        android:text="7月17日 星期一"
+                        android:textColor="@color/color_auxiliary_info" />
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/textSize_48"
+                        android:text="10:00"
+                        android:textColor="@color/color_auxiliary_info"/>
+
+                    <ImageView
+                        android:id="@+id/iv_select_time"
+                        android:layout_width="110px"
+                        android:layout_height="41px"
+                        android:layout_marginRight="28px"
+                        android:paddingLeft="30px"
+                        android:paddingRight="30px"
+                        android:src="@mipmap/ic_select_time"/>
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@android:color/darker_gray"/>
+
+                <ListView
+                    android:id="@+id/lv_individual_health_plan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="55px"
+                    android:paddingRight="55px"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="55px"
+                    android:layout_marginRight="55px"
+                    android:background="@android:color/darker_gray"/>
+
+                <TextView
+                    android:id="@+id/tv_add_individual_health_plan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40px"
+                    android:layout_marginBottom="40px"
+                    style="@style/textSize_48"
+                    android:layout_gravity="center_horizontal"
+                    android:text="+添加单项养生计划"
+                    android:textColor="@color/selector_text_color_from_hint_to_white"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.healthyfish.healthyfish.ui.widget.AutoCardView>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

@@ -1,10 +1,12 @@
 package com.healthyfish.healthyfish.utils;
 
 import android.support.annotation.NonNull;
+
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MyApplication;
+
 import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 
 import okhttp3.MediaType;
@@ -75,8 +77,8 @@ public class OkHttpUtils {
     @NonNull
     public static RequestBody getRequestBody(BeanBaseReq beanBaseReq) {
         String jsonStr = JSON.toJSONString(beanBaseReq);
-        Log.i("JsonString",jsonStr);
         MediaType MJSON = MediaType.parse("application/json; charset=utf-8");
         return RequestBody.create(MJSON,jsonStr);
     }
+
 }

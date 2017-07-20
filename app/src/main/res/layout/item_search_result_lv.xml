@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40px"
+        android:maxLines="2"
+        android:ellipsize="end"
+        style="@style/textSize_52"
+        android:text="标题"
+        android:textColor="@color/color_blue_dark"/>
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30px"
+        android:layout_marginBottom="40px"
+        android:text="内容"
+        style="@style/textSize_42"
+        android:textColor="@color/color_general_and_title"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

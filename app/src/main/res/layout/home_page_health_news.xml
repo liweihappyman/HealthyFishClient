@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/lly_more_health_news"
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:gravity="center_vertical"
@@ -60,6 +61,7 @@
             android:background="@color/color_divider" />-->
 
         <TextView
+            android:id="@+id/tv_add_more_news"
             style="@style/genera_title_text"
             android:layout_width="match_parent"
             android:layout_height="120px"

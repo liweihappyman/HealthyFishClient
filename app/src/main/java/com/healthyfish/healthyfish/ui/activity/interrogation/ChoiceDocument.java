@@ -15,6 +15,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDocumentLvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.NestingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,31 +97,10 @@ public class ChoiceDocument extends BaseActivity {
         lvChoiceDocument.setChoiceMode(ListView.CHOICE_MODE_SINGLE);//设置单选功能
         mAdapter = new ChoiceDocumentLvAdapter(this, list);
         lvChoiceDocument.setAdapter(mAdapter);
-        setListViewHeightBasedOnChildren(lvChoiceDocument);
+        NestingUtils.setListViewHeightBasedOnChildren(lvChoiceDocument);
     }
 
 
-    /**
-     * 计算ListView的高度以解决ListView嵌套在ScrollView中出现的高度问题
-     * @param listView
-     */
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-    }
 
 
     /**
@@ -141,7 +121,7 @@ public class ChoiceDocument extends BaseActivity {
                 case 1:
                     mAdapter.addDataToAdapter(info);
                     mAdapter.notifyDataSetChanged();
-                    setListViewHeightBasedOnChildren(lvChoiceDocument);
+                    NestingUtils.setListViewHeightBasedOnChildren(lvChoiceDocument);
                     break;
                 default:
                     break;
