@@ -20,11 +20,14 @@ public class BeanHospDeptDoctInfoReq extends BeanBaseReq {
 	public void setHosp(String hosp) {
 		this.hosp = hosp;
 	}
+
 	public String getStaffNo() {
 		return staffNo;
 	}
 	public void setStaffNo(String staffNo) {
 		this.staffNo = staffNo;
-	}
+
+	public BeanHospDeptDoctInfoReq(){super(BeanHospDeptDoctInfoReq.class.getSimpleName());}
+
 	
 }

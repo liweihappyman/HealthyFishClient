@@ -150,7 +150,11 @@
         <activity android:name=".ui.activity.healthy_management.SinglePlanDetail" />
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
+
         <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme" />
+
+        <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme"></activity>
+
         <!-- 健康管理自定义计划具体安排页面 -->
         <activity android:name=".ui.activity.healthy_management.ConcreteArrangement" />
 
@@ -160,7 +164,9 @@
         <activity android:name=".ui.activity.MoreHealthNews" />
         <!-- 问诊搜索结果显示页面 -->
         <activity android:name=".ui.activity.SearchResult" />
+        <!-- 电子处方 -->
         <activity android:name=".ui.activity.Inspection_report.MyPrescription"></activity>
+
     </application>
 
 </manifest>

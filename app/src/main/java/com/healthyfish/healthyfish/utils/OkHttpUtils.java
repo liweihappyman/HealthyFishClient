@@ -81,10 +81,13 @@ public class OkHttpUtils {
     @NonNull
     public static RequestBody getRequestBody(BeanBaseReq beanBaseReq) {
         String jsonStr = JSON.toJSONString(beanBaseReq);
+
         Log.i("请求信息"," "+jsonStr);
+
         MediaType MJSON = MediaType.parse("application/json; charset=utf-8");
         return RequestBody.create(MJSON,jsonStr);
     }
+
 
     /**
      * 图片文件上传时的MultipartBody构造

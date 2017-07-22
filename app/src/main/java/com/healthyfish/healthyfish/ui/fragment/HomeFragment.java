@@ -39,7 +39,9 @@ import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
 
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
+
 import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport;
+
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
