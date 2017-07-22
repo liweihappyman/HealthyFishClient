@@ -192,7 +192,6 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                 AllMedRec.this.startActivity(selectDoctor);
                 break;
             case R.id.test:
-                showOptions();
                 break;
         }
         return true;
@@ -236,28 +235,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void showOptions() {
-        TextView close;
-        View rootView;
-        rootView = LayoutInflater.from(AllMedRec.this).inflate(R.layout.popupwindow_drug_instructions,
-                null);
-        final PopupWindow mPopWindow = new PopupWindow(rootView);
-        mPopWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        mPopWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopWindow.setTouchable(true);
-        mPopWindow.setFocusable(true);
-        mPopWindow.setBackgroundDrawable(new BitmapDrawable());
-        mPopWindow.setOutsideTouchable(true);
-        mPopWindow.setAnimationStyle(R.style.PopupRightAnimation);
-        mPopWindow.showAsDropDown(toolbar,380,0);
-        close = (TextView) rootView.findViewById(R.id.close);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopWindow.dismiss();
-            }
-        });
-    }
+
 
 
 }

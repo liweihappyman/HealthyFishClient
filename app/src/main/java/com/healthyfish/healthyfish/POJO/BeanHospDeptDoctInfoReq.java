@@ -1,16 +1,13 @@
 package com.healthyfish.healthyfish.POJO;
 
+//响应用BeanHospDeptDoctListRespItem.java
 public class BeanHospDeptDoctInfoReq extends BeanBaseReq {
 	private String hosp;
 	private String dept;
-	private String doct;
+	private String staffNo;
 	
-	public String getDoct() {
-		return doct;
-	}
-	public void setDoct(String doct) {
-		this.doct = doct;
-	}
+	BeanHospDeptDoctInfoReq(){super(BeanHospDeptDoctInfoReq.class.getSimpleName());}
+
 	public String getDept() {
 		return dept;
 	}
@@ -23,6 +20,11 @@ public class BeanHospDeptDoctInfoReq extends BeanBaseReq {
 	public void setHosp(String hosp) {
 		this.hosp = hosp;
 	}
-	public BeanHospDeptDoctInfoReq(){super(BeanHospDeptDoctInfoReq.class.getSimpleName());}
+	public String getStaffNo() {
+		return staffNo;
+	}
+	public void setStaffNo(String staffNo) {
+		this.staffNo = staffNo;
+	}
 	
 }

@@ -64,7 +64,6 @@
         <!-- 问诊选择档案页面 -->
         <activity android:name=".ui.activity.interrogation.ChoiceDocument" />
 
-
         <!-- 新建病历夹页面 -->
         <activity
             android:name=".ui.activity.medicalrecord.NewMedRec"
@@ -105,21 +104,18 @@
         <!-- 个人中心设置页面 -->
         <activity android:name=".ui.activity.personal_center.SetUp" />
 
-
         <!-- 图片选择器 -->
         <activity
             android:name="com.foamtrace.photopicker.PhotoPickerActivity"
             android:configChanges="orientation|screenSize" />
-
-        <activity android:name=".ui.activity.medicalrecord.CreateCourse"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".ui.activity.medicalrecord.CreateCourse"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
-
         <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
         <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
         <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
-        <activity android:name=".ui.activity.InspectionReport" />
-
+        <activity android:name=".ui.activity.Inspection_report.InspectionReport" />
         <activity android:name=".ui.activity.appointment.AppointmentHome" />
         <activity android:name=".ui.activity.appointment.ChooseHospital" />
         <activity android:name=".ui.activity.appointment.DoctorDetail" />
@@ -139,7 +135,6 @@
         <!-- 挂号模块根据科室选择医生页面 -->
         <activity android:name=".ui.activity.appointment.DepartmentDoctorList" />
 
-
         <!-- 健康管理 -->
         <activity android:name=".ui.activity.healthy_management.MainIndexHealthyManagement" />
         <activity android:name=".ui.activity.healthy_management.IndexPhysicalIdentification" />
@@ -152,11 +147,10 @@
         <activity android:name=".ui.activity.healthy_management.StartingSchemeDate" />
         <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.MyHealthyScheme" />
-
         <activity android:name=".ui.activity.healthy_management.SinglePlanDetail" />
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
-        <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme"></activity>
+        <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme" />
         <!-- 健康管理自定义计划具体安排页面 -->
         <activity android:name=".ui.activity.healthy_management.ConcreteArrangement" />
 
@@ -166,7 +160,7 @@
         <activity android:name=".ui.activity.MoreHealthNews" />
         <!-- 问诊搜索结果显示页面 -->
         <activity android:name=".ui.activity.SearchResult" />
-
+        <activity android:name=".ui.activity.Inspection_report.MyPrescription"></activity>
     </application>
 
 </manifest>

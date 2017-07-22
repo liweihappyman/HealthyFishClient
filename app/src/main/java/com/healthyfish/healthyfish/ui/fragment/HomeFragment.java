@@ -39,6 +39,7 @@ import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
 
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
+import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport;
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
@@ -415,6 +416,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.fm_registration:
                 Intent toRegistration = new Intent(mContext, AppointmentHome.class);
                 startActivity(toRegistration);
+                break;
+            case R.id.fm_fm_inspection_report:
+                Intent toInspectionReport = new Intent(getActivity(), InspectionReport.class);
+                startActivity(toInspectionReport);
                 break;
         }
 

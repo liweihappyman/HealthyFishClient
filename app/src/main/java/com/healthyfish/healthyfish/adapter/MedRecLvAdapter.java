@@ -94,7 +94,15 @@ public class MedRecLvAdapter extends BaseAdapter {
             viewHolderHasHead.headDate.setText(dateCompare);
             viewHolderHasHead.headCount.setText(String.valueOf(count));
         }
-        viewHolderHasHead.nameGender.setText(beanMedRec.getName() + "  " + beanMedRec.getGender());
+
+        String birth = beanMedRec.getBirthday();
+
+        if (birth!=null) {
+            int age = 2017 - Integer.valueOf(birth.substring(0, 4));
+            viewHolderHasHead.nameGender.setText(beanMedRec.getName() + "  " + beanMedRec.getGender()+"  "+age+"岁");
+        }else {
+            viewHolderHasHead.nameGender.setText(beanMedRec.getName() + "  " + beanMedRec.getGender());
+        }
         viewHolderHasHead.info.setText(beanMedRec.getDiseaseInfo());
         viewHolderHasHead.dateDiagnose.setText(beanMedRec.getClinicalTime() + "  " + beanMedRec.getDiagnosis());
         //设置右边标志的颜色和内容

@@ -1,5 +1,7 @@
 package com.healthyfish.healthyfish.POJO;
 
+//验证就诊卡
+//返回sick_id(患者在医院的内部编号，不同与card_id)
 public class BeanHospCardAuthReq extends BeanBaseReq {
 	private String hosp;
 	private String cardId;

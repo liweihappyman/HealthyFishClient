@@ -94,7 +94,7 @@ public class DatePickerDialog extends Dialog {
 
 
         np1.setMaxValue(2022);//设置数字选择器的最大值,最小值,以及当前值
-        np1.setMinValue(2015);
+        np1.setMinValue(1900);
         np1.setValue(Integer.parseInt(str1));
         np1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
