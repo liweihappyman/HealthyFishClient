@@ -10,11 +10,32 @@ import java.io.Serializable;
  */
 
 public class BeanWeekAndDate implements Serializable{
+    private BeanHospRegisterReq beanHospRegisterReq;
+    private BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem;
+    private String time;//预约时间
     private String titleWeek;
     private String Date;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     private String am;
     private String pm;
     private boolean outTime = false;//是否过时
+
+    public BeanWeekAndDate(BeanHospRegisterReq beanHospRegisterReq, BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem,String date, String am, String pm) {
+        this.beanHospRegisterReq = beanHospRegisterReq;
+        this.beanHospDeptDoctListRespItem = beanHospDeptDoctListRespItem;
+        Date = date;
+        this.am = am;
+        this.pm = pm;
+    }
+
 
     public boolean isOutTime() {
         return outTime;
@@ -76,8 +97,22 @@ public class BeanWeekAndDate implements Serializable{
         this.pm = pm;
     }
 
-
-
     public BeanWeekAndDate() {
+    }
+
+    public BeanHospRegisterReq getBeanHospRegisterReq() {
+        return beanHospRegisterReq;
+    }
+
+    public void setBeanHospRegisterReq(BeanHospRegisterReq beanHospRegisterReq) {
+        this.beanHospRegisterReq = beanHospRegisterReq;
+    }
+
+    public BeanHospDeptDoctListRespItem getBeanHospDeptDoctListRespItem() {
+        return beanHospDeptDoctListRespItem;
+    }
+
+    public void setBeanHospDeptDoctListRespItem(BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem) {
+        this.beanHospDeptDoctListRespItem = beanHospDeptDoctListRespItem;
     }
 }

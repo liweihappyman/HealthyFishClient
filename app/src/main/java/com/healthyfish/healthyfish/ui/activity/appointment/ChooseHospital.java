@@ -10,15 +10,21 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeysGetReq;
 import com.healthyfish.healthyfish.POJO.BeanDoctAuthReq;
 import com.healthyfish.healthyfish.POJO.BeanDoctorListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospRegNumListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospitalListResp;
+import com.healthyfish.healthyfish.POJO.BeanHospitalListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanListReq;
 import com.healthyfish.healthyfish.POJO.BeanSearchReq;
+import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChooseHospitalAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
@@ -33,6 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：选择医院列表页面
@@ -49,63 +57,51 @@ public class ChooseHospital extends BaseActivity {
     @BindView(R.id.choose_hospital_recyclerview)
     RecyclerView chooseHospitalRecyclerview;
 
+    private ChooseHospitalAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_hospital);
         ButterKnife.bind(this);
-        initToolBar(toolbar,toolbarTitle,"选择医院");
+        initToolBar(toolbar, toolbarTitle, "选择医院");
         initData();
     }
 
     private void initData() {
-        List<String> list = new ArrayList<>();
-//        BeanListReq beanListReq = new BeanListReq();
-//        beanListReq.setPrefix("hpc_");
-//        beanListReq.setFrom(0);
-//        beanListReq.setTo(20);
-//        beanListReq.setNum(21);
-//
-//        BeanSearchReq beanSearchReq = new BeanSearchReq();
-//        beanSearchReq.setType("hosp");
-//        beanSearchReq.setKeyword("中医院");
-//
-//        RetrofitManagerUtils.getInstance(this, null)
-//                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanListReq), new Subscriber<ResponseBody>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        Log.e("LYQ", "onCompleted");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e("LYQ", "onError");
-//                    }
-//
-//                    @Override
-//                    public void onNext(ResponseBody responseBody) {
-//                        Log.e("LYQ", "onNext");
-//                        String jsonStr = null;
-//                        try {
-//                            jsonStr = responseBody.string();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        Log.e("LYQ", jsonStr);
-//                    }
-//                });
-        list.add("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg");
-        list.add("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg");
-        list.add("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg");
-        list.add("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg");
-        list.add("http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg");
+        final List<String> list = new ArrayList<>();
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHospitalListReq()), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("LYQ", e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                String str = null;
+                try {
+                    str = responseBody.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                BeanHospitalListResp beanHospitalListResp = JSON.parseObject(str, BeanHospitalListResp.class);
+                for (BeanHospitalListRespItem beanHospitalListRespItem : beanHospitalListResp.getHospitalList()) {
+                    list.add(HttpHealthyFishyUrl + beanHospitalListRespItem.getImg());
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         LinearLayoutManager lmg = new LinearLayoutManager(this);
         chooseHospitalRecyclerview.setLayoutManager(lmg);
-        ChooseHospitalAdapter adapter = new ChooseHospitalAdapter(list, this);
+        adapter = new ChooseHospitalAdapter(list, this);
         chooseHospitalRecyclerview.setAdapter(adapter);
-
-
     }
 
 }

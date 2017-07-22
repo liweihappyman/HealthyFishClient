@@ -6,29 +6,30 @@
 
     <com.healthyfish.healthyfish.ui.widget.AutoCardView
         android:layout_width="match_parent"
-        android:layout_height="195px"
-        android:layout_marginLeft="24px"
-        android:layout_marginRight="24px"
-        app:cardElevation="4px"
-        app:cardCornerRadius="2px">
+        android:layout_height="180px"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        app:cardElevation="1dp">
 
         <com.daimajia.swipe.SwipeLayout
             android:id="@+id/sly_my_community"
             android:layout_width="match_parent"
-            android:layout_height="195px"
+            android:layout_height="180px"
             android:background="@color/color_white"
             android:splitMotionEvents="false">
 
             <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="195px"
+                android:layout_height="180px"
                 android:clickable="true">
 
                 <TextView
                     android:id="@+id/tv_cancel_attention"
                     style="@style/textSize_60"
                     android:layout_width="180px"
-                    android:layout_height="195px"
+                    android:layout_height="180px"
                     android:background="@color/color_secondary"
                     android:gravity="center"
                     android:text="取消\n关注"
@@ -39,7 +40,7 @@
             <com.zhy.autolayout.AutoRelativeLayout
                 android:id="@+id/rly_my_community"
                 android:layout_width="match_parent"
-                android:layout_height="195px">
+                android:layout_height="180px">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/civ_community_img"

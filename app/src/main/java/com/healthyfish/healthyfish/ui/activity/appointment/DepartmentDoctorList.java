@@ -5,23 +5,41 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.healthyfish.healthyfish.POJO.BeanDepartmentDoctor;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.adapter.DepartmentDoctorLvAdapter;
+import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：挂号模块科室医生列表页面
@@ -40,10 +58,14 @@ public class DepartmentDoctorList extends BaseActivity {
     ListView lvDepartmentDoctorList;
 
     private String departmentName = "选择医生";
+    private String departmentCode;//部门编号
 
     private Context mContext;
-    private ChoiceDoctorLvAdapter mChoiceDoctorLvAdapter;
+    private DepartmentDoctorLvAdapter adapter;
     private List<BeanDepartmentDoctor> mDoctorInfos = new ArrayList<>();
+    private List<BeanHospDeptDoctListRespItem> DeptDoctList = new ArrayList<>();
+
+    private BeanHospRegisterReq beanHospRegisterReq;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,16 +83,18 @@ public class DepartmentDoctorList extends BaseActivity {
      * 初始化ListView
      */
     private void initListView() {
-        DepartmentDoctorLvAdapter adapter = new DepartmentDoctorLvAdapter(mContext, mDoctorInfos);
+        adapter = new DepartmentDoctorLvAdapter(mContext, mDoctorInfos);
+
         lvDepartmentDoctorList.setAdapter(adapter);
         lvDepartmentDoctorList.setVerticalScrollBarEnabled(false);
         lvDepartmentDoctorList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入到医生详情页面，进行预约时间的选择
-                MyToast.showToast(DepartmentDoctorList.this,mDoctorInfos.get(position).getName());
-                Intent test = new Intent(DepartmentDoctorList.this,DoctorDetail.class);
-                startActivity(test);
+                Intent intent = new Intent(DepartmentDoctorList.this,DoctorDetail.class);
+                intent.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
+                intent.putExtra("BeanHospDeptDoctListRespItem", DeptDoctList.get(position));
+                startActivity(intent);
             }
         });
     }
@@ -79,9 +103,10 @@ public class DepartmentDoctorList extends BaseActivity {
      * 获取上一页面传过来的科室名
      */
     private void getDepartmentName() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
-            departmentName = bundle.get("DepartmentName").toString();
+        beanHospRegisterReq = (BeanHospRegisterReq) getIntent().getSerializableExtra("BeanHospRegisterReq");
+        if (beanHospRegisterReq!= null){
+            departmentName = beanHospRegisterReq.getDeptTxt();
+            departmentCode = beanHospRegisterReq.getDept();
         }
     }
 
@@ -89,27 +114,50 @@ public class DepartmentDoctorList extends BaseActivity {
      * 初始化科室医生数据
      */
     private void initData() {
-        for (int i = 0; i < 5; i++) {
-            BeanDepartmentDoctor data = new BeanDepartmentDoctor();
-            data.setImgUrl("http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg");
-            data.setName("医生" + i);
-            data.setDepartment("中医科");
-            data.setDuties("主任医师");
-            data.setHospital("柳州市中医院");
-            data.setIntroduce("擅长：消化系统疾病。。。。。。。。。。。。。。。。。。。。。。。。。。");
-            data.setAvailable(true);
-            mDoctorInfos.add(data);
-        }
-        for (int i = 0; i < 5; i++) {
-            BeanDepartmentDoctor data = new BeanDepartmentDoctor();
-            data.setImgUrl("http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg");
-            data.setName("医生" + i);
-            data.setDepartment("中医科");
-            data.setDuties("主任医师");
-            data.setHospital("柳州市中医院");
-            data.setIntroduce("擅长：消化系统疾病。。。。。。。。。。。。。。。。。。。。。。。。。。");
-            data.setAvailable(false);
-            mDoctorInfos.add(data);
-        }
+
+        final BeanHospDeptDoctListReq beanHospDeptDoctListReq = new BeanHospDeptDoctListReq();
+        beanHospDeptDoctListReq.setHosp("lzzyy");
+        beanHospDeptDoctListReq.setDept(departmentCode);
+
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctListReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String jsonStr = null;
+                        try {
+                            jsonStr = responseBody.string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Log.e("LYQ", jsonStr);
+                        List<JSONObject> doctorList = JSONArray.parseObject(jsonStr,List.class);
+                        for (JSONObject  object :doctorList){
+                            String jsonString = object.toJSONString();
+                            BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptDoctListRespItem.class);
+                            DeptDoctList.add(beanHospDeptListRespItem);
+                            BeanDepartmentDoctor data = new BeanDepartmentDoctor();
+                            data.setImgUrl(HttpHealthyFishyUrl+beanHospDeptListRespItem.getZHAOPIAN());
+                            data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
+                            data.setDepartment("诊室："+beanHospDeptListRespItem.getCLINIQUE_CODE());
+                            data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
+                            data.setHospital(beanHospRegisterReq.getHospTxt());
+                            data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
+                            data.setAvailable(true);
+                            mDoctorInfos.add(data);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
     }
 }

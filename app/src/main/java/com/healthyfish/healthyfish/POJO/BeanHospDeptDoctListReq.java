@@ -1,8 +1,8 @@
 package com.healthyfish.healthyfish.POJO;
 
 public class BeanHospDeptDoctListReq extends BeanBaseReq {
-	private String hosp;
-	private String dept;
+	private String hosp; // "lzzyy":柳州中医院
+	private String dept; // BeanHospDeptListRespItem中的DEPT_CODE
 	
 	public String getDept() {
 		return dept;

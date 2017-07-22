@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.POJO;
-
+//获取医生某天的排班情况
+//返回List<String>
 public class BeanHospRegNumListReq extends BeanBaseReq {
 	private String hosp;
 	private String dept;
@@ -7,7 +8,7 @@ public class BeanHospRegNumListReq extends BeanBaseReq {
 	private String date;
 	private String type;
 
-	BeanHospRegNumListReq(){super(BeanHospRegNumListReq.class.getSimpleName());}
+	public BeanHospRegNumListReq(){super(BeanHospRegNumListReq.class.getSimpleName());}
 
 	public String getHosp() {
 		return hosp;

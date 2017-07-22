@@ -1,13 +1,16 @@
 package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.MyToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,11 +54,44 @@ public class PhyIdeReport extends BaseActivity {
         setContentView(R.layout.activity_phy_report);
         ButterKnife.bind(this);
         initToolBar(toolbar,toolbarTitle,"体质报告");
+        initData();
+    }
 
+    /**
+     * 初始化显示数据
+     */
+    private void initData() {
+        if (getIntent().getBooleanExtra("IS_TESTED", false)) {//由健康管理首页跳转过来
+            btSave.setText("重新测试");
+        } else {//由测试页面跳转过来
+            btSave.setText("保存");
+
+            if (getIntent().getStringArrayExtra("PHY_NAME") != null) {
+                String[] phy = getIntent().getStringArrayExtra("PHY_NAME");
+                tvMainPhysique.setText(phy[0]);
+                if (phy.length >= 3) {
+                    tvBothPhysique.setText(phy[1]+"、"+phy[2]);
+                } else if (phy.length == 2) {
+                    tvBothPhysique.setText(phy[1]);
+                } else {
+                    tvBothPhyTitle.setVisibility(View.GONE);
+                    tvBothPhysique.setVisibility(View.GONE);
+                }
+                tvIntroductionTitle.setText(phy[0]+"简介");
+            }
+        }
     }
 
     @OnClick(R.id.bt_save)
     public void onViewClicked() {
         //点击保存按钮
+        if (btSave.getText().toString().equals("重新测试")) {
+            Intent intent = new Intent(this, IndexPhysicalIdentification.class);
+            startActivity(intent);
+        } else if (btSave.getText().toString().equals("保存")) {
+            //保存操作
+            MyToast.showToast(this, "保存成功");
+            btSave.setText("重新测试");//保存成功后的操作
+        }
     }
 }

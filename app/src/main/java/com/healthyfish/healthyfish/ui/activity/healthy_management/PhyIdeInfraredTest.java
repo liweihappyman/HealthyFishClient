@@ -1,6 +1,8 @@
 package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -8,9 +10,11 @@ import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.foamtrace.photopicker.ImageCaptureManager;
@@ -24,6 +28,7 @@ import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.adapter.PhyGvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.healthy_circle.HealthyCirclePosting;
+import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +60,14 @@ public class PhyIdeInfraredTest extends BaseActivity implements AdapterView.OnIt
     @BindView(R.id.bt_complete)
     Button btComplete;
 
-    private CreateCourseGridAdapter gridAdapter;//适配器
+    private CreateCourseGridAdapter gridAdapter;//图片选择器适配器
     private List<String> imagePaths = new ArrayList<>();//（后面用的）图片的路径list
     private ImageCaptureManager captureManager; // 相机拍照处理类
     public static final int REQUEST_CAMERA_CODE = 11;//摄像头拍照的标志
     public static final int REQUEST_PREVIEW_CODE = 12;//预览的标志
+
+    private PhyGvAdapter adapter;//选择体质适配器
+    String[] phyNames = new String[]{"平和质","气虚质","阳虚质","阴虚质","痰湿质","湿热质","血瘀质","气郁质","特秉质"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +82,36 @@ public class PhyIdeInfraredTest extends BaseActivity implements AdapterView.OnIt
     }
 
 
+
     @OnClick(R.id.bt_complete)
     public void onViewClicked() {
-        //点击完成按钮
-        Intent intent = new Intent(this, PhyIdeReport.class);
-        startActivity(intent);
+        //点击完成按钮,将图片上传，选择的体质上传
+        String phy1 = null,phy2 = null,phy3 = null;
+        for (int i=0;i<phyNames.length;i++) {
+            if (adapter.getTvOrderList().get(i).getText().toString().equals("1")) {
+                phy1 = phyNames[i];
+            } else if (adapter.getTvOrderList().get(i).getText().toString().equals("2")) {
+                phy2 = phyNames[i];
+            } else if (adapter.getTvOrderList().get(i).getText().toString().equals("3")) {
+                phy3 = phyNames[i];
+            }
+        }
+
+        if (phy1 != null) {
+            String[] selectedPhy;
+            if (phy3 != null) {
+                selectedPhy = new String[]{phy1,phy2,phy3};
+            } else if (phy2 != null) {
+                selectedPhy = new String[]{phy1, phy2};
+            } else {
+                selectedPhy = new String[]{phy1};
+            }
+            Intent intent = new Intent(this, PhyIdeReport.class);
+            intent.putExtra("PHY_NAME", selectedPhy);
+            startActivity(intent);
+        } else {
+            MyToast.showToast(this,"请至少选择一种体质噢");
+        }
     }
 
     /**
@@ -86,11 +119,10 @@ public class PhyIdeInfraredTest extends BaseActivity implements AdapterView.OnIt
      */
     private void initGvSelectPhy() {
         List<String> list = new ArrayList<>();
-        String[] phyNames = new String[]{"平和质","气虚质","阳虚质","阴虚质","痰湿质","湿热质","血瘀质","气郁质","特秉质"};
         for (int i=0; i<phyNames.length; i++){
             list.add(phyNames[i]);
         }
-        PhyGvAdapter adapter = new PhyGvAdapter(this, list,3);  //设置适配器并设置最大可选体质数为3
+        adapter = new PhyGvAdapter(this, list,3);  //设置适配器并设置最大可选体质数为3
         gvSelectPhy.setAdapter(adapter);
     }
 

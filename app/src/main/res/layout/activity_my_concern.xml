@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="37px"
         android:divider="#00000000"
-        android:dividerHeight="20px"/>
+        android:dividerHeight="10px"/>
 
 
 </com.zhy.autolayout.AutoLinearLayout>

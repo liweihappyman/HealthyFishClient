@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--挂号模块确认信息页面布局-->
+<?xml version="1.0" encoding="utf-8"?><!--挂号模块确认信息页面布局-->
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -38,225 +37,246 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <com.zhy.autolayout.AutoLinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:background="@color/color_white">
-
-
-        <TextView
-            android:id="@+id/tv_hospital"
-            style="@style/textSize_48"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="54px"
-            android:text="医院：柳州市中医院"
-            android:textColor="@color/color_general_and_title" />
-
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="53px"
-            android:layout_marginRight="53px"
-            android:background="@android:color/darker_gray"/>
-
-        <TextView
-            android:id="@+id/tv_department"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="54px"
-            android:text="科室：中医科"
-            style="@style/textSize_48"
-            android:textColor="@color/color_general_and_title" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="53px"
-            android:layout_marginRight="53px"
-            android:background="@android:color/darker_gray"/>
-
-        <TextView
-            android:id="@+id/tv_appointment_time"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="54px"
-            android:text="预约时间：2017年7月10日 下午16：20-16：30"
-            style="@style/textSize_48"
-            android:textColor="@color/color_general_and_title" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="53px"
-            android:layout_marginRight="53px"
-            android:background="@android:color/darker_gray"/>
-
-        <TextView
-            android:id="@+id/tv_doctor_name"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="54px"
-            android:text="医生姓名：非凡"
-            style="@style/textSize_48"
-            android:textColor="@color/color_general_and_title" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="53px"
-            android:layout_marginRight="53px"
-            android:background="@android:color/darker_gray"/>
-
-        <TextView
-            android:id="@+id/tv_outpatient_type"
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="54px"
-            android:text="门诊类型：主治医师"
-            style="@style/textSize_48"
-            android:textColor="@color/color_general_and_title" />
-
-    </com.zhy.autolayout.AutoLinearLayout>
-
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36px"
-        android:background="@color/color_white"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/tv_hospital"
+                    style="@style/textSize_48"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="54px"
+                    android:text="医院：柳州市中医院"
+                    android:textColor="@color/color_general_and_title" />
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="53px"
+                    android:layout_marginRight="53px"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/tv_department"
+                    style="@style/textSize_48"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="54px"
+                    android:text="科室：中医科"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="53px"
+                    android:layout_marginRight="53px"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/tv_appointment_time"
+                    style="@style/textSize_48"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="54px"
+                    android:text="预约时间：2017年7月10日 下午16：20-16：30"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="53px"
+                    android:layout_marginRight="53px"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/tv_doctor_name"
+                    style="@style/textSize_48"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="54px"
+                    android:text="医生姓名：非凡"
+                    android:textColor="@color/color_general_and_title" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="53px"
+                    android:layout_marginRight="53px"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/tv_outpatient_type"
+                    style="@style/textSize_48"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="54px"
+                    android:text="门诊类型：主治医师"
+                    android:textColor="@color/color_general_and_title" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36px"
+                android:background="@color/color_white"
+                android:orientation="vertical">
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/textSize_48"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="54px"
+                        android:text="就诊人姓名："
+                        android:textColor="@color/color_general_and_title" />
+
+                    <EditText
+                        android:id="@+id/et_visiting_person_name"
+                        android:layout_width="666px"
+                        android:layout_height="100px"
+                        android:layout_marginRight="54px"
+                        android:background="@drawable/gray_1dp_rounded_rectangle"
+                        android:paddingLeft="5px"
+                        android:paddingRight="5px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/textSize_48"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="54px"
+                        android:text="身份证号："
+                        android:textColor="@color/color_general_and_title" />
+
+                    <EditText
+                        android:id="@+id/et_ID_number"
+                        android:layout_width="666px"
+                        android:layout_height="100px"
+                        android:layout_marginRight="54px"
+                        android:background="@drawable/gray_1dp_rounded_rectangle"
+                        android:paddingLeft="5px"
+                        android:paddingRight="5px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/textSize_48"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="54px"
+                        android:text="就诊卡号："
+                        android:textColor="@color/color_general_and_title" />
+
+                    <EditText
+                        android:id="@+id/et_visiting_card_number"
+                        android:layout_width="666px"
+                        android:layout_height="100px"
+                        android:layout_marginRight="54px"
+                        android:background="@drawable/gray_1dp_rounded_rectangle"
+                        android:paddingLeft="5px"
+                        android:paddingRight="5px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/textSize_48"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="54px"
+                        android:text="手机号："
+                        android:textColor="@color/color_general_and_title" />
+
+                    <EditText
+                        android:id="@+id/et_phone_number"
+                        android:layout_width="666px"
+                        android:layout_height="100px"
+                        android:layout_marginRight="54px"
+                        android:background="@drawable/gray_1dp_rounded_rectangle"
+                        android:paddingLeft="5px"
+                        android:paddingRight="5px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+            </com.zhy.autolayout.AutoLinearLayout>
 
             <TextView
-                style="@style/textSize_48"
+                android:id="@+id/tv_registration_fee"
+                style="@style/textSize_60"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:text="就诊人姓名："
+                android:layout_gravity="right"
+                android:layout_marginRight="54px"
+                android:layout_marginTop="88px"
+                android:text="挂号费：10元"
                 android:textColor="@color/color_general_and_title" />
 
-            <EditText
-                android:id="@+id/et_visiting_person_name"
-                android:layout_width="666px"
-                android:layout_height="100px"
-                android:layout_marginRight="54px"
-                android:background="@drawable/gray_1dp_rounded_rectangle" />
+            <Button
+                android:id="@+id/bt_confirm_registration"
+                style="@style/textSize_54"
+                android:layout_width="978px"
+                android:layout_height="126px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="90px"
+                android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"
+                android:text="确认挂号"
+                android:textColor="@color/selector_text_color_from_white_to_primary" />
 
         </com.zhy.autolayout.AutoLinearLayout>
 
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/textSize_48"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:text="身份证号："
-                android:textColor="@color/color_general_and_title" />
-
-            <EditText
-                android:id="@+id/et_ID_number"
-                android:layout_width="666px"
-                android:layout_height="100px"
-                android:layout_marginRight="54px"
-                android:background="@drawable/gray_1dp_rounded_rectangle" />
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/textSize_48"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:text="就诊卡号："
-                android:textColor="@color/color_general_and_title" />
-
-            <EditText
-                android:id="@+id/et_visiting_card_number"
-                android:layout_width="666px"
-                android:layout_height="100px"
-                android:layout_marginRight="54px"
-                android:background="@drawable/gray_1dp_rounded_rectangle" />
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="120px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/textSize_48"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="54px"
-                android:text="手机号："
-                android:textColor="@color/color_general_and_title" />
-
-            <EditText
-                android:id="@+id/et_phone_number"
-                android:layout_width="666px"
-                android:layout_height="100px"
-                android:layout_marginRight="54px"
-                android:background="@drawable/gray_1dp_rounded_rectangle" />
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-    </com.zhy.autolayout.AutoLinearLayout>
-
-    <TextView
-        android:id="@+id/tv_registration_fee"
-        style="@style/textSize_60"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginRight="54px"
-        android:layout_marginTop="88px"
-        android:text="挂号费：10元"
-        android:textColor="@color/color_general_and_title" />
-
-    <Button
-        android:id="@+id/bt_confirm_registration"
-        android:layout_width="978px"
-        android:layout_height="126px"
-        android:layout_marginTop="90px"
-        android:layout_gravity="center_horizontal"
-        android:text="确认挂号"
-        style="@style/textSize_54"
-        android:textColor="@color/selector_text_color_from_white_to_primary"
-        android:background="@drawable/selector_4dp_btn_color_from_priamry_to_white"/>
+    </ScrollView>
 
 </com.zhy.autolayout.AutoLinearLayout>
