@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.utils.AutoUtils;
 
@@ -42,7 +43,7 @@ public class InterrogationRvAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ContentViewHolder){
             ((ContentViewHolder)holder).title.setText(departments.get(position));
-            ((ContentViewHolder)holder).icon.setImageResource(departmentIcons.get(position));
+            Glide.with(context).load(departmentIcons.get(position)).into(((ContentViewHolder) holder).icon);
         }
     }
 

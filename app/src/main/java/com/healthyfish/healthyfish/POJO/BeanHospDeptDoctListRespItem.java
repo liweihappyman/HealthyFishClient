@@ -1,8 +1,29 @@
 package com.healthyfish.healthyfish.POJO;
 
+
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class BeanHospDeptDoctListRespItem extends BeanBaseReq {
+//获取到的数据：
+//[{"PRE_LIMIT":5,
+// "PRICE":10,
+// "DOCTOR_NAME":"江铭",
+// "WEB_INTRODUCE":"擅长双眼皮、祛眼袋、隆鼻、面部除皱，面部肿物、疤痕治疗，胸部整形，吸脂减肥、微创腋臭治疗等整形美容手术。",
+// "schdList":["2017-07-21_2","2017-07-24_1","2017-07-24_2","2017-07-25_1","2017-07-25_2","2017-07-26_1","2017-07-26_2","2017-07-27_1","2017-07-27_2"],
+// "PRE_ALLOW":0,
+// "CLINIQUE_CODE":403,
+// "title":"柳州市中医院-中医美容科-江铭",
+// "WORK_DATE":"2017-07-21T00:00:00",
+// "REISTER_NAME":"副主任医师号",
+// "WORK_TYPE":2,
+// "STAFF_NO":"054",
+// "ZHAOPIAN":"/demo/downloadFile/img_lzzyy_0204_054.jpg",
+// "DOCTOR":"江铭/054"}]
+
+public class BeanHospDeptDoctListRespItem extends BeanBaseReq implements Serializable{
+
 	private int STAFF_NO; //员工编号
 	private String REISTER_NAME; //职称
 	private int CLINIQUE_CODE; //诊室
@@ -11,6 +32,14 @@ public class BeanHospDeptDoctListRespItem extends BeanBaseReq {
 	private String WEB_INTRODUCE; //简介
 	private String ZHAOPIAN; //照片
 	private int WORK_TYPE; //
+
+	private String DOCTOR; //挂号用的医生标识
+	private int PRE_ALLOW;
+	/*"schdList":[\"2017-07-21_1\",\"2017-07-24_1\",\"2017-07-25_1\",\"2017-07-26_1\",\"2017-07-27_1\"*/
+	private List<String> schdList; //排班表, 1:上午，2:下午
+
+	BeanHospDeptDoctListRespItem(){super(BeanHospDeptDoctListRespItem.class.getSimpleName());}
+
 	public int getSTAFF_NO() {
 		return STAFF_NO;
 	}
@@ -99,13 +128,4 @@ public class BeanHospDeptDoctListRespItem extends BeanBaseReq {
 		this.schdList = schdList;
 	}
 
-	private String DOCTOR; //挂号用的医生标识
-	private int PRE_ALLOW;
-	/*"schdList":[\"2017-07-21_1\",\"2017-07-24_1\",\"2017-07-25_1\",\"2017-07-26_1\",\"2017-07-27_1\"*/
-	private List<String> schdList; //排班表, 1:上午，2:下午
-	
-	BeanHospDeptDoctListRespItem(){super(BeanHospDeptDoctListRespItem.class.getSimpleName());}
-
-
-	
 }

@@ -69,36 +69,10 @@ public class SelectTimeAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
-
         SingleView singleView = new SingleView(context);
         singleView.setTitle(list.get(position));
         return singleView;
 
-//        final ViewHolder holder;
-//        if (convertView == null) {
-//            holder = new ViewHolder();
-//            convertView = mLayoutInflater.inflate(R.layout.item_choose_time, viewGroup, false);//填充Listview的item视图
-//            holder.time = (TextView) convertView.findViewById(R.id.time);
-//            holder.checkBox = (CheckBox) convertView.findViewById(R.id.selected_state);
-//            convertView.setTag(holder);
-//            AutoUtils.auto(convertView);
-//
-//        } else {
-//            holder = (ViewHolder) convertView.getTag();
-//        }
-//        holder.time.setText(list.get(position));
-//        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                //重置，确保最多只有一项被选中
-//                for (String key : states.keySet()) {
-//                    states.put(key, false);
-//
-//                }
-//                mPosition = position;//用接口将数据传出去
-//                states.put(String.valueOf(position), holder.checkBox.isChecked());
-//                SelectTimeAdapter.this.notifyDataSetChanged();
-//            }
-//        });
     }
 
     class ViewHolder {
@@ -114,7 +88,6 @@ public class SelectTimeAdapter extends BaseAdapter {
      */
 
     public class SingleView extends LinearLayout implements Checkable {
-
 
         @BindView(R.id.time)
         TextView time;

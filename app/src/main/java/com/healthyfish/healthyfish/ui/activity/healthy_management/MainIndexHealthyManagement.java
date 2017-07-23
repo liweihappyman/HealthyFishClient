@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.healthyfish.healthyfish.POJO.BeanSinglePlan;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SinglePlanAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainIndexHealthyManagement extends AppCompatActivity {
+public class MainIndexHealthyManagement extends BaseActivity {
 
     SpannableString healthyIdentication;
 
@@ -53,45 +54,42 @@ public class MainIndexHealthyManagement extends AppCompatActivity {
     @BindView(R.id.rv_single_plan)
     RecyclerView rvSinglePlan;
 
+    private boolean isTested = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_index_healthy_management);
         ButterKnife.bind(this);
-
-        intiToolbarView();
+        initToolBar(toolbar,toolbarTitle,"我的健康管理");
         initHealthIdentityView();
         intiTotalHealthyscheme();
         intiSingleHealthyPlan();
 
     }
 
-    // 初始化toolbar
-    private void intiToolbarView() {
-        toolbarTitle.setText("我的健康管理");
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
-        }
-    }
-
     // 初始化体质选项
     private void initHealthIdentityView() {
         healthyIdentication = new SpannableString("体质：阳虚  阴虚  气虚  气郁  血瘀  痰湿  湿热  特禀");
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#009ad6"));
-        AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(36);
-        healthyIdentication.setSpan(colorSpan, 3, 5, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        healthyIdentication.setSpan(absoluteSizeSpan, 3, 5, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        if (isTested) {//已经测试过体质，则对体质进行标识
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#009ad6"));
+            AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(36);
+            healthyIdentication.setSpan(colorSpan, 3, 5, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            healthyIdentication.setSpan(absoluteSizeSpan, 3, 5, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
         tvHealthyIdentification.setText(healthyIdentication);
 
         tvHealthyIdentification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainIndexHealthyManagement.this, IndexPhysicalIdentification.class);
-                startActivity(intent);
+                if (isTested) {//已经做过体质测试
+                    Intent intent = new Intent(MainIndexHealthyManagement.this,PhyIdeReport.class);
+                    intent.putExtra("IS_TESTED", isTested);
+                    startActivity(intent);
+                } else {//未做过体质测试
+                    Intent intent = new Intent(MainIndexHealthyManagement.this, IndexPhysicalIdentification.class);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -130,17 +128,6 @@ public class MainIndexHealthyManagement extends AppCompatActivity {
                 Toast.makeText(MainIndexHealthyManagement.this, "添加更多单项计划", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    // Toolbar按钮
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return true;
     }
 
 }

@@ -8,8 +8,9 @@
     <com.healthyfish.healthyfish.ui.widget.AutoCardView
         android:layout_width="match_parent"
         android:layout_height="283px"
-        app:cardElevation="5px"
-        app:cardCornerRadius="2px">
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        app:cardElevation="2dp">
 
         <com.daimajia.swipe.SwipeLayout
             android:id="@+id/sly_message_view"

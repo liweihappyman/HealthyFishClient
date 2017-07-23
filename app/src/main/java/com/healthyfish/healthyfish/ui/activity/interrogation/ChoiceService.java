@@ -14,6 +14,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.interrogation.SendMind;
@@ -31,6 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：选择服务页面
@@ -93,6 +96,7 @@ public class ChoiceService extends BaseActivity {
     AutoLinearLayout layoutChoiceService;
 
     private Context mContext;//全局上下文
+    private BeanHospDeptDoctListRespItem DeptDoctInfo;
 
     private String imgDoctorUrl;  //医生头像资源
     private String doctorName;  //医生名字
@@ -127,23 +131,23 @@ public class ChoiceService extends BaseActivity {
      * 模拟医生数据
      */
     private void getData() {
-        //模拟数据
-        String info = "擅长：消化系统疾病、口腔溃疡、阴虚、肾阳虚、阳虚、虚火。（测试数据）擅长：消化系统疾病、口腔溃疡、阴虚、肾阳虚、阳虚、虚火。（测试数据）" +
-                "擅长：消化系统疾病、口腔溃疡、阴虚、肾阳虚、阳虚、虚火。（测试数据）擅长：消化系统疾病、口腔溃疡、阴虚、肾阳虚、阳虚、虚火。（测试数据）" +
-                "擅长：消化系统疾病、口腔溃疡、阴虚、肾阳虚、阳虚、虚火。（测试数据）";
 
-        doctorName = "赵婧";
-        imgDoctorUrl = "http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg";
-        doctorDepartment = "五官科";
-        doctorTitle = "医师";
-        doctorCompany = "柳州市中医院";
+        if (getIntent().getSerializableExtra("DEPT_DOCTOR_INFO") != null) {
+            doctorDepartment = getIntent().getStringExtra("DepartmentName");
+            DeptDoctInfo = (BeanHospDeptDoctListRespItem) getIntent().getSerializableExtra("DEPT_DOCTOR_INFO");
+        }
+
+        doctorName = DeptDoctInfo.getDOCTOR_NAME();
+        imgDoctorUrl = HttpHealthyFishyUrl+DeptDoctInfo.getZHAOPIAN();
+        doctorTitle = DeptDoctInfo.getREISTER_NAME();
         pictureConsultingPrice = "30";
         privateDoctorPrice = "100";
-        appointmentPrice = "10";
-        doctorInfo = info;
-        isOpenPictureConsulting = true;
-        isOpenPrivateDoctor = true;
-        isOpenAppointment = false;
+        doctorInfo = DeptDoctInfo.getWEB_INTRODUCE();
+        doctorCompany = "柳州市中医院";
+        appointmentPrice = String.valueOf(DeptDoctInfo.getPRICE());
+        isOpenPictureConsulting = false;
+        isOpenPrivateDoctor = false;
+        isOpenAppointment = true;
         isAttention = false;
     }
 
@@ -152,42 +156,6 @@ public class ChoiceService extends BaseActivity {
      */
     private List<Map<String, Object>> getLisViewData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("username", "非凡boy");
-        map.put("satisfaction", "很满意");
-        map.put("content", "张宇医生在看诊过程中非常细心，而且对于我的问题解答得很详细！赞！");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("username", "非凡girl");
-        map.put("satisfaction", "很满意");
-        map.put("content", "张宇医生在看诊过程中非常细心，而且对于我的问题解答得很详细！赞！张宇医生在看诊过程中非常细心，而且对于我的问题解答得很详细！赞！");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("username", "非凡girl");
-        map.put("satisfaction", "很满意");
-        map.put("content", "张宇医生在看诊过程中非常细心，而且对于我的问题解答得很详细！赞！");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("username", "非凡girl");
-        map.put("satisfaction", "很满意");
-        map.put("content", "张宇医生在看诊过程中非常细心，赞！");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("username", "非凡girl");
-        map.put("satisfaction", "很满意");
-        map.put("content", "张宇医生，赞！");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("username", "非凡girl");
-        map.put("satisfaction", "很满意");
-        map.put("content", "张宇医生，一般般！");
-        list.add(map);
 
         return list;
     }
@@ -258,7 +226,7 @@ public class ChoiceService extends BaseActivity {
     private void initData() {
         Glide.with(mContext).load(imgDoctorUrl).error(R.mipmap.error).into(civDoctor);//设置医生头像
         tvName.setText(doctorName);  //设置医生名字
-        tvDepartmentAndTitle.setText(doctorDepartment + "   " + doctorTitle);  //设置医生的科室和职称
+        tvDepartmentAndTitle.setText(doctorDepartment + "   " + DeptDoctInfo.getREISTER_NAME());  //设置医生的科室和职称
         tvDoctorCompany.setText(doctorCompany);  //设置医生工作的医院
         //判断是否已经关注该医生
         if (isAttention) {

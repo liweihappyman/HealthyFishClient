@@ -7,7 +7,7 @@ public class BeanHospCardAuthReq extends BeanBaseReq {
 	private String cardId;
 	private String name;
 				
-	BeanHospCardAuthReq(){super(BeanHospCardAuthReq.class.getSimpleName());}
+	public BeanHospCardAuthReq(){super(BeanHospCardAuthReq.class.getSimpleName());}
 	
 	public String getCardId() {
 		return cardId;

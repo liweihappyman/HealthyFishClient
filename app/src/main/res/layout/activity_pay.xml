@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="70px"
-            android:paddingBottom="50px"
-            android:paddingTop="50px"
+            android:paddingBottom="40px"
+            android:paddingTop="40px"
             android:text="张宇医生-送心意"
             android:textColor="@color/color_general_and_title"
             android:textSize="54px" />
@@ -33,8 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="65px"
-            android:paddingBottom="50px"
-            android:paddingTop="50px"
+            android:paddingBottom="40px"
+            android:paddingTop="40px"
             android:text="5元"
             android:textColor="@color/color_orange"
             android:textSize="54px" />
@@ -305,11 +305,11 @@
     <Button
         android:id="@+id/btn_pay_confirm"
         android:layout_width="978px"
-        android:layout_height="wrap_content"
+        android:layout_height="120px"
         android:layout_gravity="center"
+        android:gravity="center"
         android:layout_marginTop="50px"
         android:background="@drawable/selector_btn_color_from_secondary_to_white"
-        android:padding="20px"
         android:text="确认支付"
         android:textColor="@color/selector_text_color_from_white_to_secondary"
         android:textSize="54px" />

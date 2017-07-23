@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="27px"
+            android:layout_marginBottom="33px"
             android:text="湿热质"
             android:textColor="@color/color_secondary"
             android:textStyle="bold" />
@@ -36,7 +37,6 @@
             style="@style/textSize_36"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="33px"
             android:text="兼有体质"
             android:textColor="@color/color_general_and_title" />
 

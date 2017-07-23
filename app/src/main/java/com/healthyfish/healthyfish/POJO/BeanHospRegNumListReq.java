@@ -8,7 +8,7 @@ public class BeanHospRegNumListReq extends BeanBaseReq {
 	private String date;
 	private String type;
 
-	BeanHospRegNumListReq(){super(BeanHospRegNumListReq.class.getSimpleName());}
+	public BeanHospRegNumListReq(){super(BeanHospRegNumListReq.class.getSimpleName());}
 
 	public String getHosp() {
 		return hosp;

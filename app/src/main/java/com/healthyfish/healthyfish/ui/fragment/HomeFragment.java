@@ -4,7 +4,6 @@ package com.healthyfish.healthyfish.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,12 +19,9 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.healthyfish.healthyfish.MyApplication;
-import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
 import com.healthyfish.healthyfish.POJO.BeanHealthWorkShop;
 import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideReq;
@@ -47,23 +43,18 @@ import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
+import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.NetworkConnectUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
-import com.healthyfish.healthyfish.api.IApiService;
-import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
-import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
-import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
-import com.healthyfish.healthyfish.utils.OkHttpUtils;
-import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
 
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,16 +65,6 @@ import cn.bingoogolapple.bgabanner.BGABanner;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
-import rx.Subscriber;
-
-import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import q.rorbin.badgeview.Badge;
-import q.rorbin.badgeview.QBadgeView;
-import retrofit2.Retrofit;
 import rx.Subscriber;
 
 import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
@@ -337,19 +318,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         tvAddMoreNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tvAddMoreNews.getText().toString().equals("点击加载更多")) {
-                    for (int i = 4; i < newsList.size(); i++) {
-                        healthInfoAdapter.addData(newsList.get(i));
+                if (NetworkConnectUtils.isNetworkConnected(mContext)) {
+                    if (tvAddMoreNews.getText().toString().equals("点击加载更多")) {
+                        for (int i = 4; i < newsList.size(); i++) {
+                            healthInfoAdapter.addData(newsList.get(i));
+                        }
+                        healthInfoAdapter.notifyDataSetChanged();
+                        tvAddMoreNews.setText("收起");
+                    } else if (tvAddMoreNews.getText().toString().equals("收起")) {
+                        for (int i = 4; i < newsList.size(); i++) {
+                            healthInfoAdapter.removeData(4);
+                        }
+                        healthInfoAdapter.notifyDataSetChanged();
+                        tvAddMoreNews.setText("点击加载更多");
                     }
-                    healthInfoAdapter.notifyDataSetChanged();
-                    tvAddMoreNews.setText("收起");
-                } else if (tvAddMoreNews.getText().toString().equals("收起")) {
-                    for (int i = 4; i < newsList.size(); i++) {
-                        healthInfoAdapter.removeData(4);
-                    }
-                    healthInfoAdapter.notifyDataSetChanged();
-                    tvAddMoreNews.setText("点击加载更多");
+                } else {
+                    MyToast.showToast(getActivity(),"网络不可用，请检查您的网络连接！");
                 }
+
             }
         });
         //跳转到更多健康资讯页面

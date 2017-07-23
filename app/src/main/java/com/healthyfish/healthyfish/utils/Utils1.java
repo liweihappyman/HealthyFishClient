@@ -49,7 +49,7 @@ public class Utils1 {
 
     //将字符串的日期转化为真正的日期格式，获取该日期是星期几,格式如 ： 2017年7月30日
     public static String getWeekFromStr(String dateStr){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");//设置想要的日期格式
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");//设置想要的日期格式
         Calendar calendar = Calendar.getInstance();//获取日历实例
         Date date = dateFormat.parse(dateStr, new ParsePosition(0));//反向操作，将字符格式的转化为日期格式
         calendar.setTime(date);//将转化回来的日期设置成当前的日期

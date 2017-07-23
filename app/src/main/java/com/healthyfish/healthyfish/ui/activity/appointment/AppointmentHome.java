@@ -22,8 +22,10 @@ import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.healthyfish.healthyfish.POJO.BeanDoctorListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
+
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListResp;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
+
 import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrReptReq;
@@ -125,9 +127,8 @@ public class AppointmentHome extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.choose_hospital:
-                requestForHospital();
-//                Intent toChooseHospital = new Intent(this, ChooseHospital.class);
-//                startActivity(toChooseHospital);
+                Intent toChooseHospital = new Intent(this, ChooseHospital.class);
+                startActivity(toChooseHospital);
                 break;
             case R.id.choose_department:
                 Intent test = new Intent(this, SelectDepartments.class);
@@ -135,6 +136,7 @@ public class AppointmentHome extends AppCompatActivity {
                 break;
         }
     }
+
 
     private void requestForHospital() {
 
