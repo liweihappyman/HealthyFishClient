@@ -5,45 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.healthyfish.healthyfish.ui.activity.InspectionReport">
+    tools:context="com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.zhy.autolayout.AutoFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="135px"
-        android:background="@color/color_primary_dark"
-        android:focusableInTouchMode="true"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-        android:weightSum="1"
-        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+        android:layout_height="wrap_content">
 
-        <com.zhy.autolayout.AutoRelativeLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="135px"
+            android:background="@color/color_primary_dark"
+            android:focusableInTouchMode="true"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:weightSum="1"
+            app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
 
             <TextView
                 android:id="@+id/toolbar_title"
                 style="@style/big_content_title_text"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="385px"
-                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="检查报告"
-                android:textColor="@android:color/white"
-                />
+                android:textColor="@android:color/white" />
+
             <ImageView
                 android:id="@+id/search"
                 android:layout_width="60px"
                 android:layout_height="60px"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="50px"
-                android:layout_marginRight="50px"
+                android:layout_gravity="right"
+                android:layout_marginRight="55px"
+
                 android:background="@mipmap/search_white" />
-        </com.zhy.autolayout.AutoRelativeLayout>
-    </android.support.v7.widget.Toolbar>
-
-
+        </android.support.v7.widget.Toolbar>
+    </com.zhy.autolayout.AutoFrameLayout>
 </com.zhy.autolayout.AutoLinearLayout>

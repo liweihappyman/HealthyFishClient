@@ -10,6 +10,7 @@ import com.healthyfish.healthyfish.api.IApiService;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -92,6 +93,14 @@ public class RetrofitManagerUtils {
      */
     public void getHealthyInfoByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
         apiService.getHealthyInfoByRetrofit(requestBody)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    public void uploadFilesRetrofit(MultipartBody multipartBody, Subscriber<ResponseBody> subscriber) {
+        apiService.uploadFile(multipartBody)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

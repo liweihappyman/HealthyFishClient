@@ -26,8 +26,8 @@ public class BeanPrescription {
 	private String abbr;
 	private String comp;
     private String effect;
-    private String attending;
-    private String symptom;
+    private String attending;//主治医师
+    private String symptom;//症状
     private List<String> tactics = new ArrayList<String>();
     private String ref;
 

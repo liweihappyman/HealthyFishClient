@@ -48,7 +48,7 @@ public class BeanUserRetrReptReq extends BeanBaseReq {
 		this.sickId = sickId;
 	}
 
-	BeanUserRetrReptReq(){super(BeanUserRetrReptReq.class.getSimpleName());}
+	public BeanUserRetrReptReq(){super(BeanUserRetrReptReq.class.getSimpleName());}
 	
 	public String getHosp() {
 		return hosp;

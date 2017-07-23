@@ -15,11 +15,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.healthyfish.healthyfish.POJO.BeanDoctorListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
+
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListResp;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
+
 import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
+import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
+import com.healthyfish.healthyfish.POJO.BeanUserRetrReptReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.widget.AutoVerticalScrollTextView;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -30,6 +39,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -125,6 +135,66 @@ public class AppointmentHome extends AppCompatActivity {
                 startActivity(test);
                 break;
         }
+    }
+
+
+    private void requestForHospital() {
+
+//        BeanHospitalListReq beanHospitalListReq = new BeanHospitalListReq();
+//        beanHospitalListReq.setAct(BeanHospitalListReq.class.getSimpleName());
+//
+//        BeanHospDeptListReq beanHospDeptListReq = new BeanHospDeptListReq();
+//        beanHospDeptListReq.setHosp("lzzyy");
+//        beanHospDeptListReq.setAct(BeanHospDeptListReq.class.getSimpleName());
+
+
+        BeanUserRetrPresReq  beanUserRetrPresReq = new BeanUserRetrPresReq();
+        beanUserRetrPresReq.setUser("邹玉贵");
+        beanUserRetrPresReq.setHosp("lzzyy");
+        beanUserRetrPresReq.setSickId("0000281122");
+
+
+        BeanUserRetrReptReq beanUserRetrReptReq = new BeanUserRetrReptReq();
+        beanUserRetrReptReq.setUser("邹玉贵");
+        beanUserRetrReptReq.setHosp("lzzyy");
+        beanUserRetrReptReq.setSickId("0000281122");
+        beanUserRetrReptReq.setAct(BeanUserRetrReptReq.class.getSimpleName());
+
+        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserRetrPresReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(AppointmentHome.this,"网络错误"+e.toString(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    String str = responseBody.string();
+                    Log.i("电子处方","数据："+str);
+                    Toast.makeText(AppointmentHome.this,"电子处方"+str,Toast.LENGTH_LONG).show();
+
+//                    List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(str,List.class);
+//                    for (JSONObject  object :beanHospDeptListResp){
+//                         String jsonString = object.toJSONString();
+//                        BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptListRespItem.class);
+//                        Log.i("DEPTNAME",beanHospDeptListRespItem.getDEPT_NAME());
+//                        Log.i("DEPTNAME",beanHospDeptListRespItem.getDEPT_CODE());
+//                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
+
     }
 
     @Override

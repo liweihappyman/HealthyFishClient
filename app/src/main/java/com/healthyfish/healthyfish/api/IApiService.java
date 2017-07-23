@@ -2,6 +2,7 @@ package com.healthyfish.healthyfish.api;
 
 import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
@@ -23,4 +24,11 @@ public interface IApiService {
     @POST("demo/TestServlet")
     Observable<ResponseBody> getHealthyInfoByRetrofit(@Body RequestBody requestBody);
 
+    /**
+     * 通过 MultipartBody和@body作为参数来上传图片
+     * @param multipartBody MultipartBody包含多个Part
+     * @return 状态信息
+     */
+    @POST("demo/TestServlet")
+    Observable<ResponseBody> uploadFile(@Body MultipartBody multipartBody);
 }
