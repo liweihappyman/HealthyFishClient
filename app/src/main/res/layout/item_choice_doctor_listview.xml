@@ -33,7 +33,7 @@
             android:id="@+id/tv_doctorDepartment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="45px"
+            android:layout_marginLeft="30px"
             android:text="中医科"
             android:textSize="48px"
             android:textColor="@color/color_auxiliary_info"/>
@@ -42,7 +42,7 @@
             android:id="@+id/tv_doctorTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="45px"
+            android:layout_marginLeft="30px"
             android:text="主任医师"
             android:textSize="48px"
             android:textColor="@color/color_auxiliary_info"/>

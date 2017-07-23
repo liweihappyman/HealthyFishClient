@@ -16,6 +16,7 @@ import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +45,10 @@ public class PhyGvAdapter extends BaseAdapter {
         this.phyNames = phyNames;
         this.maxSelectNum = maxSelectNum;
         mInflater = LayoutInflater.from(mContext);
+    }
+
+    public List<TextView> getTvOrderList() {
+        return tvOrderList;
     }
 
     @Override

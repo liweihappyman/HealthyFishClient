@@ -17,6 +17,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
 import com.healthyfish.healthyfish.ui.activity.SearchResult;
 import com.healthyfish.healthyfish.utils.DividerGridItemDecoration;
 import com.healthyfish.healthyfish.R;
@@ -24,13 +29,20 @@ import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDoctor;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +63,7 @@ public class InterrogationFragment extends Fragment {
     View rootView;
 
     private InterrogationRvAdapter mRvAdapter;
+    private List<BeanHospDeptListRespItem> DeptList = new ArrayList<>();
 
     public InterrogationFragment() {
 
@@ -94,8 +107,11 @@ public class InterrogationFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 //跳转到该科室的医生列表，需要发送科室信息到后台获取科室医生列表信息，传入下一个页面
-                MyToast.showToast(mContext,"点击"+String.valueOf(position));
                 Intent intent = new Intent(mContext,ChoiceDoctor.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("DepartmentName",DeptList.get(position).getDEPT_NAME());
+                bundle.putString("DepartmentCode",DeptList.get(position).getDEPT_CODE());
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
 
@@ -112,14 +128,45 @@ public class InterrogationFragment extends Fragment {
      * 初始化科室数据
      */
     private void initRecycleView() {
-        List<String> mDepartments = new ArrayList<>();
-        List<Integer> mDepartmentIcons = new ArrayList<>();
-        String[] departments = new String[]{"中医科"};
-        int[] icons = new int[]{R.mipmap.ic_chinese_medicine};
-        for (int i = 0;i<departments.length;i++){
-            mDepartments.add(departments[i]);
-            mDepartmentIcons.add(icons[i]);
-        }
+        final List<String> mDepartments = new ArrayList<>();
+        final List<Integer> mDepartmentIcons = new ArrayList<>();
+        final int[] icons = new int[]{R.mipmap.ic_chinese_medicine};
+
+        BeanHospDeptListReq beanHospDeptListReq = new BeanHospDeptListReq();
+        beanHospDeptListReq.setHosp("lzzyy");
+
+        RetrofitManagerUtils.getInstance(getActivity(), null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptListReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String jsonStr = null;
+                        try {
+                            jsonStr = responseBody.string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr,List.class);
+                        for (JSONObject  object :beanHospDeptListResp){
+                            String jsonString = object.toJSONString();
+                            BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptListRespItem.class);
+                            DeptList.add(beanHospDeptListRespItem);
+                            mDepartments.add(beanHospDeptListRespItem.getDEPT_NAME());
+                            mDepartmentIcons.add(icons[0]);
+                        }
+                        mRvAdapter.notifyDataSetChanged();
+                    }
+                });
+
         GridLayoutManager gridLayoutManager=new GridLayoutManager(mContext,4);
         rvChoiceDepartment.setLayoutManager(gridLayoutManager);
         mRvAdapter = new InterrogationRvAdapter(mContext,mDepartments,mDepartmentIcons);

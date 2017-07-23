@@ -140,7 +140,7 @@ public class MoreHealthNews extends BaseActivity {
                                         newsList.add(bean);
                                     }
                                     healthInfoAdapter.notifyDataSetChanged();//由于加载需要时间，故加载完成重新刷新适配器，防止FootView位置出错
-                                    if (strJsonNewsList.size() < 9) {
+                                    if (strJsonNewsList.size() <= 9) {
                                         isNotMore = true;
                                     }
                                 }

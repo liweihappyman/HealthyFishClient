@@ -57,7 +57,7 @@ public class ChangeVisitingPerson extends BaseActivity {
             case R.id.tv_new:
                 //新建就诊人
                 Intent intent = new Intent(this, NewVisitingPerson.class);
-                startActivity(intent);
+                startActivityForResult(intent,10013);
                 break;
             case R.id.bt_complete:
                 //完成就诊人的选择
@@ -83,4 +83,8 @@ public class ChangeVisitingPerson extends BaseActivity {
         return list;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

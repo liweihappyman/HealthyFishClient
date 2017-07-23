@@ -4,15 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
+import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +31,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 /**
  * 描述：挂号模块选择科室页面
@@ -37,7 +50,9 @@ public class SelectDepartments extends BaseActivity {
     @BindView(R.id.gv_select_departments)
     GridView gvSelectDepartments;
 
+    private SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> data_list = new ArrayList<Map<String, Object>>();
+    private List<BeanHospDeptListRespItem> HospDeptList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,30 +70,60 @@ public class SelectDepartments extends BaseActivity {
     private void initGridView() {
         String [] from ={"image","text"};
         int [] to = {R.id.iv_department_img,R.id.tv_department_name};
-        SimpleAdapter simpleAdapter = new SimpleAdapter(SelectDepartments.this,data_list,R.layout.layout_choice_department,from,to);
+        simpleAdapter = new SimpleAdapter(SelectDepartments.this,data_list,R.layout.layout_choice_department,from,to);
         gvSelectDepartments.setAdapter(simpleAdapter);
         gvSelectDepartments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //访问服务器获取该科室医生列表，并跳转到医生列表页面
                 Intent intent = new Intent(SelectDepartments.this,DepartmentDoctorList.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("DepartmentName",data_list.get(position).get("text").toString());
-                intent.putExtras(bundle);
+                BeanHospRegisterReq beanHospRegisterReq = new BeanHospRegisterReq();
+                beanHospRegisterReq.setHosp("lzzyy");
+                beanHospRegisterReq.setHospTxt("柳州市中医院");
+                beanHospRegisterReq.setDept(HospDeptList.get(position).getDEPT_CODE());
+                beanHospRegisterReq.setDeptTxt(data_list.get(position).get("text").toString());
+                intent.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
                 startActivity(intent);
             }
         });
     }
 
     public void getData(){
-        int[] icon = { R.mipmap.ic_chinese_medicine,R.mipmap.ic_chinese_medicine,R.mipmap.ic_chinese_medicine,R.mipmap.ic_chinese_medicine};
-        String[] iconName = { "中医科", "儿科", "脾胃病科", "骨科"};
-        for(int i=0;i<3;i++){
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("image", icon[i]);
-            map.put("text", iconName[i]);
-            data_list.add(map);
-        }
-    }
+        BeanHospDeptListReq beanHospDeptListReq = new BeanHospDeptListReq();
+        beanHospDeptListReq.setHosp("lzzyy");
 
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptListReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String jsonStr = null;
+                        try {
+                            jsonStr = responseBody.string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr,List.class);
+                        for (JSONObject  object :beanHospDeptListResp){
+                            String jsonString = object.toJSONString();
+                            BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptListRespItem.class);
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            HospDeptList.add(beanHospDeptListRespItem);
+                            map.put("text", beanHospDeptListRespItem.getDEPT_NAME());
+                            data_list.add(map);
+                        }
+                        simpleAdapter.notifyDataSetChanged();
+                    }
+                });
+
+    }
 }

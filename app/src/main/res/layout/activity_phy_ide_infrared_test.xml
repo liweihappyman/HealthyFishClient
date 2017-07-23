@@ -57,7 +57,7 @@
         <GridView
             android:id="@+id/gv_select_img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="600px"
             android:layout_gravity="center_horizontal"
             android:numColumns="3"
             android:padding="40px" />
@@ -69,6 +69,7 @@
         style="@style/textSize_54"
         android:layout_width="972px"
         android:layout_height="124px"
+        android:layout_marginTop="10px"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/selector_btn_color_from_secondary_to_white"
         android:text="完成"

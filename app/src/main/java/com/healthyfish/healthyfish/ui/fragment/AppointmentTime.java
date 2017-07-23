@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.POJO.Test;
 import com.healthyfish.healthyfish.R;

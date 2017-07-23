@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.healthyfish.healthyfish.POJO.BeanDoctorListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.widget.AutoVerticalScrollTextView;
@@ -116,48 +117,14 @@ public class AppointmentHome extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.choose_hospital:
-                requestForHospital();
-//                Intent toChooseHospital = new Intent(this, ChooseHospital.class);
-//                startActivity(toChooseHospital);
+                Intent toChooseHospital = new Intent(this, ChooseHospital.class);
+                startActivity(toChooseHospital);
                 break;
             case R.id.choose_department:
                 Intent test = new Intent(this, SelectDepartments.class);
                 startActivity(test);
                 break;
         }
-    }
-
-    private void requestForHospital() {
-        BeanHospDeptDoctListReq beanHospDeptDoctListReq = new BeanHospDeptDoctListReq();
-        BeanHospitalListReq beanHospitalListReq = new BeanHospitalListReq();
-        BeanDoctorListReq beanDoctorListReq = new BeanDoctorListReq();
-
-        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospitalListReq), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(AppointmentHome.this,"网络错误"+e.toString(),Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    String str = responseBody.string();
-                    Log.i("hospital","成功"+str);
-                    Toast.makeText(AppointmentHome.this,"成功"+str,Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-
-
     }
 
     @Override

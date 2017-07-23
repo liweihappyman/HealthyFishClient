@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.POJO.Test;
 import com.healthyfish.healthyfish.R;
@@ -32,6 +33,7 @@ public class AppointmentTime2 extends Fragment {
     private View rootView;
     private List<BeanWeekAndDate> mList = new ArrayList<>();
     private Test test;
+
     public AppointmentTime2() {
     }
 
