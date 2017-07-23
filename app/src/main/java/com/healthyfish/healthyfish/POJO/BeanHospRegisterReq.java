@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.POJO;
 
+
 import java.io.Serializable;
 
 //挂号请求
@@ -7,6 +8,7 @@ import java.io.Serializable;
 //成功的key："reg_"+uid+"_"+doctBean.getHosp()+"_"+DateTimeUtils.getTime()，value为""
 //			可用于将来查询已挂号的信息。
 //失败的key:"failed"，value为失败的原因
+
 public class BeanHospRegisterReq extends BeanBaseReq implements Serializable{
 	private String hosp;//医院编号"lzzyy"
 	private String hospTxt;//医院名称"柳州市中医院"
@@ -21,6 +23,7 @@ public class BeanHospRegisterReq extends BeanBaseReq implements Serializable{
 	private String sickId; //验证就诊卡后返回的患者在医院的内部编号
 	
 	public BeanHospRegisterReq(){super(BeanHospRegisterReq.class.getSimpleName());}
+
 
 	public String getStaffNo() {
 		return staffNo;

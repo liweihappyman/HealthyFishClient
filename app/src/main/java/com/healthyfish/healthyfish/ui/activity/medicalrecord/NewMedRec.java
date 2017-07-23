@@ -1,8 +1,10 @@
 package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -161,16 +163,35 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         }
         return true;
     }
-    //执行删除操作并跳转回到AllMedRed页面
+    //执行删除操作并跳转回到AllMedRed页面，新建状态则提示没有可删除的病历
     private void deleteAndGoback() {
         if (constants.POSITION_MED_REC != -1) {
-            medRec.delete();
-            Intent intent = new Intent(this, AllMedRec.class);
-            setResult(ALL_MED_REC_RESULT, intent);
-            finish();
+            showDelDialog();
         } else {
             Toast.makeText(this, "没有可删除的病程哦", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 删除提示对话框
+     */
+    private void showDelDialog() {
+        new AlertDialog.Builder(NewMedRec.this).setMessage("是否要删除此病历")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        medRec.delete();
+                        dialog.dismiss();
+                        Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
+                        setResult(ALL_MED_REC_RESULT, intent);
+                        finish();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     @Override

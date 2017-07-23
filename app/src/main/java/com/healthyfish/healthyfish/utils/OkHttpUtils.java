@@ -9,7 +9,11 @@ import com.healthyfish.healthyfish.MyApplication;
 
 import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 
+import java.io.File;
+import java.util.List;
+
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.internal.platform.Platform;
@@ -77,8 +81,31 @@ public class OkHttpUtils {
     @NonNull
     public static RequestBody getRequestBody(BeanBaseReq beanBaseReq) {
         String jsonStr = JSON.toJSONString(beanBaseReq);
+
+        Log.i("请求信息"," "+jsonStr);
+
         MediaType MJSON = MediaType.parse("application/json; charset=utf-8");
         return RequestBody.create(MJSON,jsonStr);
     }
+
+
+    /**
+     * 图片文件上传时的MultipartBody构造
+     * @param files  图片文件
+     * @return
+     */
+    public static MultipartBody filesToMultipartBody(List<File> files) {
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+
+        for (File file : files) {
+            // 这里为了简单起见，没有判断file的类型
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), file);
+            builder.addFormDataPart("file", file.getName(), requestBody);
+        }
+        builder.setType(MultipartBody.FORM);
+        MultipartBody multipartBody = builder.build();
+        return multipartBody;
+    }
+
 
 }

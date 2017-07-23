@@ -177,7 +177,7 @@ public class HealthyCirclePosting extends BaseActivity implements AdapterView.On
         imagePaths.addAll(paths);
         int i = imagePaths.size();
         if (gridAdapter == null) {
-            gridAdapter = new CreateCourseGridAdapter(imagePaths, this);
+            gridAdapter = new CreateCourseGridAdapter(imagePaths,this);
             gvShareHealthTrendsImg.setAdapter(gridAdapter);
             gridAdapter.notifyDataSetChanged();
         } else {

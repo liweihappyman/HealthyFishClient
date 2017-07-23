@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.POJO;
 
+
 import android.os.Parcelable;
 
 import java.io.Serializable;
@@ -22,6 +23,7 @@ import java.util.List;
 // "DOCTOR":"江铭/054"}]
 
 public class BeanHospDeptDoctListRespItem extends BeanBaseReq implements Serializable{
+
 	private int STAFF_NO; //员工编号
 	private String REISTER_NAME; //职称
 	private int CLINIQUE_CODE; //诊室
@@ -30,6 +32,7 @@ public class BeanHospDeptDoctListRespItem extends BeanBaseReq implements Seriali
 	private String WEB_INTRODUCE; //简介
 	private String ZHAOPIAN; //照片
 	private int WORK_TYPE; //
+
 	private String DOCTOR; //挂号用的医生标识
 	private int PRE_ALLOW;
 	/*"schdList":[\"2017-07-21_1\",\"2017-07-24_1\",\"2017-07-25_1\",\"2017-07-26_1\",\"2017-07-27_1\"*/

@@ -6,7 +6,7 @@
         android:title="分享病历"
         app:showAsAction="never"/>
     <item android:id="@+id/del"
-        android:title="shanchu"
+        android:title="删除"
         app:showAsAction="never"/>
     <item android:id="@+id/test"
         android:title="popupWindow"

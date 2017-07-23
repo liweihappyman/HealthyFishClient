@@ -1,11 +1,14 @@
 package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,17 +35,32 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.constant.constants;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 
 public class CreateCourse extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
@@ -55,6 +73,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_PREVIEW_CODE = 12;//预览的标志
     private BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
     private BeanMedRec medRec = new BeanMedRec();
+
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -112,17 +131,39 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    //删除病程的操所
+    //删除病程的操作,新建状态提示没有可删除的病程
     private void delete() {
         if (constants.POSITION_COURSE != -1) {
-            courseOfDisease.delete(BeanCourseOfDisease.class, courseOfDisease.getId());
-            Intent intent = new Intent(this, NewMedRec.class);
-            setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
-            finish();
+            showDelDialog();// 删除提示对话框
         } else {
             Toast.makeText(this, "没有可删除的病程哦", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    /**
+     * 删除提示对话框
+     */
+    private void showDelDialog() {
+        new AlertDialog.Builder(CreateCourse.this).setMessage("是否要删除此病程")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        courseOfDisease.delete(BeanCourseOfDisease.class, courseOfDisease.getId());
+                        dialog.dismiss();
+                        Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
+                        setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
+                        finish();
+
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
 
     //点击创建病程进来执行的初始化操作
     private void initData1() {
@@ -172,10 +213,12 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             courseOfDisease.setBeanMedRec(medRec);
             //更新操作
             courseOfDisease.update(courseOfDisease.getId());
-            Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
-            intent.putExtra("updateCourse", courseOfDisease);
-            setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
-            finish();
+            uploadImages();
+
+//            Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
+//            intent.putExtra("updateCourse", courseOfDisease);
+//            setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
+//            finish();
         } else {
             //数据库特性，这个定义的id会在保存的时候被赋值，所以可以根据这个id操作
 //                    BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
@@ -189,6 +232,132 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             setResult(CREATE_COURSE_RESULT_SAVE, intent);
             finish();
 
+        }
+    }
+
+    private void uploadImages()  {
+        if (imagePaths.size()>0){
+            //List<File> files = new ArrayList<>();//从路径直接获取到的图片文件
+            List<File> compressFiles = new ArrayList<>();//暂时存放压缩后的图片，用来上传
+            for (int i = 0;i<imagePaths.size();i++){
+                File file = new File(imagePaths.get(i));
+                final DecimalFormat df = new DecimalFormat("00.0000");
+                try {
+                    String size = df.format(((double)(new FileInputStream(file).available())) / 1024 / 1024);
+                    Log.i("图片原来的大小"+i,"第  "+i+"  张:  "+size+"   M");
+                    if (Float.valueOf(size)<0.6){//如果文件小于600k，就不用压缩了
+                        compressFiles.add(file);
+                    }else {
+                        compressFiles.add(Luban.with(CreateCourse.this).load(file).get());
+                        String compressSize = null;
+                        try {
+                            compressSize = df.format(((double)(new FileInputStream(Luban.with(CreateCourse.this).load(file).get()).available())) / 1024 / 1024);
+                            Log.i("压缩后的图片"," "+compressSize+"   M");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+//                        Observable.just(file)
+//                                .subscribeOn(AndroidSchedulers.mainThread())
+//                                .map(new Func1<File, File>() {
+//                                    @Override
+//                                    public File call(File file) {
+//                                        File f = null;
+//                                        try {
+//                                            f = Luban.with(CreateCourse.this).load(file).get();
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                        return f;
+//                                    }
+//                                })
+//                                .observeOn(AndroidSchedulers.mainThread())
+//                                .subscribe(new Subscriber<File>() {
+//                                    @Override
+//                                    public void onCompleted() {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(Throwable e) {
+//                                        Log.i("压缩图片异常","" +e.toString());
+//                                    }
+//
+//                                    @Override
+//                                    public void onNext(File file) {
+//                                        try {
+//                                            Log.i("压缩后图片的大小",""+df.format((double)(new FileInputStream(file).available()) / 1024 / 1024 )+"M");
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                        compressFiles.add(file);
+//                                    }
+//                                });
+//================================================================
+//                        Luban.with(this)
+//                                .load(file)                     //传人要压缩的图片
+//                                .setCompressListener(new OnCompressListener() { //设置回调
+//                                    @Override
+//                                    public void onStart() {
+//                                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
+//                                    }
+//                                    @Override
+//                                    public void onSuccess(File file) {
+//                                        // TODO 压缩成功后调用，返回压缩后的图片文件
+//                                        try {
+//                                            Log.i("压缩后图片的大小",""+df.format((double)(new FileInputStream(file).available()) / 1024 / 1024 )+"M");
+//                                            compressFiles.add(file);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(Throwable e) {
+//                                        // TODO 当压缩过程出现问题时调用
+//                                    }
+//                                }).launch();    //启动压缩
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for(int k = 0; k<compressFiles.size();k++){
+                DecimalFormat df = new DecimalFormat("#.0000");
+                String size = null;
+                try {
+                    size = df.format(((double)(new FileInputStream(compressFiles.get(k)).available())) / 1024 / 1024);
+                    Log.i("等待上传的图片的大小"+k,"第  "+k+"  张:  "+size+"   M");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            MultipartBody body = OkHttpUtils.filesToMultipartBody(compressFiles);
+            RetrofitManagerUtils.getInstance(this,null).uploadFilesRetrofit(body, new Subscriber<ResponseBody>() {
+                @Override
+                public void onCompleted() {
+                    Log.i("图片上传","完成");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.i("图片上传","错误"+e.toString());
+                }
+
+                @Override
+                public void onNext(ResponseBody responseBody) {
+                    try {
+                        String str = responseBody.string();
+                        Log.i("图片上传","返回数据"+str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //http://www.kangfish.cn/demo/downloadFile/upload/20170318/19411489838119199.jpg
+                }
+            });
         }
     }
 
@@ -257,7 +426,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         intent.setShowCarema(true); // 是否显示拍照， 默认false
         intent.setMaxTotal(8); // 最多选择照片数量，默认为8
         intent.setSelectedPaths((ArrayList) imagePaths); // 已选中的照片地址， 用于回显选中状态
-        // intent.setImageConfig(config);
+        //intent.setImageConfig(config);
         startActivityForResult(intent, REQUEST_CAMERA_CODE);
     }
 
@@ -271,7 +440,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         imagePaths.addAll(paths);
         int i = imagePaths.size();
         if (gridAdapter == null) {
-            gridAdapter = new CreateCourseGridAdapter(imagePaths, this);
+            gridAdapter = new CreateCourseGridAdapter(imagePaths,this);
             createCourseImgGridview.setAdapter(gridAdapter);
             gridAdapter.notifyDataSetChanged();
         } else {
