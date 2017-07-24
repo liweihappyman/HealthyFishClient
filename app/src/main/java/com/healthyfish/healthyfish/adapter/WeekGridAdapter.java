@@ -1,10 +1,11 @@
 package com.healthyfish.healthyfish.adapter;
 
 import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.widget.LinearLayoutManager;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,13 +23,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.healthyfish.healthyfish.POJO.BeanHospRegNumListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospRegNumListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
-import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
-import com.healthyfish.healthyfish.POJO.BeanHospitalListResp;
-import com.healthyfish.healthyfish.POJO.BeanHospitalListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
+
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.appointment.ConfirmReservationInformation;
+import com.healthyfish.healthyfish.utils.LoadingDialog;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -41,8 +40,6 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 import rx.Subscriber;
-
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：预约时间显示适配器
@@ -58,10 +55,20 @@ public class WeekGridAdapter extends BaseAdapter {
     private Activity activity;
     private TextView titleWeek;
 
+    private PopupWindow mPopWindow = null;
+    private boolean isShow;
+    private TextView cancel;
+    private TextView confirm;
+    private TextView today;
+    private ListView listView;
+    private View rootView;
+
     private List<String> timeList = new ArrayList<>();
     private SelectTimeAdapter selectTimeAdapter;
 
     private List<BeanHospRegNumListRespItem> HospRegNumList = new ArrayList<>();
+
+    private LoadingDialog loadingDialog = null;
 
     public WeekGridAdapter(List<BeanWeekAndDate> list, Activity activity) {
         this.list = list;
@@ -120,20 +127,28 @@ public class WeekGridAdapter extends BaseAdapter {
             }
 
             //监听上午
-            if (list.get(position).getAm().equals("上午") && !list.get(position).isOutTime()) {
+            if (list.get(position).getAm().equals("上午")) {
                 am.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        initData(list.get(position), "1", "上午");
+                        if (!isShow) {
+                            loadingDialog = new LoadingDialog(mContext, "加载中，请稍后...");
+                            loadingDialog.setCanceledOnTouchOutside(false);
+                            initData(list.get(position), "1", "上午");
+                        }
                     }
                 });
             }
             //监听下午
-            if (list.get(position).getPm().equals("下午") && !list.get(position).isOutTime()) {
+            if (list.get(position).getPm().equals("下午")) {
                 pm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        initData(list.get(position), "2", "下午");
+                        if (!isShow) {
+                            loadingDialog = new LoadingDialog(mContext, "加载中，请稍后...");
+                            loadingDialog.setCanceledOnTouchOutside(false);
+                            initData(list.get(position), "2", "下午");
+                        }
                     }
                 });
             }
@@ -153,7 +168,6 @@ public class WeekGridAdapter extends BaseAdapter {
         beanHospRegNumListReq.setDoct(beanWeekAndDate.getBeanHospRegisterReq().getDoct());
         beanHospRegNumListReq.setDate(beanWeekAndDate.getDate());
         beanHospRegNumListReq.setType(Type);
-
 
         RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospRegNumListReq), new Subscriber<ResponseBody>() {
             @Override
@@ -182,9 +196,12 @@ public class WeekGridAdapter extends BaseAdapter {
                     HospRegNumList.add(beanHospRegNumListRespItem);
                 }
                 if (timeList.isEmpty()) {
+                    loadingDialog.dismiss();
                     MyToast.showToast(mContext, "该时间段已经没有号源啦！");
                 } else {
+                    loadingDialog.dismiss();
                     showOptions(beanWeekAndDate);
+                    isShow = true;
                 }
 
                 Log.e("LYQ", str + "  ");
@@ -194,34 +211,35 @@ public class WeekGridAdapter extends BaseAdapter {
     }
 
     private void showOptions(final BeanWeekAndDate beanWeekAndDate) {
-        TextView cancel;
-        TextView confirm;
-        TextView today;
-        final ListView listView;
-        View rootView;
-        rootView = LayoutInflater.from(mContext).inflate(R.layout.popupwind_choice_appointment_time, null);
-        final PopupWindow mPopWindow = new PopupWindow(rootView);
-        mPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        mPopWindow.setTouchable(true);
-        mPopWindow.setFocusable(true);
-        mPopWindow.setBackgroundDrawable(new BitmapDrawable());
-        mPopWindow.setOutsideTouchable(true);
+        if (mPopWindow == null) {
+            rootView = LayoutInflater.from(mContext).inflate(R.layout.popupwind_choice_appointment_time, null);
+            mPopWindow = new PopupWindow(rootView);
+            mPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            mPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+            mPopWindow.setTouchable(true);
+            mPopWindow.setFocusable(true);
+            mPopWindow.setBackgroundDrawable(new BitmapDrawable());
+            mPopWindow.setOutsideTouchable(true);
+            mPopWindow.setAnimationStyle(R.style.AnimBottom);
 
-        //设置窗口背景
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        lp.alpha = 0.7f;
-        activity.getWindow().setAttributes(lp);
-        cancel = (TextView) rootView.findViewById(R.id.cancel);
-        today = (TextView) rootView.findViewById(R.id.today);
-        confirm = (TextView) rootView.findViewById(R.id.confirm);
-        listView = (ListView) rootView.findViewById(R.id.choose_time_listview);
+            cancel = (TextView) rootView.findViewById(R.id.cancel);
+            today = (TextView) rootView.findViewById(R.id.today);
+            confirm = (TextView) rootView.findViewById(R.id.confirm);
+            listView = (ListView) rootView.findViewById(R.id.choose_time_listview);
+        }
+
+        if (!isShow) {
+            //设置窗口背景
+            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+            lp.alpha = 0.7f;
+            activity.getWindow().setAttributes(lp);
+            selectTimeAdapter = new SelectTimeAdapter(mContext, timeList);
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setAdapter(selectTimeAdapter);
+            mPopWindow.showAtLocation(titleWeek, Gravity.BOTTOM, 0, 0);
+        }
 
         today.setText(beanWeekAndDate.getDate());
-
-        selectTimeAdapter = new SelectTimeAdapter(mContext, timeList);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setAdapter(selectTimeAdapter);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,12 +247,15 @@ public class WeekGridAdapter extends BaseAdapter {
                 mPopWindow.dismiss();
             }
         });
+
+        final ListView finalListView = listView;
+
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //跳转到下一页面
-                int position = listView.getCheckedItemPosition();
-                if (listView.INVALID_POSITION != position) {
+                int position = finalListView.getCheckedItemPosition();
+                if (finalListView.INVALID_POSITION != position) {
                     BeanHospRegisterReq beanHospRegisterReq = beanWeekAndDate.getBeanHospRegisterReq();
                     beanHospRegisterReq.setDate(HospRegNumList.get(position).getHID());
                     beanHospRegisterReq.setDateTxt(HospRegNumList.get(position).getHZS());
@@ -250,18 +271,16 @@ public class WeekGridAdapter extends BaseAdapter {
             }
         });
         mPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-
             @Override
             public void onDismiss() {
                 WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
                 lp.alpha = 1f;
                 activity.getWindow().setAttributes(lp);
                 timeList.clear();
+                isShow = false;
             }
         });
-        mPopWindow.setAnimationStyle(R.style.AnimBottom);
-        mPopWindow.showAtLocation(titleWeek, Gravity.BOTTOM, 0, 0);
-    }
 
+    }
 
 }

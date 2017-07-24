@@ -89,7 +89,6 @@ public class DoctorDetail extends BaseActivity {
     private FragmentTransaction ft;
 
     private BeanHospDeptDoctListRespItem DeptDoctInfo;
-    private String DepartmentCode;
 
     private BeanHospRegisterReq beanHospRegisterReq;
 
@@ -105,9 +104,6 @@ public class DoctorDetail extends BaseActivity {
         beanHospRegisterReq.setDoctTxt(DeptDoctInfo.getDOCTOR_NAME());
         beanHospRegisterReq.setStaffNo(String.valueOf(DeptDoctInfo.getSTAFF_NO()));
         DeptDoctInfo.getPRICE();
-
-        DepartmentCode = beanHospRegisterReq.getDept();
-        //Log.e("LYQ", DepartmentCode);
 
         initToolBar(toolbar, toolbarTitle, DeptDoctInfo.getDOCTOR_NAME() + "医生");
         fm = this.getSupportFragmentManager();

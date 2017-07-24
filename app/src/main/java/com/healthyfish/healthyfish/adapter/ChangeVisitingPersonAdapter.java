@@ -10,6 +10,7 @@ import android.widget.Checkable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanVisitingPerson;
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.utils.AutoUtils;
 
@@ -30,9 +31,9 @@ public class ChangeVisitingPersonAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<String> mData = new ArrayList<>();
+    private List<BeanVisitingPerson> mData = new ArrayList<>();
 
-    public ChangeVisitingPersonAdapter(Context mContext, List<String> mData) {
+    public ChangeVisitingPersonAdapter(Context mContext, List<BeanVisitingPerson> mData) {
         this.mContext = mContext;
         this.mData = mData;
         mInflater = LayoutInflater.from(mContext);
@@ -56,7 +57,7 @@ public class ChangeVisitingPersonAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         SingleView singleView = new SingleView(mContext);
-        singleView.setTitle(mData.get(position).toString());
+        singleView.setTitle(mData.get(position).getVisitingPerson());
         return singleView;
     }
 

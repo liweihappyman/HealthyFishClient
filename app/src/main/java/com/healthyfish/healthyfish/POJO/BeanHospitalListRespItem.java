@@ -3,7 +3,9 @@ package com.healthyfish.healthyfish.POJO;
 //返回数据：
 //{"code":0,"hospitalList":[{"address":"柳州市解放北路32号","code":0,"id":"lzzyy","img":"/demo/img/lzzyy.jpg","intr":"广西中医药大学第三附属医院, 广西中医药大学第三临床医学院","level":"三级医院","name":"柳州市中医院","ver":"0.1"}],"ver":"0.1"}
 
-public class BeanHospitalListRespItem extends BeanBaseResp {
+import java.io.Serializable;
+
+public class BeanHospitalListRespItem extends BeanBaseResp implements Serializable{
 //	private String url; //医院详细介绍的链接
 	private String name; //名称
 	private String level; //等级：三级甲等

@@ -15,8 +15,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.appointment.DepartmentDoctorList;
+import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
 import com.healthyfish.healthyfish.ui.activity.interrogation.SendMind;
 import com.healthyfish.healthyfish.ui.fragment.BuyServiceFragment;
 import com.healthyfish.healthyfish.utils.MyToast;
@@ -113,6 +117,8 @@ public class ChoiceService extends BaseActivity {
 
     private boolean isAttention;//是否已经关注该医生
 
+    private BeanHospRegisterReq beanHospRegisterReq;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,20 +139,21 @@ public class ChoiceService extends BaseActivity {
     private void getData() {
 
         if (getIntent().getSerializableExtra("DEPT_DOCTOR_INFO") != null) {
-            doctorDepartment = getIntent().getStringExtra("DepartmentName");
+            beanHospRegisterReq = (BeanHospRegisterReq) getIntent().getSerializableExtra("BeanHospRegisterReq");
             DeptDoctInfo = (BeanHospDeptDoctListRespItem) getIntent().getSerializableExtra("DEPT_DOCTOR_INFO");
         }
 
+        doctorDepartment = beanHospRegisterReq.getDeptTxt();
         doctorName = DeptDoctInfo.getDOCTOR_NAME();
         imgDoctorUrl = HttpHealthyFishyUrl+DeptDoctInfo.getZHAOPIAN();
         doctorTitle = DeptDoctInfo.getREISTER_NAME();
         pictureConsultingPrice = "30";
-        privateDoctorPrice = "100";
+        privateDoctorPrice = "50";
         doctorInfo = DeptDoctInfo.getWEB_INTRODUCE();
-        doctorCompany = "柳州市中医院";
+        doctorCompany = beanHospRegisterReq.getHospTxt();
         appointmentPrice = String.valueOf(DeptDoctInfo.getPRICE());
-        isOpenPictureConsulting = false;
-        isOpenPrivateDoctor = false;
+        isOpenPictureConsulting = true;
+        isOpenPrivateDoctor = true;
         isOpenAppointment = true;
         isAttention = false;
     }
@@ -207,7 +214,11 @@ public class ChoiceService extends BaseActivity {
                 break;
             case R.id.line_appointment:
                 //点击进行预约挂号
-                buyAppointmentService();
+                Intent intent1 = new Intent(ChoiceService.this,DoctorDetail.class);
+                intent1.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
+                intent1.putExtra("BeanHospDeptDoctListRespItem", DeptDoctInfo);
+                startActivity(intent1);
+                //buyAppointmentService();
                 break;
             case R.id.line_moreDoctorInfo:
                 //点击显示更多医生介绍

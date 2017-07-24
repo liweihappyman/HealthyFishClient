@@ -138,65 +138,6 @@ public class AppointmentHome extends AppCompatActivity {
     }
 
 
-    private void requestForHospital() {
-
-//        BeanHospitalListReq beanHospitalListReq = new BeanHospitalListReq();
-//        beanHospitalListReq.setAct(BeanHospitalListReq.class.getSimpleName());
-//
-//        BeanHospDeptListReq beanHospDeptListReq = new BeanHospDeptListReq();
-//        beanHospDeptListReq.setHosp("lzzyy");
-//        beanHospDeptListReq.setAct(BeanHospDeptListReq.class.getSimpleName());
-
-
-        BeanUserRetrPresReq  beanUserRetrPresReq = new BeanUserRetrPresReq();
-        beanUserRetrPresReq.setUser("邹玉贵");
-        beanUserRetrPresReq.setHosp("lzzyy");
-        beanUserRetrPresReq.setSickId("0000281122");
-
-
-        BeanUserRetrReptReq beanUserRetrReptReq = new BeanUserRetrReptReq();
-        beanUserRetrReptReq.setUser("邹玉贵");
-        beanUserRetrReptReq.setHosp("lzzyy");
-        beanUserRetrReptReq.setSickId("0000281122");
-        beanUserRetrReptReq.setAct(BeanUserRetrReptReq.class.getSimpleName());
-
-        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserRetrPresReq), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(AppointmentHome.this,"网络错误"+e.toString(),Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    String str = responseBody.string();
-                    Log.i("电子处方","数据："+str);
-                    Toast.makeText(AppointmentHome.this,"电子处方"+str,Toast.LENGTH_LONG).show();
-
-//                    List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(str,List.class);
-//                    for (JSONObject  object :beanHospDeptListResp){
-//                         String jsonString = object.toJSONString();
-//                        BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptListRespItem.class);
-//                        Log.i("DEPTNAME",beanHospDeptListRespItem.getDEPT_NAME());
-//                        Log.i("DEPTNAME",beanHospDeptListRespItem.getDEPT_CODE());
-//                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-
-
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
