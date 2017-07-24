@@ -67,8 +67,20 @@ public class RetrofitManagerUtils {
 
         // 设置ssl以访问Https
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(MyApplication.getContetxt(), new int[0], R.raw.kangfish, "");
+
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//                .addInterceptor(httpLoggingInterceptor)
+//                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
+//                .writeTimeout(WRITE_TIMEOUT,TimeUnit.SECONDS)//设置写的超时时间
+//                .connectTimeout(CONNECT_TIMEOUT,TimeUnit.SECONDS)//设置连接超时时间
+//                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
+//                .hostnameVerifier(HttpsUtils.getHostnameVerifier())
+//                .cookieJar(new CookieMangerUtils(MyApplication.getContetxt()))//设置cookie保存
+//                .build();
+
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor(new AddCookiesInterceptor(MyApplication.getContetxt(),"wkj"))
+                .addInterceptor(new ReceivedCookiesInterceptor(MyApplication.getContetxt()))
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                 .writeTimeout(WRITE_TIMEOUT,TimeUnit.SECONDS)//设置写的超时时间
                 .connectTimeout(CONNECT_TIMEOUT,TimeUnit.SECONDS)//设置连接超时时间
@@ -76,6 +88,10 @@ public class RetrofitManagerUtils {
                 .hostnameVerifier(HttpsUtils.getHostnameVerifier())
                 .cookieJar(new CookieMangerUtils(MyApplication.getContetxt()))//设置cookie保存
                 .build();
+
+
+
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
@@ -101,6 +117,15 @@ public class RetrofitManagerUtils {
 
     public void uploadFilesRetrofit(MultipartBody multipartBody, Subscriber<ResponseBody> subscriber) {
         apiService.uploadFile(multipartBody)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+
+    public void getInfoByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
+        apiService.getHealthyInfoByRetrofit(requestBody)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
