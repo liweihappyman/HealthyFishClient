@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
 import com.healthyfish.healthyfish.POJO.BeanPrescription;
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.AutoLinearLayout;
@@ -33,10 +32,10 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
 
 
     private Context mContext;
-    private List<BeanPrescriptiom> list;
+    private List<BeanPrescription> list;
     private Toolbar toolbar;
 
-    public PrescriptionRvAdapter(Context mContext, List<BeanPrescriptiom> list, Toolbar toolbar) {
+    public PrescriptionRvAdapter(Context mContext, List<BeanPrescription> list, Toolbar toolbar) {
         this.mContext = mContext;
         this.list = list;
         this.toolbar = toolbar;
@@ -53,21 +52,21 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        BeanPrescriptiom item = list.get(position);
-//        holder.ipresDiagnosisName.setText(item.getTitle());
-//        holder.ipresWriteTime.setText(item.getRef());
-//        holder.ipresSickName.setText(item.getName());
-//        holder.ipresSex.setText(item.getSymptom());
-//        holder.ipresAge.setText(item.getAbbr());
-//        holder.ipresDeptOperator.setText(item.getAttending());
-//        holder.ipresPerscribeStatus.setText(item.getComp());
-//        holder.ipresPhysicName.setText(item.getEffect());
-//        holder.drugNameLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showOptions();
-//            }
-//        });
+        BeanPrescription item = list.get(position);
+        holder.ipresDiagnosisName.setText(item.getTitle());
+        holder.ipresWriteTime.setText(item.getRef());
+        holder.ipresSickName.setText(item.getName());
+        holder.ipresSex.setText(item.getSymptom());
+        holder.ipresAge.setText(item.getAbbr());
+        holder.ipresDeptOperator.setText(item.getAttending());
+        holder.ipresPerscribeStatus.setText(item.getComp());
+        holder.ipresPhysicName.setText(item.getEffect());
+        holder.drugNameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOptions();
+            }
+        });
     }
 
     @Override

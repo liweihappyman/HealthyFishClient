@@ -10,14 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
-import com.healthyfish.healthyfish.POJO.BeanPresList;
-import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
 import com.healthyfish.healthyfish.POJO.BeanPrescription;
-import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PrescriptionRvAdapter;
@@ -35,7 +28,7 @@ import okhttp3.ResponseBody;
 import rx.Subscriber;
 
 public class MyPrescription extends BaseActivity {
-    private List<BeanPrescriptiom> list = new ArrayList<>();
+
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -55,58 +48,25 @@ public class MyPrescription extends BaseActivity {
     }
 
     private void requestForPrescription() {
-
-
         BeanUserRetrPresReq userRetrPresReq = new BeanUserRetrPresReq();
         userRetrPresReq.setSickId("0000281122");
-        userRetrPresReq.setUser("13977211042");
+        userRetrPresReq.setUser("邹玉贵");
         userRetrPresReq.setHosp("lzzyy");
+        userRetrPresReq.setAct(BeanUserRetrPresReq.class.getSimpleName());
 
-
-        BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
-        userListValueReq.setPrefix("pres_");
-        userListValueReq.setFrom(0);
-        userListValueReq.setNum(-1);
-        userListValueReq.setTo(-1);
-
-
-        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(userListValueReq), new Subscriber<ResponseBody>() {
+        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(userRetrPresReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-
             }
             @Override
             public void onError(Throwable e) {
-                Log.i("电子处方","出错啦" + e.toString());
+                Log.i("电子处方","网络错误" + e.toString());
             }
             @Override
             public void onNext(ResponseBody responseBody) {
                 try {
                     String str = responseBody.string();
                     Log.i("电子处方","数据" + str);
-//                    JSONObject object = JSONArray.parseObject(str);
-//                    String JStr = JSON.toJSONString(object);
-//                    BeanPrescriptiom beanPrescriptiom = JSON.parseObject(JStr,BeanPrescriptiom.class);
-
-
-                    List<String> strJsonList = JSONArray.parseObject(str, List.class);
-                    for (String strJson : strJsonList) {
-                        BeanPrescriptiom beanPrescriptiom = JSON.parseObject(strJson, BeanPrescriptiom.class);
-                        list.add(beanPrescriptiom);
-
-                        Log.i("电子处方详细数据"," "+beanPrescriptiom.toString());
-
-                        Log.i("电子处方详细数据"," "+beanPrescriptiom.getAGE()+beanPrescriptiom.getAPPLY_DEPT()+beanPrescriptiom.getKey());
-//                        Log.i("电子处方详细数据","----------------------------------------------------------------------------");
-//                        Log.i("电子处方详细数据PresList()"," "+beanPrescriptiom.getPresList());
-
-                        List<BeanPrescriptiom.PresListBean> preslist = beanPrescriptiom.getPresList();
-                        for (BeanPrescriptiom.PresListBean presListBean:preslist){
-                            //BeanPrescriptiom.PresListBean presListBean =  JSON.parseObject(strJsonPres, BeanPrescriptiom.PresListBean.class);
-                            //Log.i("电子处方详细数据PresList()"," "+presListBean.toString()+"*****************************");
-                            Log.i("电子处方详细数据PresList()"," "+presListBean.getPRICE()+"*****************************");
-                        }
-                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -172,7 +132,7 @@ public class MyPrescription extends BaseActivity {
         list.add(b2);
         LinearLayoutManager lmg = new LinearLayoutManager(this);
         rvPrescription.setLayoutManager(lmg);
-       // PrescriptionRvAdapter adapter = new PrescriptionRvAdapter(this,list,toolbar);
-       // rvPrescription.setAdapter(adapter);
+        PrescriptionRvAdapter adapter = new PrescriptionRvAdapter(this,list,toolbar);
+        rvPrescription.setAdapter(adapter);
     }
 }
