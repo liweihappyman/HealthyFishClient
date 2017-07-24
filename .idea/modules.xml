@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HealthyFishAndroidClient.iml" filepath="$PROJECT_DIR$/HealthyFishAndroidClient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/HealthyFishClient.iml" filepath="$PROJECT_DIR$/HealthyFishClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/module/module.iml" filepath="$PROJECT_DIR$/module/module.iml" />
-      <module fileurl="file://$PROJECT_DIR$/photopicker/photopicker.iml" filepath="$PROJECT_DIR$/photopicker/photopicker.iml" />
     </modules>
   </component>
 </project>
