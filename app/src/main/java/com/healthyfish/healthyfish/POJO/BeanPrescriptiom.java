@@ -11,21 +11,41 @@ import java.util.List;
 
 public class BeanPrescriptiom {
 
+    @Override
+    public String toString() {
+        return "BeanPrescriptiom{" +
+                "PRESCRIBE_OPERATOR='" + PRESCRIBE_OPERATOR + '\'' +
+                ", DEPT_NAME='" + DEPT_NAME + '\'' +
+                ", SEX='" + SEX + '\'' +
+                ", ITEM_CLASS='" + ITEM_CLASS + '\'' +
+                ", APPLY_DEPT='" + APPLY_DEPT + '\'' +
+                ", SICK_NAME='" + SICK_NAME + '\'' +
+                ", DIAGNOSIS_NAME='" + DIAGNOSIS_NAME + '\'' +
+                ", WRITE_TIME='" + WRITE_TIME + '\'' +
+                ", RESCRIBE_STATUS='" + RESCRIBE_STATUS + '\'' +
+                ", SICK_ID='" + SICK_ID + '\'' +
+                ", PRESCRIPTION_NUMBER='" + PRESCRIPTION_NUMBER + '\'' +
+                ", key='" + key + '\'' +
+                ", AGE='" + AGE + '\'' +
+                ", presList=" + presList +
+                '}';
+    }
+
     /**
-     * PRESCRIBE_OPERATOR : 杨坚毅/142
-     * DEPT_NAME : 心病科门诊
+     * PRESCRIBE_OPERATOR : 杨文革/169
+     * DEPT_NAME : 脾胃病科门诊
      * SEX : 男
      * ITEM_CLASS : 西药
-     * APPLY_DEPT : 2216
+     * APPLY_DEPT : 2221
      * SICK_NAME : 邹玉贵
-     * DIAGNOSIS_NAME : 高血压(慢)
-     * WRITE_TIME : 2016-12-15T09:00:35+08:00
-     * presList : [{"LAY_PHYSIC_DAYS":"14","PRICE":"44.35","FREQ_DESCRIBE":"q.d.","LAY_PHYSIC_QUANTITY":"14","PACK_SPEC":"10mg*7","PHYSIC_DOSEAGE":"10","STATUS":"已完成","COST":"88.70","USAGE":"口服","SICK_ID":"0000281122","DOSE_UNIT":"mg","PHYSIC_NAME":"瑞舒伐他汀钙片","PRESCRIBE_NUMBER":"12953414","TAKE_MEDICINE_WAYS_CODE":"Y020","PHYSIC_UNIT":"片","MODIFY_TIME":"2016-12-15T09:00:36+08:00"}]
+     * DIAGNOSIS_NAME : 体检
+     * WRITE_TIME : 2017-04-25T09:29:32+08:00
+     * presList : [{"LAY_PHYSIC_DAYS":"1","PRICE":"36.40","FREQ_DESCRIBE":"q.d.","LAY_PHYSIC_QUANTITY":"2","PACK_SPEC":"69.56g*(A.B.C各一)","PHYSIC_DOSEAGE":"2","STATUS":"已完成","COST":"72.80","USAGE":"口服","SICK_ID":"0000281122","DOSE_UNIT":"盒","PHYSIC_NAME":"复方聚乙二醇电解质散(Ⅰ)","PRESCRIBE_NUMBER":"14222548","TAKE_MEDICINE_WAYS_CODE":"Y020","PHYSIC_UNIT":"盒","MODIFY_TIME":"2017-04-25T09:29:33+08:00"}]
      * RESCRIBE_STATUS : 已执行
      * SICK_ID : 0000281122
-     * PRESCRIPTION_NUMBER : 12953414
-     * key : pres_null_lzzyy_12953414
-     * AGE : 66
+     * PRESCRIPTION_NUMBER : 14222548
+     * key : pres_13977211042_lzzyy_14222548
+     * AGE : 67
      */
 
     private String PRESCRIBE_OPERATOR;
@@ -41,7 +61,7 @@ public class BeanPrescriptiom {
     private String PRESCRIPTION_NUMBER;
     private String key;
     private String AGE;
-    private List<BeanPresList> presList;
+    private List<PresListBean> presList;
 
     public String getPRESCRIBE_OPERATOR() {
         return PRESCRIBE_OPERATOR;
@@ -147,11 +167,199 @@ public class BeanPrescriptiom {
         this.AGE = AGE;
     }
 
-    public List<BeanPresList> getPresList() {
+    public List<PresListBean> getPresList() {
         return presList;
     }
 
-    public void setPresList(List<BeanPresList> presList) {
+    public void setPresList(List<PresListBean> presList) {
         this.presList = presList;
+    }
+
+    public static class PresListBean {
+        /**
+         * LAY_PHYSIC_DAYS : 1
+         * PRICE : 36.40
+         * FREQ_DESCRIBE : q.d.
+         * LAY_PHYSIC_QUANTITY : 2
+         * PACK_SPEC : 69.56g*(A.B.C各一)
+         * PHYSIC_DOSEAGE : 2
+         * STATUS : 已完成
+         * COST : 72.80
+         * USAGE : 口服
+         * SICK_ID : 0000281122
+         * DOSE_UNIT : 盒
+         * PHYSIC_NAME : 复方聚乙二醇电解质散(Ⅰ)
+         * PRESCRIBE_NUMBER : 14222548
+         * TAKE_MEDICINE_WAYS_CODE : Y020
+         * PHYSIC_UNIT : 盒
+         * MODIFY_TIME : 2017-04-25T09:29:33+08:00
+         */
+
+        private String LAY_PHYSIC_DAYS;
+        private String PRICE;
+        private String FREQ_DESCRIBE;
+        private String LAY_PHYSIC_QUANTITY;
+        private String PACK_SPEC;
+        private String PHYSIC_DOSEAGE;
+        private String STATUS;
+        private String COST;
+        private String USAGE;
+        private String SICK_ID;
+        private String DOSE_UNIT;
+        private String PHYSIC_NAME;
+        private String PRESCRIBE_NUMBER;
+        private String TAKE_MEDICINE_WAYS_CODE;
+        private String PHYSIC_UNIT;
+        private String MODIFY_TIME;
+
+        public String getLAY_PHYSIC_DAYS() {
+            return LAY_PHYSIC_DAYS;
+        }
+
+        public void setLAY_PHYSIC_DAYS(String LAY_PHYSIC_DAYS) {
+            this.LAY_PHYSIC_DAYS = LAY_PHYSIC_DAYS;
+        }
+
+        public String getPRICE() {
+            return PRICE;
+        }
+
+        public void setPRICE(String PRICE) {
+            this.PRICE = PRICE;
+        }
+
+        public String getFREQ_DESCRIBE() {
+            return FREQ_DESCRIBE;
+        }
+
+        public void setFREQ_DESCRIBE(String FREQ_DESCRIBE) {
+            this.FREQ_DESCRIBE = FREQ_DESCRIBE;
+        }
+
+        public String getLAY_PHYSIC_QUANTITY() {
+            return LAY_PHYSIC_QUANTITY;
+        }
+
+        public void setLAY_PHYSIC_QUANTITY(String LAY_PHYSIC_QUANTITY) {
+            this.LAY_PHYSIC_QUANTITY = LAY_PHYSIC_QUANTITY;
+        }
+
+        public String getPACK_SPEC() {
+            return PACK_SPEC;
+        }
+
+        public void setPACK_SPEC(String PACK_SPEC) {
+            this.PACK_SPEC = PACK_SPEC;
+        }
+
+        public String getPHYSIC_DOSEAGE() {
+            return PHYSIC_DOSEAGE;
+        }
+
+        public void setPHYSIC_DOSEAGE(String PHYSIC_DOSEAGE) {
+            this.PHYSIC_DOSEAGE = PHYSIC_DOSEAGE;
+        }
+
+        public String getSTATUS() {
+            return STATUS;
+        }
+
+        public void setSTATUS(String STATUS) {
+            this.STATUS = STATUS;
+        }
+
+        public String getCOST() {
+            return COST;
+        }
+
+        public void setCOST(String COST) {
+            this.COST = COST;
+        }
+
+        public String getUSAGE() {
+            return USAGE;
+        }
+
+        public void setUSAGE(String USAGE) {
+            this.USAGE = USAGE;
+        }
+
+        public String getSICK_ID() {
+            return SICK_ID;
+        }
+
+        public void setSICK_ID(String SICK_ID) {
+            this.SICK_ID = SICK_ID;
+        }
+
+        public String getDOSE_UNIT() {
+            return DOSE_UNIT;
+        }
+
+        public void setDOSE_UNIT(String DOSE_UNIT) {
+            this.DOSE_UNIT = DOSE_UNIT;
+        }
+
+        public String getPHYSIC_NAME() {
+            return PHYSIC_NAME;
+        }
+
+        public void setPHYSIC_NAME(String PHYSIC_NAME) {
+            this.PHYSIC_NAME = PHYSIC_NAME;
+        }
+
+        public String getPRESCRIBE_NUMBER() {
+            return PRESCRIBE_NUMBER;
+        }
+
+        public void setPRESCRIBE_NUMBER(String PRESCRIBE_NUMBER) {
+            this.PRESCRIBE_NUMBER = PRESCRIBE_NUMBER;
+        }
+
+        public String getTAKE_MEDICINE_WAYS_CODE() {
+            return TAKE_MEDICINE_WAYS_CODE;
+        }
+
+        public void setTAKE_MEDICINE_WAYS_CODE(String TAKE_MEDICINE_WAYS_CODE) {
+            this.TAKE_MEDICINE_WAYS_CODE = TAKE_MEDICINE_WAYS_CODE;
+        }
+
+        public String getPHYSIC_UNIT() {
+            return PHYSIC_UNIT;
+        }
+
+        public void setPHYSIC_UNIT(String PHYSIC_UNIT) {
+            this.PHYSIC_UNIT = PHYSIC_UNIT;
+        }
+
+        public String getMODIFY_TIME() {
+            return MODIFY_TIME;
+        }
+
+        public void setMODIFY_TIME(String MODIFY_TIME) {
+            this.MODIFY_TIME = MODIFY_TIME;
+        }
+
+        @Override
+        public String toString() {
+            return "PresListBean{" +
+                    "LAY_PHYSIC_DAYS='" + LAY_PHYSIC_DAYS + '\'' +
+                    ", PRICE='" + PRICE + '\'' +
+                    ", FREQ_DESCRIBE='" + FREQ_DESCRIBE + '\'' +
+                    ", LAY_PHYSIC_QUANTITY='" + LAY_PHYSIC_QUANTITY + '\'' +
+                    ", PACK_SPEC='" + PACK_SPEC + '\'' +
+                    ", PHYSIC_DOSEAGE='" + PHYSIC_DOSEAGE + '\'' +
+                    ", STATUS='" + STATUS + '\'' +
+                    ", COST='" + COST + '\'' +
+                    ", USAGE='" + USAGE + '\'' +
+                    ", SICK_ID='" + SICK_ID + '\'' +
+                    ", DOSE_UNIT='" + DOSE_UNIT + '\'' +
+                    ", PHYSIC_NAME='" + PHYSIC_NAME + '\'' +
+                    ", PRESCRIBE_NUMBER='" + PRESCRIBE_NUMBER + '\'' +
+                    ", TAKE_MEDICINE_WAYS_CODE='" + TAKE_MEDICINE_WAYS_CODE + '\'' +
+                    ", PHYSIC_UNIT='" + PHYSIC_UNIT + '\'' +
+                    ", MODIFY_TIME='" + MODIFY_TIME + '\'' +
+                    '}';
+        }
     }
 }
