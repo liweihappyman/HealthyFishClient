@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.POJO.BeanHospitalListRespItem;
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
+
+import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：医院列表适配器
@@ -20,24 +23,24 @@ import java.util.List;
  * 编辑：WKJ
  */
 
-public class ChooseHospitalAdapter extends RecyclerView.Adapter<ChooseHospitalAdapter.ViewHolder>{
-    private List<String> imgUrls;//测试数据list
+public class ChooseHospitalAdapter extends RecyclerView.Adapter<ChooseHospitalAdapter.ViewHolder> {
+    private List<BeanHospitalListRespItem> imgUrls;//测试数据list
     private Context mContext;
 
-    public ChooseHospitalAdapter(List<String> imgUrls, Context mContext) {
+    public ChooseHospitalAdapter(List<BeanHospitalListRespItem> imgUrls, Context mContext) {
         this.imgUrls = imgUrls;
         this.mContext = mContext;
     }
 
-     @Override
+    @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-         View rootView = LayoutInflater.from(mContext).inflate(R.layout.item_choose_hospital,parent,false);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.item_choose_hospital, parent, false);
         return new ViewHolder(rootView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String url = imgUrls.get(position);
+        String url = HttpHealthyFishyUrl + imgUrls.get(position).getImg();
         Glide.with(mContext).load(url).placeholder(R.mipmap.placeholder)
                 .error(R.mipmap.error).centerCrop().into(holder.hospital);
     }
@@ -47,8 +50,9 @@ public class ChooseHospitalAdapter extends RecyclerView.Adapter<ChooseHospitalAd
         return imgUrls.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView hospital;
+
         public ViewHolder(View itemView) {
             super(itemView);
             AutoUtils.auto(itemView);

@@ -17,6 +17,7 @@ import com.healthyfish.healthyfish.POJO.BeanDepartmentDoctor;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
@@ -59,6 +60,9 @@ public class ChoiceDoctor extends BaseActivity {
     private List<BeanHospDeptDoctListRespItem> DeptDoctList = new ArrayList<>();
     private String departmentName;//部门名称
 
+    private String hosp = "lzzyy";
+    private String hospTxt = "柳州市中医院";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +85,12 @@ public class ChoiceDoctor extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //跳转到该医生的服务页面,需要传递该医生的唯一标识去服务器访问医生的服务详情
                 Intent intent = new Intent(mContext, ChoiceService.class);
-                intent.putExtra("DepartmentName", departmentName);
+                BeanHospRegisterReq beanHospRegisterReq = new BeanHospRegisterReq();
+                beanHospRegisterReq.setHosp(hosp);
+                beanHospRegisterReq.setHospTxt(hospTxt);
+                beanHospRegisterReq.setDept(departmentCode);
+                beanHospRegisterReq.setDeptTxt(departmentName);
+                intent.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
                 intent.putExtra("DEPT_DOCTOR_INFO", DeptDoctList.get(position));
                 startActivity(intent);
             }

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanVisitingPerson;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChangeVisitingPersonAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
@@ -42,12 +43,15 @@ public class ChangeVisitingPerson extends BaseActivity {
     @BindView(R.id.bt_complete)
     Button btComplete;
 
+    List<BeanVisitingPerson> list = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_visiting_person);
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "更换就诊人");
+        getData();
         initListView();
     }
 
@@ -70,18 +74,15 @@ public class ChangeVisitingPerson extends BaseActivity {
      * 初始化ListView
      */
     private void initListView() {
-        ChangeVisitingPersonAdapter adapter = new ChangeVisitingPersonAdapter(this, getData());
+        ChangeVisitingPersonAdapter adapter = new ChangeVisitingPersonAdapter(this, list);
         lvChangeVisitingPerson.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         lvChangeVisitingPerson.setAdapter(adapter);
         lvChangeVisitingPerson.setVerticalScrollBarEnabled(false);
     }
 
-    private List<String> getData() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            list.add("就诊人" + i + "    " + 2 + i + "岁");
-        }
-        return list;
+    private void getData() {
+
+
     }
 
 }

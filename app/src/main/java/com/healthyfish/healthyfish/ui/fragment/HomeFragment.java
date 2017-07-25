@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -143,45 +144,48 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initBannerRequest();//网络访问获取轮播图内容
 
     }
+
     //网络访问获取轮播图内容
     private void initBannerRequest() {
-        final List<String> imgs =new ArrayList<>();//装载图片
+        final List<String> imgs = new ArrayList<>();//装载图片
         final List<String> desc = new ArrayList<>();//装载描述
-        RetrofitManagerUtils.getInstance(getActivity(),null)
+        RetrofitManagerUtils.getInstance(getActivity(), null)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHomeImgSlideReq()), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-            }
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                String str = null;
-                try {
-                    str = responseBody.string();
-                    BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str,BeanHomeImgSlideResp.class);
-                    for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem :beanHomeImgSlideResp.getImgList()){
-                        imgs.add(HttpHealthyFishyUrl+beanHomeImgSlideRespItem.getImg());
-                        Log.i("imgstr",beanHomeImgSlideRespItem.getImg());
-                        desc.add(beanHomeImgSlideRespItem.getDesc());
+                    @Override
+                    public void onCompleted() {
                     }
-                    setbanner(imgs, desc);//给轮播图设置图片
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //Log.i("imgstr",str);
-            }
-        });
-    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String str = null;
+                        try {
+                            str = responseBody.string();
+                            BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str, BeanHomeImgSlideResp.class);
+                            for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem : beanHomeImgSlideResp.getImgList()) {
+                                imgs.add(HttpHealthyFishyUrl + beanHomeImgSlideRespItem.getImg());
+                                Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
+                                desc.add(beanHomeImgSlideRespItem.getDesc());
+                            }
+                            setbanner(imgs, desc);//给轮播图设置图片
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //Log.i("imgstr",str);
+                    }
+                });
+    }
 
 
     /**
      * 给轮播图设置图片和描述
-     * @param imgs  图片地址链接
-     * @param desc  描述
+     *
+     * @param imgs 图片地址链接
+     * @param desc 描述
      */
     private void setbanner(List<String> imgs, List<String> desc) {
         //轮播图
@@ -198,7 +202,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
         });
         //轮播图设置数据
-        bannerGuideContent.setData(imgs,desc);
+        bannerGuideContent.setData(imgs, desc);
     }
 
     //测试养生计划
@@ -252,50 +256,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     //健康资讯列表
     private void initHealthNews() {
         final List<BeanItemNewsAbstract> newsList = new ArrayList<>();
-        BeanListReq beanListReq = new BeanListReq();
-        beanListReq.setPrefix("news_");
-        beanListReq.setFrom(0);
-        beanListReq.setTo(7);
-        beanListReq.setNum(8);
-        RetrofitManagerUtils.getInstance(getActivity(), null)
-                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanListReq),
-                        new Subscriber<ResponseBody>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(ResponseBody responseBody) {
-                                if (responseBody != null) {
-                                    String jsonNews = null;
-                                    try {
-                                        jsonNews = responseBody.string();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
-                                    for (String strJsonNews : strJsonNewsList) {
-                                        BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
-                                        newsList.add(bean);
-                                    }
-                                    List<BeanItemNewsAbstract> list = new ArrayList<>();
-                                    for (int i = 0; i < 4; i++) {
-                                        list.add(newsList.get(i));
-                                    }
-                                    LinearLayoutManager lmg = new LinearLayoutManager(mContext);
-                                    healthNewsRecyclerview.setLayoutManager(lmg);
-                                    healthInfoAdapter = new HomePageHealthInfoAadpter(mContext, list);
-                                    healthNewsRecyclerview.setAdapter(healthInfoAdapter);
-                                }
-                            }
-                        });
-
+        createRequest(newsList);//健康资讯请求
         //Item的点击监听
         healthNewsRecyclerview.addOnItemTouchListener(new MyRecyclerViewOnItemListener(mContext, healthNewsRecyclerview,
                 new MyRecyclerViewOnItemListener.OnItemClickListener() {
@@ -320,20 +281,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 if (NetworkConnectUtils.isNetworkConnected(mContext)) {
                     if (tvAddMoreNews.getText().toString().equals("点击加载更多")) {
-                        for (int i = 4; i < newsList.size(); i++) {
-                            healthInfoAdapter.addData(newsList.get(i));
+                        if (newsList.isEmpty()) {
+                            createRequest(newsList);
+                        } else {
+                            if (newsList.size() > 4) {
+                                for (int i = 4; i < newsList.size(); i++) {
+                                    healthInfoAdapter.addData(newsList.get(i));
+                                }
+                                healthInfoAdapter.notifyDataSetChanged();
+                                tvAddMoreNews.setText("收起");
+                            } else {
+                                MyToast.showToast(mContext, "没有更多啦！");
+                            }
                         }
-                        healthInfoAdapter.notifyDataSetChanged();
-                        tvAddMoreNews.setText("收起");
                     } else if (tvAddMoreNews.getText().toString().equals("收起")) {
-                        for (int i = 4; i < newsList.size(); i++) {
-                            healthInfoAdapter.removeData(4);
+                        if (newsList.size() > 4) {
+                            for (int i = 4; i < newsList.size(); i++) {
+                                healthInfoAdapter.removeData(4);
+                            }
+                            healthInfoAdapter.notifyDataSetChanged();
+                            tvAddMoreNews.setText("点击加载更多");
                         }
-                        healthInfoAdapter.notifyDataSetChanged();
-                        tvAddMoreNews.setText("点击加载更多");
                     }
                 } else {
-                    MyToast.showToast(getActivity(),"网络不可用，请检查您的网络连接！");
+                    MyToast.showToast(getActivity(), "网络不可用，请检查您的网络连接！");
                 }
 
             }
@@ -346,6 +317,64 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * 健康新闻请求
+     * @param newsList
+     */
+    private void createRequest(final List<BeanItemNewsAbstract> newsList) {
+        BeanListReq beanListReq = new BeanListReq();
+        beanListReq.setPrefix("news_");
+        beanListReq.setFrom(0);
+        beanListReq.setTo(7);
+        beanListReq.setNum(8);
+        RetrofitManagerUtils.getInstance(getActivity(), null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanListReq),
+                        new Subscriber<ResponseBody>() {
+                            @Override
+                            public void onCompleted() {
+                                if (newsList.size() > 0) {
+                                    List<BeanItemNewsAbstract> list = new ArrayList<>();
+                                    if (newsList.size() >= 4) {
+                                        for (int i = 0; i < 4; i++) {
+                                            list.add(newsList.get(i));
+                                        }
+                                    } else {
+                                        for (int i = 0; i < newsList.size(); i++) {
+                                            list.add(newsList.get(i));
+                                        }
+                                    }
+                                    LinearLayoutManager lmg = new LinearLayoutManager(mContext);
+                                    healthNewsRecyclerview.setLayoutManager(lmg);
+                                    healthInfoAdapter = new HomePageHealthInfoAadpter(mContext, list);
+                                    healthNewsRecyclerview.setAdapter(healthInfoAdapter);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(ResponseBody responseBody) {
+                                if (responseBody != null) {
+                                    String jsonNews = null;
+                                    try {
+                                        jsonNews = responseBody.string();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.i("LYQ",jsonNews);
+                                    List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
+                                    for (String strJsonNews : strJsonNewsList) {
+                                        BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
+                                        newsList.add(bean);
+                                    }
+                                }
+                            }
+                        });
     }
 
 

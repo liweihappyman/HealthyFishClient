@@ -9,9 +9,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanVisitingPerson;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChangeVisitingPersonAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.MyToast;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +45,22 @@ public class ChangeVisitingPerson extends BaseActivity {
     @BindView(R.id.bt_complete)
     Button btComplete;
 
+    private ChangeVisitingPersonAdapter adapter;
+    private List<BeanVisitingPerson> list = new ArrayList<>();
+
+    private final static int mRequestCode = 10053;
+    public final static int mResultCode = 10056;
+    private BeanVisitingPerson visitingPerson;
+
+    private String id = "15278898523";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_visiting_person);
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "更换就诊人");
+        getData();
         initListView();
     }
 
@@ -57,10 +71,20 @@ public class ChangeVisitingPerson extends BaseActivity {
             case R.id.tv_new:
                 //新建就诊人
                 Intent intent = new Intent(this, NewVisitingPerson.class);
-                startActivityForResult(intent,10013);
+                startActivityForResult(intent, mRequestCode);
                 break;
             case R.id.bt_complete:
                 //完成就诊人的选择
+                int position = lvChangeVisitingPerson.getCheckedItemPosition();
+                if (lvChangeVisitingPerson.INVALID_POSITION != position) {
+                    BeanVisitingPerson visitingPerson = list.get(position);
+                    Intent intent1 = new Intent(this,ConfirmReservationInformation.class);
+                    intent1.putExtra("BeanVisitingPerson", visitingPerson);
+                    ChangeVisitingPerson.this.setResult(mResultCode, intent1);
+                    finish();
+                } else {
+                    MyToast.showToast(this, "请选择就诊人");
+                }
                 break;
         }
     }
@@ -69,22 +93,57 @@ public class ChangeVisitingPerson extends BaseActivity {
      * 初始化ListView
      */
     private void initListView() {
-        ChangeVisitingPersonAdapter adapter = new ChangeVisitingPersonAdapter(this, getData());
+        adapter = new ChangeVisitingPersonAdapter(this, list);
         lvChangeVisitingPerson.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         lvChangeVisitingPerson.setAdapter(adapter);
         lvChangeVisitingPerson.setVerticalScrollBarEnabled(false);
     }
 
-    private List<String> getData() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            list.add("就诊人" + i + "    " + 2 + i + "岁");
+    /**
+     * 数据库查找就诊人
+     */
+    private void getData() {
+        List<BeanVisitingPerson> visitingPersonList = DataSupport.where("phoneId = ? ", id).find(BeanVisitingPerson.class);
+        for (BeanVisitingPerson visitingPerson : visitingPersonList) {
+            list.add(visitingPerson);
         }
-        return list;
+    }
+
+    /**
+     * 删除就诊人
+     */
+    private void deleteData(int id) {
+        int deleteCount = DataSupport.delete(BeanVisitingPerson.class, id);
+        if (deleteCount == id) {
+            MyToast.showToast(this, "成功删除该就诊人");
+        } else {
+            MyToast.showToast(this, "删除就诊人失败");
+        }
+    }
+
+    /**
+     * 更新就诊人
+     */
+    private void updateData(int id) {
+        BeanVisitingPerson visitingPerson = new BeanVisitingPerson();
+
+        int deleteCount = visitingPerson.update(id);
+        if (deleteCount == id) {
+            MyToast.showToast(this, "成功修改该就诊人");
+        } else {
+            MyToast.showToast(this, "修改就诊人失败");
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == mRequestCode) {
+            if (resultCode == NewVisitingPerson.resultCode) {
+                visitingPerson = (BeanVisitingPerson) data.getSerializableExtra("BeanVisitingPerson");
+                list.add(visitingPerson);
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 }

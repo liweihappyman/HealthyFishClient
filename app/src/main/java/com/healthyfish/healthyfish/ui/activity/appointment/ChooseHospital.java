@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.ui.activity.appointment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +30,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChooseHospitalAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -58,6 +61,7 @@ public class ChooseHospital extends BaseActivity {
     RecyclerView chooseHospitalRecyclerview;
 
     private ChooseHospitalAdapter adapter;
+    private List<BeanHospitalListRespItem> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +70,27 @@ public class ChooseHospital extends BaseActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "选择医院");
         initData();
+        Listener();
+    }
+
+    private void Listener() {
+        chooseHospitalRecyclerview.addOnItemTouchListener(new MyRecyclerViewOnItemListener(this, chooseHospitalRecyclerview, new MyRecyclerViewOnItemListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(ChooseHospital.this, SelectDepartments.class);
+                intent.putExtra("BeanHospitalListRespItem", list.get(position));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        }));
     }
 
     private void initData() {
-        final List<String> list = new ArrayList<>();
+
 
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHospitalListReq()), new Subscriber<ResponseBody>() {
             @Override
@@ -92,7 +113,7 @@ public class ChooseHospital extends BaseActivity {
                 }
                 BeanHospitalListResp beanHospitalListResp = JSON.parseObject(str, BeanHospitalListResp.class);
                 for (BeanHospitalListRespItem beanHospitalListRespItem : beanHospitalListResp.getHospitalList()) {
-                    list.add(HttpHealthyFishyUrl + beanHospitalListRespItem.getImg());
+                    list.add(beanHospitalListRespItem);
                 }
                 adapter.notifyDataSetChanged();
             }

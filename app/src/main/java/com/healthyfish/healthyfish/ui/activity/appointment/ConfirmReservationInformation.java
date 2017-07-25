@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -16,8 +17,10 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanHospCardAuthReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanKeyValue;
+import com.healthyfish.healthyfish.POJO.BeanVisitingPerson;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
@@ -25,7 +28,10 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,11 +77,22 @@ public class ConfirmReservationInformation extends BaseActivity {
     @BindView(R.id.bt_confirm_registration)
     Button btConfirmRegistration;
 
-    private String sick_id = null;
+    private String sick_id = "";
     private BeanWeekAndDate beanWeekAndDate;
+    private BeanKeyValue beanKeyValue;
     private String jsonStr = null;
-    private String key = null;
-    private String value = null;
+    private String key = "";
+    private String value = "";
+
+    private final int mRequestCode = 13302;
+    private BeanVisitingPerson visitingPerson;
+
+    private String id = "15278898523";
+    private String hospital = "柳州市中医院";
+    private String name;
+    private String idCard;
+    private String visitingCard;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,17 +122,24 @@ public class ConfirmReservationInformation extends BaseActivity {
             case R.id.bt_replace:
                 //更换就诊人
                 Intent intent = new Intent(this, ChangeVisitingPerson.class);
-                startActivityForResult(intent, 10012);
+                startActivityForResult(intent, mRequestCode);
                 break;
             case R.id.bt_confirm_registration:
                 //确认挂号，首先需要验证就诊卡
-                if (CertifiedVisitingCard()) {
-                    //挂号请求
-                    if (RegistrationRequest()) {
-                        MyToast.showToast(this,"挂号成功");
-                    } else {
-                        MyToast.showToast(this,"挂号失败，请重试");
-                    }
+                name = etVisitingPersonName.getText().toString().trim();
+                idCard = etIDNumber.getText().toString().trim();
+                visitingCard = etVisitingCardNumber.getText().toString().trim();
+                phoneNumber = etPhoneNumber.getText().toString().trim();
+
+                if (!TextUtils.isEmpty(name) &&
+                        !TextUtils.isEmpty(idCard) && idCard.length() == 18 &&
+                        !TextUtils.isEmpty(visitingCard) &&
+                        !TextUtils.isEmpty(phoneNumber) && phoneNumber.length() == 11) {
+
+                    CertifiedVisitingCard();//验证就诊卡
+
+                } else {
+                    MyToast.showToast(this, "请填写相关信息或选择就诊人");
                 }
                 break;
         }
@@ -139,15 +163,42 @@ public class ConfirmReservationInformation extends BaseActivity {
     /**
      * 挂号请求
      */
-    private boolean RegistrationRequest() {
-        final BeanHospRegisterReq beanHospRegisterReq = beanWeekAndDate.getBeanHospRegisterReq();
-        beanHospRegisterReq.setName(etVisitingPersonName.getText().toString().trim());
+    private void RegistrationRequest() {
+        final BeanHospRegisterReq beanHospRegisterReq = new BeanHospRegisterReq();
+        beanHospRegisterReq.setHosp(beanWeekAndDate.getBeanHospRegisterReq().getHosp());
+        beanHospRegisterReq.setHospTxt(beanWeekAndDate.getBeanHospRegisterReq().getHospTxt());
+        beanHospRegisterReq.setDept(beanWeekAndDate.getBeanHospRegisterReq().getDept());
+        beanHospRegisterReq.setDeptTxt(beanWeekAndDate.getBeanHospRegisterReq().getDeptTxt());
+        beanHospRegisterReq.setDoct(beanWeekAndDate.getBeanHospRegisterReq().getDoct());
+        beanHospRegisterReq.setDoctTxt(beanWeekAndDate.getBeanHospRegisterReq().getDoctTxt());
+        beanHospRegisterReq.setStaffNo(beanWeekAndDate.getBeanHospRegisterReq().getStaffNo());
+        beanHospRegisterReq.setDate(beanWeekAndDate.getBeanHospRegisterReq().getDate());
+        beanHospRegisterReq.setDateTxt(beanWeekAndDate.getBeanHospRegisterReq().getDateTxt());
+        beanHospRegisterReq.setName(name);
         beanHospRegisterReq.setSickId(sick_id);
+
+        Log.e("LYQ", "Hosp:" + beanHospRegisterReq.getHosp() + "--" + "HospTxt:" + beanHospRegisterReq.getHospTxt() + "--"
+                + "Dept:" + beanHospRegisterReq.getDept() + "--" + "DeptTxt:" + beanHospRegisterReq.getDeptTxt() + "--"
+                + "Doct:" + beanHospRegisterReq.getDoct() + "--" + "DoctTxt:" + beanHospRegisterReq.getDoctTxt() + "--"
+                + "StaffNo:" + beanHospRegisterReq.getStaffNo() + "--" + "Date:" + beanHospRegisterReq.getDate() + "--"
+                + "DateTxt:" + beanHospRegisterReq.getDateTxt() + "--" + "Name:" + beanHospRegisterReq.getName() + "--"
+                + "SickId:" + beanHospRegisterReq.getSickId());
+        Log.e("LYQ", JSON.toJSONString(beanHospRegisterReq));
 
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospRegisterReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-
+                if (beanKeyValue != null) {
+                    if (beanKeyValue.getKey().equals("failed")) {
+                        MyToast.showToast(ConfirmReservationInformation.this, "挂号失败，" + beanKeyValue.getValue());
+                        Log.e("LYQ", "挂号1：" + value);
+                    } else {
+                        MyToast.showToast(ConfirmReservationInformation.this, "挂号成功");
+                        Log.e("LYQ", "挂号2：" + value);
+                    }
+                } else {
+                    MyToast.showToast(ConfirmReservationInformation.this, "挂号失败，请重试");
+                }
             }
 
             @Override
@@ -165,66 +216,84 @@ public class ConfirmReservationInformation extends BaseActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                BeanKeyValue beanKeyValue = JSON.parseObject(jsonStr, BeanKeyValue.class);
-                key = beanKeyValue.getKey();
-                value = beanKeyValue.getValue();
+                Log.e("LYQ", "挂号666：" + jsonStr);
+                beanKeyValue = JSON.parseObject(jsonStr, BeanKeyValue.class);
                 Log.e("LYQ", "挂号：" + value);
             }
         });
-        if (key.equals("failed")) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     /**
      * 验证就诊卡
-     *
-     * @return 是否验证成功
      */
-    private boolean CertifiedVisitingCard() {
-        if (etVisitingPersonName.getText().toString().length() > 0 && etVisitingCardNumber.getText().toString().length() > 0) {
-            BeanHospCardAuthReq beanHospCardAuthReq = new BeanHospCardAuthReq();
-            beanHospCardAuthReq.setHosp("柳州市中医院");
-            beanHospCardAuthReq.setCardId(etVisitingCardNumber.getText().toString().trim());
-            beanHospCardAuthReq.setName(etVisitingPersonName.getText().toString().trim());
-            RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospCardAuthReq), new Subscriber<ResponseBody>() {
-                @Override
-                public void onCompleted() {
+    private void CertifiedVisitingCard() {
 
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e("LYQ", e.toString());
-                }
-
-                @Override
-                public void onNext(ResponseBody responseBody) {
-                    try {
-                        sick_id = responseBody.string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        BeanHospCardAuthReq beanHospCardAuthReq = new BeanHospCardAuthReq();
+        beanHospCardAuthReq.setHosp(hospital);
+        beanHospCardAuthReq.setName(name);
+        beanHospCardAuthReq.setCardId(visitingCard);
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospCardAuthReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+                if (!TextUtils.isEmpty(sick_id)) {
+                    RegistrationRequest();//挂号
+                    if (!saveData()) {
+                        MyToast.showToast(ConfirmReservationInformation.this, "保存就诊人信息失败");
                     }
-                    Log.e("LYQ", "验证就诊卡：" + sick_id);
+                    Log.e("LYQ", "挂号4：" + key + ":" + value);
+                } else {
+                    MyToast.showToast(ConfirmReservationInformation.this, "验证就诊卡失败，请确认您的信息重新验证");
                 }
-            });
-            if (sick_id.length() > 0) {
-                return true;
-            } else {
-                MyToast.showToast(ConfirmReservationInformation.this, "验证就诊卡失败，请确认您的信息重新验证");
-                return false;
             }
-        } else {
-            MyToast.showToast(this, "请填写相关信息");
-            return false;
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.showToast(ConfirmReservationInformation.this, "验证就诊卡失败，" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    sick_id = responseBody.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.e("LYQ", "验证就诊卡：" + sick_id);
+            }
+        });
+    }
+
+    /**
+     * 保存就诊人数据到数据库
+     */
+    private boolean saveData() {
+        boolean isSave = false;
+        visitingPerson = new BeanVisitingPerson();
+        visitingPerson.setPhoneId(id);
+        visitingPerson.setHospital(hospital);
+        visitingPerson.setVisitingPerson(name);
+        visitingPerson.setIDCard(idCard);
+        visitingPerson.setVisitingCard(visitingCard);
+        visitingPerson.setPhoneNumber(phoneNumber);
+        visitingPerson.setSick_id(sick_id);
+        List<BeanVisitingPerson> List = DataSupport.where("phoneID = ? and hospital = ? and visitingPerson = ? and visitingCard = ?", id, hospital, name, visitingCard).find(BeanVisitingPerson.class);
+        if (List.size() == 0) {
+            isSave = visitingPerson.save();
         }
+        return isSave;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        if (requestCode == mRequestCode) {
+            if (resultCode == ChangeVisitingPerson.mResultCode) {
+                visitingPerson = (BeanVisitingPerson) data.getSerializableExtra("BeanVisitingPerson");
+                etVisitingPersonName.setText(visitingPerson.getVisitingPerson());
+                etIDNumber.setText(visitingPerson.getIDCard());
+                etVisitingCardNumber.setText(visitingPerson.getVisitingCard());
+                etPhoneNumber.setText(visitingPerson.getPhoneNumber());
+            }
+        }
     }
 }
