@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.healthyfish.healthyfish.POJO.BeanDepartmentDoctor;
+import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
@@ -62,10 +63,16 @@ public class DepartmentDoctorList extends BaseActivity {
 
     private Context mContext;
     private DepartmentDoctorLvAdapter adapter;
+
     private List<BeanDepartmentDoctor> mDoctorInfos = new ArrayList<>();
     private List<BeanHospDeptDoctListRespItem> DeptDoctList = new ArrayList<>();
 
     private BeanHospRegisterReq beanHospRegisterReq;
+    private BeanDoctorInfo beanDoctorInfo;
+
+    private String hosp = "lzzyy";
+    private String hospTxt = "柳州市中医院";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,8 +99,27 @@ public class DepartmentDoctorList extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入到医生详情页面，进行预约时间的选择
                 Intent intent = new Intent(DepartmentDoctorList.this,DoctorDetail.class);
-                intent.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
-                intent.putExtra("BeanHospDeptDoctListRespItem", DeptDoctList.get(position));
+
+                beanDoctorInfo = new BeanDoctorInfo();
+                beanDoctorInfo.setHosp(hosp);
+                beanDoctorInfo.setHospital(hospTxt);
+                beanDoctorInfo.setDept(departmentCode);
+                beanDoctorInfo.setDepartment(departmentName);
+                beanDoctorInfo.setName(DeptDoctList.get(position).getDOCTOR_NAME());
+                beanDoctorInfo.setDOCTOR(DeptDoctList.get(position).getDOCTOR());
+                beanDoctorInfo.setIntroduce(DeptDoctList.get(position).getWEB_INTRODUCE());
+                beanDoctorInfo.setWORK_TYPE(DeptDoctList.get(position).getWORK_TYPE());
+                beanDoctorInfo.setSTAFF_NO(DeptDoctList.get(position).getSTAFF_NO());
+                beanDoctorInfo.setCLINIQUE_CODE(DeptDoctList.get(position).getCLINIQUE_CODE());
+                beanDoctorInfo.setDuties(DeptDoctList.get(position).getREISTER_NAME());
+                beanDoctorInfo.setImgUrl(DeptDoctList.get(position).getZHAOPIAN());
+                beanDoctorInfo.setPRE_ALLOW(DeptDoctList.get(position).getPRE_ALLOW());
+                beanDoctorInfo.setPrice(String.valueOf(DeptDoctList.get(position).getPRICE()));
+                beanDoctorInfo.setSchdList(DeptDoctList.get(position).getSchdList());
+
+                intent.putExtra("BeanDoctorInfo", beanDoctorInfo);
+//                intent.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
+//                intent.putExtra("BeanHospDeptDoctListRespItem", DeptDoctList.get(position));
                 startActivity(intent);
             }
         });

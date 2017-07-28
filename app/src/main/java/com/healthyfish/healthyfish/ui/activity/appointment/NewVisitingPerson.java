@@ -142,19 +142,19 @@ public class NewVisitingPerson extends BaseActivity {
      */
     private void saveData() {
         boolean isSave = false;
-        visitingPerson = new BeanVisitingPerson();
-        visitingPerson.setPhoneId(id);
-        visitingPerson.setHospital(hospital);
-        visitingPerson.setVisitingPerson(name);
-        visitingPerson.setIDCard(idCard);
-        visitingPerson.setVisitingCard(visitingCard);
-        visitingPerson.setPhoneNumber(phoneNumber);
-        visitingPerson.setSick_id(sick_id);
         List<BeanVisitingPerson> List = DataSupport.where("phoneID = ? and hospital = ? and visitingPerson = ? and visitingCard = ?",id,hospital,name,visitingCard).find(BeanVisitingPerson.class);
         if (List.size() > 0) {
             MyToast.showToast(NewVisitingPerson.this, "就诊人已验证,无需再次验证");
             Log.e("LYQ", "已验证");
         } else {
+            visitingPerson = new BeanVisitingPerson();
+            visitingPerson.setPhoneId(id);
+            visitingPerson.setHospital(hospital);
+            visitingPerson.setVisitingPerson(name);
+            visitingPerson.setIDCard(idCard);
+            visitingPerson.setVisitingCard(visitingCard);
+            visitingPerson.setPhoneNumber(phoneNumber);
+            visitingPerson.setSick_id(sick_id);
             isSave = visitingPerson.save();
             if (isSave) {
                 Intent intent = new Intent(NewVisitingPerson.this, ChangeVisitingPerson.class);

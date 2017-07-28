@@ -60,6 +60,8 @@ public class ChoiceDoctor extends BaseActivity {
     private List<BeanHospDeptDoctListRespItem> DeptDoctList = new ArrayList<>();
     private String departmentName;//部门名称
 
+    private BeanDoctorInfo beanDoctorInfo;
+
     private String hosp = "lzzyy";
     private String hospTxt = "柳州市中医院";
 
@@ -85,13 +87,25 @@ public class ChoiceDoctor extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //跳转到该医生的服务页面,需要传递该医生的唯一标识去服务器访问医生的服务详情
                 Intent intent = new Intent(mContext, ChoiceService.class);
-                BeanHospRegisterReq beanHospRegisterReq = new BeanHospRegisterReq();
-                beanHospRegisterReq.setHosp(hosp);
-                beanHospRegisterReq.setHospTxt(hospTxt);
-                beanHospRegisterReq.setDept(departmentCode);
-                beanHospRegisterReq.setDeptTxt(departmentName);
-                intent.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
-                intent.putExtra("DEPT_DOCTOR_INFO", DeptDoctList.get(position));
+
+                beanDoctorInfo = new BeanDoctorInfo();
+                beanDoctorInfo.setHosp(hosp);
+                beanDoctorInfo.setHospital(hospTxt);
+                beanDoctorInfo.setDept(departmentCode);
+                beanDoctorInfo.setDepartment(departmentName);
+                beanDoctorInfo.setName(DeptDoctList.get(position).getDOCTOR_NAME());
+                beanDoctorInfo.setDOCTOR(DeptDoctList.get(position).getDOCTOR());
+                beanDoctorInfo.setIntroduce(DeptDoctList.get(position).getWEB_INTRODUCE());
+                beanDoctorInfo.setWORK_TYPE(DeptDoctList.get(position).getWORK_TYPE());
+                beanDoctorInfo.setSTAFF_NO(DeptDoctList.get(position).getSTAFF_NO());
+                beanDoctorInfo.setCLINIQUE_CODE(DeptDoctList.get(position).getCLINIQUE_CODE());
+                beanDoctorInfo.setDuties(DeptDoctList.get(position).getREISTER_NAME());
+                beanDoctorInfo.setImgUrl(DeptDoctList.get(position).getZHAOPIAN());
+                beanDoctorInfo.setPRE_ALLOW(DeptDoctList.get(position).getPRE_ALLOW());
+                beanDoctorInfo.setPrice(String.valueOf(DeptDoctList.get(position).getPRICE()));
+                beanDoctorInfo.setSchdList(DeptDoctList.get(position).getSchdList());
+
+                intent.putExtra("BeanDoctorInfo", beanDoctorInfo);
                 startActivity(intent);
             }
         });
@@ -145,6 +159,7 @@ public class ChoiceDoctor extends BaseActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        Log.i("LYQ", "ChoiceDoctor:" + jsonStr);
                         List<JSONObject> doctorList = JSONArray.parseObject(jsonStr,List.class);
                         for (JSONObject  object :doctorList){
                             String jsonString = object.toJSONString();
@@ -157,7 +172,6 @@ public class ChoiceDoctor extends BaseActivity {
                             data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
                             data.setHospital("柳州市中医院");
                             data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
-                            //data.setPrice(String.valueOf(beanHospDeptListRespItem.getPRICE()));
                             data.setPrice(beanHospDeptListRespItem.getPRICE()+"元起");
                             mDoctorInfos.add(data);
                         }

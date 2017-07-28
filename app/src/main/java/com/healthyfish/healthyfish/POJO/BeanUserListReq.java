@@ -6,7 +6,7 @@ public class BeanUserListReq extends BeanBaseReq {
 	int num;
 	int to;
 
-	BeanUserListReq(){super(BeanUserListReq.class.getSimpleName());}
+	public BeanUserListReq(){super(BeanUserListReq.class.getSimpleName());}
 	
 	public String getPrefix() {return prefix;}
 	public void setPrefix(String prefix) {this.prefix = prefix;}

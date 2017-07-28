@@ -5,7 +5,7 @@ public class BeanBaseKeySetReq extends BeanBaseReq {
 	private String value;
 	
 
-	BeanBaseKeySetReq(){super(BeanBaseKeySetReq.class.getSimpleName());}
+	public BeanBaseKeySetReq(){super(BeanBaseKeySetReq.class.getSimpleName());}
 	
 	public String getKey() {return key;}
 	public void setKey(String key) {this.key = key;}

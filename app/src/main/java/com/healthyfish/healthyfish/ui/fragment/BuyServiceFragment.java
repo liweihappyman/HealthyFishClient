@@ -57,7 +57,8 @@ public class BuyServiceFragment extends DialogFragment {
                 serviceImg.setImageResource(R.mipmap.ic_picture_consulting_open);
                 serviceTypeAndDoctorName.setText("图文咨询-"+ bundleServiceType.get("name"));
                 serviceDscribe.setText("通过文字、图片进行咨询");
-                servicePrice.setText(bundleServiceType.get("price")+"元/次");
+                //servicePrice.setText(bundleServiceType.get("price")+"元/次");
+                servicePrice.setText(bundleServiceType.get("price").toString());
             }else if (bundleServiceType.get("serviceType").equals("私人医生")){
                 serviceImg.setImageResource(R.mipmap.ic_private_doctor_open);
                 serviceTypeAndDoctorName.setText("私人医生-"+ bundleServiceType.get("name"));
