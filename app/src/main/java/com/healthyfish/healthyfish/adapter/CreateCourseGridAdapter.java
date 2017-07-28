@@ -26,10 +26,10 @@ public class CreateCourseGridAdapter extends BaseAdapter {
     private Context mContext;
     private List<String> listPaths;
 
-
     public CreateCourseGridAdapter(List<String> listPaths,Context mContext) {
         this.listPaths = listPaths;
         this.mContext = mContext;
+
     }
 
     @Override
@@ -41,8 +41,6 @@ public class CreateCourseGridAdapter extends BaseAdapter {
     public String getItem(int position) {
         return listPaths.get(position);
     }
-
-
 
     @Override
     public long getItemId(int position) {
@@ -70,18 +68,18 @@ public class CreateCourseGridAdapter extends BaseAdapter {
                             .crossFade()
                             .into(imageView);
                 }else {//从网络加载
-                        Glide.with(mContext)
-                                .load(getItem(position))
-                                .placeholder(R.mipmap.default_error)
-                                .error(R.mipmap.default_error)
-                                .override(300, 300)
-                                .centerCrop()
-                                .crossFade()
-                                .into(imageView);
+                    Glide.with(mContext)
+                            .load(getItem(position))
+                            .placeholder(R.mipmap.default_error)
+                            .error(R.mipmap.default_error)
+                            .override(300,300)
+                            .centerCrop()
+                            .crossFade()
+                            .into(imageView);
                 }
             }
             if (position == listPaths.size()) {
-                imageView.setImageResource(R.drawable.selector_btn_add_photo);
+                imageView.setImageResource(R.mipmap.addpic);
             }
             if (position == 8) {
                 imageView.setVisibility(View.GONE);

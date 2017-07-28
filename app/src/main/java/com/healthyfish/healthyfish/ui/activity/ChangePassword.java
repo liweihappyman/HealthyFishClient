@@ -19,10 +19,8 @@ import com.healthyfish.healthyfish.POJO.BeanUserRegisterResp;
 import com.healthyfish.healthyfish.POJO.BeanUserSmsAuthReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
-import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
-import com.healthyfish.healthyfish.utils.Sha256;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -70,12 +68,12 @@ public class ChangePassword extends BaseActivity {
             Toast.makeText(ChangePassword.this,"输入的密码不相同",Toast.LENGTH_LONG).show();
         }else {
             BeanUserRegisterReq beanUserRegisterReq = (BeanUserRegisterReq) getIntent().getSerializableExtra("find_password");
-            beanUserRegisterReq.setPwdSHA256(Sha256.getSha256(etInputPassword.getText().toString()));
+            beanUserRegisterReq.setPwdSHA256(etInputPassword.getText().toString());
             beanUserRegisterReq.setAct(BeanUserRegisterReq.class.getSimpleName());
 
             BeanUserLoginReq beanUserLoginReq = new BeanUserLoginReq();
             beanUserLoginReq.setMobileNo(beanUserRegisterReq.getMobileNo());
-            beanUserLoginReq.setPwdSHA256(Sha256.getSha256(etInputPassword.getText().toString()));
+            beanUserLoginReq.setPwdSHA256(beanUserRegisterReq.getPwdSHA256());
             final String user = JSON.toJSONString(beanUserLoginReq);
 
             RetrofitManagerUtils.getInstance(this,null)
@@ -96,7 +94,7 @@ public class ChangePassword extends BaseActivity {
                                 int code = beanBaseResp.getCode();
                                 if (code >= 0){
                                     Toast.makeText(ChangePassword.this,"修改成功",Toast.LENGTH_LONG).show();
-                                    MySharedPrefUtil.saveKeyValue("_user",user);
+                                    saveUserBean(user);
                                     EventBus.getDefault().post(new EmptyMessage());
                                     Intent intent = new Intent(ChangePassword.this, ChangePasswordSuccess.class);
                                     startActivity(intent);
@@ -112,14 +110,14 @@ public class ChangePassword extends BaseActivity {
     }
 
 
-//    /**
-//     *     登录成功由shareprefrence保存
-//     */
-//    private void saveUserBean(String user) {
-//        SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.clear();
-//        editor.putString("user",user);
-//        editor.commit();
-//    }
+    /**
+     *     登录成功由shareprefrence保存
+     */
+    private void saveUserBean(String user) {
+        SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.putString("user",user);
+        editor.commit();
+    }
 }

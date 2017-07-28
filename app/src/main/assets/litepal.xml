@@ -14,13 +14,9 @@
         </mapping>
         <mapping class="com.healthyfish.healthyfish.POJO.BeanCourseOfDisease">
         </mapping>
-<<<<<<< HEAD
         <mapping class="com.healthyfish.healthyfish.POJO.BeanVisitingPerson">
         </mapping>
         <mapping class="com.healthyfish.healthyfish.POJO.BeanConcernList">
-=======
-        <mapping class="com.healthyfish.healthyfish.POJO.BeanPrescriptiom">
->>>>>>> master
         </mapping>
     </list>
 

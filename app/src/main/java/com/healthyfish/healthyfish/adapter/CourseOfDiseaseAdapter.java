@@ -60,12 +60,11 @@ public class CourseOfDiseaseAdapter extends RecyclerView.Adapter<CourseOfDisease
         BeanCourseOfDisease courseOfDisease  = listCourseOfDisease.get(position);
         holder.type.setText(courseOfDisease.getType());
         holder.date.setText(courseOfDisease.getDate());
-        if (courseOfDisease.getImgPaths()==null||courseOfDisease.getImgPaths().size()==0){
+        if (courseOfDisease.getImgPaths()==null){
             holder.imgGridView.setVisibility(View.GONE);
         }else {
             holder.imgGridView.setVisibility(View.VISIBLE);
-
-            CourseGridAdapter courseGridAdapter = new CourseGridAdapter(courseOfDisease.getImgPaths(),mContext,courseOfDisease.getImgUrls());
+            CourseGridAdapter courseGridAdapter = new CourseGridAdapter(courseOfDisease.getImgPaths(),mContext);
            // Log.i("url",courseOfDisease.getImgPaths().get(0));
             holder.imgGridView.setAdapter(courseGridAdapter);
         }

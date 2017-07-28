@@ -44,7 +44,6 @@ import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
-import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NetworkConnectUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -423,12 +422,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fm_med_rec:
-                if (MySharedPrefUtil.getValue("_user")==""){
-                    Toast.makeText(getActivity(),"您还没有登录哟",Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intent_med_rec = new Intent(mContext, AllMedRec.class);
-                    startActivity(intent_med_rec);
-                }
+                Intent intent_med_rec = new Intent(mContext, AllMedRec.class);
+                startActivity(intent_med_rec);
                 break;
             case R.id.fm_health_management:
                 Intent intent = new Intent(mContext, MainIndexHealthyManagement.class);

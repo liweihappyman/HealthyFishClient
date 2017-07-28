@@ -19,6 +19,7 @@ public class constants {
     public final static int WRITE_TIMEOUT = 5000;
 
     public static int POSITION_MED_REC = -1;//病历夹是从item点击进入，还是点击新建病历夹进入
+    public static String NEW_MED_REC = "save";//标志病历夹是要更新还是直接保存
     public static int POSITION_COURSE = -1;//标志是否从病程的item进入，item进入可以更新，否则回到病历页面保存
 
 

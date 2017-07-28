@@ -17,10 +17,8 @@ import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRegisterReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
-import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
-import com.healthyfish.healthyfish.utils.Sha256;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -72,12 +70,12 @@ public class RegisterPassword extends BaseActivity {
             BeanUserRegisterReq beanUserRegisterReq = (BeanUserRegisterReq) getIntent().getSerializableExtra("user");
             beanUserRegisterReq.setAct(BeanUserRegisterReq.class.getSimpleName());
             Log.i("电话号码：", beanUserRegisterReq.getMobileNo());
-            beanUserRegisterReq.setPwdSHA256(Sha256.getSha256(etInputPassword.getText().toString()));
+            beanUserRegisterReq.setPwdSHA256(etInputPassword.getText().toString());
             beanUserRegisterReq.setType(0);//新注册用户
             //待保存的bean，如果登录成功，将会由sharepreference保存如下bean
             BeanUserLoginReq beanUserLoginReq = new BeanUserLoginReq();
             beanUserLoginReq.setMobileNo(beanUserRegisterReq.getMobileNo());
-            beanUserLoginReq.setPwdSHA256(Sha256.getSha256(beanUserRegisterReq.getPwdSHA256()));
+            beanUserLoginReq.setPwdSHA256(beanUserRegisterReq.getPwdSHA256());
             final String user = JSON.toJSONString(beanUserLoginReq);
 
             RetrofitManagerUtils.getInstance(this, null)
@@ -100,7 +98,7 @@ public class RegisterPassword extends BaseActivity {
                                 int code = beanBaseResp.getCode();
                                 if (code >=0) {
                                     Toast.makeText(RegisterPassword.this, "注册成功", Toast.LENGTH_LONG).show();
-                                    MySharedPrefUtil.saveKeyValue("_user",user);
+                                    saveUsrBean(user);
                                     //————————————————————————————————————————
                                     EventBus.getDefault().post(new EmptyMessage());//注册成功通知更新登录状态
                                     Intent intent = new Intent(RegisterPassword.this, RegisterSuccess.class);
