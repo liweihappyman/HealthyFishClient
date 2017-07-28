@@ -7,10 +7,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+<<<<<<< HEAD
 import com.healthyfish.healthyfish.POJO.BeanPrescription;
+=======
+import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.POJO.BeanPresList;
+import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
+>>>>>>> master
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.utils.AutoUtils;
@@ -29,8 +36,6 @@ import butterknife.ButterKnife;
  */
 
 public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAdapter.ViewHolder> {
-
-
     private Context mContext;
     private List<BeanPrescription> list;
     private Toolbar toolbar;
@@ -52,6 +57,7 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+<<<<<<< HEAD
         BeanPrescription item = list.get(position);
         holder.ipresDiagnosisName.setText(item.getTitle());
         holder.ipresWriteTime.setText(item.getRef());
@@ -67,6 +73,40 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
                 showOptions();
             }
         });
+=======
+        BeanPrescriptiom item = list.get(position);
+        holder.ipresDiagnosisName.setText(item.getDIAGNOSIS_NAME());
+        String originalWriteTime = item.getWRITE_TIME();
+        holder.ipresWriteTime.setText(originalWriteTime.substring(0,10));
+        holder.ipresSickName.setText(item.getSICK_NAME());
+        holder.ipresSex.setText(item.getSEX());
+        holder.ipresAge.setText(item.getAGE());
+        holder.ipresDeptOperator.setText(item.getDEPT_NAME() + "  "+item.getPRESCRIBE_OPERATOR());
+        holder.ipresPerscribeStatus.setText(item.getRESCRIBE_STATUS());
+        /**
+         * ITEM_CLASS   存放的是  List<BeanPrescriptiom.PresListBean> preslist的JsonString对象
+         */
+        if (item.getITEM_CLASS() != null) {
+            BeanPresList bean = new BeanPresList();
+            bean = JSON.parseObject(item.getITEM_CLASS(),BeanPresList.class);
+                holder.ipresPhysicName.setText(bean.getPHYSIC_NAME());
+                holder.right.setVisibility(View.VISIBLE);
+            final BeanPresList finalBean = bean;
+            holder.drugNameLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showOptions(finalBean);
+                    }
+                });
+
+                //break;
+            //}
+        } else {
+            holder.ipresPhysicName.setText(" ");
+            holder.right.setVisibility(View.GONE);
+        }
+
+>>>>>>> master
     }
 
     @Override
@@ -91,6 +131,8 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
         TextView ipresPerscribeStatus;
         @BindView(R.id.ipres_physic_name)
         TextView ipresPhysicName;
+        @BindView(R.id.ipres_right)
+        ImageView right;
         @BindView(R.id.drug_name_layout)
         AutoLinearLayout drugNameLayout;
 
@@ -102,11 +144,27 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
         }
     }
 
-    private void showOptions() {
+
+
+
+    TextView ipresPhysicName;
+    @BindView(R.id.usage)
+    TextView usage;
+    @BindView(R.id.ipres_freq_describe)
+    TextView ipresFreqDescribe;
+    @BindView(R.id.dose)
+    TextView dose;
+    @BindView(R.id.ipres_physic_days)
+    TextView ipresPhysicDays;
+    @BindView(R.id.ipres_physic_quantity)
+    TextView ipresPhysicQuantity;
+    @BindView(R.id.ipres_pack_spec)
+    TextView ipresPackSpec;
+    private void showOptions(BeanPresList bean) {
+
         TextView close;
         View rootView;
-        rootView = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_drug_instructions,
-                null);
+        rootView = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_drug_instructions, null);
         final PopupWindow mPopWindow = new PopupWindow(rootView);
         mPopWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -115,7 +173,18 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
         mPopWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopWindow.setOutsideTouchable(true);
         mPopWindow.setAnimationStyle(R.style.PopupRightAnimation);
-        mPopWindow.showAsDropDown(toolbar, 380, 0);
+        ipresPhysicName = (TextView) rootView.findViewById(R.id.ipres_physic_name);
+        usage = (TextView) rootView.findViewById(R.id.usage);
+        ipresFreqDescribe = (TextView) rootView.findViewById(R.id.ipres_freq_describe);
+        dose = (TextView) rootView.findViewById(R.id.dose);
+        ipresPhysicDays = (TextView) rootView.findViewById(R.id.ipres_physic_days);
+        ipresPhysicQuantity = (TextView) rootView.findViewById(R.id.ipres_physic_quantity);
+        ipresPackSpec = (TextView) rootView.findViewById(R.id.ipres_pack_spec);
+
+
+
+
+        initdata(bean);
         close = (TextView) rootView.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +192,20 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
                 mPopWindow.dismiss();
             }
         });
+        mPopWindow.showAsDropDown(toolbar, 380, 0);
+    }
+
+    private void initdata(BeanPresList bean) {
+        ipresPhysicName.setText(bean.getPHYSIC_NAME());
+        usage.setText(bean.getUSAGE());
+        ipresFreqDescribe.setText(bean.getFREQ_DESCRIBE());
+        dose.setText("每天"+bean.getPHYSIC_DOSEAGE()+bean.getDOSE_UNIT());
+        ipresPhysicDays.setText(bean.getLAY_PHYSIC_DAYS()+"天");
+        ipresPackSpec.setText(bean.getPACK_SPEC());
+        ipresPhysicQuantity.setText(bean.getLAY_PHYSIC_QUANTITY()+"片");
+
+
+
     }
 
 }
