@@ -2,15 +2,15 @@ package com.healthyfish.healthyfish.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
+
 
 import com.healthyfish.healthyfish.MyApplication;
-import com.healthyfish.healthyfish.POJO.BeanBaseReq;
+
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.api.IApiService;
 
 import java.io.File;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,18 +22,16 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+
 import rx.schedulers.Schedulers;
 
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
+
 import static com.healthyfish.healthyfish.constant.constants.CONNECT_TIMEOUT;
 import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 import static com.healthyfish.healthyfish.constant.constants.READ_TIMEOUT;
@@ -79,10 +77,7 @@ public class RetrofitManagerUtils {
 
         // 设置ssl以访问Https
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(MyApplication.getContetxt(), new int[0], R.raw.kangfish, "");
-<<<<<<< HEAD
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-=======
+
 
 //        OkHttpClient okHttpClient = new OkHttpClient.Builder()
 //                .addInterceptor(httpLoggingInterceptor)
@@ -98,7 +93,7 @@ public class RetrofitManagerUtils {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new ReceivedCookiesInterceptor(MyApplication.getContetxt()))
                 .addInterceptor(new AddCookiesInterceptor(MyApplication.getContetxt(), null))
->>>>>>> master
+
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写的超时时间
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间
@@ -107,10 +102,7 @@ public class RetrofitManagerUtils {
                 .cookieJar(new CookieMangerUtils(MyApplication.getContetxt()))//设置cookie保存
                 .build();
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -147,8 +139,7 @@ public class RetrofitManagerUtils {
                 .subscribe(subscriber);
     }
 
-<<<<<<< HEAD
-=======
+
     /**
      * 逐个获取病历，必须执行在相同的io里面，不然获取到的数据会乱
      * @param requestBody
@@ -185,9 +176,4 @@ public class RetrofitManagerUtils {
                 .subscribe(subscriber);
     }
 
-
-
-
-
->>>>>>> master
 }

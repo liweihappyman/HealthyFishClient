@@ -43,11 +43,9 @@ public class BeanPrescriptiom extends DataSupport{
     private String PRESCRIPTION_NUMBER;
     private String key;
     private String AGE;
-<<<<<<< HEAD
-    private List<BeanPresList> presList;
-=======
+
     protected List<PresListBean> presList;//只有生明为private的对象才会被litepal创建为数据库的字段，这个用上面的ITEM_CLASS存放
->>>>>>> master
+
 
     public String getPRESCRIBE_OPERATOR() {
         return PRESCRIBE_OPERATOR;
@@ -153,20 +151,13 @@ public class BeanPrescriptiom extends DataSupport{
         this.AGE = AGE;
     }
 
-    public List<BeanPresList> getPresList() {
+    public List<PresListBean> getPresList() {
         return presList;
     }
 
-    public void setPresList(List<BeanPresList> presList) {
+    public void setPresList(List<PresListBean> presList) {
         this.presList = presList;
     }
-<<<<<<< HEAD
-=======
-
-
-
-
-
 
     public  class PresListBean {
         /**
@@ -355,5 +346,5 @@ public class BeanPrescriptiom extends DataSupport{
                     '}';
         }
     }
->>>>>>> master
+
 }

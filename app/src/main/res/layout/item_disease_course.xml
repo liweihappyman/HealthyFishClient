@@ -9,18 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20px"
-
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/type"
             android:layout_width="wrap_content"
             android:layout_height="65px"
+            android:layout_marginTop="20px"
             android:background="@mipmap/bg_green"
             android:gravity="center"
             android:text="复诊"
+            android:layout_marginBottom="20px"
             android:textColor="@color/color_white"
-            android:layout_marginTop="20px"
             android:textSize="36px" />
 
         <ImageView

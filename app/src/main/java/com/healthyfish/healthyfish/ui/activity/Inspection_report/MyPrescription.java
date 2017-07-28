@@ -11,7 +11,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
 import com.healthyfish.healthyfish.POJO.BeanPrescription;
+import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PrescriptionRvAdapter;
@@ -40,6 +44,7 @@ public class MyPrescription extends BaseActivity {
     RecyclerView rvPrescription;
     private PrescriptionRvAdapter adapter;
     private boolean hasNewData = false;//访问网络后是否有新数据
+    private List<BeanPrescriptiom> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +60,7 @@ public class MyPrescription extends BaseActivity {
      * 网络访问，获取所有的电子处方
      */
     private void requestForPrescription() {
-<<<<<<< HEAD
-        BeanUserRetrPresReq userRetrPresReq = new BeanUserRetrPresReq();
-        userRetrPresReq.setSickId("0000281122");
-        userRetrPresReq.setUser("邹玉贵");
-        userRetrPresReq.setHosp("lzzyy");
-        userRetrPresReq.setAct(BeanUserRetrPresReq.class.getSimpleName());
 
-        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(userRetrPresReq), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-=======
         BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
         userListValueReq.setPrefix("pres_13977211042");
         userListValueReq.setFrom(0);
@@ -75,31 +70,23 @@ public class MyPrescription extends BaseActivity {
             @Override
             public void onCompleted() {
                 initData(hasNewData);//如果 有新数据则通知更新列表
->>>>>>> master
-            }
 
+            }
             @Override
             public void onError(Throwable e) {
-<<<<<<< HEAD
-                Log.i("电子处方","网络错误" + e.toString());
-=======
                 Toast.makeText(MyPrescription.this, "出错啦", Toast.LENGTH_SHORT).show();
->>>>>>> master
+
             }
 
             @Override
             public void onNext(ResponseBody responseBody) {
                 try {
                     String str = responseBody.string();
-<<<<<<< HEAD
-                    Log.i("电子处方","数据" + str);
-
-=======
                     //Log.i("电子处方", "数据" + str);
                     if (str != null) {
                         saveNewData2DB(str);//保存新数据到本地数据库
                     }
->>>>>>> master
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -164,10 +151,6 @@ public class MyPrescription extends BaseActivity {
         list = DataSupport.findAll(BeanPrescriptiom.class);
         LinearLayoutManager lmg = new LinearLayoutManager(this);
         rvPrescription.setLayoutManager(lmg);
-<<<<<<< HEAD
-        PrescriptionRvAdapter adapter = new PrescriptionRvAdapter(this,list,toolbar);
-        rvPrescription.setAdapter(adapter);
-=======
         adapter = new PrescriptionRvAdapter(this, list, toolbar);
         rvPrescription.setAdapter(adapter);
     }
@@ -180,6 +163,5 @@ public class MyPrescription extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
 
->>>>>>> master
     }
 }
