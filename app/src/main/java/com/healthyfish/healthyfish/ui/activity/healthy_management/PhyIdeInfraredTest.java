@@ -17,10 +17,6 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 import com.foamtrace.photopicker.ImageCaptureManager;
 import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.PhotoPreviewActivity;
@@ -33,10 +29,6 @@ import com.healthyfish.healthyfish.adapter.PhyGvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.healthy_circle.HealthyCirclePosting;
 import com.healthyfish.healthyfish.utils.MyToast;
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 
 import java.util.ArrayList;
 import java.util.List;

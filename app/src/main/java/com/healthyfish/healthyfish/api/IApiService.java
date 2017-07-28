@@ -1,28 +1,11 @@
 package com.healthyfish.healthyfish.api;
 
-<<<<<<< HEAD
-=======
-import com.healthyfish.healthyfish.POJO.BeanBaseReq;
-
-import java.util.Map;
-
-import okhttp3.Call;
->>>>>>> master
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
-<<<<<<< HEAD
 
 import retrofit2.http.POST;
-=======
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
->>>>>>> master
 import rx.Observable;
 
 /**
@@ -39,25 +22,10 @@ public interface IApiService {
     Observable<ResponseBody> getHealthyInfoByRetrofit(@Body RequestBody requestBody);
 
     /**
-     * 多张图片上传
      * 通过 MultipartBody和@body作为参数来上传图片
      * @param multipartBody MultipartBody包含多个Part
      * @return 状态信息
      */
-    @POST("demo/uploadFile")
+    @POST("demo/TestServlet")
     Observable<ResponseBody> uploadFile(@Body MultipartBody multipartBody);
-
-    /**
-     * 多张图片上传
-     * @return
-     */
-    @Multipart
-    @POST("demo/uploadFile")
-    Observable<ResponseBody> uploadFiles(@PartMap Map<String, RequestBody> imgs);
-
-
-
-
-
-
 }

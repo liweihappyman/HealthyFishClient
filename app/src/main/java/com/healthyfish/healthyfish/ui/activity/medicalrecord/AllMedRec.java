@@ -3,12 +3,9 @@ package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,45 +16,22 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeyAddReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeyRemReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysGetReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysGetResp;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysRemReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseResp;
-import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
-import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
-import com.healthyfish.healthyfish.POJO.BeanUserListReq;
-import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
-import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MedRecLvAdapter;
 import com.healthyfish.healthyfish.constant.constants;
-import com.healthyfish.healthyfish.ui.activity.Inspection_report.MyPrescription;
 import com.healthyfish.healthyfish.utils.ComparatorDate;
-import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
-import com.healthyfish.healthyfish.utils.OkHttpUtils;
-import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
-import rx.Subscriber;
 
 import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.ALL_MED_REC_RESULT;
 
@@ -71,16 +45,14 @@ import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.AL
 
 public class AllMedRec extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int TO_NEW_MED_REC = 38;//进入NewMedRec页面的请求标志
-    private List<String> keysOutDB = new ArrayList<>();//存放数据库没有的key
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.med_rec_all)
     ListView medRecAll;
     @BindView(R.id.new_med_rec)
     AutoLinearLayout newMedRec;
-    private boolean hasNewData = false;
+
     private List<BeanMedRec> listMecRec = new ArrayList<>();
-    private int size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,16 +69,83 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
         newMedRec.setOnClickListener(this);
         medRecAll.setOnItemClickListener(this);
-        init();//先获取数据库的数据初始化列表
-        reqForNetworkData();//然后加载网络数据更新列表
+        init();//初始化布局
     }
 
-
-    /**
-     * 思路:先加载本地数据库的内容，异步获取网络的数据，通过对比key，如果没有则添加到本地数据库，最后更新列表
-     */
+    //初始化列表
     private void init() {
-        listMecRec.clear();
+//        BeanMedRec beanMedRec = new BeanMedRec();
+//        beanMedRec.setName("隔壁老王");
+//        beanMedRec.setGender("男");
+//        beanMedRec.setDiseaseInfo("慢性疾病");
+//        beanMedRec.setClinicalTime("2017年6月15日");
+//        beanMedRec.setDiagnosis("就诊");
+//        beanMedRec.setState(true);
+//        BeanMedRec beanMedRec2 = new BeanMedRec();
+//        beanMedRec2.setName("哈士奇");
+//        beanMedRec2.setGender("男");
+//        beanMedRec2.setDiseaseInfo("肠胃不适");
+//        beanMedRec2.setClinicalTime("2016年6月15日");
+//        beanMedRec2.setDiagnosis("就诊");
+//        beanMedRec2.setState(false);
+//        BeanMedRec beanMedRec3 = new BeanMedRec();
+//        beanMedRec3.setName("哈士奇");
+//        beanMedRec3.setGender("男");
+//        beanMedRec3.setDiseaseInfo("肠胃不适");
+//        beanMedRec3.setClinicalTime("2017年8月16日");
+//        beanMedRec3.setDiagnosis("就诊");
+//        beanMedRec3.setState(false);
+//        BeanMedRec beanMedRec4 = new BeanMedRec();
+//        beanMedRec4.setName("哈士奇");
+//        beanMedRec4.setGender("男");
+//        beanMedRec4.setDiseaseInfo("肠胃不适");
+//        beanMedRec4.setClinicalTime("2010年8月16日");
+//        beanMedRec4.setDiagnosis("就诊");
+//        beanMedRec4.setState(false);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec2);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec2);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec2);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec2);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec2);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec2);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec2);
+//        listMecRec.add(beanMedRec);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec4);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec3);
+//        listMecRec.add(beanMedRec3);
+
+        //对list的日期进行的进行排序，降序
+        //SQLiteDatabase db = Connector.getDatabase();
         listMecRec = DataSupport.findAll(BeanMedRec.class);
         if (listMecRec.size() == 0) {
             initNullLV();
@@ -127,149 +166,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    /**
-     * 访问网络数据
-     */
-    private void reqForNetworkData() {
-        String userStr = MySharedPrefUtil.getValue("_user");
-        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
-        StringBuilder prefix = new StringBuilder("medRec_");
-        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
-
-        BeanUserListReq beanUserListReq = new BeanUserListReq();
-        beanUserListReq.setPrefix(prefix.toString());
-        beanUserListReq.setFrom(0);
-        beanUserListReq.setNum(-1);
-        beanUserListReq.setTo(-1);
-//        BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
-//        userListValueReq.setPrefix(prefix.toString());
-//        userListValueReq.setFrom(0);
-//        userListValueReq.setNum(-1);
-//        userListValueReq.setTo(-1);
-        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(AllMedRec.this, "出错啦，请检查网络环境", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    String str = responseBody.string();
-                    //Log.i("所有病历", "数据" + str);
-                    if (str != null) {
-                        hasNewData = true;
-                        List<String> keys = JSONArray.parseObject(str, List.class);
-                        for (final String key : keys) {
-                            //Log.i("medReckey", "key" + key);
-                            if (DataSupport.select("key").where("key = ? ", key).find(BeanMedRec.class).isEmpty()) {
-                                keysOutDB.add(key);
-                            }
-                        }
-                        if (hasNewData) {//如果 有新数据则通知更新列表
-                            for (String key : keysOutDB) {
-                                keyGet(key);
-                                //networkReqDelMedRec(key);//测试用
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-
-    /**
-     * ----------------------------------------------------------------------------------------------------------------------
-     * 删除网络数据（测试用）
-     */
-    private void networkReqDelMedRec(String key) {
-        //删除多个用
-//        String userStr = MySharedPrefUtil.getValue("_user");
-//        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
-//
-//        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
-//        StringBuilder prefix = new StringBuilder("medRec_");
-//        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
-//        //Log.i("电子病历","prefix:"+prefix.toString());
-//        beanBaseKeysRemReq.setPrefix(prefix.toString());
-//        beanBaseKeysRemReq.getKeyList().add(medRec.getKey());
-//        Log.i("keyiiiii", "addkey" + beanBaseKeysRemReq.getKeyList().get(0));
-
-        BeanBaseKeyRemReq baseKeyRemReq = new BeanBaseKeyRemReq();//删除单个
-        baseKeyRemReq.setKey(key);
-        RetrofitManagerUtils.getInstance(AllMedRec.this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(baseKeyRemReq), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-            }
-
-            @Override
-            public void onError(Throwable e) {
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-
-            }
-        });
-
-    }
-
-    /**
-     * 根据返回的key逐个获取数据
-     * @param key
-     */
-    private void keyGet(final String key) {
-        size++;
-        final BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
-        beanBaseKeyGetReq.setKey(key);
-        RetrofitManagerUtils.getInstance(AllMedRec.this, null).getMedRecByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-                if (size == keysOutDB.size()) {
-                    handler.sendEmptyMessage(0x11);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(AllMedRec.this, "出错啦", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    String rspv = responseBody.string();
-                    if (rspv != null) {
-                        BeanBaseKeyGetResp object = JSON.parseObject(rspv, BeanBaseKeyGetResp.class);
-                        BeanMedRec beanMedRec = JSON.parseObject(object.getValue(), BeanMedRec.class);
-                        beanMedRec.setKey(key);
-                        beanMedRec.save();
-                        List<BeanCourseOfDisease> courseOfDiseaseList = beanMedRec.getListCourseOfDisease();
-                        for (BeanCourseOfDisease courseOfDisease : courseOfDiseaseList) {
-                            courseOfDisease.setBeanMedRec(beanMedRec);
-                            courseOfDisease.save();
-                        }
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
-     * 初始化空的ListView,提示列表为空
-     */
-
+    //初始化空的ListView,提示列表为空（没用到）
     private void initNullLV() {
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -295,7 +192,6 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                 AllMedRec.this.startActivity(selectDoctor);
                 break;
             case R.id.test:
-                reqForNetworkData();//获取网络数据
                 break;
         }
         return true;
@@ -339,14 +235,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
 
-            if (msg.what == 0x11) {
-                init();//更新列表
-            }
-        }
-    };
+
 
 }

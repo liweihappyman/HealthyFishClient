@@ -1,13 +1,12 @@
 package com.healthyfish.healthyfish.POJO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BeanBaseKeysRemReq extends BeanBaseReq {
 	private String prefix; //删除list中的元素时，需指定list的名称
-	private List<String> keyList = new ArrayList<>();
+	private List<String> keyList;
 	
-	public BeanBaseKeysRemReq(){super(BeanBaseKeysRemReq.class.getSimpleName());}
+	BeanBaseKeysRemReq(){super(BeanBaseKeysRemReq.class.getSimpleName());}
 	
 	public String getPrefix() {return prefix;}
 	public void setPrefix(String prefix) {this.prefix = prefix;}
