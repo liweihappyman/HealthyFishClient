@@ -25,6 +25,12 @@ import android.widget.Toast;
 
 
 import com.alibaba.fastjson.JSON;
+import com.foamtrace.photopicker.ImageCaptureManager;
+import com.foamtrace.photopicker.PhotoPickerActivity;
+import com.foamtrace.photopicker.PhotoPreviewActivity;
+import com.foamtrace.photopicker.SelectModel;
+import com.foamtrace.photopicker.intent.PhotoPickerIntent;
+import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
 import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.MessageToServise;
@@ -36,12 +42,7 @@ import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
-import com.lidong.photopicker.ImageCaptureManager;
-import com.lidong.photopicker.PhotoPickerActivity;
-import com.lidong.photopicker.PhotoPreviewActivity;
-import com.lidong.photopicker.SelectModel;
-import com.lidong.photopicker.intent.PhotoPickerIntent;
-import com.lidong.photopicker.intent.PhotoPreviewIntent;
+
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.litepal.crud.DataSupport;
