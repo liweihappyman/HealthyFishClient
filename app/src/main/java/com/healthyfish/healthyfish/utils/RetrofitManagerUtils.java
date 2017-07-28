@@ -2,26 +2,38 @@ package com.healthyfish.healthyfish.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.api.IApiService;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 import static com.healthyfish.healthyfish.constant.constants.CONNECT_TIMEOUT;
 import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 import static com.healthyfish.healthyfish.constant.constants.READ_TIMEOUT;
@@ -67,16 +79,38 @@ public class RetrofitManagerUtils {
 
         // 设置ssl以访问Https
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(MyApplication.getContetxt(), new int[0], R.raw.kangfish, "");
+<<<<<<< HEAD
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
+=======
+
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//                .addInterceptor(httpLoggingInterceptor)
+//                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
+//                .writeTimeout(WRITE_TIMEOUT,TimeUnit.SECONDS)//设置写的超时时间
+//                .connectTimeout(CONNECT_TIMEOUT,TimeUnit.SECONDS)//设置连接超时时间
+//                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
+//                .hostnameVerifier(HttpsUtils.getHostnameVerifier())
+//                .cookieJar(new CookieMangerUtils(MyApplication.getContetxt()))//设置cookie保存
+//                .build();
+
+        //这个WKJ正在使用的，如果有冲突改回原来那个，这个先不要删，注释掉，后面再修改
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new ReceivedCookiesInterceptor(MyApplication.getContetxt()))
+                .addInterceptor(new AddCookiesInterceptor(MyApplication.getContetxt(), null))
+>>>>>>> master
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
-                .writeTimeout(WRITE_TIMEOUT,TimeUnit.SECONDS)//设置写的超时时间
-                .connectTimeout(CONNECT_TIMEOUT,TimeUnit.SECONDS)//设置连接超时时间
+                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写的超时时间
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .hostnameVerifier(HttpsUtils.getHostnameVerifier())
                 .cookieJar(new CookieMangerUtils(MyApplication.getContetxt()))//设置cookie保存
                 .build();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -89,7 +123,6 @@ public class RetrofitManagerUtils {
     /**
      * @description 使用new Subscribe<ResponseBody>实现回调方法
      * @author Wayne
-     *
      */
     public void getHealthyInfoByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
         apiService.getHealthyInfoByRetrofit(requestBody)
@@ -99,7 +132,14 @@ public class RetrofitManagerUtils {
                 .subscribe(subscriber);
     }
 
-    public void uploadFilesRetrofit(MultipartBody multipartBody, Subscriber<ResponseBody> subscriber) {
+    /**
+     * 上传图片文件(多张图片)
+     *
+     * @param multipartBody 请求体
+     * @param subscriber    监听
+     * @author Wkj
+     */
+    public void uploadFileRetrofit(MultipartBody multipartBody, Subscriber<ResponseBody> subscriber) {
         apiService.uploadFile(multipartBody)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -107,4 +147,47 @@ public class RetrofitManagerUtils {
                 .subscribe(subscriber);
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * 逐个获取病历，必须执行在相同的io里面，不然获取到的数据会乱
+     * @param requestBody
+     * @param subscriber
+     * @author Wkj
+     */
+    public void getMedRecByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
+        apiService.getHealthyInfoByRetrofit(requestBody)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(subscriber);
+    }
+
+
+
+    /**
+     * 上传图片文件(多张图片)
+     *
+     * @param compressFlies 要上传的压缩后的图片文件
+     * @author Wkj
+     */
+    public void uploadFilesRetrofit(List<File> compressFlies,int position , Subscriber<ResponseBody> subscriber) {
+        Map<String, RequestBody> photos = new HashMap<>();
+        if (compressFlies.size() > 0) {
+            for (int i = 0; i < compressFlies.size(); i++) {
+                photos.put("photos" + position + "\"; filename=\"icon.png", RequestBody.create(MediaType.parse("multipart/form-data"), compressFlies.get(i)));
+            }
+        }
+        apiService.uploadFiles(photos)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+
+
+
+
+>>>>>>> master
 }

@@ -23,6 +23,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+<<<<<<< HEAD
+=======
+
+import com.alibaba.fastjson.JSON;
+>>>>>>> master
 import com.foamtrace.photopicker.ImageCaptureManager;
 import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.PhotoPreviewActivity;
@@ -31,13 +36,19 @@ import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
 import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
+import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.constant.constants;
+import com.healthyfish.healthyfish.service.UploadImages;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.litepal.crud.DataSupport;
@@ -54,7 +65,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -73,6 +88,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_PREVIEW_CODE = 12;//预览的标志
     private BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
     private BeanMedRec medRec = new BeanMedRec();
+    private boolean loadNetworkImages = false;
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -131,7 +147,9 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    //删除病程的操作,新建状态提示没有可删除的病程
+    /**
+     * 删除病程的操作,新建状态提示没有可删除的病程
+     */
     private void delete() {
         if (constants.POSITION_COURSE != -1) {
             showDelDialog();// 删除提示对话框
@@ -139,7 +157,6 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "没有可删除的病程哦", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     /**
      * 删除提示对话框
@@ -165,25 +182,40 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    //点击创建病程进来执行的初始化操作
+    /**
+     * 点击创建病程进来执行的初始化操作
+     */
     private void initData1() {
         date.setText(Utils1.getTime());
         refreshAdpater(imagePaths);
     }
 
-    //如果是点击item进来初始化数据，执行这个方法
-    //根据ID获取当前编辑的medRec的数据，并做相应的处理
+    /**
+     *  如果是点击item进来初始化数据，执行这个方法
+     *  根据ID获取当前编辑的medRec的数据，并做相应的处理
+     */
     private void initData2() {
         medRec = DataSupport.find(BeanMedRec.class, NewMedRec.ID, true);
         courseOfDisease = medRec.getListCourseOfDisease().get(constants.POSITION_COURSE);
+        //Log.i("查看病程信息", "路径：" + courseOfDisease.getImgUrls().toString());
         type.setText(courseOfDisease.getType());
         date.setText(courseOfDisease.getDate());
         recPatientInfo.setText(courseOfDisease.getRecPatientInfo());
         List<String> paths = courseOfDisease.getImgPaths();
+        for (String string : paths) {
+            if (!new File(string).exists()) {
+                loadNetworkImages = true;
+                paths.clear();//如果图片在本地不全有，直接加载网络的
+                paths.addAll(courseOfDisease.getImgUrls());
+                break;
+            }
+        }
         refreshAdpater(paths);
     }
 
-    //初始化控件的监听
+    /**
+     * 初始化控件的监听
+     */
     private void initListener() {
         typeLy.setOnClickListener(this);
         date.setOnClickListener(this);
@@ -200,168 +232,57 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             case R.id.type_ly:
                 showOptions();
                 break;
-            case R.id.save://先获取控件数据
+            case R.id.save:
                 saveOrUpdata();
                 break;
         }
     }
 
-    //执行保存或者更新操作，保存操作在NewMedRec活动里执行
+    /**
+     * 执行保存或者更新操作，保存操作在NewMedRec活动里执行
+     */
     private void saveOrUpdata() {
         getInfo();//获取控件的值
         if (constants.POSITION_COURSE != -1) {//每次更新必须重新关联
-            courseOfDisease.setBeanMedRec(medRec);
+            courseOfDisease.setBeanMedRec(medRec);//关联，medRec必须是数据库已经存在的数据对象
+            courseOfDisease.setImgPaths(imagePaths);
+            String g = courseOfDisease.getImgPaths().toString();
+            //Log.i("保存前路径","路径"+g);
             //更新操作
-            courseOfDisease.update(courseOfDisease.getId());
-            uploadImages();
-
-//            Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
-//            intent.putExtra("updateCourse", courseOfDisease);
-//            setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
-//            finish();
+            //经测试，当图片路径从有到无的时候，更新失败，这里直接用保存了，
+            // 因为courseOfDisease对象是从数据库读取的，所以执行save就是在原来的基础上更新
+            //courseOfDisease.update(courseOfDisease.getId());
+            courseOfDisease.save();
+            //如果有图片则开启服务上传图片
+            if (imagePaths.size() > 0) {
+                Intent startUploadImages = new Intent(this, UploadImages.class);
+                startUploadImages.putExtra("messageToService", new MessageToServise(medRec.getId(), courseOfDisease.getId(), imagePaths));
+                startService(startUploadImages);
+            }
+            //测试查看保存后的路径
+//            BeanMedRec beanMedRec= DataSupport.find(BeanMedRec.class, NewMedRec.ID, true);
+//            BeanCourseOfDisease courseOfDisease = beanMedRec.getListCourseOfDisease().get(constants.POSITION_COURSE);
+//            String string = courseOfDisease.getImgPaths().toString();
+//            String s= courseOfDisease.getImgUrls().toString();
+//            Log.i("保存后路径","路径"+string+"wang"+s);
+            //设置intent数据，并跳转
+            Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
+            intent.putExtra("updateCourse", courseOfDisease);
+            setResult(CREATE_COURSE_RESULT_UPDATE_OR_DEL, intent);
+            finish();
         } else {
-            //数据库特性，这个定义的id会在保存的时候被赋值，所以可以根据这个id操作
-//                    BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
-//                    courseOfDisease.setType(type.getText().toString());
-//                    courseOfDisease.setDate(date.getText().toString());
-//                    courseOfDisease.setRecPatientInfo(recPatientInfo.getText().toString());
-//                    courseOfDisease.setImgPaths(imagePaths);
             //将数据返回NewMedRec活动进行保存
             Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
             intent.putExtra("saveCourse", courseOfDisease);
             setResult(CREATE_COURSE_RESULT_SAVE, intent);
             finish();
-
         }
     }
 
-    private void uploadImages()  {
-        if (imagePaths.size()>0){
-            //List<File> files = new ArrayList<>();//从路径直接获取到的图片文件
-            List<File> compressFiles = new ArrayList<>();//暂时存放压缩后的图片，用来上传
-            for (int i = 0;i<imagePaths.size();i++){
-                File file = new File(imagePaths.get(i));
-                final DecimalFormat df = new DecimalFormat("00.0000");
-                try {
-                    String size = df.format(((double)(new FileInputStream(file).available())) / 1024 / 1024);
-                    Log.i("图片原来的大小"+i,"第  "+i+"  张:  "+size+"   M");
-                    if (Float.valueOf(size)<0.6){//如果文件小于600k，就不用压缩了
-                        compressFiles.add(file);
-                    }else {
-                        compressFiles.add(Luban.with(CreateCourse.this).load(file).get());
-                        String compressSize = null;
-                        try {
-                            compressSize = df.format(((double)(new FileInputStream(Luban.with(CreateCourse.this).load(file).get()).available())) / 1024 / 1024);
-                            Log.i("压缩后的图片"," "+compressSize+"   M");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+    /**
+     *  获取控件的值
+     */
 
-//                        Observable.just(file)
-//                                .subscribeOn(AndroidSchedulers.mainThread())
-//                                .map(new Func1<File, File>() {
-//                                    @Override
-//                                    public File call(File file) {
-//                                        File f = null;
-//                                        try {
-//                                            f = Luban.with(CreateCourse.this).load(file).get();
-//                                        } catch (IOException e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                        return f;
-//                                    }
-//                                })
-//                                .observeOn(AndroidSchedulers.mainThread())
-//                                .subscribe(new Subscriber<File>() {
-//                                    @Override
-//                                    public void onCompleted() {
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//                                        Log.i("压缩图片异常","" +e.toString());
-//                                    }
-//
-//                                    @Override
-//                                    public void onNext(File file) {
-//                                        try {
-//                                            Log.i("压缩后图片的大小",""+df.format((double)(new FileInputStream(file).available()) / 1024 / 1024 )+"M");
-//                                        } catch (IOException e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                        compressFiles.add(file);
-//                                    }
-//                                });
-//================================================================
-//                        Luban.with(this)
-//                                .load(file)                     //传人要压缩的图片
-//                                .setCompressListener(new OnCompressListener() { //设置回调
-//                                    @Override
-//                                    public void onStart() {
-//                                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
-//                                    }
-//                                    @Override
-//                                    public void onSuccess(File file) {
-//                                        // TODO 压缩成功后调用，返回压缩后的图片文件
-//                                        try {
-//                                            Log.i("压缩后图片的大小",""+df.format((double)(new FileInputStream(file).available()) / 1024 / 1024 )+"M");
-//                                            compressFiles.add(file);
-//                                        } catch (IOException e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//                                        // TODO 当压缩过程出现问题时调用
-//                                    }
-//                                }).launch();    //启动压缩
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            for(int k = 0; k<compressFiles.size();k++){
-                DecimalFormat df = new DecimalFormat("#.0000");
-                String size = null;
-                try {
-                    size = df.format(((double)(new FileInputStream(compressFiles.get(k)).available())) / 1024 / 1024);
-                    Log.i("等待上传的图片的大小"+k,"第  "+k+"  张:  "+size+"   M");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            MultipartBody body = OkHttpUtils.filesToMultipartBody(compressFiles);
-            RetrofitManagerUtils.getInstance(this,null).uploadFilesRetrofit(body, new Subscriber<ResponseBody>() {
-                @Override
-                public void onCompleted() {
-                    Log.i("图片上传","完成");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.i("图片上传","错误"+e.toString());
-                }
-
-                @Override
-                public void onNext(ResponseBody responseBody) {
-                    try {
-                        String str = responseBody.string();
-                        Log.i("图片上传","返回数据"+str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //http://www.kangfish.cn/demo/downloadFile/upload/20170318/19411489838119199.jpg
-                }
-            });
-        }
-    }
-
-    //获取控件的值
     private void getInfo() {
         courseOfDisease.setType(type.getText().toString());
         courseOfDisease.setDate(date.getText().toString());
@@ -369,7 +290,9 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         courseOfDisease.setImgPaths(imagePaths);
     }
 
-    //用poppopupwindow+listView+ArrayAdapter实现弹窗选择菜单
+    /**
+     *  用poppopupwindow+listView+ArrayAdapter实现弹窗选择菜单
+     */
     private void showOptions() {
         View rootView;
         rootView = LayoutInflater.from(CreateCourse.this).inflate(R.layout.options,
@@ -392,7 +315,9 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         mPopWindow.showAsDropDown(typeLy);
     }
 
-    //时间选择对话框
+    /**
+     *  时间选择对话框
+     */
     private void selectTime() {
         DatePickerDialog datePicker_dialog = new DatePickerDialog(this, new
                 DatePickerDialog.MyListener() {
@@ -407,19 +332,41 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position < 8) {//设置显示图片的数量
+        if (position < 9) {//设置显示图片的数量
             if (imagePaths.size() == position) {
                 selectImg();//选择图片
             } else {
-                PhotoPreviewIntent intent = new PhotoPreviewIntent(this);
-                intent.setCurrentItem(position);
-                intent.setPhotoPaths((ArrayList) imagePaths);
-                startActivityForResult(intent, REQUEST_PREVIEW_CODE);
+                preview(position);//图片预览
             }
         }
     }
 
-    //选择图片，设置选择图片的张数
+    /**
+     * 设置图片预览的路径，本地或者网络
+     * 如果图片在本地不全有，则直接加载网络的图片预览
+     * @param position 当前图片的位置
+     */
+    private void preview(int position) {
+        for (String string : imagePaths) {
+            if (!new File(string).exists()) {
+                loadNetworkImages = true;
+                break;
+            }
+        }
+        PhotoPreviewIntent intent = new PhotoPreviewIntent(this);
+        if (loadNetworkImages) {
+            imagePaths.clear();
+            //如果图片路径在手机不全存在，则直接将路径设置为网络的路径
+            imagePaths.addAll(courseOfDisease.getImgUrls());
+        }
+        intent.setPhotoPaths((ArrayList) imagePaths);
+        intent.setCurrentItem(position);
+        startActivityForResult(intent, REQUEST_PREVIEW_CODE);
+    }
+
+    /**
+     * 设置选择图片的张数
+     */
     protected void selectImg() {
         PhotoPickerIntent intent = new PhotoPickerIntent(this);
         intent.setSelectModel(SelectModel.MULTI);
@@ -430,7 +377,9 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(intent, REQUEST_CAMERA_CODE);
     }
 
-    //刷新适配器
+    /**
+     * 适配器更新列表
+     */
     private void refreshAdpater(List<String> paths) {
         // 处理返回照片地址
         if (imagePaths == null) {
@@ -440,7 +389,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         imagePaths.addAll(paths);
         int i = imagePaths.size();
         if (gridAdapter == null) {
-            gridAdapter = new CreateCourseGridAdapter(imagePaths,this);
+            gridAdapter = new CreateCourseGridAdapter(imagePaths, this);
             createCourseImgGridview.setAdapter(gridAdapter);
             gridAdapter.notifyDataSetChanged();
         } else {
@@ -459,6 +408,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
                     break;
                 // 预览
                 case REQUEST_PREVIEW_CODE:
+                    removeUrls(data);
                     refreshAdpater(data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT));
                     break;
                 // 调用相机拍照
@@ -473,5 +423,26 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             }
 
         }
+    }
+
+    /**
+     * 将预览时删除的图片的路径从courseOfDisease.getImgUrls()中去掉
+     * （即从存放网络路径的list中去掉，这一步很关键，前面这个路径要用到，所以必须同步）
+     *
+     * @param data 预览结束回传的数据
+     */
+    private void removeUrls(Intent data) {
+        imagePaths.clear();
+        imagePaths.addAll(data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT));
+        List<String> temp = new ArrayList<>();
+        for (int i = 0; i < imagePaths.size(); i++) {
+            for (int k = 0; k < courseOfDisease.getImgUrls().size(); k++) {
+                if (imagePaths.get(i).equals(courseOfDisease.getImgUrls().get(k))) {
+                    temp.add(courseOfDisease.getImgUrls().get(k));
+                }
+            }
+        }
+        courseOfDisease.getImgUrls().clear();
+        courseOfDisease.setImgUrls(temp);
     }
 }

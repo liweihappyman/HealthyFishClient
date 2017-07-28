@@ -49,9 +49,14 @@ dependencies {
     compile 'com.foamtrace:photopicker:1.0'
     compile 'org.litepal.android:core:1.5.1'
     compile 'com.daimajia.swipelayout:library:1.2.0'
+    compile 'com.foamtrace:photopicker:1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 }

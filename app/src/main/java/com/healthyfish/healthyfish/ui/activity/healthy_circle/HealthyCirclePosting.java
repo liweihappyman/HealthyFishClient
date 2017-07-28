@@ -21,6 +21,10 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import com.zhy.autolayout.AutoLinearLayout;
 
 import java.util.ArrayList;

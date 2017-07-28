@@ -32,6 +32,48 @@ public class InspectionReport extends BaseActivity implements View.OnClickListen
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "我的化验单");
         search.setOnClickListener(this);
+<<<<<<< HEAD
+=======
+        init();
+    }
+
+    private void init() {
+
+//        BeanUserRetrReptReq userRetrReptReq = new BeanUserRetrReptReq();
+//        userRetrReptReq.setSickId("0000281122");
+//        userRetrReptReq.setUser("13977211042");
+//        userRetrReptReq.setHosp("lzzyy");
+//
+//        BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
+//        userListValueReq.setPrefix("rept_<%= 13977211042 %>_");
+//        userListValueReq.setFrom(0);
+//        userListValueReq.setNum(-1);
+//        userListValueReq.setTo(-1);
+//
+//
+//        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(userRetrReptReq), new Subscriber<ResponseBody>() {
+//            @Override
+//            public void onCompleted() {
+//            }
+//            @Override
+//            public void onError(Throwable e) {
+//                Log.i("检查报告","网络错误" + e.toString());
+//            }
+//            @Override
+//            public void onNext(ResponseBody responseBody) {
+//                try {
+//                    String str = responseBody.string();
+//                    Log.i("检查报告","数据" + str);
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+
+
+
+>>>>>>> master
     }
 
 

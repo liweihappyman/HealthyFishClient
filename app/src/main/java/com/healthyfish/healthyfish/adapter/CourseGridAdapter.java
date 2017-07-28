@@ -26,10 +26,12 @@ public class CourseGridAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<String> listPaths;
+    private List<String> listUrls;
 
-    public CourseGridAdapter(List<String> listPaths, Context mContext) {
+    public CourseGridAdapter(List<String> listPaths, Context mContext,List<String> listUrls) {
         this.listPaths = listPaths;
         this.mContext = mContext;
+        this.listUrls = listUrls;
     }
 
     @Override
@@ -60,16 +62,24 @@ public class CourseGridAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView.getTag();
         }
-
-        Glide.with(mContext)
-                .load(new File(getItem(position)))
-                .placeholder(R.mipmap.default_error)
-                .error(R.mipmap.default_error)
-                .centerCrop()
-                .crossFade()
-                .into(imageView);
-
-
+        //如果本地存在图片文件，直接加载本地的，否则加载网上的
+        if (new File(getItem(position)).exists()) {
+            Glide.with(mContext)
+                    .load(new File(getItem(position)))
+                    .placeholder(R.mipmap.default_error)
+                    .error(R.mipmap.default_error)
+                    .centerCrop()
+                    .crossFade()
+                    .into(imageView);
+        }else {
+            Glide.with(mContext)
+                    .load(listUrls.get(position))
+                    .placeholder(R.mipmap.default_error)
+                    .error(R.mipmap.default_error)
+                    .centerCrop()
+                    .crossFade()
+                    .into(imageView);
+        }
         return convertView;
     }
 }
