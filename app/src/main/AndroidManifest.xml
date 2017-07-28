@@ -148,9 +148,10 @@
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
         <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme" />
         <activity
-            android:name="com.lidong.photopicker.PhotoPickerActivity"
-            android:configChanges="orientation|screenSize" />
-        <activity android:name="com.lidong.photopicker.PhotoPreviewActivity" />
+            android:name="com.foamtrace.photopicker.PhotoPickerActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
 
         <!-- 健康管理自定义计划具体安排页面 -->
         <activity android:name=".ui.activity.healthy_management.ConcreteArrangement" />

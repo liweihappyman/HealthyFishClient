@@ -11,16 +11,17 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.foamtrace.photopicker.ImageCaptureManager;
+import com.foamtrace.photopicker.PhotoPickerActivity;
+import com.foamtrace.photopicker.PhotoPreviewActivity;
+import com.foamtrace.photopicker.SelectModel;
+import com.foamtrace.photopicker.intent.PhotoPickerIntent;
+import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
-import com.lidong.photopicker.ImageCaptureManager;
-import com.lidong.photopicker.PhotoPickerActivity;
-import com.lidong.photopicker.PhotoPreviewActivity;
-import com.lidong.photopicker.SelectModel;
-import com.lidong.photopicker.intent.PhotoPickerIntent;
-import com.lidong.photopicker.intent.PhotoPreviewIntent;
+
 import com.zhy.autolayout.AutoLinearLayout;
 
 import java.util.ArrayList;
