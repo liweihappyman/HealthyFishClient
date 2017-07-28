@@ -104,7 +104,7 @@
         <activity android:name=".ui.activity.personal_center.Feedback" />
         <!-- 个人中心设置页面 -->
         <activity android:name=".ui.activity.personal_center.SetUp" />
-<<<<<<< HEAD
+
 
         <!-- 图片选择器 -->
         <activity
@@ -114,12 +114,7 @@
             android:name=".ui.activity.medicalrecord.CreateCourse"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
-=======
-        android:configChanges="orientation|screenSize" />
-        <activity
-            android:name=".ui.activity.medicalrecord.CreateCourse"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
->>>>>>> master
+
         <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
         <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
         <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
@@ -159,16 +154,12 @@
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
         <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme" />
-<<<<<<< HEAD
 
-        <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme"></activity>
-=======
-        <activity
-            android:name="com.foamtrace.photopicker.PhotoPickerActivity"
-            android:configChanges="orientation|screenSize"/>
 
-        <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
->>>>>>> master
+
+
+
+
 
         <!-- 健康管理自定义计划具体安排页面 -->
         <activity android:name=".ui.activity.healthy_management.ConcreteArrangement" />

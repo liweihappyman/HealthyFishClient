@@ -31,14 +31,10 @@ import com.healthyfish.healthyfish.ui.activity.personal_center.MyConcern;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyNews;
 import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformation;
 import com.healthyfish.healthyfish.ui.activity.personal_center.SetUp;
-<<<<<<< HEAD
 import com.healthyfish.healthyfish.utils.MyToast;
-=======
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
->>>>>>> master
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

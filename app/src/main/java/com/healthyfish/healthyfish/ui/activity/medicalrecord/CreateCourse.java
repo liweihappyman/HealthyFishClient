@@ -23,11 +23,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
-=======
-
-import com.alibaba.fastjson.JSON;
->>>>>>> master
 import com.foamtrace.photopicker.ImageCaptureManager;
 import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.PhotoPreviewActivity;
@@ -45,10 +40,7 @@ import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.litepal.crud.DataSupport;

@@ -11,13 +11,11 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-<<<<<<< HEAD
 import com.healthyfish.healthyfish.POJO.BeanPrescription;
-=======
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanPresList;
 import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
->>>>>>> master
+
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.utils.AutoUtils;
@@ -37,10 +35,10 @@ import butterknife.ButterKnife;
 
 public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAdapter.ViewHolder> {
     private Context mContext;
-    private List<BeanPrescription> list;
+    private List<BeanPrescriptiom> list;
     private Toolbar toolbar;
 
-    public PrescriptionRvAdapter(Context mContext, List<BeanPrescription> list, Toolbar toolbar) {
+    public PrescriptionRvAdapter(Context mContext, List<BeanPrescriptiom> list, Toolbar toolbar) {
         this.mContext = mContext;
         this.list = list;
         this.toolbar = toolbar;
@@ -57,23 +55,7 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-<<<<<<< HEAD
-        BeanPrescription item = list.get(position);
-        holder.ipresDiagnosisName.setText(item.getTitle());
-        holder.ipresWriteTime.setText(item.getRef());
-        holder.ipresSickName.setText(item.getName());
-        holder.ipresSex.setText(item.getSymptom());
-        holder.ipresAge.setText(item.getAbbr());
-        holder.ipresDeptOperator.setText(item.getAttending());
-        holder.ipresPerscribeStatus.setText(item.getComp());
-        holder.ipresPhysicName.setText(item.getEffect());
-        holder.drugNameLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showOptions();
-            }
-        });
-=======
+
         BeanPrescriptiom item = list.get(position);
         holder.ipresDiagnosisName.setText(item.getDIAGNOSIS_NAME());
         String originalWriteTime = item.getWRITE_TIME();
@@ -106,7 +88,7 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
             holder.right.setVisibility(View.GONE);
         }
 
->>>>>>> master
+
     }
 
     @Override

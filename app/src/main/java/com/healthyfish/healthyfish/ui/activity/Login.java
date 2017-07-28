@@ -30,19 +30,11 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
 import com.zhy.autolayout.AutoLayoutActivity;
-
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
-
 import java.io.IOException;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
-=======
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
->>>>>>> master
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -183,13 +175,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
     private void judgeAndShowToast(int code, String user) {
         if (code >= 0) {
             Toast.makeText(Login.this, "登录成功", Toast.LENGTH_LONG).show();
-<<<<<<< HEAD
-            saveUserBean(user);  //登录成功由shareprefrence保存
-            //MyApplication.uid = getUserName();
-            upDateMyConcern();//更新用户的关注列表
-=======
             MySharedPrefUtil.saveKeyValue("_user",user);  //登录成功由shareprefrence保存
->>>>>>> master
             EventBus.getDefault().post(new EmptyMessage());//发送消息提醒刷新个人中心的登录状态
             Intent intent = new Intent(Login.this,MainActivity.class);
             startActivity(intent);

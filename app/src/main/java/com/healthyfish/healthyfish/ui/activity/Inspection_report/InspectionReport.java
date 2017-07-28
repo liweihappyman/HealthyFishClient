@@ -32,8 +32,6 @@ public class InspectionReport extends BaseActivity implements View.OnClickListen
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "我的化验单");
         search.setOnClickListener(this);
-<<<<<<< HEAD
-=======
         init();
     }
 
@@ -72,8 +70,6 @@ public class InspectionReport extends BaseActivity implements View.OnClickListen
 //        });
 
 
-
->>>>>>> master
     }
 
 
