@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospRegNumListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospRegNumListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
@@ -164,8 +165,12 @@ public class WeekGridAdapter extends BaseAdapter {
 
         BeanHospRegNumListReq beanHospRegNumListReq = new BeanHospRegNumListReq();
         beanHospRegNumListReq.setHosp("lzzyy");
-        beanHospRegNumListReq.setDept(beanWeekAndDate.getBeanHospRegisterReq().getDept());
-        beanHospRegNumListReq.setDoct(beanWeekAndDate.getBeanHospRegisterReq().getDoct());
+//        beanHospRegNumListReq.setDept(beanWeekAndDate.getBeanHospRegisterReq().getDept());
+//        beanHospRegNumListReq.setDoct(beanWeekAndDate.getBeanHospRegisterReq().getDoct());
+//        beanHospRegNumListReq.setDate(beanWeekAndDate.getDate());
+
+        beanHospRegNumListReq.setDept(beanWeekAndDate.getBeanDoctorInfo().getDept());
+        beanHospRegNumListReq.setDoct(beanWeekAndDate.getBeanDoctorInfo().getDOCTOR());
         beanHospRegNumListReq.setDate(beanWeekAndDate.getDate());
         beanHospRegNumListReq.setType(Type);
 
@@ -256,11 +261,27 @@ public class WeekGridAdapter extends BaseAdapter {
                 //跳转到下一页面
                 int position = finalListView.getCheckedItemPosition();
                 if (finalListView.INVALID_POSITION != position) {
-                    BeanHospRegisterReq beanHospRegisterReq = beanWeekAndDate.getBeanHospRegisterReq();
+
+//                    BeanHospRegisterReq beanHospRegisterReq = beanWeekAndDate.getBeanHospRegisterReq();
+//                    beanHospRegisterReq.setDate(HospRegNumList.get(position).getHID());
+//                    beanHospRegisterReq.setDateTxt(HospRegNumList.get(position).getHZS());
+                    //BeanDoctorInfo beanDoctorInfo = beanWeekAndDate.getBeanDoctorInfo();
+
+                    BeanHospRegisterReq beanHospRegisterReq = new BeanHospRegisterReq();
+//                    beanHospRegisterReq.setHosp(beanDoctorInfo.getHosp());
+//                    beanHospRegisterReq.setHospTxt(beanDoctorInfo.getHospital());
+//                    beanHospRegisterReq.setDept(beanDoctorInfo.getDept());
+//                    beanHospRegisterReq.setDeptTxt(beanDoctorInfo.getDepartment());
+//                    beanHospRegisterReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
+//                    beanHospRegisterReq.setDoct(beanDoctorInfo.getDOCTOR());
+//                    beanHospRegisterReq.setDoctTxt(beanDoctorInfo.getName());
                     beanHospRegisterReq.setDate(HospRegNumList.get(position).getHID());
                     beanHospRegisterReq.setDateTxt(HospRegNumList.get(position).getHZS());
+
                     beanWeekAndDate.setTime(timeList.get(position));
                     beanWeekAndDate.setBeanHospRegisterReq(beanHospRegisterReq);
+
+
                     Intent intent = new Intent(mContext, ConfirmReservationInformation.class);
                     intent.putExtra("BeanWeekAndDate", beanWeekAndDate);
                     mContext.startActivity(intent);

@@ -10,11 +10,20 @@ import java.io.Serializable;
  */
 
 public class BeanWeekAndDate implements Serializable{
+
+    private BeanDoctorInfo beanDoctorInfo;
     private BeanHospRegisterReq beanHospRegisterReq;
-    private BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem;
+    //private BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem;
     private String time;//预约时间
     private String titleWeek;
     private String Date;
+
+    public BeanWeekAndDate(BeanDoctorInfo beanDoctorInfo, String date, String am, String pm) {
+        this.beanDoctorInfo = beanDoctorInfo;
+        Date = date;
+        this.am = am;
+        this.pm = pm;
+    }
 
     public String getTime() {
         return time;
@@ -28,13 +37,13 @@ public class BeanWeekAndDate implements Serializable{
     private String pm;
     private boolean outTime = false;//是否过时
 
-    public BeanWeekAndDate(BeanHospRegisterReq beanHospRegisterReq, BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem,String date, String am, String pm) {
-        this.beanHospRegisterReq = beanHospRegisterReq;
-        this.beanHospDeptDoctListRespItem = beanHospDeptDoctListRespItem;
-        Date = date;
-        this.am = am;
-        this.pm = pm;
-    }
+//    public BeanWeekAndDate(BeanHospRegisterReq beanHospRegisterReq, BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem,String date, String am, String pm) {
+//        this.beanHospRegisterReq = beanHospRegisterReq;
+//        this.beanHospDeptDoctListRespItem = beanHospDeptDoctListRespItem;
+//        Date = date;
+//        this.am = am;
+//        this.pm = pm;
+//    }
 
 
     public boolean isOutTime() {
@@ -108,11 +117,19 @@ public class BeanWeekAndDate implements Serializable{
         this.beanHospRegisterReq = beanHospRegisterReq;
     }
 
-    public BeanHospDeptDoctListRespItem getBeanHospDeptDoctListRespItem() {
-        return beanHospDeptDoctListRespItem;
+//    public BeanHospDeptDoctListRespItem getBeanHospDeptDoctListRespItem() {
+//        return beanHospDeptDoctListRespItem;
+//    }
+//
+//    public void setBeanHospDeptDoctListRespItem(BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem) {
+//        this.beanHospDeptDoctListRespItem = beanHospDeptDoctListRespItem;
+//    }
+
+    public BeanDoctorInfo getBeanDoctorInfo() {
+        return beanDoctorInfo;
     }
 
-    public void setBeanHospDeptDoctListRespItem(BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem) {
-        this.beanHospDeptDoctListRespItem = beanHospDeptDoctListRespItem;
+    public void setBeanDoctorInfo(BeanDoctorInfo beanDoctorInfo) {
+        this.beanDoctorInfo = beanDoctorInfo;
     }
 }

@@ -38,7 +38,7 @@ public class BeanHospDeptDoctListRespItem extends BeanBaseReq implements Seriali
 	/*"schdList":[\"2017-07-21_1\",\"2017-07-24_1\",\"2017-07-25_1\",\"2017-07-26_1\",\"2017-07-27_1\"*/
 	private List<String> schdList; //排班表, 1:上午，2:下午
 
-	BeanHospDeptDoctListRespItem(){super(BeanHospDeptDoctListRespItem.class.getSimpleName());}
+	public BeanHospDeptDoctListRespItem(){super(BeanHospDeptDoctListRespItem.class.getSimpleName());}
 
 	public int getSTAFF_NO() {
 		return STAFF_NO;

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -14,7 +15,13 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
@@ -26,8 +33,14 @@ import com.healthyfish.healthyfish.ui.fragment.AppointmentTime;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime2;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime3;
 import com.healthyfish.healthyfish.utils.FixedSpeedScroller;
+import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -40,6 +53,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
@@ -51,8 +66,6 @@ import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl
  */
 public class DoctorDetail extends BaseActivity {
 
-    private int mPosition = 0;//记录选择预约时间页面的位置
-    private FixedSpeedScroller mScroller;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -65,8 +78,8 @@ public class DoctorDetail extends BaseActivity {
     TextView tvDepartmentAndTitle;
     @BindView(R.id.tv_doctorCompany)
     TextView tvDoctorCompany;
-    @BindView(R.id.ckb_attention)
-    CheckBox ckbAttention;
+    @BindView(R.id.tv_attention)
+    TextView tvAttention;
     @BindView(R.id.btn_sendTheMind)
     Button btnSendTheMind;
     @BindView(R.id.appointment_time_vp)
@@ -85,12 +98,20 @@ public class DoctorDetail extends BaseActivity {
     ImageView third;
     @BindView(R.id.doctorInfo)
     TextView doctorInfo;
+
+    private int mPosition = 0;//记录选择预约时间页面的位置
+    private FixedSpeedScroller mScroller;
+
     private FragmentManager fm;
     private FragmentTransaction ft;
 
-    private BeanHospDeptDoctListRespItem DeptDoctInfo;
+//    private BeanHospDeptDoctListRespItem DeptDoctInfo;
+//    private BeanHospRegisterReq beanHospRegisterReq;
+    private BeanDoctorInfo beanDoctorInfo;
 
-    private BeanHospRegisterReq beanHospRegisterReq;
+    private boolean isAttention = false;//是否已经关注该医生
+    private String uid = MyApplication.uid;
+    private String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,14 +119,34 @@ public class DoctorDetail extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_detail);
         ButterKnife.bind(this);
-        DeptDoctInfo = (BeanHospDeptDoctListRespItem) getIntent().getSerializableExtra("BeanHospDeptDoctListRespItem");
-        beanHospRegisterReq = (BeanHospRegisterReq) getIntent().getSerializableExtra("BeanHospRegisterReq");
-        beanHospRegisterReq.setDoct(DeptDoctInfo.getDOCTOR());
-        beanHospRegisterReq.setDoctTxt(DeptDoctInfo.getDOCTOR_NAME());
-        beanHospRegisterReq.setStaffNo(String.valueOf(DeptDoctInfo.getSTAFF_NO()));
-        DeptDoctInfo.getPRICE();
+//        DeptDoctInfo = (BeanHospDeptDoctListRespItem) getIntent().getSerializableExtra("BeanHospDeptDoctListRespItem");
+//        beanHospRegisterReq = (BeanHospRegisterReq) getIntent().getSerializableExtra("BeanHospRegisterReq");
+//        beanHospRegisterReq.setDoct(DeptDoctInfo.getDOCTOR());
+//        beanHospRegisterReq.setDoctTxt(DeptDoctInfo.getDOCTOR_NAME());
+//        beanHospRegisterReq.setStaffNo(String.valueOf(DeptDoctInfo.getSTAFF_NO()));
+        beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
+//        DeptDoctInfo = new BeanHospDeptDoctListRespItem();
+//        DeptDoctInfo.setDOCTOR(beanDoctorInfo.getDOCTOR());
+//        DeptDoctInfo.setDOCTOR_NAME(beanDoctorInfo.getName());
+//        DeptDoctInfo.setSchdList(beanDoctorInfo.getSchdList());
+//        DeptDoctInfo.setCLINIQUE_CODE(beanDoctorInfo.getCLINIQUE_CODE());
+//        DeptDoctInfo.setPRE_ALLOW(beanDoctorInfo.getPRE_ALLOW());
+//        DeptDoctInfo.setPRICE(Integer.parseInt(beanDoctorInfo.getPrice()));
+//        DeptDoctInfo.setREISTER_NAME(beanDoctorInfo.getDuties());
+//        DeptDoctInfo.setSTAFF_NO(beanDoctorInfo.getSTAFF_NO());
+//        DeptDoctInfo.setWEB_INTRODUCE(beanDoctorInfo.getIntroduce());
+//        DeptDoctInfo.setWORK_TYPE(beanDoctorInfo.getWORK_TYPE());
+//        DeptDoctInfo.setZHAOPIAN(beanDoctorInfo.getImgUrl());
+//
+//        beanHospRegisterReq = new BeanHospRegisterReq();
+//        beanHospRegisterReq.setHosp(beanDoctorInfo.getHosp());
+//        beanHospRegisterReq.setHospTxt(beanDoctorInfo.getHospital());
+//        beanHospRegisterReq.setDept(beanDoctorInfo.getDept());
+//        beanHospRegisterReq.setDeptTxt(beanDoctorInfo.getDepartment());
+//        beanHospRegisterReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
 
-        initToolBar(toolbar, toolbarTitle, DeptDoctInfo.getDOCTOR_NAME() + "医生");
+        initToolBar(toolbar, toolbarTitle, beanDoctorInfo.getName() + "医生");
+        tvAttentionListener();//关注操作
         fm = this.getSupportFragmentManager();
         ft = fm.beginTransaction();
         initData();
@@ -117,92 +158,117 @@ public class DoctorDetail extends BaseActivity {
      * 初始化显示数据
      */
     private void initData() {
-        Glide.with(this).load(HttpHealthyFishyUrl + DeptDoctInfo.getZHAOPIAN()).into(civDoctor);
-        tvName.setText(DeptDoctInfo.getDOCTOR_NAME());
-        tvDepartmentAndTitle.setText("诊室：" + DeptDoctInfo.getCLINIQUE_CODE() + "   " + DeptDoctInfo.getREISTER_NAME());
-        tvDoctorCompany.setText(beanHospRegisterReq.getHospTxt());
-        doctorInfo.setText(DeptDoctInfo.getWEB_INTRODUCE());
+//        Glide.with(this).load(HttpHealthyFishyUrl + DeptDoctInfo.getZHAOPIAN()).into(civDoctor);
+//        tvName.setText(DeptDoctInfo.getDOCTOR_NAME());
+//        tvDepartmentAndTitle.setText("诊室：" + DeptDoctInfo.getCLINIQUE_CODE() + "   " + DeptDoctInfo.getREISTER_NAME());
+//        tvDoctorCompany.setText(beanHospRegisterReq.getHospTxt());
+//        doctorInfo.setText(DeptDoctInfo.getWEB_INTRODUCE());
+        Glide.with(this).load(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl()).into(civDoctor);
+        tvName.setText(beanDoctorInfo.getName());
+        tvDepartmentAndTitle.setText("诊室：" + beanDoctorInfo.getCLINIQUE_CODE() + "   " + beanDoctorInfo.getDuties());
+        tvDoctorCompany.setText(beanDoctorInfo.getHospital());
+        doctorInfo.setText(beanDoctorInfo.getIntroduce());
+
+        //判断是否已经关注该医生
+        if (isAttention) {
+            tvAttention.setText("已关注");
+            tvAttention.setBackgroundResource(R.drawable.concern);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_white));
+            tvAttention.setClickable(false);
+        } else {
+            tvAttention.setText("+关注");
+            tvAttention.setBackgroundResource(R.drawable.concern_not);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
+            tvAttention.setClickable(true);
+        }
     }
 
-
+    /**
+     * 初始化预约时间
+     */
     private void initPointmentTime() {
         List<BeanWeekAndDate> mList = new ArrayList<>();
+        List<String> schdList = beanDoctorInfo.getSchdList();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");//设置想要的日期格式
         Date Today = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();//获取日历实例
         calendar.setTime(Today);
-        int index1 = 10, index2 = 10;
-        List<String> schdList = DeptDoctInfo.getSchdList();
+
+        int size_1 = schdList.size() - 1;
         for (int i = 0; i < schdList.size(); i++) {
-            if (i < schdList.size() - 1) {
-                String strDate1 = schdList.get(i).substring(0, index1);
-                String strDate2 = schdList.get(i + 1).substring(0, index2);
-                if (dateFormat.format(Today).equals(strDate1)) {
+            if (i < size_1) {
+                String strDate1 = schdList.get(i).split("_")[0];
+                String strDate2 = schdList.get(i + 1).split("_")[0];
+                String strToday = dateFormat.format(Today);
+                if (strToday.equals(strDate1)) {
                     if (strDate1.equals(strDate2)) {
-                        mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate1, "上午", "下午"));
+                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "下午"));
                         i++;
                     } else {
-                        if (schdList.get(i).substring(index1 + 1, index1 + 2).equals("1")) {
-                            mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate1, "上午", "1"));
+                        if (schdList.get(i).split("_")[1].equals("1")) {
+                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "1"));
                         } else {
-                            mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate1, "1", "下午"));
+                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "1", "下午"));
                         }
                     }
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     Today = calendar.getTime();
                 } else {
-                    mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,dateFormat.format(Today), "1", "1"));
+                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strToday, "1", "1"));
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     Today = calendar.getTime();
                     boolean flag = true;
                     while (flag) {
-                        if (dateFormat.format(Today).equals(strDate1)) {
+                        String strToday2 = dateFormat.format(Today);
+                        if (strToday2.equals(strDate1)) {
                             if (strDate1.equals(strDate2)) {
-                                mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate1, "上午", "下午"));
+                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "下午"));
                                 i++;
                             } else {
-                                if (schdList.get(i).substring(index1 + 1, index1 + 2).equals("1")) {
-                                    mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate1, "上午", "1"));
+                                if (schdList.get(i).split("_")[1].equals("1")) {
+                                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "1"));
                                 } else {
-                                    mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate1, "1", "下午"));
+                                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "1", "下午"));
                                 }
                             }
-                            flag = false;
                             calendar.add(Calendar.DAY_OF_YEAR, 1);
                             Today = calendar.getTime();
+                            flag = false;
                         } else {
-                            mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,dateFormat.format(Today), "1", "1"));
+                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strToday2, "1", "1"));
                             calendar.add(Calendar.DAY_OF_YEAR, 1);
                             Today = calendar.getTime();
                         }
                     }
                 }
             } else {
-                String strDate = schdList.get(i).substring(0, index1);
-                if (dateFormat.format(Today).equals(strDate)) {
-                    if (schdList.get(i).substring(index1 + 1, index1 + 2).equals("1")) {
-                        mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate, "上午", "1"));
+                String strDate = schdList.get(i).split("_")[0];
+                String strToday = dateFormat.format(Today);
+                if (strToday.equals(strDate)) {
+                    if (schdList.get(i).split("_")[1].equals("1")) {
+                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "上午", "1"));
                     } else {
-                        mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate, "1", "下午"));
+                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "1", "下午"));
                     }
                 } else {
-                    mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,dateFormat.format(Today), "1", "1"));
+                    mList.add(new BeanWeekAndDate(beanDoctorInfo, dateFormat.format(Today), "1", "1"));
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     Today = calendar.getTime();
                     boolean flag = true;
                     while (flag) {
-                        if (dateFormat.format(Today).equals(strDate)) {
-                            if (schdList.get(i).substring(index1 + 1, index1 + 2).equals("1")) {
-                                mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate, "上午", "1"));
+                        String strToday2 = dateFormat.format(Today);
+                        if (strToday2.equals(strDate)) {
+                            if (schdList.get(i).split("_")[1].equals("1")) {
+                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "上午", "1"));
                             } else {
-                                mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,strDate, "1", "下午"));
+                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "1", "下午"));
                             }
-                            flag = false;
                             calendar.add(Calendar.DAY_OF_YEAR, 1);
                             Today = calendar.getTime();
+                            flag = false;
                         } else {
-                            mList.add(new BeanWeekAndDate(beanHospRegisterReq,DeptDoctInfo,dateFormat.format(Today), "1", "1"));
+                            mList.add(new BeanWeekAndDate(beanDoctorInfo, dateFormat.format(Today), "1", "1"));
                             calendar.add(Calendar.DAY_OF_YEAR, 1);
                             Today = calendar.getTime();
                         }
@@ -211,6 +277,7 @@ public class DoctorDetail extends BaseActivity {
                 }
             }
         }
+
         String today = Utils1.getWeekFromStr(mList.get(0).getDate());
         //判断第一个数据是一周的哪一天，在前面补相应的空位
         //确定是具体的星期几之后：
@@ -359,7 +426,6 @@ public class DoctorDetail extends BaseActivity {
         setDirectionIndicator();
     }
 
-
     //页面改变是重新设置圆点状态
     private void pagechange() {
         //setViewPagerSwitchingTime();
@@ -454,7 +520,92 @@ public class DoctorDetail extends BaseActivity {
                 right.setVisibility(View.INVISIBLE);
                 break;
         }
+    }
 
+    /**
+     * 设置是否关注按钮的监听
+     */
+    private void tvAttentionListener() {
+        if (!TextUtils.isEmpty(uid)) {
+            key = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
+            if (!DataSupport.where("key = ?", key).find(BeanConcernList.class).isEmpty()) {
+                isAttention = true;
+                tvAttention.setClickable(false);
+            } else {
+                isAttention = false;
+            }
+        }
+
+        tvAttention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(uid)) {
+                    if (tvAttention.getText().toString().equals("+关注")) {
+                        addConcern();//加关注
+                    }
+                } else {
+                    MyToast.showToast(DoctorDetail.this, "您还没有登录呦！请先登录再关注");
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 加关注操作
+     */
+    private void addConcern() {
+        Log.i("LYQ", key);
+
+        final String strJson = JSON.toJSONString(beanDoctorInfo);
+        Log.i("LYQ", "strJsonBeanDoctorInfo:" + strJson);
+
+        BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
+        beanBaseKeySetReq.setKey(key);
+        beanBaseKeySetReq.setValue(strJson);
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
+                if (beanBaseResp.getCode() >= 0) {
+                    tvAttention.setText("已关注");
+                    tvAttention.setBackgroundResource(R.drawable.concern);
+                    tvAttention.setTextColor(getResources().getColor(R.color.color_white));
+                    tvAttention.setClickable(false);
+                    isAttention = true;
+                    BeanConcernList beanConcernList = new BeanConcernList();
+                    beanConcernList.setKey(key);
+                    if (!beanConcernList.saveOrUpdate("key = ?", key)) {
+                        beanConcernList.saveOrUpdate("key = ?", key);
+                    }
+                } else {
+                    MyToast.showToast(DoctorDetail.this, "关注失败，请重试");
+                    tvAttention.setText("+关注");
+                    tvAttention.setBackgroundResource(R.drawable.concern_not);
+                    tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
+                    tvAttention.setClickable(true);
+                    isAttention = false;
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 }

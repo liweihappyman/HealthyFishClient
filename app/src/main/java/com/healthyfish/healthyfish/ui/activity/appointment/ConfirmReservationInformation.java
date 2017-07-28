@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanHospCardAuthReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
@@ -87,7 +88,7 @@ public class ConfirmReservationInformation extends BaseActivity {
     private final int mRequestCode = 13302;
     private BeanVisitingPerson visitingPerson;
 
-    private String id = "15278898523";
+    private String id = MyApplication.uid;
     private String hospital = "柳州市中医院";
     private String name;
     private String idCard;
@@ -108,12 +109,16 @@ public class ConfirmReservationInformation extends BaseActivity {
      */
     private void iniData() {
         beanWeekAndDate = (BeanWeekAndDate) getIntent().getSerializableExtra("BeanWeekAndDate");
-        tvHospital.setText("医院：" + beanWeekAndDate.getBeanHospRegisterReq().getHospTxt());
-        tvDepartment.setText("科室：" + beanWeekAndDate.getBeanHospRegisterReq().getDeptTxt());
+        tvHospital.setText("医院：" + beanWeekAndDate.getBeanDoctorInfo().getHospital());
+        tvDepartment.setText("科室：" + beanWeekAndDate.getBeanDoctorInfo().getDepartment());
         tvAppointmentTime.setText("预约时间：" + beanWeekAndDate.getDate() + " " + beanWeekAndDate.getTime());
-        tvDoctorName.setText("医生姓名：" + beanWeekAndDate.getBeanHospDeptDoctListRespItem().getDOCTOR_NAME());
-        tvOutpatientType.setText("问诊类型：" + beanWeekAndDate.getBeanHospDeptDoctListRespItem().getREISTER_NAME());
-        setTextColorAndSize(String.valueOf(beanWeekAndDate.getBeanHospDeptDoctListRespItem().getPRICE()));
+        tvDoctorName.setText("医生姓名：" + beanWeekAndDate.getBeanDoctorInfo().getName());
+        tvOutpatientType.setText("问诊类型：" + beanWeekAndDate.getBeanDoctorInfo().getDuties());
+        setTextColorAndSize(beanWeekAndDate.getBeanDoctorInfo().getPrice());
+
+//        tvDoctorName.setText("医生姓名：" + beanWeekAndDate.getBeanHospDeptDoctListRespItem().getDOCTOR_NAME());
+//        tvOutpatientType.setText("问诊类型：" + beanWeekAndDate.getBeanHospDeptDoctListRespItem().getREISTER_NAME());
+//        setTextColorAndSize(String.valueOf(beanWeekAndDate.getBeanHospDeptDoctListRespItem().getPRICE()));
     }
 
     @OnClick({R.id.bt_replace, R.id.bt_confirm_registration})
@@ -165,13 +170,22 @@ public class ConfirmReservationInformation extends BaseActivity {
      */
     private void RegistrationRequest() {
         final BeanHospRegisterReq beanHospRegisterReq = new BeanHospRegisterReq();
-        beanHospRegisterReq.setHosp(beanWeekAndDate.getBeanHospRegisterReq().getHosp());
-        beanHospRegisterReq.setHospTxt(beanWeekAndDate.getBeanHospRegisterReq().getHospTxt());
-        beanHospRegisterReq.setDept(beanWeekAndDate.getBeanHospRegisterReq().getDept());
-        beanHospRegisterReq.setDeptTxt(beanWeekAndDate.getBeanHospRegisterReq().getDeptTxt());
-        beanHospRegisterReq.setDoct(beanWeekAndDate.getBeanHospRegisterReq().getDoct());
-        beanHospRegisterReq.setDoctTxt(beanWeekAndDate.getBeanHospRegisterReq().getDoctTxt());
-        beanHospRegisterReq.setStaffNo(beanWeekAndDate.getBeanHospRegisterReq().getStaffNo());
+//        beanHospRegisterReq.setHosp(beanWeekAndDate.getBeanHospRegisterReq().getHosp());
+//        beanHospRegisterReq.setHospTxt(beanWeekAndDate.getBeanHospRegisterReq().getHospTxt());
+//        beanHospRegisterReq.setDept(beanWeekAndDate.getBeanHospRegisterReq().getDept());
+//        beanHospRegisterReq.setDeptTxt(beanWeekAndDate.getBeanHospRegisterReq().getDeptTxt());
+//        beanHospRegisterReq.setDoct(beanWeekAndDate.getBeanHospRegisterReq().getDoct());
+//        beanHospRegisterReq.setDoctTxt(beanWeekAndDate.getBeanHospRegisterReq().getDoctTxt());
+//        beanHospRegisterReq.setStaffNo(beanWeekAndDate.getBeanHospRegisterReq().getStaffNo());
+//        beanHospRegisterReq.setDate(beanWeekAndDate.getBeanHospRegisterReq().getDate());
+//        beanHospRegisterReq.setDateTxt(beanWeekAndDate.getBeanHospRegisterReq().getDateTxt());
+        beanHospRegisterReq.setHosp(beanWeekAndDate.getBeanDoctorInfo().getHosp());
+        beanHospRegisterReq.setHospTxt(beanWeekAndDate.getBeanDoctorInfo().getHospital());
+        beanHospRegisterReq.setDept(beanWeekAndDate.getBeanDoctorInfo().getDept());
+        beanHospRegisterReq.setDeptTxt(beanWeekAndDate.getBeanDoctorInfo().getDepartment());
+        beanHospRegisterReq.setDoct(beanWeekAndDate.getBeanDoctorInfo().getDOCTOR());
+        beanHospRegisterReq.setDoctTxt(beanWeekAndDate.getBeanDoctorInfo().getName());
+        beanHospRegisterReq.setStaffNo(String.valueOf(beanWeekAndDate.getBeanDoctorInfo().getSTAFF_NO()));
         beanHospRegisterReq.setDate(beanWeekAndDate.getBeanHospRegisterReq().getDate());
         beanHospRegisterReq.setDateTxt(beanWeekAndDate.getBeanHospRegisterReq().getDateTxt());
         beanHospRegisterReq.setName(name);
@@ -237,9 +251,7 @@ public class ConfirmReservationInformation extends BaseActivity {
             public void onCompleted() {
                 if (!TextUtils.isEmpty(sick_id)) {
                     RegistrationRequest();//挂号
-                    if (!saveData()) {
-                        MyToast.showToast(ConfirmReservationInformation.this, "保存就诊人信息失败");
-                    }
+                    saveData();
                     Log.e("LYQ", "挂号4：" + key + ":" + value);
                 } else {
                     MyToast.showToast(ConfirmReservationInformation.this, "验证就诊卡失败，请确认您的信息重新验证");
@@ -266,21 +278,23 @@ public class ConfirmReservationInformation extends BaseActivity {
     /**
      * 保存就诊人数据到数据库
      */
-    private boolean saveData() {
+    private void saveData() {
         boolean isSave = false;
-        visitingPerson = new BeanVisitingPerson();
-        visitingPerson.setPhoneId(id);
-        visitingPerson.setHospital(hospital);
-        visitingPerson.setVisitingPerson(name);
-        visitingPerson.setIDCard(idCard);
-        visitingPerson.setVisitingCard(visitingCard);
-        visitingPerson.setPhoneNumber(phoneNumber);
-        visitingPerson.setSick_id(sick_id);
         List<BeanVisitingPerson> List = DataSupport.where("phoneID = ? and hospital = ? and visitingPerson = ? and visitingCard = ?", id, hospital, name, visitingCard).find(BeanVisitingPerson.class);
         if (List.size() == 0) {
+            visitingPerson = new BeanVisitingPerson();
+            visitingPerson.setPhoneId(id);
+            visitingPerson.setHospital(hospital);
+            visitingPerson.setVisitingPerson(name);
+            visitingPerson.setIDCard(idCard);
+            visitingPerson.setVisitingCard(visitingCard);
+            visitingPerson.setPhoneNumber(phoneNumber);
+            visitingPerson.setSick_id(sick_id);
             isSave = visitingPerson.save();
+            if (!isSave) {
+                MyToast.showToast(ConfirmReservationInformation.this, "保存就诊人信息失败");
+            }
         }
-        return isSave;
     }
 
     @Override

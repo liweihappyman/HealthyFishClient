@@ -3,23 +3,31 @@ package com.healthyfish.healthyfish.ui.activity.healthy_management;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanPhyQuestionnaireTest;
+import com.healthyfish.healthyfish.POJO.BeanUserPhyIdReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PhyQuestionnaireTestAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 
 /**
@@ -85,9 +93,57 @@ public class PhyIdeQuestionnaireTest extends BaseActivity {
                 MyToast.showToast(this,"您还有选项没有选择噢！");
                 return;
             }
+            Log.i("LYQ", "题目:" + list.get(i).getContent() + "答案：" + list.get(i).getAnswer());
         }
         //将答案列表上传到服务器
-        Intent intent = new Intent(this, PhyIdeReport.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, PhyIdeReport.class);
+//        startActivity(intent);
+        phyIdReq(list);
     }
+
+    private void phyIdReq(List<BeanPhyQuestionnaireTest> list) {
+        final String phyStrs[] = {"气虚","阳虚","阴虚","痰湿","湿热","血淤","气郁","特禀质","平和"};
+
+        List<Integer> ansList = new ArrayList<>();
+        for (BeanPhyQuestionnaireTest phyTestList : list) {
+            ansList.add(Integer.valueOf(phyTestList.getAnswer()));
+        }
+
+        List<Integer> phyList = new ArrayList<>();
+        phyList.add(5);
+
+        List<String> strPhyList = new ArrayList<>();
+        strPhyList.add(phyStrs[5]);
+
+        BeanUserPhyIdReq beanUserPhyIdReq = new BeanUserPhyIdReq();
+        beanUserPhyIdReq.setAnsList(ansList);
+        //beanUserPhyIdReq.setPhyList(phyList);
+
+        Log.i("LYQ", "参数json:"+ JSON.toJSONString(beanUserPhyIdReq));
+
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserPhyIdReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    String strResp = responseBody.string();
+                    Log.i("LYQ", "体质：" + strResp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
 }

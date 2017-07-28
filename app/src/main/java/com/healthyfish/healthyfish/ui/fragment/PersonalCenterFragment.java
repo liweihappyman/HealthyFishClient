@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
@@ -29,6 +31,7 @@ import com.healthyfish.healthyfish.ui.activity.personal_center.MyConcern;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyNews;
 import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformation;
 import com.healthyfish.healthyfish.ui.activity.personal_center.SetUp;
+import com.healthyfish.healthyfish.utils.MyToast;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
@@ -84,6 +87,7 @@ public class PersonalCenterFragment extends Fragment {
 
     private Context mContext;
     private View rootView;
+    private String uid = MyApplication.uid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -205,8 +209,12 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.lly_my_concern:
                 //点击我的关注
-                Intent intent04 = new Intent(getActivity(), MyConcern.class);
-                startActivity(intent04);
+                if (!TextUtils.isEmpty(uid)) {
+                    Intent intent04 = new Intent(getActivity(), MyConcern.class);
+                    startActivity(intent04);
+                } else {
+                    MyToast.showToast(getActivity(),"您还没有登录呦！请先登录");
+                }
                 break;
             case R.id.lly_feedback:
                 //点击意见反馈

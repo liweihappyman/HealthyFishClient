@@ -366,7 +366,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    Log.i("LYQ",jsonNews);
                                     List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
                                     for (String strJsonNews : strJsonNewsList) {
                                         BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);

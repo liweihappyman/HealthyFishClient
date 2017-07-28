@@ -12,8 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.healthyfish.healthyfish.MainActivity;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
@@ -26,8 +30,11 @@ import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -158,6 +165,8 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         if (code >= 0) {
             Toast.makeText(Login.this, "登录成功", Toast.LENGTH_LONG).show();
             saveUserBean(user);  //登录成功由shareprefrence保存
+            //MyApplication.uid = getUserName();
+            upDateMyConcern();//更新用户的关注列表
             EventBus.getDefault().post(new EmptyMessage());//发送消息提醒刷新个人中心的登录状态
             Intent intent = new Intent(Login.this,MainActivity.class);
             startActivity(intent);
@@ -205,4 +214,66 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         super.onBackPressed();
         EventBus.getDefault().post(new EmptyMessage());
     }
+
+    /**
+     * 将用户的关注列表保存到数据库
+     */
+    private void upDateMyConcern(){
+        final List<BeanConcernList> concernList = new ArrayList<>();
+
+        BeanUserListReq beanUserListReq = new BeanUserListReq();
+        beanUserListReq.setPrefix("care_" + getUserName());
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+                        if (DataSupport.findAll(BeanConcernList.class).isEmpty()) {
+                            for (BeanConcernList beanConcernList : concernList) {
+                                if (!beanConcernList.save()) {
+                                    for (BeanConcernList beanConcernList1 : concernList) {
+                                        beanConcernList1.save();
+                                    }
+                                }
+                            }
+                        } else {
+                            DataSupport.deleteAll(BeanConcernList.class);
+                            for (BeanConcernList beanConcernList : concernList) {
+                                if (!beanConcernList.save()) {
+                                    for (BeanConcernList beanConcernList1 : concernList) {
+                                        beanConcernList1.save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("LYQ", "Login_upDateMyConcern_onError:" + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String jsonStr = null;
+                        try {
+                            jsonStr = responseBody.string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
+                        for (String str : concerns) {
+                            BeanConcernList beanConcernList = new BeanConcernList();
+                            beanConcernList.setKey(str);
+                            concernList.add(beanConcernList);
+
+                        }
+                    }
+                });
+
+    }
+
 }

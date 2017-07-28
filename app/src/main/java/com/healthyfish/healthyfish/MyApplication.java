@@ -17,6 +17,7 @@ import org.litepal.LitePal;
 
 public class MyApplication extends Application{
     private static Context applicationContext;
+    public static String uid = "15278898523";//暂时设置用
 
     @Override
     public void onCreate() {
@@ -26,6 +27,7 @@ public class MyApplication extends Application{
 
         applicationContext = getApplicationContext();
         LitePal.initialize(getApplicationContext());//初始化数据库
+
     }
 
     /**
@@ -36,4 +38,5 @@ public class MyApplication extends Application{
     public static Context getContetxt() {
         return applicationContext;
     }
+
 }

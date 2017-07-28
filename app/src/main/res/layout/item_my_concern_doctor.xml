@@ -48,14 +48,14 @@
                     android:layout_width="120px"
                     android:layout_height="120px"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="30px"
+                    android:layout_marginLeft="15px"
                     android:layout_marginTop="40px"
                     android:src="@mipmap/ic_male_select" />
 
                 <com.zhy.autolayout.AutoLinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="183px"
+                    android:layout_marginLeft="163px"
                     android:orientation="horizontal"
                     android:paddingTop="30px">
 
@@ -72,7 +72,7 @@
                         style="@style/textSize_48"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="45px"
+                        android:layout_marginLeft="15px"
                         android:text="中医科"
                         android:textColor="@color/color_auxiliary_info" />
 
@@ -81,7 +81,7 @@
                         style="@style/textSize_48"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="45px"
+                        android:layout_marginLeft="15px"
                         android:text="主任医师"
                         android:textColor="@color/color_auxiliary_info" />
 
@@ -92,7 +92,7 @@
                     style="@style/textSize_48"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="183px"
+                    android:layout_marginLeft="163px"
                     android:layout_marginTop="108px"
                     android:text="柳州市中医院"
                     android:textColor="@color/color_auxiliary_info" />
@@ -102,7 +102,7 @@
                     style="@style/textSize_48"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="180px"
+                    android:layout_marginLeft="160px"
                     android:layout_marginTop="190px"
                     android:ellipsize="end"
                     android:maxLines="1"

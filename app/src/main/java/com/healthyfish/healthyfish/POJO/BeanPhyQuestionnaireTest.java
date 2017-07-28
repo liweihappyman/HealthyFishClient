@@ -11,7 +11,8 @@ public class BeanPhyQuestionnaireTest {
 
     private String content; // 问题
     private String answer; // 答案
-    public  static String[] answers = { "没有", "很少", "有时", "经常","总是" }; // 选项编号和答案编号
+    //public  static String[] answers = { "没有", "很少", "有时", "经常","总是" }; // 选项编号和答案编号
+    public  static String[] answers = { "0", "1", "2", "3","4" }; // 选项编号和答案编号
 
     public String getContent()
     {

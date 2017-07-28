@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,22 +15,30 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.R;
+
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
-import com.healthyfish.healthyfish.ui.activity.appointment.DepartmentDoctorList;
 import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
-import com.healthyfish.healthyfish.ui.activity.interrogation.SendMind;
 import com.healthyfish.healthyfish.ui.fragment.BuyServiceFragment;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NestingUtils;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +46,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
@@ -58,8 +70,8 @@ public class ChoiceService extends BaseActivity {
     TextView tvDepartmentAndTitle;
     @BindView(R.id.tv_doctorCompany)
     TextView tvDoctorCompany;
-    @BindView(R.id.ckb_attention)
-    CheckBox ckbAttention;
+    @BindView(R.id.tv_attention)
+    TextView tvAttention;
     @BindView(R.id.btn_sendTheMind)
     Button btnSendTheMind;
     @BindView(R.id.img_pictureConsulting)
@@ -101,6 +113,8 @@ public class ChoiceService extends BaseActivity {
 
     private Context mContext;//全局上下文
     private BeanHospDeptDoctListRespItem DeptDoctInfo;
+    private BeanHospRegisterReq beanHospRegisterReq;
+    private BeanDoctorInfo beanDoctorInfo;
 
     private String imgDoctorUrl;  //医生头像资源
     private String doctorName;  //医生名字
@@ -115,9 +129,12 @@ public class ChoiceService extends BaseActivity {
     private boolean isOpenPrivateDoctor;  //是否开通私人医生
     private boolean isOpenAppointment;  //是否开通预约挂号
 
-    private boolean isAttention;//是否已经关注该医生
+    private boolean isAttention = false;//是否已经关注该医生
 
-    private BeanHospRegisterReq beanHospRegisterReq;
+    private String uid = MyApplication.uid;
+
+    private String key;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,11 +142,11 @@ public class ChoiceService extends BaseActivity {
         setContentView(R.layout.activity_choice_service);
         ButterKnife.bind(this);
         mContext = this;
-        initToolBar(toolbar,tvTitle,"选择服务");
+        initToolBar(toolbar, tvTitle, "选择服务");
         getData();
+        tvAttentionListener();
         initData();
         initListView();
-        ckbAttentionListener();
     }
 
 
@@ -138,24 +155,45 @@ public class ChoiceService extends BaseActivity {
      */
     private void getData() {
 
-        if (getIntent().getSerializableExtra("DEPT_DOCTOR_INFO") != null) {
-            beanHospRegisterReq = (BeanHospRegisterReq) getIntent().getSerializableExtra("BeanHospRegisterReq");
-            DeptDoctInfo = (BeanHospDeptDoctListRespItem) getIntent().getSerializableExtra("DEPT_DOCTOR_INFO");
+        if (getIntent().getSerializableExtra("BeanDoctorInfo") != null) {
+            beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
+
+            DeptDoctInfo = new BeanHospDeptDoctListRespItem();
+            DeptDoctInfo.setDOCTOR(beanDoctorInfo.getDOCTOR());
+            DeptDoctInfo.setDOCTOR_NAME(beanDoctorInfo.getName());
+            DeptDoctInfo.setSchdList(beanDoctorInfo.getSchdList());
+            DeptDoctInfo.setCLINIQUE_CODE(beanDoctorInfo.getCLINIQUE_CODE());
+            DeptDoctInfo.setPRE_ALLOW(beanDoctorInfo.getPRE_ALLOW());
+            DeptDoctInfo.setPRICE(Integer.parseInt(beanDoctorInfo.getPrice()));
+            DeptDoctInfo.setREISTER_NAME(beanDoctorInfo.getDuties());
+            DeptDoctInfo.setSTAFF_NO(beanDoctorInfo.getSTAFF_NO());
+            DeptDoctInfo.setWEB_INTRODUCE(beanDoctorInfo.getIntroduce());
+            DeptDoctInfo.setWORK_TYPE(beanDoctorInfo.getWORK_TYPE());
+            DeptDoctInfo.setZHAOPIAN(beanDoctorInfo.getImgUrl());
+
+            beanHospRegisterReq = new BeanHospRegisterReq();
+            beanHospRegisterReq.setHosp(beanDoctorInfo.getHosp());
+            beanHospRegisterReq.setHospTxt(beanDoctorInfo.getHospital());
+            beanHospRegisterReq.setDept(beanDoctorInfo.getDept());
+            beanHospRegisterReq.setDeptTxt(beanDoctorInfo.getDepartment());
+            beanHospRegisterReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
+
         }
 
-        doctorDepartment = beanHospRegisterReq.getDeptTxt();
-        doctorName = DeptDoctInfo.getDOCTOR_NAME();
-        imgDoctorUrl = HttpHealthyFishyUrl+DeptDoctInfo.getZHAOPIAN();
-        doctorTitle = DeptDoctInfo.getREISTER_NAME();
-        pictureConsultingPrice = "30";
-        privateDoctorPrice = "50";
-        doctorInfo = DeptDoctInfo.getWEB_INTRODUCE();
-        doctorCompany = beanHospRegisterReq.getHospTxt();
-        appointmentPrice = String.valueOf(DeptDoctInfo.getPRICE());
+        imgDoctorUrl = HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl();
+        doctorName = beanDoctorInfo.getName();
+        doctorTitle = beanDoctorInfo.getDuties();
+        doctorInfo = beanDoctorInfo.getIntroduce();
+        appointmentPrice = beanDoctorInfo.getPrice();
+        doctorCompany = beanDoctorInfo.getHospital();
+        doctorDepartment = beanDoctorInfo.getDepartment();
+
+        pictureConsultingPrice = "免费";
+        privateDoctorPrice = "免费";
         isOpenPictureConsulting = true;
-        isOpenPrivateDoctor = true;
+        isOpenPrivateDoctor = false;
         isOpenAppointment = true;
-        isAttention = false;
+
     }
 
     /**
@@ -170,21 +208,88 @@ public class ChoiceService extends BaseActivity {
     /**
      * 设置是否关注按钮的监听
      */
-    private void ckbAttentionListener() {
-        ckbAttention.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    private void tvAttentionListener() {
+        if (!TextUtils.isEmpty(uid)) {
+            key = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
+            if (!DataSupport.where("key = ?", key).find(BeanConcernList.class).isEmpty()) {
+                isAttention = true;
+                tvAttention.setClickable(false);
+            } else {
+                isAttention = false;
+            }
+        }
+
+        tvAttention.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    //需要访问服务器改变关注的状态
-                    ckbAttention.setText("已关注");
-                    isAttention = true;
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(uid)) {
+                    if (tvAttention.getText().toString().equals("+关注")) {
+                        addConcern();//加关注
+                    }
                 } else {
-                    //需要访问服务器改变关注的状态
-                    ckbAttention.setText("+关注");
-                    isAttention = false;
+                    MyToast.showToast(ChoiceService.this, "您还没有登录呦！请先登录再关注");
                 }
             }
         });
+
+    }
+
+    /**
+     * 加关注操作
+     */
+    private void addConcern() {
+        Log.i("LYQ", key);
+
+        final String strJson = JSON.toJSONString(beanDoctorInfo);
+        Log.i("LYQ", "strJsonBeanDoctorInfo:" + strJson);
+
+        BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
+        beanBaseKeySetReq.setKey(key);
+        beanBaseKeySetReq.setValue(strJson);
+
+        RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
+                if (beanBaseResp.getCode() >= 0) {
+                    tvAttention.setText("已关注");
+                    tvAttention.setBackgroundResource(R.drawable.concern);
+                    tvAttention.setTextColor(getResources().getColor(R.color.color_white));
+                    tvAttention.setClickable(false);
+                    isAttention = true;
+                    BeanConcernList beanConcernList = new BeanConcernList();
+                    beanConcernList.setKey(key);
+                    if (beanConcernList.saveOrUpdate("key = ?", key)) {
+                        beanConcernList.saveOrUpdate("key = ?", key);
+                    }
+                } else {
+                    MyToast.showToast(ChoiceService.this, "关注失败，请重试");
+                    tvAttention.setText("+关注");
+                    tvAttention.setBackgroundResource(R.drawable.concern_not);
+                    tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
+                    tvAttention.setClickable(true);
+                    isAttention = false;
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     /**
@@ -197,28 +302,48 @@ public class ChoiceService extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_sendTheMind:
                 //跳转到送心意页面，需要传递医生标识
-                Intent intent = new Intent(this, SendMind.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("name", doctorName);
-                bundle.putString("imgUrl", imgDoctorUrl);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(uid)) {
+                    Intent intent = new Intent(this, SendMind.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", doctorName);
+                    bundle.putString("imgUrl", imgDoctorUrl);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    MyToast.showToast(ChoiceService.this, "您还没有登录呦！请先登录");
+                }
+
                 break;
             case R.id.line_pictureConsulting:
                 //点击购买图文咨询服务
-                buyPictureConsultingService();
+                if (!TextUtils.isEmpty(uid)) {
+                    buyPictureConsultingService();
+                } else {
+                    MyToast.showToast(ChoiceService.this, "您还没有登录呦！请先登录");
+                }
+
                 break;
             case R.id.line_privateDoctor:
                 //点击购买私人医生服务
-                buyPrivateDoctorService();
+                if (!TextUtils.isEmpty(uid)) {
+                    buyPrivateDoctorService();
+                } else {
+                    MyToast.showToast(ChoiceService.this, "您还没有登录呦！请先登录");
+                }
+
                 break;
             case R.id.line_appointment:
                 //点击进行预约挂号
-                Intent intent1 = new Intent(ChoiceService.this,DoctorDetail.class);
-                intent1.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
-                intent1.putExtra("BeanHospDeptDoctListRespItem", DeptDoctInfo);
-                startActivity(intent1);
-                //buyAppointmentService();
+                if (!TextUtils.isEmpty(uid)) {
+                    Intent intent1 = new Intent(ChoiceService.this, DoctorDetail.class);
+                    intent1.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
+                    intent1.putExtra("BeanHospDeptDoctListRespItem", DeptDoctInfo);
+                    intent1.putExtra("BeanDoctorInfo", beanDoctorInfo);
+                    startActivity(intent1);
+                } else {
+                    MyToast.showToast(ChoiceService.this, "您还没有登录呦！请先登录");
+                }
+
                 break;
             case R.id.line_moreDoctorInfo:
                 //点击显示更多医生介绍
@@ -241,16 +366,21 @@ public class ChoiceService extends BaseActivity {
         tvDoctorCompany.setText(doctorCompany);  //设置医生工作的医院
         //判断是否已经关注该医生
         if (isAttention) {
-            ckbAttention.setChecked(true);
-            ckbAttention.setText("已关注");
+            tvAttention.setText("已关注");
+            tvAttention.setBackgroundResource(R.drawable.concern);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_white));
+            tvAttention.setClickable(false);
         } else {
-            ckbAttention.setChecked(false);
-            ckbAttention.setText("+关注");
+            tvAttention.setText("+关注");
+            tvAttention.setBackgroundResource(R.drawable.concern_not);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
+            tvAttention.setClickable(true);
         }
         //判断是否已开通图文咨询服务
         if (isOpenPictureConsulting) {
             imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_open);
-            tvPictureConsultingPrice.setText(pictureConsultingPrice + "元/次");
+            //tvPictureConsultingPrice.setText(pictureConsultingPrice + "元/次");
+            tvPictureConsultingPrice.setText(pictureConsultingPrice);
             tvPictureConsultingPrice.setTextColor(getResources().getColor(R.color.color_primary));
         } else {
             imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_not_open);
@@ -259,7 +389,8 @@ public class ChoiceService extends BaseActivity {
         //判断是否已开通私人医生服务
         if (isOpenPrivateDoctor) {
             imgPrivateDoctor.setImageResource(R.mipmap.ic_private_doctor_open);
-            tvPrivateDoctorPrice.setText(privateDoctorPrice + "元/周");
+            //tvPrivateDoctorPrice.setText(privateDoctorPrice + "元/周");
+            tvPrivateDoctorPrice.setText(privateDoctorPrice);
             tvPrivateDoctorPrice.setTextColor(getResources().getColor(R.color.color_primary));
         } else {
             imgPrivateDoctor.setImageResource(R.mipmap.ic_private_doctor_not_open);

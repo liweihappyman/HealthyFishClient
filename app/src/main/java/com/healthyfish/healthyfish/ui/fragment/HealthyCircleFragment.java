@@ -71,7 +71,6 @@ public class HealthyCircleFragment extends Fragment {
         initImageView();
         initPgAdapter();
         vpListener();
-        Log.e("LYQ","HealthyCircleFragment");
         return rootView;
     }
 

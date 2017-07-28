@@ -16,6 +16,8 @@
         </mapping>
         <mapping class="com.healthyfish.healthyfish.POJO.BeanVisitingPerson">
         </mapping>
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanConcernList">
+        </mapping>
     </list>
 
 </litepal>
