@@ -3,7 +3,7 @@ package com.healthyfish.healthyfish.POJO;
 import org.litepal.crud.DataSupport;
 
 /**
- * 描述：
+ * 描述：已关注的key列表，用来保存到数据库的类
  * 作者：LYQ on 2017/7/27.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
