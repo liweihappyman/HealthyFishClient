@@ -20,14 +20,18 @@ import com.healthyfish.healthyfish.eventbus.EmptyMessage;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.ui.presenter.login.LoginPresenter;
 import com.healthyfish.healthyfish.ui.view.login.ILoginView;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.Sha256;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,6 +121,14 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         }
     }
 
+
+
+
+
+
+
+
+
     /**
      *     登录
      */
@@ -124,8 +136,10 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         BeanUserLoginReq beanUserLoginReq = new BeanUserLoginReq();
         beanUserLoginReq.setMobileNo(getUserName());//号码
         beanUserLoginReq.setAct(BeanUserLoginReq.class.getSimpleName());//设置操作类型，不然服务器不知道
-        beanUserLoginReq.setPwdSHA256(getPassword());//密码
-
+        beanUserLoginReq.setPwdSHA256(Sha256.getSha256(getPassword()));//密码
+        //A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3
+        //A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3
+        //A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3
         final String user = JSON.toJSONString(beanUserLoginReq);//如果登录成功，将会由sharepreference保存
 
         RetrofitManagerUtils.getInstance(this, null)
@@ -151,13 +165,15 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                     }
                 });
     }
+
+
     /**
      *     根据返回码做出相应的提示
      */
     private void judgeAndShowToast(int code, String user) {
         if (code >= 0) {
             Toast.makeText(Login.this, "登录成功", Toast.LENGTH_LONG).show();
-            saveUserBean(user);  //登录成功由shareprefrence保存
+            MySharedPrefUtil.saveKeyValue("_user",user);  //登录成功由shareprefrence保存
             EventBus.getDefault().post(new EmptyMessage());//发送消息提醒刷新个人中心的登录状态
             Intent intent = new Intent(Login.this,MainActivity.class);
             startActivity(intent);
@@ -173,16 +189,16 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         }
     }
 
-    /**
-     *     登录成功由shareprefrence保存
-     */
-    private void saveUserBean(String user) {
-        SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.putString("user",user);
-        editor.commit();
-    }
+//    /**
+//     *     登录成功由shareprefrence保存
+//     */
+//    private void saveUserBean(String user) {
+//        SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.clear();
+//        editor.putString("user",user);
+//        editor.commit();
+//    }
 
     /**
      * 跳转到注册界面

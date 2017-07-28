@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,16 +15,19 @@ import android.widget.ToggleButton;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MainActivity;
+import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLogoutReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 
@@ -96,12 +100,11 @@ public class SetUp extends BaseActivity {
      * 退出登录
      */
     private void loginOut() {
-        SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
-        String user = sp.getString("user", null);
+        String user = MySharedPrefUtil.getValue("_user");
         if (user == null) {
             Toast.makeText(this, "您还没有登录哟", Toast.LENGTH_LONG).show();
         } else {
-            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user,BeanUserLoginReq.class);
+            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
 
             BeanUserLogoutReq beanUserLogoutReq = new BeanUserLogoutReq();
             beanUserLogoutReq.setMobileNo(beanUserLoginReq.getMobileNo());
@@ -110,8 +113,16 @@ public class SetUp extends BaseActivity {
             RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserLogoutReq), new Subscriber<ResponseBody>() {
                 @Override
                 public void onCompleted() {
-                    SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
-                    sp.edit().clear().commit();//清除用户登录信息
+                    MySharedPrefUtil.remKey("_user");     //清除用户登录信息
+                    SharedPreferences cookie = getSharedPreferences("cookie", MODE_PRIVATE);
+                    cookie.edit().clear().commit();//清除cookie
+
+                    SharedPreferences test = getSharedPreferences("cookie", MODE_PRIVATE);
+                    String s = test.getString("cookie", null);
+                    Log.i("cookie", " " + s);
+
+                    DataSupport.deleteAll(BeanMedRec.class);//清除所有病历
+
                     EventBus.getDefault().post(new EmptyMessage());
                     Intent intent = new Intent(SetUp.this, MainActivity.class);
                     startActivity(intent);
@@ -120,14 +131,14 @@ public class SetUp extends BaseActivity {
 
                 @Override
                 public void onError(Throwable e) {
-                    Toast.makeText(SetUp.this, "网络异常"+e.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(SetUp.this, "网络异常" + e.toString(), Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onNext(ResponseBody responseBody) {
                     try {
                         String str = responseBody.string();
-                        Toast.makeText(SetUp.this, "退出登录成功", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SetUp.this, "退出登录成功", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -136,6 +147,7 @@ public class SetUp extends BaseActivity {
 
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

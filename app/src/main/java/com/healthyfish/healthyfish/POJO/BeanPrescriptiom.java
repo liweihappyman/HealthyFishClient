@@ -1,5 +1,7 @@
 package com.healthyfish.healthyfish.POJO;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  * 编辑：WKJ
  */
 
-public class BeanPrescriptiom {
+public class BeanPrescriptiom extends DataSupport{
 
     @Override
     public String toString() {
@@ -51,7 +53,7 @@ public class BeanPrescriptiom {
     private String PRESCRIBE_OPERATOR;
     private String DEPT_NAME;
     private String SEX;
-    private String ITEM_CLASS;
+    private String ITEM_CLASS;//由于这个字段没有用到，暂时拿来存放List<PresListBean> presList的JsonString对象；
     private String APPLY_DEPT;
     private String SICK_NAME;
     private String DIAGNOSIS_NAME;
@@ -61,7 +63,7 @@ public class BeanPrescriptiom {
     private String PRESCRIPTION_NUMBER;
     private String key;
     private String AGE;
-    private List<PresListBean> presList;
+    protected List<PresListBean> presList;//只有生明为private的对象才会被litepal创建为数据库的字段，这个用上面的ITEM_CLASS存放
 
     public String getPRESCRIBE_OPERATOR() {
         return PRESCRIBE_OPERATOR;
@@ -175,7 +177,12 @@ public class BeanPrescriptiom {
         this.presList = presList;
     }
 
-    public static class PresListBean {
+
+
+
+
+
+    public  class PresListBean {
         /**
          * LAY_PHYSIC_DAYS : 1
          * PRICE : 36.40
@@ -195,22 +202,22 @@ public class BeanPrescriptiom {
          * MODIFY_TIME : 2017-04-25T09:29:33+08:00
          */
 
-        private String LAY_PHYSIC_DAYS;
-        private String PRICE;
-        private String FREQ_DESCRIBE;
-        private String LAY_PHYSIC_QUANTITY;
-        private String PACK_SPEC;
-        private String PHYSIC_DOSEAGE;
-        private String STATUS;
-        private String COST;
-        private String USAGE;
-        private String SICK_ID;
-        private String DOSE_UNIT;
-        private String PHYSIC_NAME;
-        private String PRESCRIBE_NUMBER;
-        private String TAKE_MEDICINE_WAYS_CODE;
-        private String PHYSIC_UNIT;
-        private String MODIFY_TIME;
+        protected String LAY_PHYSIC_DAYS;
+        protected String PRICE;
+        protected String FREQ_DESCRIBE;
+        protected String LAY_PHYSIC_QUANTITY;
+        protected String PACK_SPEC;
+        protected String PHYSIC_DOSEAGE;
+        protected String STATUS;
+        protected String COST;
+        protected String USAGE;
+        protected String SICK_ID;
+        protected String DOSE_UNIT;
+        protected String PHYSIC_NAME;
+        protected String PRESCRIBE_NUMBER;
+        protected String TAKE_MEDICINE_WAYS_CODE;
+        protected String PHYSIC_UNIT;
+        protected String MODIFY_TIME;
 
         public String getLAY_PHYSIC_DAYS() {
             return LAY_PHYSIC_DAYS;

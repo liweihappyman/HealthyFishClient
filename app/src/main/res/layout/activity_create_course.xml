@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.activity.medicalrecord.CreateCourse">
     <include layout="@layout/toolbar"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/type_ly"
         android:clickable="true"
@@ -53,7 +61,7 @@
         <TextView
             style="@style/Divider"/>
 
-        <GridView
+        <com.healthyfish.healthyfish.ui.widget.MyGridView
             android:id="@+id/create_course_img_gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +69,8 @@
             android:layout_marginLeft="50px"
             android:layout_marginTop="10px"
             android:layout_marginBottom="10px"
-            ></GridView>
+            ></com.healthyfish.healthyfish.ui.widget.MyGridView>
+
         <TextView
             style="@style/Divider"/>
         <TextView
@@ -74,10 +83,8 @@
             android:paddingLeft="50px"
             style="@style/genera_title_text"/>
     </com.zhy.autolayout.AutoLinearLayout>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+    </ScrollView>
     <TextView
         android:id="@+id/save"
         android:layout_width="match_parent"

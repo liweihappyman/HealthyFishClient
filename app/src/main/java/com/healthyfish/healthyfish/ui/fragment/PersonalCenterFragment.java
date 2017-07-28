@@ -29,6 +29,7 @@ import com.healthyfish.healthyfish.ui.activity.personal_center.MyConcern;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyNews;
 import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformation;
 import com.healthyfish.healthyfish.ui.activity.personal_center.SetUp;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
@@ -95,9 +96,8 @@ public class PersonalCenterFragment extends Fragment {
     }
    //登录状态判断初始化相应的控件
     private void judgeLoginState() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
-        String user = sharedPreferences.getString("user",null);
-        if (user!=null){
+        String user = MySharedPrefUtil.getValue("_user");
+        if (user!=""){
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user,BeanUserLoginReq.class);
             String numble = beanUserLoginReq.getMobileNo();
             isLogin(true,numble);

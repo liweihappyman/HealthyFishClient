@@ -106,10 +106,12 @@
                 <TextView
                     android:id="@+id/ipres_perscribe_status"
                     style="@style/textSize_42"
-                    android:layout_width="120px"
+                    android:layout_width="wrap_content"
                     android:layout_height="60px"
                     android:layout_marginLeft="45px"
                     android:layout_marginRight="45px"
+                    android:paddingLeft="5px"
+                    android:paddingRight="5px"
                     android:background="@drawable/blue_rounded_rectangle"
                     android:gravity="center"
                     android:text="挂号"
@@ -145,6 +147,7 @@
                 android:textColor="@color/color_content_title" />
 
             <ImageView
+                android:id="@+id/ipres_right"
                 android:layout_width="40px"
                 android:layout_height="60px"
                 android:layout_gravity="center_vertical"

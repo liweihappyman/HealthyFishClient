@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -24,6 +25,8 @@ import com.healthyfish.healthyfish.adapter.PrescriptionRvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +45,8 @@ public class MyPrescription extends BaseActivity {
     Toolbar toolbar;
     @BindView(R.id.rv_prescription)
     RecyclerView rvPrescription;
+    private PrescriptionRvAdapter adapter;
+    private boolean hasNewData = false;//访问网络后是否有新数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,65 +54,38 @@ public class MyPrescription extends BaseActivity {
         setContentView(R.layout.activity_my_prescription);
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "我的处方");
-        initData();
+        initDataFromDB();
         requestForPrescription();
-
     }
 
+    /**
+     * 网络访问，获取所有的电子处方
+     */
     private void requestForPrescription() {
-
-
-        BeanUserRetrPresReq userRetrPresReq = new BeanUserRetrPresReq();
-        userRetrPresReq.setSickId("0000281122");
-        userRetrPresReq.setUser("13977211042");
-        userRetrPresReq.setHosp("lzzyy");
-
-
         BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
-        userListValueReq.setPrefix("pres_");
+        userListValueReq.setPrefix("pres_13977211042");
         userListValueReq.setFrom(0);
         userListValueReq.setNum(-1);
         userListValueReq.setTo(-1);
-
-
-        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(userListValueReq), new Subscriber<ResponseBody>() {
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(userListValueReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-
+                initData(hasNewData);//如果 有新数据则通知更新列表
             }
+
             @Override
             public void onError(Throwable e) {
-                Log.i("电子处方","出错啦" + e.toString());
+                Toast.makeText(MyPrescription.this, "出错啦", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onNext(ResponseBody responseBody) {
                 try {
                     String str = responseBody.string();
-                    Log.i("电子处方","数据" + str);
-//                    JSONObject object = JSONArray.parseObject(str);
-//                    String JStr = JSON.toJSONString(object);
-//                    BeanPrescriptiom beanPrescriptiom = JSON.parseObject(JStr,BeanPrescriptiom.class);
-
-
-                    List<String> strJsonList = JSONArray.parseObject(str, List.class);
-                    for (String strJson : strJsonList) {
-                        BeanPrescriptiom beanPrescriptiom = JSON.parseObject(strJson, BeanPrescriptiom.class);
-                        list.add(beanPrescriptiom);
-
-                        Log.i("电子处方详细数据"," "+beanPrescriptiom.toString());
-
-                        Log.i("电子处方详细数据"," "+beanPrescriptiom.getAGE()+beanPrescriptiom.getAPPLY_DEPT()+beanPrescriptiom.getKey());
-//                        Log.i("电子处方详细数据","----------------------------------------------------------------------------");
-//                        Log.i("电子处方详细数据PresList()"," "+beanPrescriptiom.getPresList());
-
-                        List<BeanPrescriptiom.PresListBean> preslist = beanPrescriptiom.getPresList();
-                        for (BeanPrescriptiom.PresListBean presListBean:preslist){
-                            //BeanPrescriptiom.PresListBean presListBean =  JSON.parseObject(strJsonPres, BeanPrescriptiom.PresListBean.class);
-                            //Log.i("电子处方详细数据PresList()"," "+presListBean.toString()+"*****************************");
-                            Log.i("电子处方详细数据PresList()"," "+presListBean.getPRICE()+"*****************************");
-                        }
+                    //Log.i("电子处方", "数据" + str);
+                    if (str != null) {
+                        saveNewData2DB(str);//保存新数据到本地数据库
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -116,6 +94,35 @@ public class MyPrescription extends BaseActivity {
 
 
     }
+
+    /**
+     * 对比本地数据库的key，如果不存在，则保存到数据库中
+     * @param str 请求相应的数据responseBody.string()
+     */
+    private void saveNewData2DB(String str) {
+        List<String> strJsonList = JSONArray.parseObject(str, List.class);
+        for (String strJson : strJsonList) {
+            BeanPrescriptiom beanPrescriptiom = JSON.parseObject(strJson, BeanPrescriptiom.class);
+            //判断当前请求回来的key是否存在，不存在的话保存到数据库中
+            if (DataSupport.select("key").where("key = ? ", beanPrescriptiom.getKey()).find(BeanPrescriptiom.class).isEmpty()) {
+                list.add(beanPrescriptiom);
+                Log.i("电子处方详细数据", " " + beanPrescriptiom.toString());
+//                        Log.i("电子处方详细数据"," "+beanPrescriptiom.getAGE()+beanPrescriptiom.getAPPLY_DEPT()+beanPrescriptiom.getKey());
+//                        Log.i("电子处方详细数据","----------------------------------------------------------------------------");
+//                        Log.i("电子处方详细数据PresList()"," "+beanPrescriptiom.getPresList())
+                List<BeanPrescriptiom.PresListBean> preslist = beanPrescriptiom.getPresList();
+                for (BeanPrescriptiom.PresListBean presBean : preslist) {//目前只有一个药，所以执行一遍直接break掉
+                    //presBean打包成JsonStr，set到ITEM_CLASS（因为这个数据项（ITEM_CLASS）没有用到，所以用来存放presBean打包成的JsonStr）
+                    beanPrescriptiom.setITEM_CLASS(JSON.toJSONString(presBean));
+                    //表示有新数据
+                    hasNewData = true;
+                    break;
+                }//保存到数据库
+                beanPrescriptiom.save();
+            }
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,44 +142,25 @@ public class MyPrescription extends BaseActivity {
         }
         return true;
     }
-    private void initData() {
-        List<BeanPrescription> list = new ArrayList<>();
-        BeanPrescription b1 = new BeanPrescription();
-        b1.setTitle("高血压（慢）");
-        b1.setRef("2017-12-01");
-        b1.setName("隔壁老王");
-        b1.setSymptom("男");
-        b1.setAbbr("66岁");
-        b1.setAttending("柳州市中医院-心病科门诊-洋洋");
-        b1.setComp("挂号");
-        b1.setEffect("瑞舒伐他汀钙片");
-        BeanPrescription b2 = new BeanPrescription();
-        b2.setTitle("高血压（慢）");
-        b2.setRef("2017-12-01");
-        b2.setName("隔壁老王");
-        b2.setSymptom("男");
-        b2.setAbbr("66岁");
-        b2.setAttending("柳州市中医院-心病科门诊-洋洋");
-        b2.setComp("挂号");
-        b2.setEffect("瑞舒伐他汀钙片");
-        BeanPrescription b3 = new BeanPrescription();
-        b3.setTitle("高血压（慢）");
-        b3.setRef("2017-12-01");
-        b3.setName("隔壁老王");
-        b3.setSymptom("男");
-        b3.setAbbr("66岁");
-        b3.setAttending("柳州市中医院-心病科门诊-洋洋");
-        b3.setComp("挂号");
-        b3.setEffect("瑞舒伐他汀钙片");
-        list.add(b1);
-        list.add(b2);
-        list.add(b3);
-        list.add(b1);
-        list.add(b3);
-        list.add(b2);
+
+    /**
+     * 从数据库加载
+     */
+    private void initDataFromDB() {
+        list = DataSupport.findAll(BeanPrescriptiom.class);
         LinearLayoutManager lmg = new LinearLayoutManager(this);
         rvPrescription.setLayoutManager(lmg);
-       // PrescriptionRvAdapter adapter = new PrescriptionRvAdapter(this,list,toolbar);
-       // rvPrescription.setAdapter(adapter);
+        adapter = new PrescriptionRvAdapter(this, list, toolbar);
+        rvPrescription.setAdapter(adapter);
+    }
+
+    /**
+     * 访问网络后，有新数据通知更新列表
+     */
+    private void initData(boolean hasNewData) {
+        if (hasNewData) {
+            adapter.notifyDataSetChanged();
+        }
+
     }
 }

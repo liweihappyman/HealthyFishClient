@@ -6,8 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />//读取网络是否可用
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    //读取网络是否可用
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -104,13 +104,10 @@
         <activity android:name=".ui.activity.personal_center.Feedback" />
         <!-- 个人中心设置页面 -->
         <activity android:name=".ui.activity.personal_center.SetUp" />
-
-
-            android:configChanges="orientation|screenSize" />
+        android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activity.medicalrecord.CreateCourse"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
         <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
         <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
         <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
@@ -149,12 +146,10 @@
         <activity android:name=".ui.activity.healthy_management.SinglePlanDetail" />
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
-
         <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme" />
-
         <activity
             android:name="com.lidong.photopicker.PhotoPickerActivity"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize" />
         <activity android:name="com.lidong.photopicker.PhotoPreviewActivity" />
 
         <!-- 健康管理自定义计划具体安排页面 -->
@@ -167,8 +162,11 @@
         <!-- 问诊搜索结果显示页面 -->
         <activity android:name=".ui.activity.SearchResult" />
         <!-- 电子处方 -->
-        <activity android:name=".ui.activity.Inspection_report.MyPrescription"></activity>
+        <activity android:name=".ui.activity.Inspection_report.MyPrescription" />
 
+        <service
+            android:name=".service.UploadImages"
+            android:exported="false"></service>
     </application>
 
 </manifest>

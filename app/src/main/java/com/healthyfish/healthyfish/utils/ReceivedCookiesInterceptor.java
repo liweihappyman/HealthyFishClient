@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.List;
 
+import okhttp3.Cookie;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 import rx.Observable;
@@ -34,6 +36,7 @@ public class ReceivedCookiesInterceptor implements Interceptor {
         if (chain == null)
             Log.d("httpCookid", "Receivedchain == null");
         Response originalResponse = chain.proceed(chain.request());
+
         Log.d("httpCookid", "originalResponse" + originalResponse.toString());
         if (!originalResponse.headers("set-cookie").isEmpty()) {
             final StringBuffer cookieBuffer = new StringBuffer();

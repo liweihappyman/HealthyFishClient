@@ -14,6 +14,8 @@
         </mapping>
         <mapping class="com.healthyfish.healthyfish.POJO.BeanCourseOfDisease">
         </mapping>
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanPrescriptiom">
+        </mapping>
     </list>
 
 </litepal>
