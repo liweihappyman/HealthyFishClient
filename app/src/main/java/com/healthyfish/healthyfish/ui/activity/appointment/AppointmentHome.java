@@ -65,8 +65,7 @@ public class AppointmentHome extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.choose_hospital)
-    Button chooseHospital;
-    @BindView(R.id.choose_department)
+    Button chooseHospital;    @BindView(R.id.choose_department)
     Button chooseDepartment;
     @BindView(R.id.scroll_message)
     AutoVerticalScrollTextView scrollMessage;
@@ -76,8 +75,7 @@ public class AppointmentHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_home);
         ButterKnife.bind(this);
-        toolbar.setTitle("");
-        toolbarTitle.setText("挂号");
+        toolbar.setTitle("");        toolbarTitle.setText("挂号");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -87,8 +85,7 @@ public class AppointmentHome extends AppCompatActivity {
         initSrollText();
     }
 
-    private void initSrollText() {
-        scrollMessage.setText(strings[0]);
+    private void initSrollText() {        scrollMessage.setText(strings[0]);
         new Thread(){
             @Override
             public void run() {
@@ -136,7 +133,6 @@ public class AppointmentHome extends AppCompatActivity {
                 break;
         }
     }
-
 
     @Override
     protected void onDestroy() {
