@@ -14,6 +14,8 @@ import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.utils.AutoUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +28,6 @@ import java.util.List;
 public class CourseOfDiseaseAdapter extends RecyclerView.Adapter<CourseOfDiseaseAdapter.ViewHolder> implements View.OnClickListener {
     private Context mContext;
     private List<BeanCourseOfDisease> listCourseOfDisease;//病程列表
-
     private OnItemClickListener mOnItemClickListener = null;
 
     @Override
@@ -57,6 +58,7 @@ public class CourseOfDiseaseAdapter extends RecyclerView.Adapter<CourseOfDisease
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        List<String> listImages = new ArrayList<>();
         BeanCourseOfDisease courseOfDisease  = listCourseOfDisease.get(position);
         holder.type.setText(courseOfDisease.getType());
         holder.date.setText(courseOfDisease.getDate());
@@ -64,7 +66,6 @@ public class CourseOfDiseaseAdapter extends RecyclerView.Adapter<CourseOfDisease
             holder.imgGridView.setVisibility(View.GONE);
         }else {
             holder.imgGridView.setVisibility(View.VISIBLE);
-
             CourseGridAdapter courseGridAdapter = new CourseGridAdapter(courseOfDisease.getImgPaths(),mContext,courseOfDisease.getImgUrls());
            // Log.i("url",courseOfDisease.getImgPaths().get(0));
             holder.imgGridView.setAdapter(courseGridAdapter);

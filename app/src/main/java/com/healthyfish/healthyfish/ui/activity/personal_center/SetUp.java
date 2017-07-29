@@ -107,8 +107,10 @@ public class SetUp extends BaseActivity {
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
 
             BeanUserLogoutReq beanUserLogoutReq = new BeanUserLogoutReq();
-            beanUserLogoutReq.setMobileNo(beanUserLoginReq.getMobileNo());
-            beanUserLogoutReq.setPwdSHA256(beanUserLoginReq.getPwdSHA256());
+            if (beanUserLoginReq!=null) {//防止空引用炸锅
+                beanUserLogoutReq.setMobileNo(beanUserLoginReq.getMobileNo());
+                beanUserLogoutReq.setPwdSHA256(beanUserLoginReq.getPwdSHA256());
+            }
 
             RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserLogoutReq), new Subscriber<ResponseBody>() {
                 @Override
