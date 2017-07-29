@@ -71,7 +71,9 @@ import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.AL
 
 public class AllMedRec extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int TO_NEW_MED_REC = 38;//进入NewMedRec页面的请求标志
-    private List<String> keysOutDB = new ArrayList<>();//存放数据库没有的key
+    //private List<String> keysOutDB = new ArrayList<>();//存放数据库没有的key
+    private List<String> nullValueKey = new ArrayList<>();//存放value值为空的key；
+    boolean hasNullValueKey = false;//标志空值key
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.med_rec_all)
@@ -131,6 +133,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
      * 访问网络数据
      */
     private void reqForNetworkData() {
+        final List<String> keysOutDB = new ArrayList<>();//存放数据库没有的key
         String userStr = MySharedPrefUtil.getValue("_user");
         BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
         StringBuilder prefix = new StringBuilder("medRec_");
@@ -163,18 +166,24 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                     String str = responseBody.string();
                     //Log.i("所有病历", "数据" + str);
                     if (str != null) {
-                        hasNewData = true;
                         List<String> keys = JSONArray.parseObject(str, List.class);
-                        for (final String key : keys) {
-                            //Log.i("medReckey", "key" + key);
-                            if (DataSupport.select("key").where("key = ? ", key).find(BeanMedRec.class).isEmpty()) {
-                                keysOutDB.add(key);
+                        if (keys.size() > 0) {
+                            for (final String key : keys) {
+                                //Log.i("medReckey", "key" + key);
+                                if (DataSupport.select("key").where("key = ? ", key).find(BeanMedRec.class).isEmpty()) {
+                                    keysOutDB.add(key);
+                                    hasNewData = true;
+                                }
                             }
-                        }
-                        if (hasNewData) {//如果 有新数据则通知更新列表
-                            for (String key : keysOutDB) {
-                                keyGet(key);
-                                //networkReqDelMedRec(key);//测试用
+                            if (hasNewData) {//如果 有新数据则通知更新列表
+                                new Thread() {
+                                    @Override
+                                    public void run() {
+                                        keyGet(keysOutDB);
+                                    }
+                                }.start();
+                            }else {
+                                Toast.makeText(AllMedRec.this,"已经是最新数据了",Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -188,7 +197,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
     /**
      * ----------------------------------------------------------------------------------------------------------------------
-     * 删除网络数据（测试用）
+     * 删除网络数据空值key，造成空值key的原因还不清楚，出现过
      */
     private void networkReqDelMedRec(String key) {
         //删除多个用
@@ -223,47 +232,54 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
     }
 
     /**
-     * 根据返回的key逐个获取数据
-     * @param key
+     * 根据返回的key逐个获取数据r
      */
-    private void keyGet(final String key) {
-        size++;
-        final BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
-        beanBaseKeyGetReq.setKey(key);
-        RetrofitManagerUtils.getInstance(AllMedRec.this, null).getMedRecByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
-            @Override
-            public void onCompleted() {
-                if (size == keysOutDB.size()) {
-                    handler.sendEmptyMessage(0x11);
-                }
-            }
 
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(AllMedRec.this, "出错啦", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    String rspv = responseBody.string();
-                    if (rspv != null) {
-                        BeanBaseKeyGetResp object = JSON.parseObject(rspv, BeanBaseKeyGetResp.class);
-                        BeanMedRec beanMedRec = JSON.parseObject(object.getValue(), BeanMedRec.class);
-                        beanMedRec.setKey(key);
-                        beanMedRec.save();
-                        List<BeanCourseOfDisease> courseOfDiseaseList = beanMedRec.getListCourseOfDisease();
-                        for (BeanCourseOfDisease courseOfDisease : courseOfDiseaseList) {
-                            courseOfDisease.setBeanMedRec(beanMedRec);
-                            courseOfDisease.save();
-                        }
-
+    private void keyGet(final List<String> keysOutDB) {
+        for (final String key : keysOutDB) {
+            size++;
+            final BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+            beanBaseKeyGetReq.setKey(key);
+            RetrofitManagerUtils.getInstance(AllMedRec.this, null).getMedRecByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+                @Override
+                public void onCompleted() {
+                    if (size == keysOutDB.size()) {
+                        size = 0;
+                        handler.sendEmptyMessage(0x11);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+
+                @Override
+                public void onError(Throwable e) {
+                    Toast.makeText(AllMedRec.this, "出错啦", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNext(ResponseBody responseBody) {
+                    try {
+                        String rspv = responseBody.string();
+                        if (rspv != null) {
+                            BeanBaseKeyGetResp object = JSON.parseObject(rspv, BeanBaseKeyGetResp.class);
+                            if (object.getValue() != null) {
+                                BeanMedRec beanMedRec = JSON.parseObject(object.getValue(), BeanMedRec.class);
+                                beanMedRec.setKey(key);
+                                beanMedRec.save();
+                                List<BeanCourseOfDisease> courseOfDiseaseList = beanMedRec.getListCourseOfDisease();
+                                for (BeanCourseOfDisease courseOfDisease : courseOfDiseaseList) {
+                                    courseOfDisease.setBeanMedRec(beanMedRec);
+                                    courseOfDisease.save();
+                                }
+                            } else {
+                                nullValueKey.add(key);
+                                hasNullValueKey = true;
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -342,9 +358,12 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
             if (msg.what == 0x11) {
                 init();//更新列表
+                if (hasNullValueKey){
+                    for (String key:nullValueKey)
+                    networkReqDelMedRec(key);//删除空值key
+                }
             }
         }
     };

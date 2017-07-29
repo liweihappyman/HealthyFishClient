@@ -212,14 +212,15 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
                         if (medRec.getKey() == null) {
                             medRec.delete();
                             Toast.makeText(NewMedRec.this, "删除成功", Toast.LENGTH_SHORT);
+                            Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
+                            setResult(ALL_MED_REC_RESULT, intent);
+                            finish();
 
                         } else {
                             networkReqDelMedRec();
                         }
                         dialog.dismiss();
-                        Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
-                        setResult(ALL_MED_REC_RESULT, intent);
-                        finish();
+
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
@@ -319,11 +320,16 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         RetrofitManagerUtils.getInstance(NewMedRec.this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(baseKeyRemReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-
+                Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
+                setResult(ALL_MED_REC_RESULT, intent);
+                finish();
             }
 
             @Override
             public void onError(Throwable e) {
+                Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
+                setResult(ALL_MED_REC_RESULT, intent);
+                finish();
                 Toast.makeText(NewMedRec.this, "删除失败，请检查网络环境", Toast.LENGTH_SHORT).show();
             }
 

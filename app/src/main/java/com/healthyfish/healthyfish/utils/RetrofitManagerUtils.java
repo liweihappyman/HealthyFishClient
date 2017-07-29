@@ -141,16 +141,16 @@ public class RetrofitManagerUtils {
 
 
     /**
-     * 逐个获取病历，必须执行在相同的io里面，不然获取到的数据会乱
+     * 逐个获取病历，必须执行在相同的线程历里面，不然获取到的数据有可能会乱
      * @param requestBody
      * @param subscriber
      * @author Wkj
      */
     public void getMedRecByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
         apiService.getHealthyInfoByRetrofit(requestBody)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.io())
+//                .unsubscribeOn(Schedulers.io())
+//                .observeOn(Schedulers.io())
                 .subscribe(subscriber);
     }
 

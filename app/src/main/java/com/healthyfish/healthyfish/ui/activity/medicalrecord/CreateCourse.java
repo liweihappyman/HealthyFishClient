@@ -23,6 +23,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.alibaba.fastjson.JSON;
 import com.foamtrace.photopicker.ImageCaptureManager;
 import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.PhotoPreviewActivity;
@@ -37,23 +39,12 @@ import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.constant.constants;
 import com.healthyfish.healthyfish.service.UploadImages;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
-import com.healthyfish.healthyfish.utils.OkHttpUtils;
-import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
-
 import com.zhy.autolayout.AutoLinearLayout;
-
 import org.litepal.crud.DataSupport;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.MultipartBody;
@@ -289,7 +280,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
         View rootView;
         rootView = LayoutInflater.from(CreateCourse.this).inflate(R.layout.options,
                 null);
-        final PopupWindow mPopWindow = new android.widget.PopupWindow(rootView);
+        final PopupWindow mPopWindow = new PopupWindow(rootView);
         mPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopWindow.setTouchable(true);
@@ -413,7 +404,6 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
             }
-
         }
     }
 

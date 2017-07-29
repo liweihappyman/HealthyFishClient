@@ -61,6 +61,14 @@ public class MyPrescription extends BaseActivity {
      */
     private void requestForPrescription() {
 
+        BeanUserRetrPresReq beanUserRetrPresReq = new BeanUserRetrPresReq();
+        beanUserRetrPresReq.setSickId("0000281122");
+        beanUserRetrPresReq.setUser("13977211042");
+        beanUserRetrPresReq.setHosp("lzzyy");
+
+
+
+
         BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
         userListValueReq.setPrefix("pres_13977211042");
         userListValueReq.setFrom(0);
@@ -82,7 +90,7 @@ public class MyPrescription extends BaseActivity {
             public void onNext(ResponseBody responseBody) {
                 try {
                     String str = responseBody.string();
-                    //Log.i("电子处方", "数据" + str);
+                    Log.i("电子处方", "数据" + str);
                     if (str != null) {
                         saveNewData2DB(str);//保存新数据到本地数据库
                     }
