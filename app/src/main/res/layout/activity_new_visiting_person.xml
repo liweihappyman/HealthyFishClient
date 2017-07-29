@@ -26,6 +26,32 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingLeft="54px"
+                android:text="医院："
+                android:textColor="@color/color_general_and_title" />
+
+            <EditText
+                android:id="@+id/et_hospital"
+                android:layout_width="666px"
+                android:layout_height="100px"
+                android:layout_marginRight="54px"
+                android:paddingLeft="5px"
+                android:paddingRight="5px"
+                android:background="@drawable/gray_1dp_rounded_rectangle" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/textSize_48"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="54px"
                 android:text="就诊人姓名："
                 android:textColor="@color/color_general_and_title" />
 

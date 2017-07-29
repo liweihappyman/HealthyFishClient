@@ -177,6 +177,8 @@ public class Login extends AutoLayoutActivity implements ILoginView {
             Toast.makeText(Login.this, "登录成功", Toast.LENGTH_LONG).show();
             MySharedPrefUtil.saveKeyValue("_user",user);  //登录成功由shareprefrence保存
             EventBus.getDefault().post(new EmptyMessage());//发送消息提醒刷新个人中心的登录状态
+            MyApplication.uid = getUserName();
+            upDateMyConcern();
             Intent intent = new Intent(Login.this,MainActivity.class);
             startActivity(intent);
             finish();

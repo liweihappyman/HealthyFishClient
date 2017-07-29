@@ -52,6 +52,8 @@ public class NewVisitingPerson extends BaseActivity {
     EditText etPhoneNumber;
     @BindView(R.id.bt_confirm_registration)
     Button btConfirmRegistration;
+    @BindView(R.id.et_hospital)
+    EditText etHospital;
 
     private BeanVisitingPerson visitingPerson;
 
@@ -71,6 +73,8 @@ public class NewVisitingPerson extends BaseActivity {
         setContentView(R.layout.activity_new_visiting_person);
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "新建就诊人");
+        etHospital.setText(hospital);
+        etHospital.setEnabled(false);
     }
 
     @OnClick(R.id.bt_confirm_registration)
@@ -142,7 +146,7 @@ public class NewVisitingPerson extends BaseActivity {
      */
     private void saveData() {
         boolean isSave = false;
-        List<BeanVisitingPerson> List = DataSupport.where("phoneID = ? and hospital = ? and visitingPerson = ? and visitingCard = ?",id,hospital,name,visitingCard).find(BeanVisitingPerson.class);
+        List<BeanVisitingPerson> List = DataSupport.where("phoneID = ? and hospital = ? and visitingPerson = ? and visitingCard = ?", id, hospital, name, visitingCard).find(BeanVisitingPerson.class);
         if (List.size() > 0) {
             MyToast.showToast(NewVisitingPerson.this, "就诊人已验证,无需再次验证");
             Log.e("LYQ", "已验证");

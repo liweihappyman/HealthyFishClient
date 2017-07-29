@@ -1,9 +1,10 @@
 package com.healthyfish.healthyfish.ui.activity.personal_center;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.zhy.autolayout.AutoLinearLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 描述：个人中心个人信息页面
@@ -24,24 +26,27 @@ import butterknife.OnClick;
 
 public class PersonalInformation extends BaseActivity {
 
+
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
+    @BindView(R.id.tv_change)
+    TextView tvChange;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.et_name)
-    EditText etName;
-    @BindView(R.id.et_gender)
-    EditText etGender;
-    @BindView(R.id.et_age)
-    EditText etAge;
-    @BindView(R.id.et_height)
-    EditText etHeight;
-    @BindView(R.id.et_weight)
-    EditText etWeight;
-    @BindView(R.id.et_phoneNumber)
-    EditText etPhoneNumber;
-    @BindView(R.id.et_idCard)
-    EditText etIdCard;
+    @BindView(R.id.civ_head_portrait)
+    CircleImageView civHeadPortrait;
+    @BindView(R.id.tv_nickname)
+    TextView tvNickname;
+    @BindView(R.id.tv_gender)
+    TextView tvGender;
+    @BindView(R.id.tv_birthDate)
+    TextView tvBirthDate;
+    @BindView(R.id.tv_phoneNumber)
+    TextView tvPhoneNumber;
+    @BindView(R.id.tv_name)
+    TextView tvName;
+    @BindView(R.id.tv_idCard)
+    TextView tvIdCard;
     @BindView(R.id.iv_go)
     ImageView ivGo;
     @BindView(R.id.lly_id_card)
@@ -52,11 +57,18 @@ public class PersonalInformation extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_information);
         ButterKnife.bind(this);
-        initToolBar(toolbar,toolbarTitle,"个人信息");
+        initToolBar(toolbar, toolbarTitle, "个人信息");
     }
 
-    @OnClick(R.id.iv_go)
-    public void onViewClicked() {
-        //跳转到身份证页面
+    @OnClick({R.id.tv_change, R.id.iv_go})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tv_change:
+                Intent intent = new Intent(this, ChangePersonalInformation.class);
+                startActivity(intent);
+                break;
+            case R.id.iv_go:
+                break;
+        }
     }
 }
