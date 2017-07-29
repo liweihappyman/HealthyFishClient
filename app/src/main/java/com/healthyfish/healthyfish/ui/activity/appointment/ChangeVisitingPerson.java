@@ -1,18 +1,25 @@
 package com.healthyfish.healthyfish.ui.activity.appointment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanVisitingPerson;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChangeVisitingPersonAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec;
 import com.healthyfish.healthyfish.utils.MyToast;
 
 import org.litepal.crud.DataSupport;
@@ -52,7 +59,7 @@ public class ChangeVisitingPerson extends BaseActivity {
     public final static int mResultCode = 10056;
     private BeanVisitingPerson visitingPerson;
 
-    private String id = "15278898523";
+    private String id = MyApplication.uid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +104,13 @@ public class ChangeVisitingPerson extends BaseActivity {
         lvChangeVisitingPerson.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         lvChangeVisitingPerson.setAdapter(adapter);
         lvChangeVisitingPerson.setVerticalScrollBarEnabled(false);
+        lvChangeVisitingPerson.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showDelDialog(position);
+                return true;
+            }
+        });
     }
 
     /**
@@ -112,10 +126,12 @@ public class ChangeVisitingPerson extends BaseActivity {
     /**
      * 删除就诊人
      */
-    private void deleteData(int id) {
-        int deleteCount = DataSupport.delete(BeanVisitingPerson.class, id);
-        if (deleteCount == id) {
+    private void deleteData(int position) {
+        int deleteCount = DataSupport.delete(BeanVisitingPerson.class, list.get(position).getId());
+        if (deleteCount == 1) {
             MyToast.showToast(this, "成功删除该就诊人");
+            list.remove(position);
+            adapter.notifyDataSetChanged();
         } else {
             MyToast.showToast(this, "删除就诊人失败");
         }
@@ -126,13 +142,31 @@ public class ChangeVisitingPerson extends BaseActivity {
      */
     private void updateData(int id) {
         BeanVisitingPerson visitingPerson = new BeanVisitingPerson();
-
         int deleteCount = visitingPerson.update(id);
         if (deleteCount == id) {
             MyToast.showToast(this, "成功修改该就诊人");
         } else {
             MyToast.showToast(this, "修改就诊人失败");
         }
+    }
+
+    /**
+     * 删除提示对话框
+     */
+    private void showDelDialog(final int position) {
+        new AlertDialog.Builder(ChangeVisitingPerson.this).setMessage("是否要删除此就诊人？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteData(position);
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     @Override

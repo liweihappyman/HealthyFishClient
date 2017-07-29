@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
@@ -112,8 +114,8 @@ public class ChoiceService extends BaseActivity {
     AutoLinearLayout layoutChoiceService;
 
     private Context mContext;//全局上下文
-    private BeanHospDeptDoctListRespItem DeptDoctInfo;
-    private BeanHospRegisterReq beanHospRegisterReq;
+//    private BeanHospDeptDoctListRespItem DeptDoctInfo;
+//    private BeanHospRegisterReq beanHospRegisterReq;
     private BeanDoctorInfo beanDoctorInfo;
 
     private String imgDoctorUrl;  //医生头像资源
@@ -144,6 +146,7 @@ public class ChoiceService extends BaseActivity {
         mContext = this;
         initToolBar(toolbar, tvTitle, "选择服务");
         getData();
+        isOpenPictureConsultingReq();
         tvAttentionListener();
         initData();
         initListView();
@@ -158,25 +161,25 @@ public class ChoiceService extends BaseActivity {
         if (getIntent().getSerializableExtra("BeanDoctorInfo") != null) {
             beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
 
-            DeptDoctInfo = new BeanHospDeptDoctListRespItem();
-            DeptDoctInfo.setDOCTOR(beanDoctorInfo.getDOCTOR());
-            DeptDoctInfo.setDOCTOR_NAME(beanDoctorInfo.getName());
-            DeptDoctInfo.setSchdList(beanDoctorInfo.getSchdList());
-            DeptDoctInfo.setCLINIQUE_CODE(beanDoctorInfo.getCLINIQUE_CODE());
-            DeptDoctInfo.setPRE_ALLOW(beanDoctorInfo.getPRE_ALLOW());
-            DeptDoctInfo.setPRICE(Integer.parseInt(beanDoctorInfo.getPrice()));
-            DeptDoctInfo.setREISTER_NAME(beanDoctorInfo.getDuties());
-            DeptDoctInfo.setSTAFF_NO(beanDoctorInfo.getSTAFF_NO());
-            DeptDoctInfo.setWEB_INTRODUCE(beanDoctorInfo.getIntroduce());
-            DeptDoctInfo.setWORK_TYPE(beanDoctorInfo.getWORK_TYPE());
-            DeptDoctInfo.setZHAOPIAN(beanDoctorInfo.getImgUrl());
-
-            beanHospRegisterReq = new BeanHospRegisterReq();
-            beanHospRegisterReq.setHosp(beanDoctorInfo.getHosp());
-            beanHospRegisterReq.setHospTxt(beanDoctorInfo.getHospital());
-            beanHospRegisterReq.setDept(beanDoctorInfo.getDept());
-            beanHospRegisterReq.setDeptTxt(beanDoctorInfo.getDepartment());
-            beanHospRegisterReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
+//            DeptDoctInfo = new BeanHospDeptDoctListRespItem();
+//            DeptDoctInfo.setDOCTOR(beanDoctorInfo.getDOCTOR());
+//            DeptDoctInfo.setDOCTOR_NAME(beanDoctorInfo.getName());
+//            DeptDoctInfo.setSchdList(beanDoctorInfo.getSchdList());
+//            DeptDoctInfo.setCLINIQUE_CODE(beanDoctorInfo.getCLINIQUE_CODE());
+//            DeptDoctInfo.setPRE_ALLOW(beanDoctorInfo.getPRE_ALLOW());
+//            DeptDoctInfo.setPRICE(Integer.parseInt(beanDoctorInfo.getPrice()));
+//            DeptDoctInfo.setREISTER_NAME(beanDoctorInfo.getDuties());
+//            DeptDoctInfo.setSTAFF_NO(beanDoctorInfo.getSTAFF_NO());
+//            DeptDoctInfo.setWEB_INTRODUCE(beanDoctorInfo.getIntroduce());
+//            DeptDoctInfo.setWORK_TYPE(beanDoctorInfo.getWORK_TYPE());
+//            DeptDoctInfo.setZHAOPIAN(beanDoctorInfo.getImgUrl());
+//
+//            beanHospRegisterReq = new BeanHospRegisterReq();
+//            beanHospRegisterReq.setHosp(beanDoctorInfo.getHosp());
+//            beanHospRegisterReq.setHospTxt(beanDoctorInfo.getHospital());
+//            beanHospRegisterReq.setDept(beanDoctorInfo.getDept());
+//            beanHospRegisterReq.setDeptTxt(beanDoctorInfo.getDepartment());
+//            beanHospRegisterReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
 
         }
 
@@ -336,8 +339,8 @@ public class ChoiceService extends BaseActivity {
                 //点击进行预约挂号
                 if (!TextUtils.isEmpty(uid)) {
                     Intent intent1 = new Intent(ChoiceService.this, DoctorDetail.class);
-                    intent1.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
-                    intent1.putExtra("BeanHospDeptDoctListRespItem", DeptDoctInfo);
+//                    intent1.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
+//                    intent1.putExtra("BeanHospDeptDoctListRespItem", DeptDoctInfo);
                     intent1.putExtra("BeanDoctorInfo", beanDoctorInfo);
                     startActivity(intent1);
                 } else {
@@ -362,7 +365,7 @@ public class ChoiceService extends BaseActivity {
     private void initData() {
         Glide.with(mContext).load(imgDoctorUrl).error(R.mipmap.error).into(civDoctor);//设置医生头像
         tvName.setText(doctorName);  //设置医生名字
-        tvDepartmentAndTitle.setText(doctorDepartment + "   " + DeptDoctInfo.getREISTER_NAME());  //设置医生的科室和职称
+        tvDepartmentAndTitle.setText(doctorDepartment + "   " + beanDoctorInfo.getDuties());  //设置医生的科室和职称
         tvDoctorCompany.setText(doctorCompany);  //设置医生工作的医院
         //判断是否已经关注该医生
         if (isAttention) {
@@ -375,16 +378,6 @@ public class ChoiceService extends BaseActivity {
             tvAttention.setBackgroundResource(R.drawable.concern_not);
             tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
             tvAttention.setClickable(true);
-        }
-        //判断是否已开通图文咨询服务
-        if (isOpenPictureConsulting) {
-            imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_open);
-            //tvPictureConsultingPrice.setText(pictureConsultingPrice + "元/次");
-            tvPictureConsultingPrice.setText(pictureConsultingPrice);
-            tvPictureConsultingPrice.setTextColor(getResources().getColor(R.color.color_primary));
-        } else {
-            imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_not_open);
-            tvPictureConsultingPrice.setText("暂未开通");
         }
         //判断是否已开通私人医生服务
         if (isOpenPrivateDoctor) {
@@ -486,6 +479,60 @@ public class ChoiceService extends BaseActivity {
         } else {
             MyToast.showToast(mContext, "该医生暂未开通此服务");
         }
+    }
+
+    private void isOpenPictureConsultingReq() {
+        String reqKey = "ol_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
+        final BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+        beanBaseKeyGetReq.setKey(reqKey);
+
+        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+                //判断是否已开通图文咨询服务
+                if (isOpenPictureConsulting) {
+                    imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_open);
+                    //tvPictureConsultingPrice.setText(pictureConsultingPrice + "元/次");
+                    tvPictureConsultingPrice.setText(pictureConsultingPrice);
+                    tvPictureConsultingPrice.setTextColor(getResources().getColor(R.color.color_primary));
+                } else {
+                    imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_not_open);
+                    tvPictureConsultingPrice.setText("暂未开通");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.showToast(ChoiceService.this, "获取开通服务情况失败,请检查网络状态");
+                imgPictureConsulting.setImageResource(R.mipmap.ic_picture_consulting_not_open);
+                tvPictureConsultingPrice.setText("暂未开通");
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                String resp = null;
+                try {
+                    resp = responseBody.string();
+                    Log.i("LYQ", "isOpenPictureConsultingReq:" + resp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (!TextUtils.isEmpty(resp)) {
+                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                    if (beanBaseKeyGetResp.getCode() >= 0) {
+                        if (!TextUtils.isEmpty(beanBaseKeyGetResp.getValue())) {
+                            isOpenPictureConsulting = true;
+                        } else {
+                            isOpenPictureConsulting = false;
+                        }
+                    } else {
+                        MyToast.showToast(ChoiceService.this, "获取开通服务情况失败");
+                    }
+                } else {
+                    MyToast.showToast(ChoiceService.this, "获取开通服务情况失败");
+                }
+            }
+        });
     }
 
 }

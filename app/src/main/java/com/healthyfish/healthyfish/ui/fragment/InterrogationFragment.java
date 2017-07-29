@@ -117,7 +117,7 @@ public class InterrogationFragment extends Fragment {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                MyToast.showToast(mContext,"长按"+String.valueOf(position));
+                //MyToast.showToast(mContext,"长按"+String.valueOf(position));
             }
         }));
 
@@ -139,7 +139,7 @@ public class InterrogationFragment extends Fragment {
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptListReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-
+                        mRvAdapter.notifyDataSetChanged();
                     }
 
                     @Override

@@ -12,6 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
@@ -33,19 +37,28 @@ import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformati
 import com.healthyfish.healthyfish.ui.activity.personal_center.SetUp;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
+import rx.Subscriber;
 
 /**
  * 描述：个人中心首页
@@ -87,7 +100,7 @@ public class PersonalCenterFragment extends Fragment {
 
     private Context mContext;
     private View rootView;
-    private String uid = MyApplication.uid;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,6 +116,8 @@ public class PersonalCenterFragment extends Fragment {
         if (user!=""){
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user,BeanUserLoginReq.class);
             String numble = beanUserLoginReq.getMobileNo();
+            MyApplication.uid = numble;
+            upDateMyConcern(numble);
             isLogin(true,numble);
         }else {
             isLogin(false,null);
@@ -208,7 +223,7 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.lly_my_concern:
                 //点击我的关注
-                if (!TextUtils.isEmpty(uid)) {
+                if (!TextUtils.isEmpty(MyApplication.uid)) {
                     Intent intent04 = new Intent(getActivity(), MyConcern.class);
                     startActivity(intent04);
                 } else {
@@ -247,7 +262,66 @@ public class PersonalCenterFragment extends Fragment {
     }
 
 
+    /**
+     * 将用户的关注列表保存到数据库
+     */
+    private void upDateMyConcern(String uid){
+        final List<BeanConcernList> concernList = new ArrayList<>();
 
+        BeanUserListReq beanUserListReq = new BeanUserListReq();
+        beanUserListReq.setPrefix("care_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(getActivity(), null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+                        if (DataSupport.findAll(BeanConcernList.class).isEmpty()) {
+                            for (BeanConcernList beanConcernList : concernList) {
+                                if (!beanConcernList.save()) {
+                                    for (BeanConcernList beanConcernList1 : concernList) {
+                                        beanConcernList1.save();
+                                    }
+                                }
+                            }
+                        } else {
+                            DataSupport.deleteAll(BeanConcernList.class);
+                            for (BeanConcernList beanConcernList : concernList) {
+                                if (!beanConcernList.save()) {
+                                    for (BeanConcernList beanConcernList1 : concernList) {
+                                        beanConcernList1.save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("LYQ", "Login_upDateMyConcern_onError:" + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String jsonStr = null;
+                        try {
+                            jsonStr = responseBody.string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
+                        for (String str : concerns) {
+                            BeanConcernList beanConcernList = new BeanConcernList();
+                            beanConcernList.setKey(str);
+                            concernList.add(beanConcernList);
+
+                        }
+                    }
+                });
+
+    }
 
 
 

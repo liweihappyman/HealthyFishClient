@@ -167,9 +167,9 @@
                         android:layout_width="666px"
                         android:layout_height="100px"
                         android:layout_marginRight="54px"
-                        android:background="@drawable/gray_1dp_rounded_rectangle"
                         android:paddingLeft="5px"
-                        android:paddingRight="5px" />
+                        android:paddingRight="5px"
+                        android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>
 
@@ -193,9 +193,11 @@
                         android:layout_width="666px"
                         android:layout_height="100px"
                         android:layout_marginRight="54px"
-                        android:background="@drawable/gray_1dp_rounded_rectangle"
                         android:paddingLeft="5px"
-                        android:paddingRight="5px" />
+                        android:paddingRight="5px"
+                        android:inputType="number"
+                        android:maxLength="18"
+                        android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>
 
@@ -219,9 +221,10 @@
                         android:layout_width="666px"
                         android:layout_height="100px"
                         android:layout_marginRight="54px"
-                        android:background="@drawable/gray_1dp_rounded_rectangle"
                         android:paddingLeft="5px"
-                        android:paddingRight="5px" />
+                        android:paddingRight="5px"
+                        android:inputType="number"
+                        android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>
 
@@ -245,9 +248,11 @@
                         android:layout_width="666px"
                         android:layout_height="100px"
                         android:layout_marginRight="54px"
-                        android:background="@drawable/gray_1dp_rounded_rectangle"
                         android:paddingLeft="5px"
-                        android:paddingRight="5px" />
+                        android:paddingRight="5px"
+                        android:inputType="number"
+                        android:maxLength="11"
+                        android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>
 

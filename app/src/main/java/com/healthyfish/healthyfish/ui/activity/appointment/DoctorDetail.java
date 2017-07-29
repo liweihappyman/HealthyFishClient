@@ -42,6 +42,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class DoctorDetail extends BaseActivity {
     private FragmentManager fm;
     private FragmentTransaction ft;
 
-//    private BeanHospDeptDoctListRespItem DeptDoctInfo;
+    //    private BeanHospDeptDoctListRespItem DeptDoctInfo;
 //    private BeanHospRegisterReq beanHospRegisterReq;
     private BeanDoctorInfo beanDoctorInfo;
 
@@ -119,38 +120,17 @@ public class DoctorDetail extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_detail);
         ButterKnife.bind(this);
-//        DeptDoctInfo = (BeanHospDeptDoctListRespItem) getIntent().getSerializableExtra("BeanHospDeptDoctListRespItem");
-//        beanHospRegisterReq = (BeanHospRegisterReq) getIntent().getSerializableExtra("BeanHospRegisterReq");
-//        beanHospRegisterReq.setDoct(DeptDoctInfo.getDOCTOR());
-//        beanHospRegisterReq.setDoctTxt(DeptDoctInfo.getDOCTOR_NAME());
-//        beanHospRegisterReq.setStaffNo(String.valueOf(DeptDoctInfo.getSTAFF_NO()));
         beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
-//        DeptDoctInfo = new BeanHospDeptDoctListRespItem();
-//        DeptDoctInfo.setDOCTOR(beanDoctorInfo.getDOCTOR());
-//        DeptDoctInfo.setDOCTOR_NAME(beanDoctorInfo.getName());
-//        DeptDoctInfo.setSchdList(beanDoctorInfo.getSchdList());
-//        DeptDoctInfo.setCLINIQUE_CODE(beanDoctorInfo.getCLINIQUE_CODE());
-//        DeptDoctInfo.setPRE_ALLOW(beanDoctorInfo.getPRE_ALLOW());
-//        DeptDoctInfo.setPRICE(Integer.parseInt(beanDoctorInfo.getPrice()));
-//        DeptDoctInfo.setREISTER_NAME(beanDoctorInfo.getDuties());
-//        DeptDoctInfo.setSTAFF_NO(beanDoctorInfo.getSTAFF_NO());
-//        DeptDoctInfo.setWEB_INTRODUCE(beanDoctorInfo.getIntroduce());
-//        DeptDoctInfo.setWORK_TYPE(beanDoctorInfo.getWORK_TYPE());
-//        DeptDoctInfo.setZHAOPIAN(beanDoctorInfo.getImgUrl());
-//
-//        beanHospRegisterReq = new BeanHospRegisterReq();
-//        beanHospRegisterReq.setHosp(beanDoctorInfo.getHosp());
-//        beanHospRegisterReq.setHospTxt(beanDoctorInfo.getHospital());
-//        beanHospRegisterReq.setDept(beanDoctorInfo.getDept());
-//        beanHospRegisterReq.setDeptTxt(beanDoctorInfo.getDepartment());
-//        beanHospRegisterReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
-
         initToolBar(toolbar, toolbarTitle, beanDoctorInfo.getName() + "医生");
         tvAttentionListener();//关注操作
         fm = this.getSupportFragmentManager();
         ft = fm.beginTransaction();
         initData();
-        initPointmentTime();//初始化预约时间
+        try {
+            initPointmentTime();//初始化预约时间
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         pagechange();//页面改动监听
     }
 
@@ -158,11 +138,6 @@ public class DoctorDetail extends BaseActivity {
      * 初始化显示数据
      */
     private void initData() {
-//        Glide.with(this).load(HttpHealthyFishyUrl + DeptDoctInfo.getZHAOPIAN()).into(civDoctor);
-//        tvName.setText(DeptDoctInfo.getDOCTOR_NAME());
-//        tvDepartmentAndTitle.setText("诊室：" + DeptDoctInfo.getCLINIQUE_CODE() + "   " + DeptDoctInfo.getREISTER_NAME());
-//        tvDoctorCompany.setText(beanHospRegisterReq.getHospTxt());
-//        doctorInfo.setText(DeptDoctInfo.getWEB_INTRODUCE());
         Glide.with(this).load(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl()).into(civDoctor);
         tvName.setText(beanDoctorInfo.getName());
         tvDepartmentAndTitle.setText("诊室：" + beanDoctorInfo.getCLINIQUE_CODE() + "   " + beanDoctorInfo.getDuties());
@@ -186,94 +161,104 @@ public class DoctorDetail extends BaseActivity {
     /**
      * 初始化预约时间
      */
-    private void initPointmentTime() {
+    private void initPointmentTime() throws ParseException {
         List<BeanWeekAndDate> mList = new ArrayList<>();
         List<String> schdList = beanDoctorInfo.getSchdList();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");//设置想要的日期格式
-        Date Today = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();//获取日历实例
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        StringBuffer stringBuffer = new StringBuffer().append(year).append("-").append(month).append("-").append(day);
+        String date = stringBuffer.toString();
+        Date Today = dateFormat.parse(date);//必须使用上述方法获取当天日期（保证得到的当前日期不能包含具体时间点）
         calendar.setTime(Today);
 
         int size_1 = schdList.size() - 1;
         for (int i = 0; i < schdList.size(); i++) {
-            if (i < size_1) {
-                String strDate1 = schdList.get(i).split("_")[0];
-                String strDate2 = schdList.get(i + 1).split("_")[0];
-                String strToday = dateFormat.format(Today);
-                if (strToday.equals(strDate1)) {
-                    if (strDate1.equals(strDate2)) {
-                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "下午"));
-                        i++;
-                    } else {
-                        if (schdList.get(i).split("_")[1].equals("1")) {
-                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "1"));
+            String strDateFirst = schdList.get(i).split("_")[0];
+            Date dateFirst = dateFormat.parse(strDateFirst);
+            //返回的数据会出现日期小于当天日期的情况,必须做此判断，否则会陷入死循环
+            if (Today.getTime() <= dateFirst.getTime()) {
+                if (i < size_1) {
+                    String strDate1 = schdList.get(i).split("_")[0];
+                    String strDate2 = schdList.get(i + 1).split("_")[0];
+                    String strToday = dateFormat.format(Today);
+                    if (strToday.equals(strDate1)) {
+                        if (strDate1.equals(strDate2)) {
+                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "下午"));
+                            i++;
                         } else {
-                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "1", "下午"));
-                        }
-                    }
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    Today = calendar.getTime();
-                } else {
-                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strToday, "1", "1"));
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    Today = calendar.getTime();
-                    boolean flag = true;
-                    while (flag) {
-                        String strToday2 = dateFormat.format(Today);
-                        if (strToday2.equals(strDate1)) {
-                            if (strDate1.equals(strDate2)) {
-                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "下午"));
-                                i++;
-                            } else {
-                                if (schdList.get(i).split("_")[1].equals("1")) {
-                                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "1"));
-                                } else {
-                                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "1", "下午"));
-                                }
-                            }
-                            calendar.add(Calendar.DAY_OF_YEAR, 1);
-                            Today = calendar.getTime();
-                            flag = false;
-                        } else {
-                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strToday2, "1", "1"));
-                            calendar.add(Calendar.DAY_OF_YEAR, 1);
-                            Today = calendar.getTime();
-                        }
-                    }
-                }
-            } else {
-                String strDate = schdList.get(i).split("_")[0];
-                String strToday = dateFormat.format(Today);
-                if (strToday.equals(strDate)) {
-                    if (schdList.get(i).split("_")[1].equals("1")) {
-                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "上午", "1"));
-                    } else {
-                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "1", "下午"));
-                    }
-                } else {
-                    mList.add(new BeanWeekAndDate(beanDoctorInfo, dateFormat.format(Today), "1", "1"));
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    Today = calendar.getTime();
-                    boolean flag = true;
-                    while (flag) {
-                        String strToday2 = dateFormat.format(Today);
-                        if (strToday2.equals(strDate)) {
                             if (schdList.get(i).split("_")[1].equals("1")) {
-                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "上午", "1"));
+                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "1"));
                             } else {
-                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "1", "下午"));
+                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "1", "下午"));
                             }
-                            calendar.add(Calendar.DAY_OF_YEAR, 1);
-                            Today = calendar.getTime();
-                            flag = false;
-                        } else {
-                            mList.add(new BeanWeekAndDate(beanDoctorInfo, dateFormat.format(Today), "1", "1"));
-                            calendar.add(Calendar.DAY_OF_YEAR, 1);
-                            Today = calendar.getTime();
+                        }
+                        calendar.add(Calendar.DAY_OF_YEAR, 1);
+                        Today = calendar.getTime();
+                    } else {
+                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strToday, "1", "1"));
+                        calendar.add(Calendar.DAY_OF_YEAR, 1);
+                        Today = calendar.getTime();
+                        boolean flag = true;
+                        while (flag) {
+                            String strToday2 = dateFormat.format(Today);
+                            if (strToday2.equals(strDate1)) {
+                                if (strDate1.equals(strDate2)) {
+                                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "下午"));
+                                    i++;
+                                } else {
+                                    if (schdList.get(i).split("_")[1].equals("1")) {
+                                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "1"));
+                                    } else {
+                                        mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "1", "下午"));
+                                    }
+                                }
+                                calendar.add(Calendar.DAY_OF_YEAR, 1);
+                                Today = calendar.getTime();
+                                flag = false;
+                            } else {
+                                mList.add(new BeanWeekAndDate(beanDoctorInfo, strToday2, "1", "1"));
+                                calendar.add(Calendar.DAY_OF_YEAR, 1);
+                                Today = calendar.getTime();
+                            }
                         }
                     }
+                } else {
+                    String strDate = schdList.get(i).split("_")[0];
+                    String strToday = dateFormat.format(Today);
+                    if (strToday.equals(strDate)) {
+                        if (schdList.get(i).split("_")[1].equals("1")) {
+                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "上午", "1"));
+                        } else {
+                            mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "1", "下午"));
+                        }
+                    } else {
+                        mList.add(new BeanWeekAndDate(beanDoctorInfo, dateFormat.format(Today), "1", "1"));
+                        calendar.add(Calendar.DAY_OF_YEAR, 1);
+                        Today = calendar.getTime();
+                        boolean flag = true;
+                        while (flag) {
+                            String strToday2 = dateFormat.format(Today);
+                            if (strToday2.equals(strDate)) {
+                                if (schdList.get(i).split("_")[1].equals("1")) {
+                                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "上午", "1"));
+                                } else {
+                                    mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate, "1", "下午"));
+                                }
+                                calendar.add(Calendar.DAY_OF_YEAR, 1);
+                                Today = calendar.getTime();
+                                flag = false;
+                            } else {
+                                mList.add(new BeanWeekAndDate(beanDoctorInfo, dateFormat.format(Today), "1", "1"));
+                                calendar.add(Calendar.DAY_OF_YEAR, 1);
+                                Today = calendar.getTime();
+                            }
+                        }
 
+                    }
                 }
             }
         }
