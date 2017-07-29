@@ -17,7 +17,7 @@ import org.litepal.LitePal;
 
 public class MyApplication extends Application{
     private static Context applicationContext;
-    public static String uid = "15278898523";//暂时设置用
+    public static String uid = "";//暂时设置用
 
     @Override
     public void onCreate() {
