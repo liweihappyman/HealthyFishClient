@@ -74,8 +74,8 @@ public class InterrogationFragment extends Fragment {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_interrogation, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        rvListener();
         initRecycleView();
+        rvListener();
         searchListener();
         return rootView;
     }
@@ -90,7 +90,7 @@ public class InterrogationFragment extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Intent intent = new Intent(getActivity(), SearchResult.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("SEARCH_KEY",etSearch.getText().toString());
+                    bundle.putString("SEARCH_KEY", etSearch.getText().toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -107,10 +107,10 @@ public class InterrogationFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 //跳转到该科室的医生列表，需要发送科室信息到后台获取科室医生列表信息，传入下一个页面
-                Intent intent = new Intent(mContext,ChoiceDoctor.class);
+                Intent intent = new Intent(mContext, ChoiceDoctor.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("DepartmentName",DeptList.get(position).getDEPT_NAME());
-                bundle.putString("DepartmentCode",DeptList.get(position).getDEPT_CODE());
+                bundle.putString("DepartmentName", DeptList.get(position).getDEPT_NAME());
+                bundle.putString("DepartmentCode", DeptList.get(position).getDEPT_CODE());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -131,6 +131,12 @@ public class InterrogationFragment extends Fragment {
         final List<String> mDepartments = new ArrayList<>();
         final List<Integer> mDepartmentIcons = new ArrayList<>();
         final int[] icons = new int[]{R.mipmap.ic_chinese_medicine};
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
+        rvChoiceDepartment.setLayoutManager(gridLayoutManager);
+        mRvAdapter = new InterrogationRvAdapter(mContext, mDepartments, mDepartmentIcons);
+        rvChoiceDepartment.setAdapter(mRvAdapter);
+        rvChoiceDepartment.addItemDecoration(new DividerGridItemDecoration(mContext));
 
         BeanHospDeptListReq beanHospDeptListReq = new BeanHospDeptListReq();
         beanHospDeptListReq.setHosp("lzzyy");
@@ -155,10 +161,10 @@ public class InterrogationFragment extends Fragment {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr,List.class);
-                        for (JSONObject  object :beanHospDeptListResp){
+                        List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr, List.class);
+                        for (JSONObject object : beanHospDeptListResp) {
                             String jsonString = object.toJSONString();
-                            BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptListRespItem.class);
+                            BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
                             DeptList.add(beanHospDeptListRespItem);
                             mDepartments.add(beanHospDeptListRespItem.getDEPT_NAME());
                             mDepartmentIcons.add(icons[0]);
@@ -167,13 +173,8 @@ public class InterrogationFragment extends Fragment {
                     }
                 });
 
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(mContext,4);
-        rvChoiceDepartment.setLayoutManager(gridLayoutManager);
-        mRvAdapter = new InterrogationRvAdapter(mContext,mDepartments,mDepartmentIcons);
-        rvChoiceDepartment.setAdapter(mRvAdapter);
-        rvChoiceDepartment.addItemDecoration(new DividerGridItemDecoration(mContext));
     }
- 
+
 
     @Override
     public void onDestroyView() {
