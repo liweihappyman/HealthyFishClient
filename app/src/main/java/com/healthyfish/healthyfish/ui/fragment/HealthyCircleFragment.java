@@ -1,187 +1,132 @@
 package com.healthyfish.healthyfish.ui.fragment;
 
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Matrix;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.support.v4.app.FragmentManager;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.adapter.MainVpAdapter;
 import com.healthyfish.healthyfish.ui.activity.healthy_circle.HealthyCirclePosting;
-import com.healthyfish.healthyfish.utils.MyToast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
  * 描述：健康圈首页
  * A simple {@link Fragment} subclass.
  */
-public class HealthyCircleFragment extends Fragment {
-
+@SuppressLint("ValidFragment")
+public class HealthyCircleFragment extends Fragment implements View.OnClickListener {
+    private FragmentManager fragmentManager;
+    public HealthyCircleFragment(FragmentManager fragmentManager){
+            this.fragmentManager = fragmentManager;
+    }
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
+    @BindView(R.id.iv_posting)
+    ImageView ivPosting;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.tv_concern_community)
-    TextView tvConcernCommunity;
-    @BindView(R.id.tv_all_community)
-    TextView tvAllCommunity;
-    @BindView(R.id.cursor)
-    ImageView cursor;
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
     @BindView(R.id.vp_healthy_circle)
     ViewPager vpHealthyCircle;
     Unbinder unbinder;
-    @BindView(R.id.iv_posting)
-    ImageView ivPosting;
-
     private Context mContext;
     private View rootView;
-
-    private int offset = 0;  // 动画图片偏移量
-    private int currIndex = 0;  // 当前页卡编号
-    private int currentItem = 0;  //初始页面
-    private Animation animation = null;
-    private int one2twoLength;  // 页卡1 -> 页卡2 偏移量
+    private int mPosition = 0;
+    private Activity activity;
+    private String[] mTitles = {
+            "我关注的", "所有社区", "今日头条", "新东方","一言堂","北京同仁堂","一页纸"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        activity = getActivity();
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_healthy_circle, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        initImageView();
-        initPgAdapter();
-        vpListener();
+        initTabLayout();
+        ivPosting.setOnClickListener(this);
         return rootView;
     }
+
+    private void initTabLayout() {
+        ArrayList<Fragment> mFragments = new ArrayList<>();
+        mFragments.add(new MyCommunityFragment());
+        mFragments.add(new AllCommunityFragment());
+        mFragments.add(new TestFragment());
+        for (int i = 0; i < mTitles.length-3; i++) {
+            mFragments.add(new PersonalCenterFragment());
+        }
+        vpHealthyCircle.setAdapter(new PagerAdapter(fragmentManager,mFragments));
+        tabLayout.setupWithViewPager(vpHealthyCircle);
+        vpHealthyCircle.setCurrentItem(mPosition);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getActivity(),HealthyCirclePosting.class);
+        startActivity(intent);
+    }
+
+
+    private class PagerAdapter extends FragmentPagerAdapter {
+        private List<Fragment> mListFragment;
+        public PagerAdapter(FragmentManager fm, List<Fragment> mListFragment) {
+            super(fm);
+            this.mListFragment = mListFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return mListFragment.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitles[position];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mListFragment.get(position);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @OnClick({R.id.tv_concern_community, R.id.tv_all_community,R.id.iv_posting})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_concern_community:
-                //选择我关注的社区页面
-                vpHealthyCircle.setCurrentItem(0);
-                break;
-            case R.id.tv_all_community:
-                //选择所有社区页面
-                vpHealthyCircle.setCurrentItem(1);
-                break;
-            case R.id.iv_posting:
-                //点击发帖按钮
-                MyToast.showToast(getActivity(),"分享你的健康动态让更多人知道吧!");
-                Intent intent = new Intent(getActivity(), HealthyCirclePosting.class);
-                startActivity(intent);
-                break;
-        }
-    }
-
-    /**
-     * 设置ViewPager的选中监听
-     */
-    private void vpListener() {
-        vpHealthyCircle.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    //第一个页面当创建后滑动到第二页面不会销毁，滑动到第三页面时会销毁，如果要刷新理论上可以在页面的Fragment中重新加载处理刷新
-                    case 0:
-                        if (currIndex == 1) {
-                            animation = new TranslateAnimation(one2twoLength, 0, 0, 0);
-                        }
-                        reSet();
-                        tvConcernCommunity.setTextColor(getResources().getColor(R.color.color_secondary));
-                        break;
-                    //中间的页面当创建后不会销毁，即它不会再去执行Fragment中的程序，如果要刷新理论上应该在此处理刷新
-                    case 1:
-                        if (currIndex == 0) {
-                            animation = new TranslateAnimation(offset, one2twoLength, 0, 0);
-                        }
-                        reSet();
-                        tvAllCommunity.setTextColor(getResources().getColor(R.color.color_secondary));
-                        break;
-                }
-                currIndex = position;
-                animation.setFillAfter(true);// True:图片停在动画结束位置
-                animation.setDuration(300);
-                cursor.startAnimation(animation);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-    }
-
-    /**
-     * 重置头部文字颜色
-     */
-    private void reSet() {
-        tvConcernCommunity.setTextColor(getResources().getColor(R.color.color_general_and_title));
-        tvAllCommunity.setTextColor(getResources().getColor(R.color.color_general_and_title));
-    }
-
-    /**
-     * 初始化ViewPager
-     */
-    private void initPgAdapter() {
-        List<Fragment> fragments = new ArrayList<Fragment>();  //Fragment页面数组
-        Fragment MyCommunity = new MyCommunityFragment();
-        Fragment AllCommunity = new AllCommunityFragment();
-        fragments.add(MyCommunity);
-        fragments.add(AllCommunity);
-        //此处应使用getChildFragmentManager()而不是getActivity().getSupportFragmentManager()，fragment嵌套fragment时应使用使用前者,后者是activity嵌套fragment时使用
-        vpHealthyCircle.setAdapter(new MainVpAdapter(getChildFragmentManager(), fragments));
-        vpHealthyCircle.setCurrentItem(currentItem);//设置初始页面
-        if (currentItem == 1) {
-            currIndex = 1;
-        }
-    }
-
-    /**
-     * 初始化动画
-     */
-    private void initImageView() {
-        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        int screenWidth = windowManager.getDefaultDisplay().getWidth();  //获取屏幕宽度
-        int indicatorWidth = screenWidth / 2;   //计算卡片宽度
-        cursor.getLayoutParams().width = indicatorWidth;   //设置卡片宽度
-        cursor.requestLayout();     //通知卡片宽度发生改变
-        offset = (screenWidth / 2 - indicatorWidth) / 2;    // 计算偏移量
-        one2twoLength = offset * 2 + indicatorWidth;    // 页卡1 -> 页卡2 偏移量
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(offset, 0);
-        cursor.setImageMatrix(matrix);  //设置动画初始位置
     }
 
 }

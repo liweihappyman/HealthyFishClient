@@ -11,14 +11,17 @@ import java.util.List;
  */
 
 public class Test implements Serializable{
-    public List<BeanWeekAndDate> getList() {
-        return list;
+    private int type;
+
+    public Test(int type) {
+        this.type = type;
     }
 
-    public void setList(List<BeanWeekAndDate> list) {
-        this.list = list;
+    public int getType() {
+        return type;
     }
 
-    private List<BeanWeekAndDate> list ;
-
+    public void setType(int type) {
+        this.type = type;
+    }
 }

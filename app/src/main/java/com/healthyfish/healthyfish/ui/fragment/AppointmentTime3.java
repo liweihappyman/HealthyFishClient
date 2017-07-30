@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.healthyfish.healthyfish.POJO.BeanAppointmentDates;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.POJO.Test;
@@ -31,7 +32,7 @@ public class AppointmentTime3 extends Fragment {
     GridView weekGridview;
 
     private View rootView;
-    private Test test;
+    private BeanAppointmentDates beanAppointmentDates;
 
 
     public AppointmentTime3() {
@@ -44,8 +45,8 @@ public class AppointmentTime3 extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_appointment_time, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         Bundle bundle=this.getArguments();
-        test = (Test) bundle.getSerializable("data3");
-        Log.i("ttttttt","测试+"+test.getList().get(0).getDate());
+        beanAppointmentDates = (BeanAppointmentDates) bundle.getSerializable("data3");
+        Log.i("ttttttt","测试+"+beanAppointmentDates.getList().get(0).getDate());
 
 
 
@@ -70,7 +71,7 @@ public class AppointmentTime3 extends Fragment {
 //        list.add(b5);
 //        list.add(b6);
         List<BeanWeekAndDate> list = new ArrayList<>();
-        list = test.getList();
+        list = beanAppointmentDates.getList();
         WeekGridAdapter weekAdapter = new WeekGridAdapter(list,getActivity());
         weekGridview.setAdapter(weekAdapter);
 

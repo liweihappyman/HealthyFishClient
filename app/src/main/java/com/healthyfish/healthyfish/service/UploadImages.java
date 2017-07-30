@@ -47,7 +47,10 @@ public class UploadImages extends IntentService {
     int sizeOfImagePathList;//总共图片的size大小
     List<String> imagePathList;//原始图片路径
     List<String> imageUrls;//存放图片网络路径
+    //List<File> list = new ArrayList<>();//每次上传往里面放一张图片
+    List<File> compressFiles = new ArrayList<>();
     boolean updateImages = false;
+    //int position;
 
     public UploadImages() {
         super("UploadImages");
@@ -61,8 +64,14 @@ public class UploadImages extends IntentService {
         List<String> uplaodlist = getUplaodList();
         //imagePathList.size() > 0，说明有图片要上传，否则直接保存
         if (uplaodlist.size() > 0) {
+            List<File> list = new ArrayList<>();//每次上传往里面放一张图片
             List<File> compressFiles = getCompressFiles();//压缩图片
-            uploadFilesAndSave(compressFiles);//上传图片并保存返回的图片路径
+            for (int i = 0; i < compressFiles.size(); i++) {
+                list.clear();
+                list.add(compressFiles.get(i));
+                //position = i;
+                uploadFilesAndSave(list,i);//上传图片并保存返回的图片路径
+            }
         } else {
             saveToDB(medRecId, courseOfDiseaseId, imageUrls,false);
         }
@@ -72,31 +81,30 @@ public class UploadImages extends IntentService {
     /**
      * 上传图片，并将返回的路径保存到数据库
      *
-     * @param compressFiles 压缩后的文件
+     *
      */
-    private void uploadFilesAndSave(List<File> compressFiles) {
-        for (int i = 0; i < compressFiles.size(); i++) {
-            final List<File> list = new ArrayList<>();
-            list.clear();
-            list.add(compressFiles.get(i));
-            RetrofitManagerUtils.getInstance(this, null).uploadFilesRetrofit(list, i, new Subscriber<ResponseBody>() {
+    private void uploadFilesAndSave(final List<File> list, final int position) {
+       //list当前上传的图片文件，position：当前上传的图片文件在compressFiles中的位置
+            RetrofitManagerUtils.getInstance(this, null).uploadFilesRetrofit(list, position, new Subscriber<ResponseBody>() {
                 @Override
                 public void onCompleted() {
-                    //Toast.makeText(MyApplication.getContetxt(), "图片上传完成！", Toast.LENGTH_SHORT).show();
-                    //Log.i("图片上传", "完成");
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    Toast.makeText(MyApplication.getContetxt(), "图片上传失败", Toast.LENGTH_SHORT).show();
-                    //Log.i("图片上传", "图片上传失败" + e.toString());
+                    //如果是502错误，则请求重新传送当前文件
+                    if (e.toString().equals("retrofit2.adapter.rxjava.HttpException: HTTP 502 Bad Gateway")){
+                        uploadFilesAndSave(list,position);
+                    }else {
+                        MyApplication.getApplicationHandler().sendEmptyMessage(0x12);
+                    }
                 }
 
                 @Override
                 public void onNext(ResponseBody responseBody) {
                     try {
                         String str = responseBody.string();
-                        //Log.i("图片上传", "返回数据" + str);
+                        Log.i("图片上传", "返回数据" + str);
                         if (str != null) {
                             BeanUploadImagesResp beanUploadImagesResp = new BeanUploadImagesResp();
                             beanUploadImagesResp = JSON.parseObject(str, BeanUploadImagesResp.class);
@@ -110,10 +118,10 @@ public class UploadImages extends IntentService {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    //网络图片路径样式:http://www.kangfish.cn/demo/downloadFile/upload/20170727/58651501120528555.png
+                    //网络图片路径样式:http://www.kangfish.cn/demo/downloadFile/upload/20170730/2861501383251816.png
                 }
             });
-        }
+
     }
 
     /**
@@ -197,9 +205,9 @@ public class UploadImages extends IntentService {
         beanCourseOfDisease.setImgUrls(imageUrls);
         if (beanCourseOfDisease.save()) {
             if (updateImages) {
-                Toast.makeText(MyApplication.getContetxt(), "图片上传成功", Toast.LENGTH_SHORT).show();
+                MyApplication.getApplicationHandler().sendEmptyMessage(0x11);
             } else {
-                Toast.makeText(MyApplication.getContetxt(), "图片保存成功", Toast.LENGTH_SHORT).show();
+                MyApplication.getApplicationHandler().sendEmptyMessage(0x13);
             }
         }
     }

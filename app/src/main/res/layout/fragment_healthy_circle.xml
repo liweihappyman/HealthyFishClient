@@ -1,7 +1,8 @@
-<com.zhy.autolayout.AutoFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment">
 
@@ -33,55 +34,25 @@
         
     </android.support.v7.widget.Toolbar>
 
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="135px"
+    <android.support.design.widget.TabLayout
         android:background="@color/color_white"
-        android:orientation="vertical">
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="144px"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/color_primary_dark"
+        app:tabSelectedTextColor="@color/color_primary_dark"
+        app:tabTextColor="@color/color_general_and_title"
+        app:tabTextAppearance="@style/textSize_42"
+        >
+    </android.support.design.widget.TabLayout>
 
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="160px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_concern_community"
-                style="@style/textSize_60"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="我关注的"
-                android:textColor="@color/color_secondary" />
-
-            <TextView
-                android:id="@+id/tv_all_community"
-                style="@style/textSize_60"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="所有社区"
-                android:textColor="@color/color_general_and_title" />
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <ImageView
-            android:id="@+id/cursor"
-            android:layout_width="540px"
-            android:layout_height="8px"
-            android:src="@mipmap/ic_community_selected" />
-
-    </com.zhy.autolayout.AutoLinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_healthy_circle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="330px">
-
+        android:layout_height="match_parent">
     </android.support.v4.view.ViewPager>
 
-</com.zhy.autolayout.AutoFrameLayout>
+</com.zhy.autolayout.AutoLinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_white"
+    android:paddingLeft="50px"
+    android:paddingRight="50px"
+    android:paddingTop="30px"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/textSize_54"
+        android:textColor="@color/color_content_title"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:text="为什么如今很多农民争当潘困户?这视频看的我都懵了"
+        />
+    <com.zhy.autolayout.AutoFrameLayout
+        android:layout_marginTop="20px"
+        android:layout_width="match_parent"
+        android:layout_height="400px">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_divider"/>
+        <ImageView
+            android:layout_width="70px"
+            android:layout_height="70px"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimaryDark"/>
+    </com.zhy.autolayout.AutoFrameLayout>
+    <TextView
+        android:text="土地论坛"
+        android:layout_marginTop="20px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/textSize_48"
+        android:textColor="@color/color_auxiliary_info"/>
+    <ImageView
+        style="@style/Divider"
+        android:layout_marginLeft="0px"
+        android:layout_marginRight="0px"/>
+
+</com.zhy.autolayout.AutoLinearLayout>
