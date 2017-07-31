@@ -97,13 +97,13 @@ public class ChangePersonalInformation extends BaseActivity {
     private String uid = MyApplication.uid;
     private BeanPersonalInformation personalInformation = new BeanPersonalInformation();
 
-    private String phone;//手机号
-    private String name;//姓名
-    private String nickname;//昵称
-    private String imgUrl;//头像
-    private String gender;//性别
-    private String birthDate;//出生日期
-    private String idCard;//身份证号
+    private String phone = "";//手机号
+    private String name = "";//姓名
+    private String nickname = "";//昵称
+    private String imgUrl = "";//头像
+    private String gender = "";//性别
+    private String birthDate = "";//出生日期
+    private String idCard = "";//身份证号
 
     private final int mResultCode = 10035;
 
@@ -170,8 +170,8 @@ public class ChangePersonalInformation extends BaseActivity {
     private void initWidget(BeanPersonalInformation beanPersonalInformation) {
         if (!TextUtils.isEmpty(beanPersonalInformation.getImgUrl())) {
             Glide.with(this).load(HttpHealthyFishyUrl+beanPersonalInformation.getImgUrl()).error(R.mipmap.error).into(civHeadPortrait);
+            imgUrl = beanPersonalInformation.getImgUrl();
         }
-        imgUrl = beanPersonalInformation.getImgUrl();
         etNickname.setText(beanPersonalInformation.getNickname());
         tvGender.setText(beanPersonalInformation.getGender());
         tvBirthDate.setText(beanPersonalInformation.getBirthDate());
@@ -261,7 +261,7 @@ public class ChangePersonalInformation extends BaseActivity {
             public void onCompleted() {
                 if (!TextUtils.isEmpty(resp)) {
                     BeanBaseResp beanBaseResp = JSON.parseObject(resp, BeanBaseResp.class);
-                    if (beanBaseResp.getCode() >= 0) {
+                    if (beanBaseResp.getCode() == 0) {
                         MyToast.showToast(ChangePersonalInformation.this, "修改个人信息成功");
                         boolean isSave = personalInformation.saveOrUpdate("key = ?", key);//将个人信息保存到数据库
                         if (isSave) {

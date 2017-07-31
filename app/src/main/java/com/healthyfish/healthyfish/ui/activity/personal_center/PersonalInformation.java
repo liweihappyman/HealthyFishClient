@@ -75,7 +75,7 @@ public class PersonalInformation extends BaseActivity {
     AutoLinearLayout llyIdCard;
 
     private String uid = MyApplication.uid;
-    private BeanPersonalInformation beanPersonalInformation;
+    private BeanPersonalInformation beanPersonalInformation = new BeanPersonalInformation();
 
     private final int mRequestCode = 10036;
 
@@ -139,7 +139,7 @@ public class PersonalInformation extends BaseActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.showToast(PersonalInformation.this, "获取个人信息失败，" + e.toString());
+                MyToast.showToast(PersonalInformation.this, "获取个人信息失败,请更新您的个人信息");
                 Log.i("LYQ", "获取个人信息失败，" + e.toString());
             }
 
@@ -150,7 +150,7 @@ public class PersonalInformation extends BaseActivity {
                     resp = responseBody.string();
                     if (!TextUtils.isEmpty(resp)) {
                         BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                        if (beanBaseKeyGetResp.getCode() >= 0) {
+                        if (beanBaseKeyGetResp.getCode() == 0) {
                             MyToast.showToast(PersonalInformation.this, "获取个人信息成功");
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                             beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
