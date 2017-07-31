@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,12 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRegisterReq;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.eventbus.EmptyMessage;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
@@ -54,6 +58,15 @@ public class RegisterPassword extends BaseActivity {
     @BindView(R.id.btn_next)
     Button btnNext;
 
+    private BeanPersonalInformation personalInformation = new BeanPersonalInformation();
+    private String phone = "";//手机号
+    private String name = "";//姓名
+    private String nickname = "";//昵称
+    private String imgUrl = "";//头像
+    private String gender = "";//性别
+    private String birthDate = "";//出生日期
+    private String idCard = "";//身份证号
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +82,7 @@ public class RegisterPassword extends BaseActivity {
             Toast.makeText(this, "输入密码不相同", Toast.LENGTH_LONG).show();
         } else {
             //注册请求的bean
-            BeanUserRegisterReq beanUserRegisterReq = (BeanUserRegisterReq) getIntent().getSerializableExtra("user");
+            final BeanUserRegisterReq beanUserRegisterReq = (BeanUserRegisterReq) getIntent().getSerializableExtra("user");
             beanUserRegisterReq.setAct(BeanUserRegisterReq.class.getSimpleName());
             Log.i("电话号码：", beanUserRegisterReq.getMobileNo());
             beanUserRegisterReq.setPwdSHA256(Sha256.getSha256(etInputPassword.getText().toString()));
@@ -100,11 +113,12 @@ public class RegisterPassword extends BaseActivity {
                                 int code = beanBaseResp.getCode();
                                 if (code >=0) {
                                     Toast.makeText(RegisterPassword.this, "注册成功", Toast.LENGTH_LONG).show();
-                                    MySharedPrefUtil.saveKeyValue("_user",user);
+                                    MySharedPrefUtil.saveKeyValue("user",user);
                                     //————————————————————————————————————————
-                                    EventBus.getDefault().post(new EmptyMessage());//注册成功通知更新登录状态
+                                    saveDataToNetwork(beanUserRegisterReq.getMobileNo());
                                     Intent intent = new Intent(RegisterPassword.this, RegisterSuccess.class);
                                     startActivity(intent);
+                                    finish();
                                     //—————————————————————————————————————————————
                                 }else {
                                     Toast.makeText(RegisterPassword.this, "注册失败", Toast.LENGTH_LONG).show();
@@ -114,10 +128,71 @@ public class RegisterPassword extends BaseActivity {
                             }
                         }
                     });
-
         }
 
+    }
 
+    /**
+     * 将个人信息同步保存到服务器
+     */
+    private void saveDataToNetwork(String uid) {
+        final String key = "info_" + uid;
+        final BeanPersonalInformation personalInformation = new BeanPersonalInformation();
+        personalInformation.setKey(key);
+        personalInformation.setNickname(nickname);
+        personalInformation.setGender(gender);
+        personalInformation.setPhone(phone);
+        personalInformation.setName(name);
+        personalInformation.setBirthDate(birthDate);
+        personalInformation.setIdCard(idCard);
+        personalInformation.setImgUrl(imgUrl);
+        String jsonReq = JSON.toJSONString(personalInformation);
+
+        Log.i("LYQ", "jsonReq:" + jsonReq);
+        BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
+        beanBaseKeySetReq.setKey(key);
+        beanBaseKeySetReq.setValue(jsonReq);
+
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
+            String resp = null;
+
+            @Override
+            public void onCompleted() {
+                if (!TextUtils.isEmpty(resp)) {
+                    BeanBaseResp beanBaseResp = JSON.parseObject(resp, BeanBaseResp.class);
+                    if (beanBaseResp.getCode() == 0) {
+                        boolean isSave = personalInformation.saveOrUpdate("key = ?", key);//将个人信息保存到数据库
+                        if (!isSave) {
+                            MyToast.showToast(RegisterPassword.this, "保存个人信息失败");
+                        }
+                        EventBus.getDefault().post(personalInformation);//发送消息提醒刷新个人中心的个人信息
+                    } else {
+                        MyToast.showToast(RegisterPassword.this, "上传个人信息失败");
+                        EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                    }
+                } else {
+                    MyToast.showToast(RegisterPassword.this, "上传个人信息失败");
+                    EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                }
+                Log.i("LYQ", "上传请求onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.showToast(RegisterPassword.this, "上传个人信息失败");
+                EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    resp = responseBody.string();
+                    Log.i("LYQ", "上传请求返回：" + resp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**

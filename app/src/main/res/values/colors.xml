@@ -21,7 +21,6 @@
     <!--第三色调-浅-->
     <color name="color_third_light">#c89ec4</color>
 
-
     <!--第四色调-深-->
     <color name="color_forth">#84b1ed</color>
     <!--第四色调-浅-->
@@ -45,6 +44,7 @@
     <color name="color_white">#ffffff</color>
     <color name="color_red">@android:color/holo_red_light</color>
 
+    <color name="color_black">#000000</color>
     <color name="color_orange">#ec6941</color>
     <color name="color_hint">#cccccc</color>
     <color name="color_light_green">#51e7b3</color>

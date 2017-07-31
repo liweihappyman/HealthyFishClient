@@ -94,7 +94,9 @@ public class SetUp extends BaseActivity {
      * 退出登录
      */
     private void loginOut() {
-        String user = MySharedPrefUtil.getValue("_user");
+
+        String user = MySharedPrefUtil.getValue("user");
+
         if (TextUtils.isEmpty(user)) {
             Toast.makeText(this, "您还没有登录哟", Toast.LENGTH_LONG).show();
 
@@ -110,7 +112,7 @@ public class SetUp extends BaseActivity {
             RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserLogoutReq), new Subscriber<ResponseBody>() {
                 @Override
                 public void onCompleted() {
-                    MySharedPrefUtil.remKey("_user");     //清除用户登录信息
+                    MySharedPrefUtil.remKey("user");     //清除用户登录信息
                     SharedPreferences cookie = getSharedPreferences("cookie", MODE_PRIVATE);
                     cookie.edit().clear().commit();//清除cookie
                     MyApplication.uid = "";

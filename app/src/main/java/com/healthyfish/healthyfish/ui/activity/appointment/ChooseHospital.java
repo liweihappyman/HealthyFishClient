@@ -2,31 +2,17 @@ package com.healthyfish.healthyfish.ui.activity.appointment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysGetReq;
-import com.healthyfish.healthyfish.POJO.BeanDoctAuthReq;
-import com.healthyfish.healthyfish.POJO.BeanDoctorListReq;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanHospRegNumListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospitalListResp;
 import com.healthyfish.healthyfish.POJO.BeanHospitalListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanListReq;
-import com.healthyfish.healthyfish.POJO.BeanSearchReq;
-import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChooseHospitalAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
@@ -42,8 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
-
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：选择医院列表页面

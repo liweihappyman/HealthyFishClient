@@ -1,7 +1,9 @@
 package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
 import android.content.Intent;
+
 import android.graphics.Color;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,7 +11,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
 import android.text.TextUtils;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -139,7 +143,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
      */
     private void reqForNetworkData(final boolean refresh) {
         final List<String> keysOutDB = new ArrayList<>();//存放数据库没有的key
-        String userStr = MySharedPrefUtil.getValue("_user");
+        String userStr = MySharedPrefUtil.getValue("user");
         BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
         StringBuilder prefix = new StringBuilder("medRec_");
         prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
@@ -206,7 +210,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
      */
     private void networkReqDelMedRec(String key) {
         //删除多个用
-//        String userStr = MySharedPrefUtil.getValue("_user");
+//        String userStr = MySharedPrefUtil.getValue("user");
 //        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
 //
 //        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
@@ -336,7 +340,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.new_med_rec://新建病历
-                constants.POSITION_MED_REC = -1;
+                Constants.POSITION_MED_REC = -1;
                 Intent intent = new Intent(this, NewMedRec.class);
                 startActivityForResult(intent, TO_NEW_MED_REC);
                 startActivity(intent);
@@ -345,7 +349,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        constants.POSITION_MED_REC = position;
+        Constants.POSITION_MED_REC = position;
         Intent intent = new Intent(AllMedRec.this, NewMedRec.class);
         //将选中的病历的id穿到NewMedRec活动
         intent.putExtra("id", listMecRec.get(position).getId());

@@ -2,7 +2,6 @@ package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -25,8 +24,6 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeyAddReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyAddResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyRemReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysRemReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysRemResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
@@ -34,7 +31,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CourseOfDiseaseAdapter;
-import com.healthyfish.healthyfish.constant.constants;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.service.UploadImages;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
@@ -115,7 +112,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         }
         initListener();
         //判断是点击item进来的还是点击新建病历夹进来的，并执行相应的初始化操作
-        if (constants.POSITION_MED_REC == -1) {
+        if (Constants.POSITION_MED_REC == -1) {
             clinicalTime.setText(Utils1.getTime());
             SAVE_OR_UPDATE = "save";//标志位新建，直接保存
             medRec = new BeanMedRec();
@@ -155,7 +152,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         courseOfDiseaseAdapter.setOnItemClickListener(new CourseOfDiseaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                constants.POSITION_COURSE = position;
+                Constants.POSITION_COURSE = position;
                 Intent intent = new Intent(NewMedRec.this, CreateCourse.class);
                 intent.putExtra("Course", medRec);
                 startActivityForResult(intent, COURSE_OF_DISEASE);
@@ -193,7 +190,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
 
     //执行删除操作并跳转回到AllMedRed页面，新建状态则提示没有可删除的病历
     private void deleteAndGoback() {
-        if (constants.POSITION_MED_REC != -1) {
+        if (Constants.POSITION_MED_REC != -1) {
             showDelDialog();
         } else {
             Toast.makeText(this, "没有可删除的病历哦", Toast.LENGTH_SHORT).show();
@@ -247,7 +244,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
                 selectTime();
                 break;
             case R.id.create_course:
-                constants.POSITION_COURSE = -1;
+                Constants.POSITION_COURSE = -1;
                 Intent toCreateCourse = new Intent(this, CreateCourse.class);
                 startActivityForResult(toCreateCourse, COURSE_OF_DISEASE);
                 break;
@@ -304,7 +301,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
      */
     private void networkReqDelMedRec() {
         //删除多个用
-//        String userStr = MySharedPrefUtil.getValue("_user");
+//        String userStr = MySharedPrefUtil.getValue("user");
 //        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
 //
 //        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
@@ -414,7 +411,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
      * 添加病历
      */
     private void addMedRec() {
-        String userStr = MySharedPrefUtil.getValue("_user");
+        String userStr = MySharedPrefUtil.getValue("user");
         BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
         final BeanBaseKeyAddReq beanBaseKeyAddReq = new BeanBaseKeyAddReq();
         StringBuilder prefix = new StringBuilder("medRec_");

@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +37,7 @@ import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
-import com.healthyfish.healthyfish.constant.constants;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.service.UploadImages;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.Utils1;
@@ -49,18 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 
 public class CreateCourse extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
@@ -105,7 +92,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
         initListener();
-        if (constants.POSITION_COURSE == -1) {
+        if (Constants.POSITION_COURSE == -1) {
             initData1();
         } else {
             initData2();
@@ -135,7 +122,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
      * 删除病程的操作,新建状态提示没有可删除的病程
      */
     private void delete() {
-        if (constants.POSITION_COURSE != -1) {
+        if (Constants.POSITION_COURSE != -1) {
             showDelDialog();// 删除提示对话框
         } else {
             Toast.makeText(this, "没有可删除的病程哦", Toast.LENGTH_SHORT).show();
@@ -180,7 +167,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
      */
     private void initData2() {
         medRec = DataSupport.find(BeanMedRec.class, NewMedRec.ID, true);
-        courseOfDisease = medRec.getListCourseOfDisease().get(constants.POSITION_COURSE);
+        courseOfDisease = medRec.getListCourseOfDisease().get(Constants.POSITION_COURSE);
         //Log.i("查看病程信息", "路径：" + courseOfDisease.getImgUrls().toString());
         type.setText(courseOfDisease.getType());
         date.setText(courseOfDisease.getDate());
@@ -227,7 +214,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
      */
     private void saveOrUpdata() {
         getInfo();//获取控件的值
-        if (constants.POSITION_COURSE != -1) {//每次更新必须重新关联
+        if (Constants.POSITION_COURSE != -1) {//每次更新必须重新关联
             courseOfDisease.setBeanMedRec(medRec);//关联，medRec必须是数据库已经存在的数据对象
             courseOfDisease.setImgPaths(imagePaths);
             String g = courseOfDisease.getImgPaths().toString();
@@ -245,7 +232,7 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
             }
             //测试查看保存后的路径
 //            BeanMedRec beanMedRec= DataSupport.find(BeanMedRec.class, NewMedRec.ID, true);
-//            BeanCourseOfDisease courseOfDisease = beanMedRec.getListCourseOfDisease().get(constants.POSITION_COURSE);
+//            BeanCourseOfDisease courseOfDisease = beanMedRec.getListCourseOfDisease().get(Constants.POSITION_COURSE);
 //            String string = courseOfDisease.getImgPaths().toString();
 //            String s= courseOfDisease.getImgUrls().toString();
 //            Log.i("保存后路径","路径"+string+"wang"+s);

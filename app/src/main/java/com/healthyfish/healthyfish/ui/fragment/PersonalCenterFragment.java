@@ -60,7 +60,9 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
+
 
 /**
  * 描述：个人中心首页
@@ -99,11 +101,9 @@ public class PersonalCenterFragment extends Fragment {
     @BindView(R.id.rly_login)
     AutoRelativeLayout rlyLogin;
     Unbinder unbinder;
-
     private Context mContext;
     private View rootView;
-
-    private BeanPersonalInformation beanPersonalInformation;
+    private BeanPersonalInformation beanPersonalInformation = new BeanPersonalInformation();
 
 
     @Override
@@ -120,7 +120,7 @@ public class PersonalCenterFragment extends Fragment {
 
     //登录状态判断初始化相应的控件
     private void judgeLoginState() {
-        String user = MySharedPrefUtil.getValue("_user");
+        String user = MySharedPrefUtil.getValue("user");
         if (!TextUtils.isEmpty(user)) {
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
             String number = beanUserLoginReq.getMobileNo();
@@ -184,6 +184,9 @@ public class PersonalCenterFragment extends Fragment {
             } else {
                 setTextBold("您");
             }
+        } else {
+            Glide.with(getActivity()).load(R.mipmap.ic_logo).into(civHeadPortraitLogin);
+            setTextBold("您");
         }
     }
 
@@ -377,7 +380,9 @@ public class PersonalCenterFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.showToast(getActivity(), "获取个人信息失败，" + e.toString());
+
+                MyToast.showToast(getActivity(), "获取个人信息失败,请更新您的个人信息");
+
                 initWidget();
 
             }
@@ -389,7 +394,7 @@ public class PersonalCenterFragment extends Fragment {
                     resp = responseBody.string();
                     if (!TextUtils.isEmpty(resp)) {
                         BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                        if (beanBaseKeyGetResp.getCode() >= 0) {
+                        if (beanBaseKeyGetResp.getCode() == 0) {
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                             beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
                             boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);

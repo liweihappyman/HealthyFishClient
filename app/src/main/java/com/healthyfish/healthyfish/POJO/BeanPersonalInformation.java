@@ -23,6 +23,24 @@ public class BeanPersonalInformation extends DataSupport implements Serializable
     private String birthDate;//出生日期
     private String idCard;//身份证号
 
+    public BeanPersonalInformation() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public int getId() {
         return id;

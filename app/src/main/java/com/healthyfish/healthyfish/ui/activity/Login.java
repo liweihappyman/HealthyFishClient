@@ -34,6 +34,7 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,6 +49,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：登录Activity
@@ -180,7 +183,8 @@ public class Login extends AutoLayoutActivity implements ILoginView {
     private void judgeAndShowToast(int code, String user) {
         if (code >= 0) {
             Toast.makeText(Login.this, "登录成功", Toast.LENGTH_LONG).show();
-            MySharedPrefUtil.saveKeyValue("_user", user);  //登录成功由shareprefrence保存
+
+            MySharedPrefUtil.saveKeyValue("user", user);  //登录成功由shareprefrence保存
             MyApplication.uid = getUserName();
             upDateMyConcern();
             upDatePersonalInformation(getUserName());
@@ -215,11 +219,6 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        EventBus.getDefault().post(new EmptyMessage());
-    }
 
     /**
      * 将用户的关注列表保存到数据库
@@ -286,7 +285,6 @@ public class Login extends AutoLayoutActivity implements ILoginView {
      * 从网络获取个人信息
      */
     private void upDatePersonalInformation(String uid) {
-        Log.i("LYQ", "getDataForNetwork");
         final String key = "info_" + uid;
         BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(key);
@@ -294,13 +292,14 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-                EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
+
             }
 
             @Override
             public void onError(Throwable e) {
-                MyToast.showToast(Login.this, "获取个人信息失败，" + e.toString());
-                EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
+
+                MyToast.showToast(Login.this, "您还没有填写个人信息，请填写您的个人信息");
+                EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
                 Log.i("LYQ", "获取个人信息失败，" + e.toString());
             }
 
@@ -311,20 +310,28 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                     resp = responseBody.string();
                     if (!TextUtils.isEmpty(resp)) {
                         BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                        if (beanBaseKeyGetResp.getCode() >= 0) {
+
+                        if (beanBaseKeyGetResp.getCode() == 0) {
                             MyToast.showToast(Login.this, "获取个人信息成功");
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
-                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
+                            BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                            if (!isSave) {
+
                                 if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
                                     MyToast.showToast(Login.this, "保存个人信息失败");
                                 }
                             }
+
+                            EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
                         } else {
                             MyToast.showToast(Login.this, "获取个人信息失败");
+                            EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
                         }
                     } else {
                         MyToast.showToast(Login.this, "获取个人信息失败");
+                        EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+
                     }
 
                     Log.i("LYQ", "个人信息：" + resp);
