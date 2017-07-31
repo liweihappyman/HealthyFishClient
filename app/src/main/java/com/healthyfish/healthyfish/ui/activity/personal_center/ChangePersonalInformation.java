@@ -56,7 +56,7 @@ import okhttp3.ResponseBody;
 import rx.Subscriber;
 import top.zibin.luban.Luban;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：个人中心>个人信息>修改个人信息页面

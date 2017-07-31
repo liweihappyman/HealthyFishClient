@@ -96,7 +96,7 @@ public class ChangePassword extends BaseActivity {
                                 int code = beanBaseResp.getCode();
                                 if (code >= 0){
                                     Toast.makeText(ChangePassword.this,"修改成功",Toast.LENGTH_LONG).show();
-                                    MySharedPrefUtil.saveKeyValue("_user",user);
+                                    MySharedPrefUtil.saveKeyValue("user",user);
                                     EventBus.getDefault().post(new EmptyMessage());
                                     Intent intent = new Intent(ChangePassword.this, ChangePasswordSuccess.class);
                                     startActivity(intent);

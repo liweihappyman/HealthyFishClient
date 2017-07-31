@@ -23,6 +23,8 @@ import com.alibaba.fastjson.JSONArray;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
 import com.healthyfish.healthyfish.POJO.BeanHealthWorkShop;
 import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideReq;
@@ -30,6 +32,8 @@ import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideResp;
 import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideRespItem;
 import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.POJO.BeanListReq;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
@@ -42,6 +46,7 @@ import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionRepor
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
+import com.healthyfish.healthyfish.ui.activity.interrogation.HealthyChat;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
@@ -49,6 +54,8 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NetworkConnectUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.Sha256;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import com.healthyfish.healthyfish.utils.Utils1;
@@ -69,7 +76,7 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 
 /**
@@ -122,6 +129,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.fm_remote_monitoring)
     ImageView fmRemoteMonitoring;
     private String url2 = "http://219.159.248.209/demo/TestServlet";
+
+    final BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
 
     private HomePageHealthInfoAadpter healthInfoAdapter;
 
@@ -422,8 +431,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.fm_interrogation2:
+                /*MySharedPrefUtil.saveKeyValue("user", "18576011826");
+                MySharedPrefUtil.saveKeyValue("pwd", Sha256.getSha256("wkj"));
+                getSid();
+                MqttUtil.startAsync();*/
+                startActivity(new Intent(mContext, HealthyChat.class));
+                break;
+
             case R.id.fm_med_rec:
-                if (MySharedPrefUtil.getValue("_user")==""){
+                if (MySharedPrefUtil.getValue("user")==""){
                     Toast.makeText(getActivity(),"您还没有登录哟",Toast.LENGTH_SHORT).show();
                 }else {
                     Intent intent_med_rec = new Intent(mContext, AllMedRec.class);
@@ -444,6 +461,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
         }
 
+    }
+
+    private void getSid() {
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), HttpHealthyFishyUrl)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        try {
+                            BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
+                            Log.e("从服务器获取sid", obj.getSid());
+                            MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 }
 

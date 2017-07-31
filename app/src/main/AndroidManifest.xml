@@ -38,10 +38,13 @@
         </activity>
 
         <!-- 登录页面 -->
-
         <activity android:name=".ui.activity.Login" />
         <!-- 注册页面 -->
         <activity android:name=".ui.activity.Register" />
+
+        <!--健康咨询（chat）-->
+        <activity android:name=".utils.chat_utils.PicViewActivity" />
+        <activity android:name=".ui.activity.interrogation.HealthyChat"></activity>
 
         <!-- 病历夹页面 -->
         <activity android:name=".ui.activity.medicalrecord.AllMedRec" />
@@ -105,7 +108,6 @@
         <!-- 个人中心设置页面 -->
         <activity android:name=".ui.activity.personal_center.SetUp" />
 
-
         <!-- 图片选择器 -->
         <activity
             android:name="com.foamtrace.photopicker.PhotoPickerActivity"
@@ -155,7 +157,6 @@
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
         <activity android:name=".ui.activity.healthy_management.SelectHealthyScheme" />
 
-
         <!-- 健康管理自定义计划具体安排页面 -->
         <activity android:name=".ui.activity.healthy_management.ConcreteArrangement" />
 
@@ -167,9 +168,6 @@
         <activity android:name=".ui.activity.SearchResult" />
         <!-- 电子处方 -->
         <activity android:name=".ui.activity.Inspection_report.MyPrescription" />
-
-        <!--个人中心>个人信息>修改个人信息页面-->
-        <activity android:name=".ui.activity.personal_center.ChangePersonalInformation"/>
 
         <service
             android:name=".service.UploadImages"

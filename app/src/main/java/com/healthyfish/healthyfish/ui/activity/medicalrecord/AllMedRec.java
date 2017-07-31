@@ -1,15 +1,12 @@
 package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,30 +14,20 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeyAddReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyRemReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysGetReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysGetResp;
-import com.healthyfish.healthyfish.POJO.BeanBaseKeysRemReq;
-import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
-import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
-import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MedRecLvAdapter;
-import com.healthyfish.healthyfish.constant.constants;
-import com.healthyfish.healthyfish.ui.activity.Inspection_report.MyPrescription;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.utils.ComparatorDate;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -134,7 +121,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
      */
     private void reqForNetworkData() {
         final List<String> keysOutDB = new ArrayList<>();//存放数据库没有的key
-        String userStr = MySharedPrefUtil.getValue("_user");
+        String userStr = MySharedPrefUtil.getValue("user");
         BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
         StringBuilder prefix = new StringBuilder("medRec_");
         prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
@@ -201,7 +188,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
      */
     private void networkReqDelMedRec(String key) {
         //删除多个用
-//        String userStr = MySharedPrefUtil.getValue("_user");
+//        String userStr = MySharedPrefUtil.getValue("user");
 //        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
 //
 //        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
@@ -327,7 +314,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.new_med_rec://新建病历
-                constants.POSITION_MED_REC = -1;
+                Constants.POSITION_MED_REC = -1;
                 Intent intent = new Intent(this, NewMedRec.class);
                 startActivityForResult(intent, TO_NEW_MED_REC);
                 startActivity(intent);
@@ -336,7 +323,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        constants.POSITION_MED_REC = position;
+        Constants.POSITION_MED_REC = position;
         Intent intent = new Intent(AllMedRec.this, NewMedRec.class);
         //将选中的病历的id穿到NewMedRec活动
         intent.putExtra("id", listMecRec.get(position).getId());
