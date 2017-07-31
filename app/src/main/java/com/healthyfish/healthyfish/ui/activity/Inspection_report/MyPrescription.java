@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +17,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
 import com.healthyfish.healthyfish.POJO.BeanPrescription;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PrescriptionRvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -60,17 +63,14 @@ public class MyPrescription extends BaseActivity {
      * 网络访问，获取所有的电子处方
      */
     private void requestForPrescription() {
-
-        BeanUserRetrPresReq beanUserRetrPresReq = new BeanUserRetrPresReq();
-        beanUserRetrPresReq.setSickId("0000281122");
-        beanUserRetrPresReq.setUser("13977211042");
-        beanUserRetrPresReq.setHosp("lzzyy");
-
-
+        String userStr = MySharedPrefUtil.getValue("_user");
+        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
+        StringBuilder prefix = new StringBuilder("pres_");
+        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
 
 
         BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
-        userListValueReq.setPrefix("pres_13977211042");
+        userListValueReq.setPrefix(prefix.toString());
         userListValueReq.setFrom(0);
         userListValueReq.setNum(-1);
         userListValueReq.setTo(-1);
@@ -90,8 +90,8 @@ public class MyPrescription extends BaseActivity {
             public void onNext(ResponseBody responseBody) {
                 try {
                     String str = responseBody.string();
-                    Log.i("电子处方", "数据" + str);
-                    if (str != null) {
+                    //Log.i("电子处方", "数据" + str);
+                    if (!TextUtils.isEmpty(str)) {
                         saveNewData2DB(str);//保存新数据到本地数据库
                     }
 
@@ -100,8 +100,6 @@ public class MyPrescription extends BaseActivity {
                 }
             }
         });
-
-
     }
 
     /**
@@ -115,10 +113,10 @@ public class MyPrescription extends BaseActivity {
             //判断当前请求回来的key是否存在，不存在的话保存到数据库中
             if (DataSupport.select("key").where("key = ? ", beanPrescriptiom.getKey()).find(BeanPrescriptiom.class).isEmpty()) {
                 list.add(beanPrescriptiom);
-                Log.i("电子处方详细数据", " " + beanPrescriptiom.toString());
+//                Log.i("电子处方详细数据", " " + beanPrescriptiom.toString());
 //                        Log.i("电子处方详细数据"," "+beanPrescriptiom.getAGE()+beanPrescriptiom.getAPPLY_DEPT()+beanPrescriptiom.getKey());
 //                        Log.i("电子处方详细数据","----------------------------------------------------------------------------");
-//                        Log.i("电子处方详细数据PresList()"," "+beanPrescriptiom.getPresList())
+//                        Log.i("电子处方详细数据PresList()"," "+beanPrescriptiom.getPresList());
                 List<BeanPrescriptiom.PresListBean> preslist = beanPrescriptiom.getPresList();
                 for (BeanPrescriptiom.PresListBean presBean : preslist) {//目前只有一个药，所以执行一遍直接break掉
                     //presBean打包成JsonStr，set到ITEM_CLASS（因为这个数据项（ITEM_CLASS）没有用到，所以用来存放presBean打包成的JsonStr）
@@ -131,7 +129,6 @@ public class MyPrescription extends BaseActivity {
             }
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

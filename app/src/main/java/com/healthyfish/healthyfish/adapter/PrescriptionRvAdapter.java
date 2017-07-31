@@ -181,10 +181,10 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
         ipresPhysicName.setText(bean.getPHYSIC_NAME());
         usage.setText(bean.getUSAGE());
         ipresFreqDescribe.setText(bean.getFREQ_DESCRIBE());
-        dose.setText("每天"+bean.getPHYSIC_DOSEAGE()+bean.getDOSE_UNIT());
+        dose.setText("每次"+bean.getPHYSIC_DOSEAGE()+bean.getDOSE_UNIT());
         ipresPhysicDays.setText(bean.getLAY_PHYSIC_DAYS()+"天");
         ipresPackSpec.setText(bean.getPACK_SPEC());
-        ipresPhysicQuantity.setText(bean.getLAY_PHYSIC_QUANTITY()+"片");
+        ipresPhysicQuantity.setText(bean.getLAY_PHYSIC_QUANTITY()+bean.getPHYSIC_UNIT());
 
 
 
