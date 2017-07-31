@@ -380,48 +380,70 @@ public class ChangePersonalInformation extends BaseActivity {
     /**
      * 上传头像
      */
-    private void uploadImage(List<File> compressFiles) {
-        for (int i = 0; i < compressFiles.size(); i++) {
-            final List<File> list = new ArrayList<>();
-            list.clear();
-            list.add(compressFiles.get(i));
-            RetrofitManagerUtils.getInstance(this, null).uploadFilesRetrofit(list, i, new Subscriber<ResponseBody>() {
-                @Override
-                public void onCompleted() {
+    private void uploadImage(final List<File> compressFiles) {
 
-                }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < compressFiles.size(); i++) {
+                    final List<File> list = new ArrayList<>();
+                    list.clear();
+                    list.add(compressFiles.get(i));
+                    RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).uploadFilesRetrofit(list, i, new Subscriber<ResponseBody>() {
+                        @Override
+                        public void onCompleted() {
 
-                @Override
-                public void onError(Throwable e) {
-                    MyToast.showToast(MyApplication.getContetxt(), "头像上传失败，" + e.toString());
-                    Glide.with(ChangePersonalInformation.this).load(imgUrl).error(R.mipmap.ic_logo).into(civHeadPortrait);
-                }
+                        }
 
-                @Override
-                public void onNext(ResponseBody responseBody) {
-                    try {
-                        String str = responseBody.string();
-                        Log.i("图片上传", "返回数据:" + str);
-                        if (str != null) {
-                            BeanUploadImagesResp beanUploadImagesResp = JSON.parseObject(str, BeanUploadImagesResp.class);
-                            if (beanUploadImagesResp.getCode() == 0) {
-                                imgUrl = beanUploadImagesResp.getUrl();
-                                if (!TextUtils.isEmpty(imgUrl)) {
-                                    beanUploadImagesRespList.add(beanUploadImagesResp);//后期用来清除服务器图片
-                                    MyToast.showToast(MyApplication.getContetxt(), "头像上传成功");
-                                    Glide.with(ChangePersonalInformation.this).load(HttpHealthyFishyUrl + imgUrl).into(civHeadPortrait);
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.i("LYQ", "上传图片：" + e.toString());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    MyToast.showToast(MyApplication.getContetxt(), "头像上传失败" );
+                                    Glide.with(ChangePersonalInformation.this).load(imgUrl).error(R.mipmap.ic_logo).into(civHeadPortrait);
                                 }
-                            } else if (beanUploadImagesResp.getCode() < 0) {
-                                MyToast.showToast(MyApplication.getContetxt(), "头像上传失败，请重新选择");
-                                Glide.with(ChangePersonalInformation.this).load(imgUrl).error(R.mipmap.ic_logo).into(civHeadPortrait);
+                            });
+                        }
+
+                        @Override
+                        public void onNext(ResponseBody responseBody) {
+                            try {
+                                String str = responseBody.string();
+                                Log.i("图片上传", "返回数据:" + str);
+                                if (str != null) {
+                                    final BeanUploadImagesResp beanUploadImagesResp = JSON.parseObject(str, BeanUploadImagesResp.class);
+                                    if (beanUploadImagesResp.getCode() == 0) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                imgUrl = beanUploadImagesResp.getUrl();
+                                                if (!TextUtils.isEmpty(imgUrl)) {
+                                                    beanUploadImagesRespList.add(beanUploadImagesResp);//后期用来清除服务器图片
+                                                    MyToast.showToast(MyApplication.getContetxt(), "头像上传成功");
+                                                    Glide.with(ChangePersonalInformation.this).load(HttpHealthyFishyUrl + imgUrl).into(civHeadPortrait);
+                                                }
+                                            }
+                                        });
+                                    } else if (beanUploadImagesResp.getCode() < 0) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                MyToast.showToast(MyApplication.getContetxt(), "头像上传失败，请重新选择");
+                                                Glide.with(ChangePersonalInformation.this).load(imgUrl).error(R.mipmap.ic_logo).into(civHeadPortrait);
+                                            }
+                                        });
+                                    }
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    });
                 }
-            });
-        }
+            }
+        }).start();
     }
 
     /**

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.interrogation.Pay;
 
@@ -30,6 +31,8 @@ public class BuyServiceFragment extends DialogFragment {
     private TextView servicePrice;
     private Button shopNow;
     private Bundle bundleServiceType;
+
+    private BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class BuyServiceFragment extends DialogFragment {
     private void initData() {
         bundleServiceType = getArguments();
         if (bundleServiceType != null) {
+            //beanDoctorChatInfo = (BeanDoctorChatInfo) bundleServiceType.getSerializable("BeanDoctorChatInfo");
             if (bundleServiceType.get("serviceType").equals("图文咨询")){
                 serviceImg.setImageResource(R.mipmap.ic_picture_consulting_open);
                 serviceTypeAndDoctorName.setText("图文咨询-"+ bundleServiceType.get("name"));
@@ -112,11 +116,12 @@ public class BuyServiceFragment extends DialogFragment {
             public void onClick(View v) {
                 if (getDialog() != null){
                     Intent intent = new Intent(getActivity(), Pay.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("serviceType",bundleServiceType.get("serviceType").toString());
-                    bundle.putString("name",bundleServiceType.get("name").toString());
-                    bundle.putString("price",bundleServiceType.get("price").toString());
-                    intent.putExtras(bundle);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("serviceType",bundleServiceType.get("serviceType").toString());
+//                    bundle.putString("name",bundleServiceType.get("name").toString());
+//                    bundle.putString("price",bundleServiceType.get("price").toString());
+//                    bundle.putSerializable("BeanDoctorChatInfo",beanDoctorChatInfo);
+                    intent.putExtras(bundleServiceType);
                     startActivity(intent);
                     getDialog().dismiss();
                 }
