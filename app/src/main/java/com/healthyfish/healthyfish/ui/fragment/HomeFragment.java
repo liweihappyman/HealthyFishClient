@@ -355,7 +355,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                             @Override
                             public void onError(Throwable e) {
-
+                                MyToast.showToast(getActivity(), "加载健康咨询出错啦！");
                             }
 
                             @Override

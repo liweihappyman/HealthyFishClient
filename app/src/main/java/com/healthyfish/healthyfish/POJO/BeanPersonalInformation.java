@@ -1,5 +1,9 @@
 package com.healthyfish.healthyfish.POJO;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
+
 /**
  * 描述：个人信息类
  * 作者：LYQ on 2017/7/25.
@@ -7,8 +11,10 @@ package com.healthyfish.healthyfish.POJO;
  * 编辑：LYQ
  */
 
-public class BeanPersonalInformation {
+public class BeanPersonalInformation extends DataSupport implements Serializable {
 
+    private int id;//数据库自动生成的id
+    private String key;//用户信息的key
     private String phone;//手机号
     private String name;//姓名
     private String nickname;//昵称
@@ -17,6 +23,22 @@ public class BeanPersonalInformation {
     private String birthDate;//出生日期
     private String idCard;//身份证号
 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getPhone() {
         return phone;
@@ -63,7 +85,7 @@ public class BeanPersonalInformation {
     }
 
     public void setBirthDate(String birthDate) {
-        birthDate = birthDate;
+        this.birthDate = birthDate;
     }
 
     public String getIdCard() {
@@ -73,4 +95,5 @@ public class BeanPersonalInformation {
     public void setIdCard(String idCard) {
         this.idCard = idCard;
     }
+
 }

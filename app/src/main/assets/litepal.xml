@@ -20,7 +20,9 @@
         <mapping class="com.healthyfish.healthyfish.POJO.BeanConcernList"> </mapping>
 
         <mapping class="com.healthyfish.healthyfish.POJO.BeanPrescriptiom">
+        </mapping>
 
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanPersonalInformation">
         </mapping>
     </list>
 

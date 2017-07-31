@@ -2,11 +2,8 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -24,11 +21,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.eventbus.EmptyMessage;
 import com.healthyfish.healthyfish.ui.activity.personal_center.Feedback;
 import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyConcern;
@@ -41,6 +40,7 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -59,6 +59,8 @@ import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：个人中心首页
@@ -101,33 +103,39 @@ public class PersonalCenterFragment extends Fragment {
     private Context mContext;
     private View rootView;
 
+    private BeanPersonalInformation beanPersonalInformation;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_personal_center, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         judgeLoginState();
         return rootView;
     }
-   //登录状态判断初始化相应的控件
+
+    //登录状态判断初始化相应的控件
     private void judgeLoginState() {
         String user = MySharedPrefUtil.getValue("_user");
-        if (user!=""){
-            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user,BeanUserLoginReq.class);
-            String numble = beanUserLoginReq.getMobileNo();
-            MyApplication.uid = numble;
-            upDateMyConcern(numble);
-            isLogin(true,numble);
-        }else {
-            isLogin(false,null);
+        if (!TextUtils.isEmpty(user)) {
+            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
+            String number = beanUserLoginReq.getMobileNo();
+            MyApplication.uid = number;
+            upDateMyConcern(number);
+            isLogin(true, number);
+        } else {
+            isLogin(false, null);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshLoginState(EmptyMessage emptyMessage){
+    public void refreshLoginState(BeanPersonalInformation beanPersonalInformation) {
+        this.beanPersonalInformation = beanPersonalInformation;
         judgeLoginState();
-        EventBus.getDefault().unregister(this);
     }
 
 
@@ -135,17 +143,25 @@ public class PersonalCenterFragment extends Fragment {
      * 判断是否登录
      * numble：目前用手机号码表示用户
      */
-    private void isLogin(boolean isLogin,String numble) {
+    private void isLogin(boolean isLogin, String number) {
         if (isLogin) {
             rlyNotLogin.setVisibility(View.GONE);
             rlyLogin.setVisibility(View.VISIBLE);
-            //检查有多少未读消息，并显示
-            //initInfoPrompt("16");
-            Glide.with(getActivity()).load("http://wmtp.net/wp-content/uploads/2017/02/0227_weimei01_1.jpeg").into(civHeadPortraitLogin);
-            setTextBold(numble);
+
+            //initInfoPrompt("16");//检查有多少未读消息，并显示
+
+            String key = "info_" + number;
+            List<BeanPersonalInformation> personalInformationList = DataSupport.where("key = ?", key).find(BeanPersonalInformation.class);
+            if (!personalInformationList.isEmpty()) {
+                beanPersonalInformation = personalInformationList.get(0);
+                initWidget();
+            } else {
+                upDatePersonalInformation(number);
+            }
+
             tvConstitutionLogin.setText("阳虚质");
             rlyNotLogin.setBackgroundResource(R.color.color_primary_dark);
-        }else {
+        } else {
             rlyLogin.setVisibility(View.GONE);
             rlyNotLogin.setVisibility(View.VISIBLE);
             rlyMail.setVisibility(View.GONE);
@@ -153,6 +169,23 @@ public class PersonalCenterFragment extends Fragment {
         }
     }
 
+    /**
+     * 展示数据
+     */
+    private void initWidget() {
+        if (beanPersonalInformation != null) {
+            if (!TextUtils.isEmpty(beanPersonalInformation.getImgUrl())) {
+                Glide.with(getActivity()).load(HttpHealthyFishyUrl + beanPersonalInformation.getImgUrl()).error(R.mipmap.error).into(civHeadPortraitLogin);
+            } else {
+                Glide.with(getActivity()).load(R.mipmap.ic_logo).into(civHeadPortraitLogin);
+            }
+            if (!TextUtils.isEmpty(beanPersonalInformation.getNickname())) {
+                setTextBold(beanPersonalInformation.getNickname());
+            } else {
+                setTextBold("您");
+            }
+        }
+    }
 
 
     /**
@@ -160,7 +193,7 @@ public class PersonalCenterFragment extends Fragment {
      */
     private void setTextBold(String name) {
         SpannableStringBuilder spannableString = new SpannableStringBuilder();
-        spannableString.append(name+" 的健康信息");
+        spannableString.append(name + " 的健康信息");
         //setSpan可多次使用
         StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);//粗体
         spannableString.setSpan(styleSpan, 0, name.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -193,6 +226,7 @@ public class PersonalCenterFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
         unbinder.unbind();
     }
 
@@ -204,7 +238,6 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.tv_login_or_register:
                 //点击登录/注册
-                EventBus.getDefault().register(this);
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 break;
@@ -213,8 +246,13 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.lly_personal_information:
                 //点击个人信息
-                Intent intent02 = new Intent(getActivity(), PersonalInformation.class);
-                startActivity(intent02);
+                if (!TextUtils.isEmpty(MyApplication.uid)) {
+                    Intent intent02 = new Intent(getActivity(), PersonalInformation.class);
+                    startActivity(intent02);
+                } else {
+                    MyToast.showToast(getActivity(), "您还没有登录呦！请先登录");
+                }
+
                 break;
             case R.id.lly_my_news:
                 //点击我的消息
@@ -227,7 +265,7 @@ public class PersonalCenterFragment extends Fragment {
                     Intent intent04 = new Intent(getActivity(), MyConcern.class);
                     startActivity(intent04);
                 } else {
-                    MyToast.showToast(getActivity(),"您还没有登录呦！请先登录");
+                    MyToast.showToast(getActivity(), "您还没有登录呦！请先登录");
                 }
                 break;
             case R.id.lly_feedback:
@@ -237,7 +275,6 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.lly_set:
                 //点击设置
-                EventBus.getDefault().register(this);
                 Intent intent06 = new Intent(getActivity(), SetUp.class);
                 startActivity(intent06);
                 break;
@@ -265,7 +302,7 @@ public class PersonalCenterFragment extends Fragment {
     /**
      * 将用户的关注列表保存到数据库
      */
-    private void upDateMyConcern(String uid){
+    private void upDateMyConcern(String uid) {
         final List<BeanConcernList> concernList = new ArrayList<>();
 
         BeanUserListReq beanUserListReq = new BeanUserListReq();
@@ -323,7 +360,54 @@ public class PersonalCenterFragment extends Fragment {
 
     }
 
+    /**
+     * 从网络获取个人信息
+     */
+    private void upDatePersonalInformation(String uid) {
 
+        final String key = "info_" + uid;
+        BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+        beanBaseKeyGetReq.setKey(key);
 
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+                initWidget();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.showToast(getActivity(), "获取个人信息失败，" + e.toString());
+                initWidget();
+
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                String resp = null;
+                try {
+                    resp = responseBody.string();
+                    if (!TextUtils.isEmpty(resp)) {
+                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                        if (beanBaseKeyGetResp.getCode() >= 0) {
+                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                            if (!isSave) {
+                                MyToast.showToast(getActivity(), "保存个人信息失败");
+                            }
+                        } else {
+                            MyToast.showToast(getActivity(), "获取个人信息失败");
+                        }
+                    } else {
+                        MyToast.showToast(getActivity(), "获取个人信息失败");
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 }

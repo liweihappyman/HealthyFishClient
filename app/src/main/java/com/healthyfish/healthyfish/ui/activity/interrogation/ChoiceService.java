@@ -339,8 +339,6 @@ public class ChoiceService extends BaseActivity {
                 //点击进行预约挂号
                 if (!TextUtils.isEmpty(uid)) {
                     Intent intent1 = new Intent(ChoiceService.this, DoctorDetail.class);
-//                    intent1.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
-//                    intent1.putExtra("BeanHospDeptDoctListRespItem", DeptDoctInfo);
                     intent1.putExtra("BeanDoctorInfo", beanDoctorInfo);
                     startActivity(intent1);
                 } else {

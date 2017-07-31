@@ -17,6 +17,7 @@ import com.healthyfish.healthyfish.POJO.BeanListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
+import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -63,15 +64,14 @@ public class MoreHealthNews extends BaseActivity {
     }
 
     private void initListView() {
-        createRequest(0, to, false);
         LinearLayoutManager lm = new LinearLayoutManager(MoreHealthNews.this);
         ryvMoreHealthNews.setLayoutManager(lm);
-        healthInfoAdapter = new HomePageHealthInfoAadpter(mContext, newsList);
-        ryvMoreHealthNews.setAdapter(healthInfoAdapter);
-
         final View footView = LayoutInflater.from(this).inflate(R.layout.layout_load_more, ryvMoreHealthNews, false);
         footTextView = (TextView) footView.findViewById(R.id.tv_load_more);
+        healthInfoAdapter = new HomePageHealthInfoAadpter(mContext, newsList);
+        ryvMoreHealthNews.setAdapter(healthInfoAdapter);
         healthInfoAdapter.addFootView(footView);
+        createRequest(0, to, false);
 
         //Item的点击监听
         ryvMoreHealthNews.addOnItemTouchListener(new MyRecyclerViewOnItemListener(this, ryvMoreHealthNews,
@@ -113,6 +113,7 @@ public class MoreHealthNews extends BaseActivity {
                         new Subscriber<ResponseBody>() {
                             @Override
                             public void onCompleted() {
+                                healthInfoAdapter.notifyDataSetChanged();//由于加载需要时间，故加载完成重新刷新适配器，防止FootView位置出错
                                 if (isLoad && !isNotMore) {
                                     footTextView.setText("加载更多");
                                 } else if (isNotMore) {
@@ -122,7 +123,8 @@ public class MoreHealthNews extends BaseActivity {
 
                             @Override
                             public void onError(Throwable e) {
-
+                                MyToast.showToast(MoreHealthNews.this,"加载出错");
+                                footTextView.setText("加载更多");
                             }
 
                             @Override
@@ -139,7 +141,6 @@ public class MoreHealthNews extends BaseActivity {
                                         BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
                                         newsList.add(bean);
                                     }
-                                    healthInfoAdapter.notifyDataSetChanged();//由于加载需要时间，故加载完成重新刷新适配器，防止FootView位置出错
                                     if (strJsonNewsList.size() <= 9) {
                                         isNotMore = true;
                                     }
