@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
         interrogationFragment = new InterrogationFragment();
-        healthyCircleFragment = new HealthyCircleFragment();
+        healthyCircleFragment = new HealthyCircleFragment(getSupportFragmentManager());
         healthWorkshopFragment = new HealthWorkshopFragment();
         personalCenterFragment = new PersonalCenterFragment();
         fragments.add(homeFragment);

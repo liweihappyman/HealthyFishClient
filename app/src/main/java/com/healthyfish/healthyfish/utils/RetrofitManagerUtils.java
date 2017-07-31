@@ -2,6 +2,7 @@ package com.healthyfish.healthyfish.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 import com.healthyfish.healthyfish.MyApplication;
@@ -142,6 +143,7 @@ public class RetrofitManagerUtils {
 
     /**
      * 逐个获取病历，必须执行在相同的线程历里面，不然获取到的数据有可能会乱
+     *
      * @param requestBody
      * @param subscriber
      * @author Wkj
@@ -155,24 +157,22 @@ public class RetrofitManagerUtils {
     }
 
 
-
     /**
      * 上传图片文件(多张图片)
      *
      * @param compressFlies 要上传的压缩后的图片文件
      * @author Wkj
      */
-    public void uploadFilesRetrofit(List<File> compressFlies,int position , Subscriber<ResponseBody> subscriber) {
+    public void uploadFilesRetrofit(List<File> compressFlies, int position, Subscriber<ResponseBody> subscriber) {
         Map<String, RequestBody> photos = new HashMap<>();
         if (compressFlies.size() > 0) {
             for (int i = 0; i < compressFlies.size(); i++) {
                 photos.put("photos" + position + "\"; filename=\"icon.png", RequestBody.create(MediaType.parse("multipart/form-data"), compressFlies.get(i)));
+                Log.i("图片上传","photos" + position + "\"; filename=\"icon.png");
             }
         }
+        //运行在服务线程
         apiService.uploadFiles(photos)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }
 

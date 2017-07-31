@@ -97,6 +97,7 @@ public class SetUp extends BaseActivity {
         String user = MySharedPrefUtil.getValue("_user");
         if (TextUtils.isEmpty(user)) {
             Toast.makeText(this, "您还没有登录哟", Toast.LENGTH_LONG).show();
+
         } else {
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
 
