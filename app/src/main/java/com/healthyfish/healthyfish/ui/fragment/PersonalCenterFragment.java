@@ -60,7 +60,9 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
 
+
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
+
 
 /**
  * 描述：个人中心首页
@@ -99,10 +101,8 @@ public class PersonalCenterFragment extends Fragment {
     @BindView(R.id.rly_login)
     AutoRelativeLayout rlyLogin;
     Unbinder unbinder;
-
     private Context mContext;
     private View rootView;
-
     private BeanPersonalInformation beanPersonalInformation = new BeanPersonalInformation();
 
 
@@ -380,7 +380,9 @@ public class PersonalCenterFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
+
                 MyToast.showToast(getActivity(), "获取个人信息失败,请更新您的个人信息");
+
                 initWidget();
 
             }

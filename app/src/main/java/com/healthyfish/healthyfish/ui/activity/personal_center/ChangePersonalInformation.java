@@ -56,7 +56,9 @@ import okhttp3.ResponseBody;
 import rx.Subscriber;
 import top.zibin.luban.Luban;
 
+
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
+
 
 /**
  * 描述：个人中心>个人信息>修改个人信息页面
@@ -104,6 +106,7 @@ public class ChangePersonalInformation extends BaseActivity {
     private String gender = "";//性别
     private String birthDate = "";//出生日期
     private String idCard = "";//身份证号
+
 
     private final int mResultCode = 10035;
 
@@ -261,6 +264,7 @@ public class ChangePersonalInformation extends BaseActivity {
             public void onCompleted() {
                 if (!TextUtils.isEmpty(resp)) {
                     BeanBaseResp beanBaseResp = JSON.parseObject(resp, BeanBaseResp.class);
+
                     if (beanBaseResp.getCode() == 0) {
                         MyToast.showToast(ChangePersonalInformation.this, "修改个人信息成功");
                         boolean isSave = personalInformation.saveOrUpdate("key = ?", key);//将个人信息保存到数据库

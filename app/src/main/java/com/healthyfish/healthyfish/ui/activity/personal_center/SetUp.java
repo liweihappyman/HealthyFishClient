@@ -94,7 +94,9 @@ public class SetUp extends BaseActivity {
      * 退出登录
      */
     private void loginOut() {
+
         String user = MySharedPrefUtil.getValue("user");
+
         if (TextUtils.isEmpty(user)) {
             Toast.makeText(this, "您还没有登录哟", Toast.LENGTH_LONG).show();
 

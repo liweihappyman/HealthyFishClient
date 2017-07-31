@@ -3,13 +3,17 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+
 import android.util.Log;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +21,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.healthyfish.healthyfish.MainActivity;
@@ -40,11 +42,8 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
-
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
-
 import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport;
-
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
@@ -56,12 +55,12 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NetworkConnectUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+
 import com.healthyfish.healthyfish.utils.Sha256;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLinearLayout;
-
 import com.healthyfish.healthyfish.utils.Utils1;
-
+import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import java.io.IOException;
@@ -72,7 +71,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.bingoogolapple.bgabanner.BGABanner;
-
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -102,6 +100,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.date)
     TextView date;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefresh;
+
 
     private Context mContext;
     private View rootView;
@@ -142,34 +143,55 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        initAll();
+        initAll(false);
+        refresh();
         return rootView;
 
     }
 
-    private void initAll() {
+    private void refresh() {
+        swipeRefresh.setColorSchemeColors(Color.parseColor("#019b79"));
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initAll(true);
+            }
+        });
+    }
+
+    private void initAll(boolean refresh) {
         initInfoPrmopt("9");//测试消息提示文本
         initFunctionMenu();//初始化菜单监听
         initHealthNews();//初始化健康资讯
         initHealthPlan();//初始化养生计划
         initHealthWorkShop();//初始化健康工坊
-        initBannerRequest();//网络访问获取轮播图内容
-
+        initBannerRequest(refresh);//网络访问获取轮播图内容
     }
 
     //网络访问获取轮播图内容
-    private void initBannerRequest() {
+    private void initBannerRequest(final boolean refresh) {
         final List<String> imgs = new ArrayList<>();//装载图片
         final List<String> desc = new ArrayList<>();//装载描述
+        //先加载本地的
+        if (!TextUtils.isEmpty(MySharedPrefUtil.getValue("slideshow"))) {
+            List<String> imgsLocal = new ArrayList<>();//装载图片
+            imgsLocal = JSON.parseObject(MySharedPrefUtil.getValue("slideshow"), List.class);
+            setbanner(imgsLocal, desc);
+        }
         RetrofitManagerUtils.getInstance(getActivity(), null)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHomeImgSlideReq()), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
+                        if (refresh) {
+                            swipeRefresh.setRefreshing(false);
+                            Toast.makeText(getActivity(), "刷新成功", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                        swipeRefresh.setRefreshing(false);
+                        Toast.makeText(getActivity(), "出错啦，请检查网络环境", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -177,13 +199,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         String str = null;
                         try {
                             str = responseBody.string();
-                            BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str, BeanHomeImgSlideResp.class);
-                            for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem : beanHomeImgSlideResp.getImgList()) {
-                                imgs.add(HttpHealthyFishyUrl + beanHomeImgSlideRespItem.getImg());
-                                Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
-                                desc.add(beanHomeImgSlideRespItem.getDesc());
+                            if (!TextUtils.isEmpty(str)) {
+                                BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str, BeanHomeImgSlideResp.class);
+                                for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem : beanHomeImgSlideResp.getImgList()) {
+                                    imgs.add(HttpHealthyFishyUrl + beanHomeImgSlideRespItem.getImg());
+                                    //Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
+                                    desc.add(beanHomeImgSlideRespItem.getDesc());
+                                }
+                                setbanner(imgs, desc);//给轮播图设置图片
+                                MySharedPrefUtil.saveKeyValue("slideshow", JSON.toJSONString(imgs));//保存轮播图的url，描述暂时没有
                             }
-                            setbanner(imgs, desc);//给轮播图设置图片
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -333,6 +358,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     /**
      * 健康新闻请求
+     *
      * @param newsList
      */
     private void createRequest(final List<BeanItemNewsAbstract> newsList) {

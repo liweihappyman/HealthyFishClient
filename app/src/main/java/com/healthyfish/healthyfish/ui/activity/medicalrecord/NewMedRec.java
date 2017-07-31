@@ -62,7 +62,7 @@ import static com.healthyfish.healthyfish.ui.activity.medicalrecord.CreateCourse
 public class NewMedRec extends AppCompatActivity implements View.OnClickListener {
     //标志病历夹是要更新还是直接保存（默认是更新状态）  save:表示新建的直接保存
     public String SAVE_OR_UPDATE = "update";
-    public boolean hasCourseList = false;
+    //public boolean hasCourseList = false;
     public static int ID = 0;//记录本次所编辑的病历夹的id
     public static final int ALL_MED_REC_RESULT = 38;//给AllMedRec页面返回结果的标志
     public static final int COURSE_OF_DISEASE = 33;//跳转进入病程页面的标志
@@ -193,7 +193,7 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         if (Constants.POSITION_MED_REC != -1) {
             showDelDialog();
         } else {
-            Toast.makeText(this, "没有可删除的病程哦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "没有可删除的病历哦", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -491,7 +491,6 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
         BeanMedRec medRecUpdateOrDel = DataSupport.find(BeanMedRec.class, ID, true);
         listCourseOfDiseases.clear();
         listCourseOfDiseases = medRecUpdateOrDel.getListCourseOfDisease();
-        int i = listCourseOfDiseases.size();
         medRec.setListCourseOfDisease(listCourseOfDiseases);
         initList(listCourseOfDiseases, courseOfDiseaseRecyclerView);
     }

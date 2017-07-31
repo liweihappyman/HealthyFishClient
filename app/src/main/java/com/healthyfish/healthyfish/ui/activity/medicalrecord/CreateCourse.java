@@ -61,7 +61,6 @@ public class CreateCourse extends AppCompatActivity implements View.OnClickListe
     private BeanCourseOfDisease courseOfDisease = new BeanCourseOfDisease();
     private BeanMedRec medRec = new BeanMedRec();
     private boolean loadNetworkImages = false;
-
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
