@@ -24,6 +24,9 @@
 
         <mapping class="com.healthyfish.healthyfish.POJO.BeanPersonalInformation">
         </mapping>
+
+        <!--健康咨询HealthyChat的表-->
+        <mapping class="com.healthyfish.healthyfish.POJO.ImMsgBean" />
     </list>
 
 </litepal>

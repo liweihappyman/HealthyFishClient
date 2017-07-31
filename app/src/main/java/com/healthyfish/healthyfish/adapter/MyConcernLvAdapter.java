@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
@@ -18,7 +17,6 @@ import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyRemReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
 import com.healthyfish.healthyfish.POJO.BeanMyConcernItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceService;
@@ -26,7 +24,6 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoRelativeLayout;
-import com.zhy.autolayout.utils.AutoUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -40,7 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：个人中心我的关注页面的适配器

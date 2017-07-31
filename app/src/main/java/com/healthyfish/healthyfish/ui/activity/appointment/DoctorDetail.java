@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,8 +22,6 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.POJO.Test;
 import com.healthyfish.healthyfish.R;
@@ -58,7 +55,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：医生详情页面

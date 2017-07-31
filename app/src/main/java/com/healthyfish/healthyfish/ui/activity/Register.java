@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,13 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideReq;
-import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideResp;
-import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideRespItem;
 import com.healthyfish.healthyfish.POJO.BeanUserRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRegisterResp;
 import com.healthyfish.healthyfish.POJO.BeanUserSmsAuthReq;
-import com.healthyfish.healthyfish.POJO.BeanUserSmsVerifyReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.view.register.IRegisterView;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -31,8 +26,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
-
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：注册Activity

@@ -18,29 +18,23 @@ import com.healthyfish.healthyfish.POJO.BeanDepartmentDoctor;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.adapter.DepartmentDoctorLvAdapter;
-import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
-import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：挂号模块科室医生列表页面

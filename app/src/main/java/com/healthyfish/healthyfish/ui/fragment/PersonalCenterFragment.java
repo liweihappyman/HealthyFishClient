@@ -60,7 +60,7 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：个人中心首页
@@ -120,7 +120,7 @@ public class PersonalCenterFragment extends Fragment {
 
     //登录状态判断初始化相应的控件
     private void judgeLoginState() {
-        String user = MySharedPrefUtil.getValue("_user");
+        String user = MySharedPrefUtil.getValue("user");
         if (!TextUtils.isEmpty(user)) {
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
             String number = beanUserLoginReq.getMobileNo();
@@ -136,6 +136,7 @@ public class PersonalCenterFragment extends Fragment {
     public void refreshLoginState(BeanPersonalInformation beanPersonalInformation) {
         this.beanPersonalInformation = beanPersonalInformation;
         judgeLoginState();
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -275,6 +276,7 @@ public class PersonalCenterFragment extends Fragment {
                 break;
             case R.id.lly_set:
                 //点击设置
+                EventBus.getDefault().register(this);
                 Intent intent06 = new Intent(getActivity(), SetUp.class);
                 startActivity(intent06);
                 break;

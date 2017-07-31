@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.google.gson.Gson;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
@@ -21,6 +22,8 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
@@ -34,8 +37,8 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLayoutActivity;
-
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
@@ -48,6 +51,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：登录Activity
@@ -133,9 +138,8 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         }
     }
 
-
     /**
-     * 登录
+     *     登录
      */
     private void login() {
         BeanUserLoginReq beanUserLoginReq = new BeanUserLoginReq();
@@ -180,7 +184,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
     private void judgeAndShowToast(int code, String user) {
         if (code >= 0) {
             Toast.makeText(Login.this, "登录成功", Toast.LENGTH_LONG).show();
-            MySharedPrefUtil.saveKeyValue("_user", user);  //登录成功由shareprefrence保存
+            MySharedPrefUtil.saveKeyValue("user", user);  //登录成功由shareprefrence保存
             MyApplication.uid = getUserName();
             upDateMyConcern();
             upDatePersonalInformation(getUserName());
@@ -189,7 +193,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
             finish();
         } else if (code == -1) {
             Toast.makeText(Login.this, "用户不存在", Toast.LENGTH_LONG).show();
-        } else if (code == -2 || code == -5 || code == -3) {
+        } else if (code == -2||code ==-5||code == -3) {
             Toast.makeText(Login.this, "密码错误", Toast.LENGTH_LONG).show();
         } else if (code == -10) {
             Toast.makeText(Login.this, "操作次数过多", Toast.LENGTH_LONG).show();

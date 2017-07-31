@@ -100,7 +100,7 @@ public class RegisterPassword extends BaseActivity {
                                 int code = beanBaseResp.getCode();
                                 if (code >=0) {
                                     Toast.makeText(RegisterPassword.this, "注册成功", Toast.LENGTH_LONG).show();
-                                    MySharedPrefUtil.saveKeyValue("_user",user);
+                                    MySharedPrefUtil.saveKeyValue("user",user);
                                     //————————————————————————————————————————
                                     EventBus.getDefault().post(new EmptyMessage());//注册成功通知更新登录状态
                                     Intent intent = new Intent(RegisterPassword.this, RegisterSuccess.class);

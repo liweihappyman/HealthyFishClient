@@ -15,7 +15,7 @@ import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
 
-import static com.healthyfish.healthyfish.constant.constants.HttpHealthyFishyUrl;
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：
