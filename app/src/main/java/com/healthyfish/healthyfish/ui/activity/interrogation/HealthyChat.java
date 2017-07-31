@@ -236,7 +236,9 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
             bean.setTime(DateTimeUtil.getTime());
             bean.setLoading(true);
             bean.setContent(msg);
-            bean.setTopic("u" + "18576011826");
+
+            // TODO: 2017/7/31 设置聊天的对象
+            bean.setTopic("d" + "13977211042");
 
             // UI添加消息
             chattingListAdapter.addData(bean, true, false);

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
 import com.healthyfish.healthyfish.POJO.BeanHealthWorkShop;
@@ -432,10 +434,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fm_interrogation2:
-                /*MySharedPrefUtil.saveKeyValue("user", "18576011826");
-                MySharedPrefUtil.saveKeyValue("pwd", Sha256.getSha256("wkj"));
-                getSid();
-                MqttUtil.startAsync();*/
+                initMQTT();
                 startActivity(new Intent(mContext, HealthyChat.class));
                 break;
 
@@ -463,11 +462,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void getSid() {
-        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), HttpHealthyFishyUrl)
+    /**
+     * 初始化MQTT
+     */
+    private void initMQTT() {
+        RetrofitManagerUtils.getInstance(getContext(), HttpHealthyFishyUrl)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
+                        String user = MySharedPrefUtil.getValue("user");
+                        if (!TextUtils.isEmpty(user)) {
+                            MqttUtil.startAsync();
+                        }
                     }
 
                     @Override
@@ -486,6 +492,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 });
+
     }
 }
 

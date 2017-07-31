@@ -1,36 +1,52 @@
 package com.healthyfish.healthyfish;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
 import com.healthyfish.healthyfish.ui.fragment.HealthWorkshopFragment;
 import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
 import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 
 /**
@@ -101,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private HealthWorkshopFragment healthWorkshopFragment;
     private PersonalCenterFragment personalCenterFragment;
 
+    BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +132,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void init() {
         initpgAdapter();//初始化viewpage
         setTab(0);//初始化界面设置，即指定刚进入是可见的界面
+
+        // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
+        initMQTT();
+
         //菜单监听
         lyHome.setOnClickListener(this);
         lyInterrogation.setOnClickListener(this);
@@ -246,4 +268,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
     }
+
+    /**
+     * 初始化MQTT
+     */
+    private void initMQTT() {
+        RetrofitManagerUtils.getInstance(MainActivity.this, HttpHealthyFishyUrl)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+                        String user = MySharedPrefUtil.getValue("user");
+                        if (!TextUtils.isEmpty(user)) {
+                            MqttUtil.startAsync();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        try {
+                            BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
+                            Log.e("从服务器获取sid", obj.getSid());
+                            MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+    }
+
+
 }

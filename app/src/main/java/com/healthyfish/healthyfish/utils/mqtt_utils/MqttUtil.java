@@ -3,10 +3,13 @@ package com.healthyfish.healthyfish.utils.mqtt_utils;
 import android.os.Handler;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -23,6 +26,8 @@ import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import static com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil.userName;
 
 
 /**
@@ -76,7 +81,6 @@ public class MqttUtil {
     public static final int MSG_WHAT_MQTT_BASE = 0;
 
     static boolean connFlag = false;
-    //    public static final String HOST = "tcp://192.168.3.97:1883";
     public static final String HOST = "tcp://219.159.248.209:1883";
     private static String userType;
     private static String localUser;
@@ -92,6 +96,12 @@ public class MqttUtil {
     public static final byte MSG_SYS_DropChannel = 2; //删除会话
     public static final byte MSG_USER_SYS_OFFLINE = 3; //用户下线
     public static final byte MSG_USER_SYS_ONLINE = 4; //用户下线
+
+    // 获取登录账号和密码
+    private static String userJson = MySharedPrefUtil.getValue("user");
+    public static BeanUserLoginReq beanUserLoginReq = JSON.parseObject(userJson, BeanUserLoginReq.class);
+    public static String userName = beanUserLoginReq.getMobileNo();
+    public static String userPwd = beanUserLoginReq.getPwdSHA256();
 
     static Handler pingHandler = new Handler();
     static Runnable pingRunnable = new Runnable() {
@@ -116,9 +126,11 @@ public class MqttUtil {
         } else {
             userType = "u";
         }
-        localUser = MySharedPrefUtil.getValue("user");
+        localUser = userName;
         localTopic = userType + localUser;
         pingHandler.postDelayed(pingRunnable, keepAliveInterval * 1000);
+
+        Log.e("MQTT init", localUser + "    " + userPwd);
     }
 
     private static MqttAsyncClient mqttAsyncClient;
@@ -136,11 +148,11 @@ public class MqttUtil {
     public static void connect() {
         if (connectingFlag)
             return;
-        final String user = MySharedPrefUtil.getValue("user");
+        final String user = userName;
         if (user == null || "".equalsIgnoreCase(user)) {
             return;
         }
-        final String pwd = MySharedPrefUtil.getValue("pwd");
+        final String pwd = userPwd;
         if (pwd == null || "".equalsIgnoreCase(pwd)) {
             return;
         }
@@ -173,7 +185,7 @@ public class MqttUtil {
                 public void onSuccess(IMqttToken arg0) {
                     connectingFlag = false;
                     connFlag = true;
-                    localUser = MySharedPrefUtil.getValue("user");
+                    localUser = userName;
                     localTopic = userType + localUser;
 
                     Log.e("MQTT", "连接服务器成功.");
@@ -262,7 +274,7 @@ public class MqttUtil {
     private static void sendMsg(final String msgTime, final String topic, byte[] msg) throws JSONException {
 
         try {
-            String localUser = userType + MySharedPrefUtil.getValue("user");
+            String localUser = userType + userName;
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             bs.write((byte) localUser.length());
             bs.write(localUser.getBytes());
@@ -307,7 +319,7 @@ public class MqttUtil {
         bean.save();
 
         try {
-            String localUser = userType + MySharedPrefUtil.getValue("user");
+            String localUser = userType + userName;
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             bs.write((byte) localUser.length());
             bs.write(localUser.getBytes());
@@ -399,7 +411,7 @@ class PushCallback implements MqttCallback {
             }
         } else {
             String dest = topic.substring(1);
-            if (!dest.equalsIgnoreCase(MySharedPrefUtil.getValue("user"))) {
+            if (!dest.equalsIgnoreCase(userName)) {
                 Log.w("MQTT", "drop a msg of topic: " + topic);
                 return; //非本用户接收的主题
             }
