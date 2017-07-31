@@ -5,6 +5,7 @@ import com.healthyfish.healthyfish.POJO.BeanBaseReq;
 import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -25,6 +26,7 @@ public interface IApiService {
 
     @POST("demo/TestServlet")
     Observable<ResponseBody> getHealthyInfoByRetrofit(@Body RequestBody requestBody);
+
 
     /**
      * 多张图片上传

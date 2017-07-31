@@ -172,6 +172,8 @@
         <service
             android:name=".service.UploadImages"
             android:exported="false"></service>
+        <!--个人中心>个人信息>修改个人信息-->
+        <activity android:name=".ui.activity.personal_center.ChangePersonalInformation" />
     </application>
 
 </manifest>

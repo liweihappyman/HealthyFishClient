@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.google.gson.Gson;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
@@ -22,8 +21,6 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
-import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
-import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
@@ -39,6 +36,7 @@ import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLayoutActivity;
+
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
@@ -138,8 +136,9 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         }
     }
 
+
     /**
-     *     登录
+     * 登录
      */
     private void login() {
         BeanUserLoginReq beanUserLoginReq = new BeanUserLoginReq();
@@ -193,7 +192,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
             finish();
         } else if (code == -1) {
             Toast.makeText(Login.this, "用户不存在", Toast.LENGTH_LONG).show();
-        } else if (code == -2||code ==-5||code == -3) {
+        } else if (code == -2 || code == -5 || code == -3) {
             Toast.makeText(Login.this, "密码错误", Toast.LENGTH_LONG).show();
         } else if (code == -10) {
             Toast.makeText(Login.this, "操作次数过多", Toast.LENGTH_LONG).show();
@@ -219,11 +218,6 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        EventBus.getDefault().post(new EmptyMessage());
-    }
 
     /**
      * 将用户的关注列表保存到数据库
@@ -290,7 +284,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
      * 从网络获取个人信息
      */
     private void upDatePersonalInformation(String uid) {
-        Log.i("LYQ", "getDataForNetwork");
+
         final String key = "info_" + uid;
         BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(key);
@@ -298,13 +292,13 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-                EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
+
             }
 
             @Override
             public void onError(Throwable e) {
-                MyToast.showToast(Login.this, "获取个人信息失败，" + e.toString());
-                EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
+                MyToast.showToast(Login.this, "您还没有填写个人信息，请填写您的个人信息");
+                EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
                 Log.i("LYQ", "获取个人信息失败，" + e.toString());
             }
 
@@ -315,20 +309,24 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                     resp = responseBody.string();
                     if (!TextUtils.isEmpty(resp)) {
                         BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                        if (beanBaseKeyGetResp.getCode() >= 0) {
+                        if (beanBaseKeyGetResp.getCode() == 0) {
                             MyToast.showToast(Login.this, "获取个人信息成功");
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
-                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
+                            BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                            if (!isSave) {
                                 if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
                                     MyToast.showToast(Login.this, "保存个人信息失败");
                                 }
                             }
+                            EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
                         } else {
                             MyToast.showToast(Login.this, "获取个人信息失败");
+                            EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
                         }
                     } else {
                         MyToast.showToast(Login.this, "获取个人信息失败");
+                        EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
                     }
 
                     Log.i("LYQ", "个人信息：" + resp);
