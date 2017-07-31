@@ -22,9 +22,6 @@ import butterknife.Unbinder;
  */
 public class HealthWorkshopFragment extends Fragment {
 
-
-    @BindView(R.id.videoview)
-    VideoView videoview;
     Unbinder unbinder;
     private Context mContext;
     private View rootView;
@@ -35,14 +32,6 @@ public class HealthWorkshopFragment extends Fragment {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_health_workshop, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-
-        String url = "http://9890.vod.myqcloud.com/9890_9c1fa3e2aea011e59fc841df10c92278.f20.mp4";
-        videoview.setVideoURI(Uri.parse("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
-        MediaController controller = new MediaController(getActivity());
-        videoview.setMediaController(controller);
-        controller.setMediaPlayer(videoview);
-        videoview.start();
-
 
         return rootView;
     }
