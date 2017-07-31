@@ -5,8 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,11 +18,12 @@ import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
+import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLogoutReq;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.eventbus.EmptyMessage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.ForgetPassword;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -75,26 +77,17 @@ public class SetUp extends BaseActivity {
 
     }
 
-
-    /**
-     * 返回按钮的监听
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                EventBus.getDefault().post(new EmptyMessage());
-                finish();
+    @OnClick({R.id.lly_change_password, R.id.bt_login_out})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.lly_change_password:
+                Intent intent = new Intent(this, ForgetPassword.class);
+                startActivity(intent);
                 break;
-            default:
+            case R.id.bt_login_out:
+                loginOut();
                 break;
         }
-        return true;
-    }
-
-    @OnClick(R.id.bt_login_out)
-    public void onViewClicked() {
-        loginOut();
     }
 
     /**
@@ -102,14 +95,14 @@ public class SetUp extends BaseActivity {
      */
     private void loginOut() {
         String user = MySharedPrefUtil.getValue("_user");
-        if (user.equals("")) {
+        if (TextUtils.isEmpty(user)) {
             Toast.makeText(this, "您还没有登录哟", Toast.LENGTH_LONG).show();
 
         } else {
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
 
             BeanUserLogoutReq beanUserLogoutReq = new BeanUserLogoutReq();
-            if (beanUserLoginReq!=null) {//防止空引用炸锅
+            if (beanUserLoginReq != null) {//防止空引用炸锅
                 beanUserLogoutReq.setMobileNo(beanUserLoginReq.getMobileNo());
                 beanUserLogoutReq.setPwdSHA256(beanUserLoginReq.getPwdSHA256());
             }
@@ -128,7 +121,7 @@ public class SetUp extends BaseActivity {
 
                     DataSupport.deleteAll(BeanMedRec.class);//清除所有病历
 
-                    EventBus.getDefault().post(new EmptyMessage());
+                    EventBus.getDefault().post(new BeanPersonalInformation());
                     Intent intent = new Intent(SetUp.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -153,9 +146,4 @@ public class SetUp extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        EventBus.getDefault().post(new EmptyMessage());
-    }
 }
