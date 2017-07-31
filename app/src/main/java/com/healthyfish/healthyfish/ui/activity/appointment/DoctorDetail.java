@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanAppointmentDates;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
@@ -379,27 +380,27 @@ public class DoctorDetail extends BaseActivity {
         for (int j = (position + 7); j < (position + 14); j++) {
             list3.add(mList.get(j));
         }
-        Test test1 = new Test();
-        test1.setList(list1);
-        Test test2 = new Test();
-        test2.setList(list2);
-        Test test3 = new Test();
-        test3.setList(list3);
+        BeanAppointmentDates beanAppointmentDates = new BeanAppointmentDates();
+        beanAppointmentDates.setList(list1);
+        BeanAppointmentDates beanAppointmentDates2 = new BeanAppointmentDates();
+        beanAppointmentDates2.setList(list2);
+        BeanAppointmentDates beanAppointmentDates3 = new BeanAppointmentDates();
+        beanAppointmentDates3.setList(list3);
         List<Fragment> fragments = new ArrayList<>();
         AppointmentTime fragment = new AppointmentTime();
         AppointmentTime2 fragment2 = new AppointmentTime2();
         AppointmentTime3 fragment3 = new AppointmentTime3();
 
         Bundle bundle1 = new Bundle();     //创建bundle来封装传递给fragment的参数
-        bundle1.putSerializable("data", test1);
+        bundle1.putSerializable("data", beanAppointmentDates);
         fragment.setArguments(bundle1);         //设置传递的对象
 
         Bundle bundle2 = new Bundle();
-        bundle2.putSerializable("data2", test2);
+        bundle2.putSerializable("data2", beanAppointmentDates2);
         fragment2.setArguments(bundle2);
 
         Bundle bundle3 = new Bundle();
-        bundle3.putSerializable("data3", test3);
+        bundle3.putSerializable("data3", beanAppointmentDates3);
         fragment3.setArguments(bundle3);
 
         fragments.add(fragment);
