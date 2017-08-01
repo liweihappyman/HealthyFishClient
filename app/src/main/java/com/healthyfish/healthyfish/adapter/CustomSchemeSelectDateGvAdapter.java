@@ -3,6 +3,7 @@ package com.healthyfish.healthyfish.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.healthyfish.healthyfish.POJO.BeanSelectDate;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.ui.activity.healthy_management.GetUserCustomScheme;
 import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.List;
@@ -30,16 +31,20 @@ public class CustomSchemeSelectDateGvAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mLayoutInflater;
-    private List<String> mDate;
+    private List<BeanSelectDate> mDate;
     private int selectedNumber = 0;
     private Handler mHandler;
     public final int mesFlag = 102;
 
-    public CustomSchemeSelectDateGvAdapter(Context mContext, List<String> mDate, Handler handler) {
+    public CustomSchemeSelectDateGvAdapter(Context mContext, List<BeanSelectDate> mDate, Handler handler) {
         this.mContext = mContext;
         this.mDate = mDate;
         this.mLayoutInflater = LayoutInflater.from(mContext);
         this.mHandler = handler;
+    }
+
+    public List<BeanSelectDate> getList() {
+        return mDate;
     }
 
     @Override
@@ -58,7 +63,7 @@ public class CustomSchemeSelectDateGvAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.item_custom_scheme_select_date_gv, parent, false);
@@ -68,17 +73,22 @@ public class CustomSchemeSelectDateGvAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.ckbSelectDate.setText(mDate.get(position).toString());
-        if (mDate.get(position).isEmpty() || mDate.get(position) == ""){
+
+        if (!TextUtils.isEmpty(mDate.get(position).getDate())) {
+            holder.ckbSelectDate.setText(mDate.get(position).getDate().substring(8,10));
+        } else {
+            holder.ckbSelectDate.setText("");
             holder.ckbSelectDate.setEnabled(false);
         }
         holder.ckbSelectDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
+                    mDate.get(position).setCheck(true);
                     selectedNumber++;
                     updateTv();
                 }else {
+                    mDate.get(position).setCheck(false);
                     selectedNumber--;
                     updateTv();
                 }
