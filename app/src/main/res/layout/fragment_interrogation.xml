@@ -1,76 +1,29 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.healthyfish.healthyfish.ui.fragment.InterrogationFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.healthyfish.healthyfish.ui.fragment.InterrogationFragment">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <include layout="@layout/toolbar" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="135px"
-        android:background="@color/color_primary_dark"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-        app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+        android:layout_height="144px"
+        android:background="@color/color_white"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/color_primary_dark"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/color_primary_dark"
+        app:tabTextAppearance="@style/textSize_42"
+        app:tabTextColor="@color/color_general_and_title" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="选择科室"
-            style="@style/textSize_54"
-            android:textColor="@android:color/white" />
 
-    </android.support.v7.widget.Toolbar>
-
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="1020px"
-        android:layout_height="96px"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24px"
-        android:gravity="center_vertical"
-        android:background="@drawable/rounded_rectangle_white">
-
-        <ImageView
-            android:id="@+id/iv_search"
-            android:layout_width="62px"
-            android:layout_height="62px"
-            android:layout_marginLeft="17px"
-            android:background="@mipmap/search" />
-
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="32px"
-            android:layout_marginRight="32px"
-            android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:background="@null"
-            android:maxLines="1"
-            android:hint="搜索医生、疾病、服务"
-            android:textColorHint="@color/color_general_and_title"
-            android:textColor="@color/color_general_and_title"
-            style="@style/textSize_36"/>
-
-    </com.zhy.autolayout.AutoLinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36px"
-        android:layout_marginLeft="30px"
-        android:text="按照科室找医生"
-        style="@style/textSize_42"
-        android:textColor="@color/color_general_and_title"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_choice_department"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_interrogation_service"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20px">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

@@ -1,32 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <!-- 数据库名 -->
-    <dbname value="MedRec" >
-    </dbname>
+    <dbname value="MedRec"></dbname>
     <!-- 数据库版本 -->
 
-    <version value="1" >
-    </version>
+    <version value="1"></version>
     <!-- 映射模型 -->
 
     <list>
-        <mapping class="com.healthyfish.healthyfish.POJO.BeanMedRec" >
-        </mapping>
-        <mapping class="com.healthyfish.healthyfish.POJO.BeanCourseOfDisease">
-        </mapping>
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanMedRec"/>
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanCourseOfDisease"/>
+        <!--就诊人列表-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanVisitingPerson"/>
+        <!--用户已关注医生列表-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanConcernList"/>
 
-        <mapping class="com.healthyfish.healthyfish.POJO.BeanVisitingPerson">
-        </mapping>
-        <mapping class="com.healthyfish.healthyfish.POJO.BeanConcernList"> </mapping>
-
-        <mapping class="com.healthyfish.healthyfish.POJO.BeanPrescriptiom">
-        </mapping>
-
-        <mapping class="com.healthyfish.healthyfish.POJO.BeanPersonalInformation">
-        </mapping>
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanPrescriptiom"/>
+        <!--个人信息表-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanPersonalInformation"/>
 
         <!--健康咨询HealthyChat的表-->
         <mapping class="com.healthyfish.healthyfish.POJO.ImMsgBean" />
+        <!--用户已购买的服务列表-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanServiceList" />
     </list>
 
 </litepal>

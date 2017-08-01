@@ -47,6 +47,7 @@ import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionRepor
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
+import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDepartment;
 import com.healthyfish.healthyfish.ui.activity.interrogation.HealthyChat;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
@@ -460,8 +461,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fm_interrogation2:
-                initMQTT();
-                startActivity(new Intent(mContext, HealthyChat.class));
+                //initMQTT();
+                startActivity(new Intent(mContext, ChoiceDepartment.class));
                 break;
 
             case R.id.fm_med_rec:

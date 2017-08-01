@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.DateUtils;
@@ -65,6 +66,8 @@ public class Pay extends BaseActivity {
     AutoLinearLayout llyAlipayPay;
     @BindView(R.id.btn_pay_confirm)
     Button btnPayConfirm;
+    @BindView(R.id.lly_pay)
+    AutoLinearLayout llyPay;
 
 
     private String shopType;
@@ -72,7 +75,9 @@ public class Pay extends BaseActivity {
     private String doctorName;
     private Bundle bundleShopType;
     private int serviceData = 2;  //图文咨询的服务时间长度
-    private String payPrice01,payPrice02,payPrice03,payPrice04,payPrice05;
+    private String payPrice01, payPrice02, payPrice03, payPrice04, payPrice05;
+
+    private BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +85,7 @@ public class Pay extends BaseActivity {
         setContentView(R.layout.activity_pay);
         ButterKnife.bind(this);
         //初始化ToolBar
-        initToolBar(toolbar,tvTitle,"购买服务");
+        initToolBar(toolbar, tvTitle, "购买服务");
         //获取上个页面传递的数据
         getFormerPagerData();
         //初始化基本数据
@@ -93,6 +98,7 @@ public class Pay extends BaseActivity {
 
     /**
      * 所有点击事件的监听
+     *
      * @param view
      */
     @OnClick({R.id.lly_balance_pay, R.id.lly_alipay_pay, R.id.btn_pay_confirm})
@@ -100,39 +106,39 @@ public class Pay extends BaseActivity {
         switch (view.getId()) {
             case R.id.lly_balance_pay:
                 //如果已经选择了余额支付，则取消选择，如果没有则选择余额支付，取消支付宝支付的选择
-                if (cbBalancePay.isChecked()){
+                if (cbBalancePay.isChecked()) {
                     cbBalancePay.setChecked(false);
-                }else {
+                } else {
                     cbBalancePay.setChecked(true);
                     cbAlipayPay.setChecked(false);
                 }
                 break;
             case R.id.lly_alipay_pay:
                 //如果已经选择了支付宝支付，则取消选择，如果没有则选择支付宝支付，取消余额支付的选择
-                if (cbAlipayPay.isChecked()){
+                if (cbAlipayPay.isChecked()) {
                     cbAlipayPay.setChecked(false);
-                }else {
+                } else {
                     cbAlipayPay.setChecked(true);
                     cbBalancePay.setChecked(false);
                 }
                 break;
             case R.id.btn_pay_confirm:
-                if (shopType.equals("私人医生")){
+                if (shopType.equals("私人医生")) {
                     if (!cbOneWeek.isChecked() && !cbOneMonth.isChecked() && !cbThreeMonth.isChecked()
-                            && !cbHalfYear.isChecked() && !cbOneYear.isChecked()){
-                        MyToast.showToast(this,"请选择服务套餐");
-                    }else if (! cbBalancePay.isChecked() && ! cbAlipayPay.isChecked()){
-                        MyToast.showToast(this,"请选择支付方式");
-                    }else {
-                        bundleShopType.putString("serviceFinishTime","服务时间为"+ DateUtils.addAndSubtractDate("D",0)+"至"+tvExpirationDate.getText().toString());
+                            && !cbHalfYear.isChecked() && !cbOneYear.isChecked()) {
+                        MyToast.showToast(this, "请选择服务套餐");
+                    } else if (!cbBalancePay.isChecked() && !cbAlipayPay.isChecked()) {
+                        MyToast.showToast(this, "请选择支付方式");
+                    } else {
+                        bundleShopType.putString("serviceFinishTime", "服务时间为" + DateUtils.addAndSubtractDate("D", 0) + "至" + tvExpirationDate.getText().toString());
                         jumpTo(PayServiceSuccess.class);
                     }
-                }else if (! cbBalancePay.isChecked() && ! cbAlipayPay.isChecked()){
-                    MyToast.showToast(this,"请选择支付方式");
-                }else if(shopType.equals("送心意")){
+                } else if (!cbBalancePay.isChecked() && !cbAlipayPay.isChecked()) {
+                    MyToast.showToast(this, "请选择支付方式");
+                } else if (shopType.equals("送心意")) {
                     jumpTo(PaySuccess.class);
-                }else {
-                    bundleShopType.putString("serviceFinishTime","服务时间为"+ DateUtils.addAndSubtractDate("D",0)+"至"+ DateUtils.addAndSubtractDate("D",serviceData));
+                } else {
+                    bundleShopType.putString("serviceFinishTime", "服务时间为" + DateUtils.addAndSubtractDate("D", 0) + "至" + DateUtils.addAndSubtractDate("D", serviceData));
                     jumpTo(PayServiceSuccess.class);
                 }
                 break;
@@ -142,9 +148,9 @@ public class Pay extends BaseActivity {
     /**
      * 获取上个页面传递的数据
      */
-    public void getFormerPagerData(){
+    public void getFormerPagerData() {
         Intent intent = this.getIntent();
-        if (intent.getExtras() != null){
+        if (intent.getExtras() != null) {
             bundleShopType = intent.getExtras();
             shopType = bundleShopType.getString("serviceType");
             strPayPrice = bundleShopType.getString("price");
@@ -155,19 +161,22 @@ public class Pay extends BaseActivity {
     /**
      * 初始化数据
      */
-    private void initData(){
-        tvNameService.setText(shopType+"-"+doctorName);
+    private void initData() {
+        tvNameService.setText(shopType + "-" + doctorName);
         tvPrice.setText(strPayPrice);
     }
 
     /**
      * 根据服务类型设置标题
      */
-    private void setTitle(){
-        if (shopType.equals("送心意")){
+    private void setTitle() {
+        if (shopType.equals("送心意")) {
             tvTitle.setText("送心意");
-        }else {
+        } else {
             tvTitle.setText("购买服务");
+            llyPay.setVisibility(View.GONE);
+            cbBalancePay.setChecked(true);//设置选中其中一种支付方式，避免弹出请选择支付方式的提示而不能成功跳转下一页面
+            btnPayConfirm.setText("确认购买");
         }
     }
 
@@ -199,18 +208,18 @@ public class Pay extends BaseActivity {
     /**
      * 套餐选择操作
      */
-    public void selectPackage(){
+    public void selectPackage() {
         LinearLayout llyPrivate = (LinearLayout) findViewById(R.id.lly_choice_package);
         llyPrivate.setVisibility(View.VISIBLE);
 
-        cbOneWeek.setText("一周"+"（"+payPrice01+"元"+"）");
-        cbOneMonth.setText("一月"+"（"+payPrice02+"元"+"）");
-        cbThreeMonth.setText("三月"+"（"+payPrice03+"元"+"）");
-        cbHalfYear.setText("半年"+"（"+payPrice04+"元"+"）");
-        cbOneYear.setText("一年"+"（"+payPrice05+"元"+"）");
+        cbOneWeek.setText("一周" + "（" + payPrice01 + "元" + "）");
+        cbOneMonth.setText("一月" + "（" + payPrice02 + "元" + "）");
+        cbThreeMonth.setText("三月" + "（" + payPrice03 + "元" + "）");
+        cbHalfYear.setText("半年" + "（" + payPrice04 + "元" + "）");
+        cbOneYear.setText("一年" + "（" + payPrice05 + "元" + "）");
 
         cbOneWeek.setChecked(true);
-        tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",7));
+        tvExpirationDate.setText(DateUtils.addAndSubtractDate("D", 7));
 
         cbOneWeek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,10 +230,10 @@ public class Pay extends BaseActivity {
                     cbThreeMonth.setChecked(false);
                     cbHalfYear.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",7));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D", 7));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D", 0));
                 }
             }
         });
@@ -238,10 +247,10 @@ public class Pay extends BaseActivity {
                     cbThreeMonth.setChecked(false);
                     cbHalfYear.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("M",1));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("M", 1));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D", 0));
                 }
             }
         });
@@ -255,10 +264,10 @@ public class Pay extends BaseActivity {
                     cbOneWeek.setChecked(false);
                     cbHalfYear.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("m",3));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("m", 3));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D", 0));
                 }
             }
         });
@@ -272,10 +281,10 @@ public class Pay extends BaseActivity {
                     cbOneMonth.setChecked(false);
                     cbOneWeek.setChecked(false);
                     cbOneYear.setChecked(false);
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("M",6));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("M", 6));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D", 0));
                 }
             }
         });
@@ -289,10 +298,10 @@ public class Pay extends BaseActivity {
                     cbThreeMonth.setChecked(false);
                     cbHalfYear.setChecked(false);
                     cbOneWeek.setChecked(false);
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("Y",1));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("Y", 1));
                 } else {
                     tvPrice.setText("0元");
-                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D",0));
+                    tvExpirationDate.setText(DateUtils.addAndSubtractDate("D", 0));
                 }
             }
         });
@@ -300,10 +309,11 @@ public class Pay extends BaseActivity {
 
     /**
      * 页面跳转
+     *
      * @param cla
      */
-    public void jumpTo(Class<? extends Activity> cla){
-        Intent intent = new Intent(this,cla);
+    public void jumpTo(Class<? extends Activity> cla) {
+        Intent intent = new Intent(this, cla);
         intent.putExtras(bundleShopType);
         startActivity(intent);
     }

@@ -22,9 +22,8 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.R;
 
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
@@ -113,9 +112,7 @@ public class ChoiceService extends BaseActivity {
     AutoLinearLayout layoutChoiceService;
 
     private Context mContext;//全局上下文
-//    private BeanHospDeptDoctListRespItem DeptDoctInfo;
-//    private BeanHospRegisterReq beanHospRegisterReq;
-    private BeanDoctorInfo beanDoctorInfo;
+    private BeanDoctorInfo beanDoctorInfo = new BeanDoctorInfo();
 
     private String imgDoctorUrl;  //医生头像资源
     private String doctorName;  //医生名字
@@ -132,9 +129,15 @@ public class ChoiceService extends BaseActivity {
 
     private boolean isAttention = false;//是否已经关注该医生
 
-    private String uid = MyApplication.uid;
+    private String uid = "";
 
-    private String key;
+    private String myConcernReqKey;
+
+    private final String TYPE_GRAPHICCONSULTATION = "GraphicConsultation";
+    private final String TYPE_PRIVATEDOCTOR = "PrivateDoctor";
+
+
+    private String doctorPhone = "";
 
 
     @Override
@@ -144,6 +147,7 @@ public class ChoiceService extends BaseActivity {
         ButterKnife.bind(this);
         mContext = this;
         initToolBar(toolbar, tvTitle, "选择服务");
+        uid = MyApplication.uid;
         getData();
         isOpenPictureConsultingReq();
         tvAttentionListener();
@@ -159,27 +163,6 @@ public class ChoiceService extends BaseActivity {
 
         if (getIntent().getSerializableExtra("BeanDoctorInfo") != null) {
             beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
-
-//            DeptDoctInfo = new BeanHospDeptDoctListRespItem();
-//            DeptDoctInfo.setDOCTOR(beanDoctorInfo.getDOCTOR());
-//            DeptDoctInfo.setDOCTOR_NAME(beanDoctorInfo.getName());
-//            DeptDoctInfo.setSchdList(beanDoctorInfo.getSchdList());
-//            DeptDoctInfo.setCLINIQUE_CODE(beanDoctorInfo.getCLINIQUE_CODE());
-//            DeptDoctInfo.setPRE_ALLOW(beanDoctorInfo.getPRE_ALLOW());
-//            DeptDoctInfo.setPRICE(Integer.parseInt(beanDoctorInfo.getPrice()));
-//            DeptDoctInfo.setREISTER_NAME(beanDoctorInfo.getDuties());
-//            DeptDoctInfo.setSTAFF_NO(beanDoctorInfo.getSTAFF_NO());
-//            DeptDoctInfo.setWEB_INTRODUCE(beanDoctorInfo.getIntroduce());
-//            DeptDoctInfo.setWORK_TYPE(beanDoctorInfo.getWORK_TYPE());
-//            DeptDoctInfo.setZHAOPIAN(beanDoctorInfo.getImgUrl());
-//
-//            beanHospRegisterReq = new BeanHospRegisterReq();
-//            beanHospRegisterReq.setHosp(beanDoctorInfo.getHosp());
-//            beanHospRegisterReq.setHospTxt(beanDoctorInfo.getHospital());
-//            beanHospRegisterReq.setDept(beanDoctorInfo.getDept());
-//            beanHospRegisterReq.setDeptTxt(beanDoctorInfo.getDepartment());
-//            beanHospRegisterReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
-
         }
 
         imgDoctorUrl = HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl();
@@ -212,8 +195,8 @@ public class ChoiceService extends BaseActivity {
      */
     private void tvAttentionListener() {
         if (!TextUtils.isEmpty(uid)) {
-            key = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
-            if (!DataSupport.where("key = ?", key).find(BeanConcernList.class).isEmpty()) {
+            myConcernReqKey = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
+            if (!DataSupport.where("key = ?", myConcernReqKey).find(BeanConcernList.class).isEmpty()) {
                 isAttention = true;
                 tvAttention.setClickable(false);
             } else {
@@ -240,13 +223,13 @@ public class ChoiceService extends BaseActivity {
      * 加关注操作
      */
     private void addConcern() {
-        Log.i("LYQ", key);
+        Log.i("LYQ", myConcernReqKey);
 
         final String strJson = JSON.toJSONString(beanDoctorInfo);
         Log.i("LYQ", "strJsonBeanDoctorInfo:" + strJson);
 
         BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
-        beanBaseKeySetReq.setKey(key);
+        beanBaseKeySetReq.setKey(myConcernReqKey);
         beanBaseKeySetReq.setValue(strJson);
 
         RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
@@ -255,16 +238,16 @@ public class ChoiceService extends BaseActivity {
             @Override
             public void onCompleted() {
                 BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
-                if (beanBaseResp.getCode() >= 0) {
+                if (beanBaseResp.getCode() == 0) {
                     tvAttention.setText("已关注");
                     tvAttention.setBackgroundResource(R.drawable.concern);
                     tvAttention.setTextColor(getResources().getColor(R.color.color_white));
                     tvAttention.setClickable(false);
                     isAttention = true;
                     BeanConcernList beanConcernList = new BeanConcernList();
-                    beanConcernList.setKey(key);
-                    if (beanConcernList.saveOrUpdate("key = ?", key)) {
-                        beanConcernList.saveOrUpdate("key = ?", key);
+                    beanConcernList.setKey(myConcernReqKey);
+                    if (beanConcernList.saveOrUpdate("myConcernReqKey = ?", myConcernReqKey)) {
+                        beanConcernList.saveOrUpdate("myConcernReqKey = ?", myConcernReqKey);
                     }
                 } else {
                     MyToast.showToast(ChoiceService.this, "关注失败，请重试");
@@ -466,11 +449,17 @@ public class ChoiceService extends BaseActivity {
      */
     private void buyPictureConsultingService() {
         if (isOpenPictureConsulting) {
+
+            BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
+            beanDoctorChatInfo.setName(beanDoctorInfo.getName());
+            beanDoctorChatInfo.setPhone(doctorPhone);
+            beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
             BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
             Bundle bundle = new Bundle();
             bundle.putString("serviceType", "图文咨询");
             bundle.putString("name", doctorName);
             bundle.putString("price", pictureConsultingPrice);
+            bundle.putSerializable("BeanDoctorChatInfo",beanDoctorChatInfo);
             buyServiceFragment.setArguments(bundle);
             buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
         } else {
@@ -516,8 +505,9 @@ public class ChoiceService extends BaseActivity {
                 }
                 if (!TextUtils.isEmpty(resp)) {
                     BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                    if (beanBaseKeyGetResp.getCode() >= 0) {
+                    if (beanBaseKeyGetResp.getCode() == 0) {
                         if (!TextUtils.isEmpty(beanBaseKeyGetResp.getValue())) {
+                            doctorPhone = beanBaseKeyGetResp.getValue();
                             isOpenPictureConsulting = true;
                         } else {
                             isOpenPictureConsulting = false;
