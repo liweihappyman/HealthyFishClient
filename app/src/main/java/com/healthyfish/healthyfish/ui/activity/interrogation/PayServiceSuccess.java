@@ -93,9 +93,9 @@ public class PayServiceSuccess extends BaseActivity {
         }else if (shopType.equals("图文咨询")){
 
             Log.i("LYQ", beanDoctorChatInfo.getName() + beanDoctorChatInfo.getPhone() + beanDoctorChatInfo.getImgUrl());
-//            Intent intent = new Intent(this,HealthyChat.class);
-//            intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-//            startActivity(intent);
+            Intent intent = new Intent(this,HealthyChat.class);
+            intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+            startActivity(intent);
 
         }
 

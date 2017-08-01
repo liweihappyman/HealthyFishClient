@@ -56,10 +56,13 @@ public class ReceivedCookiesInterceptor implements Interceptor {
                     });
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("cookie", cookieBuffer.toString());
-            Log.d("httpCookid", "拦截到的cookie" + cookieBuffer.toString());
             editor.commit();
+            log(cookieBuffer.toString());
         }
-
         return originalResponse;
     }
+    private void log(String cookie){
+        Log.i("httpCookid", "接收到的cookie" + cookie);
+    }
+
 }

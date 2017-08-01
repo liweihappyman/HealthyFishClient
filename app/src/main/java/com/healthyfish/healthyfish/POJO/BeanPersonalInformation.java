@@ -22,24 +22,20 @@ public class BeanPersonalInformation extends DataSupport implements Serializable
     private String gender;//性别
     private String birthDate;//出生日期
     private String idCard;//身份证号
-
+    protected boolean isLogin;
     public BeanPersonalInformation() {
     }
 
-    public int getId() {
-        return id;
+    public BeanPersonalInformation(boolean isLogin) {
+        this.isLogin = isLogin;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public boolean isLogin() {
+        return isLogin;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
+    public void setLogin(boolean login) {
+        isLogin = login;
     }
 
     public int getId() {
@@ -49,6 +45,7 @@ public class BeanPersonalInformation extends DataSupport implements Serializable
     public void setId(int id) {
         this.id = id;
     }
+
 
     public String getKey() {
         return key;

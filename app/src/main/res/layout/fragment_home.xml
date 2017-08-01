@@ -7,11 +7,7 @@
     tools:context="com.healthyfish.healthyfish.ui.fragment.HomeFragment">
 
     <include layout="@layout/top_bar" />
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -39,13 +35,6 @@
             <include layout="@layout/home_page_health_news" />
 
             <include layout="@layout/home_page_healthy_work_shop" />
-
-
         </com.zhy.autolayout.AutoLinearLayout>
-
-
     </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-
 </com.zhy.autolayout.AutoLinearLayout>

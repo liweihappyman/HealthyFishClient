@@ -22,6 +22,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PrescriptionRvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -56,6 +57,7 @@ public class MyPrescription extends BaseActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "我的处方");
         initDataFromDB();
+        AutoLogin.autoLogin();//登录，保证会话
         requestForPrescription();
     }
 
@@ -63,14 +65,15 @@ public class MyPrescription extends BaseActivity {
      * 网络访问，获取所有的电子处方
      */
     private void requestForPrescription() {
-        String userStr = MySharedPrefUtil.getValue("_user");
-        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
-        StringBuilder prefix = new StringBuilder("pres_");
-        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
+        //根据用户id获取
+        //String userStr = MySharedPrefUtil.getValue("user");
+        //BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
+        //StringBuilder prefix = new StringBuilder("pres_");
+        //prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
 
-
+        //根据与服务器的会话sessionid获取
         BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
-        userListValueReq.setPrefix(prefix.toString());
+        userListValueReq.setPrefix("pres_");
         userListValueReq.setFrom(0);
         userListValueReq.setNum(-1);
         userListValueReq.setTo(-1);
@@ -94,7 +97,6 @@ public class MyPrescription extends BaseActivity {
                     if (!TextUtils.isEmpty(str)) {
                         saveNewData2DB(str);//保存新数据到本地数据库
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

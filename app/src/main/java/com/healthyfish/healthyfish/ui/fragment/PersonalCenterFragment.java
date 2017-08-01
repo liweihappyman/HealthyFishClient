@@ -114,14 +114,18 @@ public class PersonalCenterFragment extends Fragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        judgeLoginState();
+        String user = MySharedPrefUtil.getValue("user");
+        String sid = MySharedPrefUtil.getValue("sid");
+        if (!TextUtils.isEmpty(user)&&!TextUtils.isEmpty(sid)) {
+            judgeLoginState(true);
+        }
         return rootView;
     }
 
     //登录状态判断初始化相应的控件
-    private void judgeLoginState() {
-        String user = MySharedPrefUtil.getValue("user");
-        if (!TextUtils.isEmpty(user)) {
+    private void judgeLoginState(boolean isLogin) {
+        if (isLogin) {
+            String user = MySharedPrefUtil.getValue("user");
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
             String number = beanUserLoginReq.getMobileNo();
             MyApplication.uid = number;
@@ -135,7 +139,7 @@ public class PersonalCenterFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLoginState(BeanPersonalInformation beanPersonalInformation) {
         this.beanPersonalInformation = beanPersonalInformation;
-        judgeLoginState();
+        judgeLoginState(beanPersonalInformation.isLogin());
     }
 
 

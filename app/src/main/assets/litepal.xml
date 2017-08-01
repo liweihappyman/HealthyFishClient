@@ -8,13 +8,15 @@
     <!-- 映射模型 -->
 
     <list>
+        <!--病历-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanMedRec"/>
+        <!--病程-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanCourseOfDisease"/>
         <!--就诊人列表-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanVisitingPerson"/>
         <!--用户已关注医生列表-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanConcernList"/>
-
+        <!--检查报告-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanPrescriptiom"/>
         <!--个人信息表-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanPersonalInformation"/>
@@ -23,6 +25,8 @@
         <mapping class="com.healthyfish.healthyfish.POJO.ImMsgBean" />
         <!--用户已购买的服务列表-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanServiceList" />
+        <!--化验单-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanInspectionReport" />
     </list>
 
 </litepal>
