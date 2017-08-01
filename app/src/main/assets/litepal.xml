@@ -8,6 +8,7 @@
     <!-- 映射模型 -->
 
     <list>
+
         <!--病历-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanMedRec"/>
         <!--病程-->

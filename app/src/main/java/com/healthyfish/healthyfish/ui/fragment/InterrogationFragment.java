@@ -70,10 +70,17 @@ public class InterrogationFragment extends Fragment {
     private void initTabLayout() {
         ArrayList<Fragment> mFragments = new ArrayList<>();
         Fragment currentService = new CurrentServiceFragment();
+
         Fragment myDoctor = new MyDoctorFragment();
         Fragment allService = new AllServiceFragment();
         mFragments.add(currentService);
         mFragments.add(myDoctor);
+
+        Fragment myAppointment = new MyAppointmentFragment();
+        Fragment allService = new AllServiceFragment();
+        mFragments.add(currentService);
+        mFragments.add(myAppointment);
+
         mFragments.add(allService);
 
         vpInterrogationService.setAdapter(new PagerAdapter(getChildFragmentManager(),mFragments));

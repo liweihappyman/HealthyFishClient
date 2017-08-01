@@ -15,20 +15,26 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyRemReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
+import com.healthyfish.healthyfish.POJO.BeanServiceList;
+import com.healthyfish.healthyfish.POJO.BeanUserListReq;
+import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.R;
 
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
 import com.healthyfish.healthyfish.ui.fragment.BuyServiceFragment;
+import com.healthyfish.healthyfish.utils.DateUtils;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NestingUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -38,7 +44,10 @@ import com.zhy.autolayout.AutoLinearLayout;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -126,17 +135,11 @@ public class ChoiceService extends BaseActivity {
     private boolean isOpenPictureConsulting;  //是否开通图文咨询
     private boolean isOpenPrivateDoctor;  //是否开通私人医生
     private boolean isOpenAppointment;  //是否开通预约挂号
-
     private boolean isAttention = false;//是否已经关注该医生
-
     private String uid = "";
-
     private String myConcernReqKey;
-
     private final String TYPE_GRAPHICCONSULTATION = "GraphicConsultation";
     private final String TYPE_PRIVATEDOCTOR = "PrivateDoctor";
-
-
     private String doctorPhone = "";
 
 
@@ -454,6 +457,7 @@ public class ChoiceService extends BaseActivity {
             beanDoctorChatInfo.setName(beanDoctorInfo.getName());
             beanDoctorChatInfo.setPhone(doctorPhone);
             beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
+
             BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
             Bundle bundle = new Bundle();
             bundle.putString("serviceType", "图文咨询");
@@ -462,17 +466,111 @@ public class ChoiceService extends BaseActivity {
             bundle.putSerializable("BeanDoctorChatInfo",beanDoctorChatInfo);
             buyServiceFragment.setArguments(bundle);
             buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
+
+
+            String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
+            Log.i("LYQ", "serviceKey:" + serviceKey);
+
+            List<BeanServiceList> serviceLists = DataSupport.where("key = ?", serviceKey).find(BeanServiceList.class);//查找数据库
+            if (!serviceLists.isEmpty()) {//不为空则购买过该医生的图文咨询服务
+                BeanServiceList beanServiceList = serviceLists.get(0);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+                Date endDate = dateFormat.parse(beanServiceList.getEndTime(), new ParsePosition(0));
+                Date currentDate = new Date(System.currentTimeMillis());
+
+                if (currentDate.getTime() <= endDate.getTime()) {//服务未过期
+                    Intent intent = new Intent(this, HealthyChat.class);
+                    intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+                    startActivity(intent);
+                } else {//服务已过期
+                    DataSupport.delete(BeanServiceList.class, beanServiceList.getId());//删除本地数据库该购买服务记录
+                    deleteServiceReq(serviceKey);//删除服务器端该购买服务记录
+
+                    goToBuyService(serviceKey,true,beanDoctorChatInfo);
+                }
+            } else {//空则没有购买过该医生的图文咨询服务或者已过期
+                goToBuyService(serviceKey,false,beanDoctorChatInfo);
+            }
+
         } else {
             MyToast.showToast(mContext, "该医生暂未开通此服务");
         }
+
+
     }
 
+    /**
+     * 跳转到购买图文咨询服务页面
+     *
+     * @param serviceKey
+     * @param beanDoctorChatInfo
+     */
+    private void goToBuyService(String serviceKey,boolean isBuy, BeanDoctorChatInfo beanDoctorChatInfo) {
+        BeanServiceList beanService = new BeanServiceList();
+        beanService.setKey(serviceKey);
+        beanService.setType("PTC");
+
+        if (isBuy) {//已购买但过期了
+            MyToast.showToast(this, "您购买该医生的图文咨询服务已到期，请重新购买");
+        }
+        BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("serviceType", "图文咨询");
+        bundle.putString("name", doctorName);
+        bundle.putString("price", pictureConsultingPrice);
+        bundle.putSerializable("BeanDoctorChatInfo", beanDoctorChatInfo);
+        bundle.putSerializable("BeanServiceList", beanService);
+        buyServiceFragment.setArguments(bundle);
+        buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
+    }
+
+
+    /**
+     * 删除已过期服务记录
+     */
+    private void deleteServiceReq(final String serviceKey) {
+        BeanBaseKeyRemReq beanBaseKeyRemReq = new BeanBaseKeyRemReq();
+        beanBaseKeyRemReq.setKey(serviceKey);
+
+        RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyRemReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
+                if (beanBaseResp.getCode() < 0) {
+                    MyToast.showToast(mContext, "删除该服务购买记录失败");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "deleteServiceReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", "删除已购买服务响应：" + strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 发送请求获取该医生是否已开通图文咨询
+     */
     private void isOpenPictureConsultingReq() {
         String reqKey = "ol_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
         final BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(reqKey);
 
-        RetrofitManagerUtils.getInstance(this,null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
                 //判断是否已开通图文咨询服务
@@ -520,6 +618,48 @@ public class ChoiceService extends BaseActivity {
                 }
             }
         });
+    }
+
+    /**
+     * 从网络获取已购买的服务列表
+     */
+    private void getServiceListReq() {
+
+        BeanUserListValueReq beanUserListValueReq = new BeanUserListValueReq();
+        beanUserListValueReq.setPrefix("service_" + uid);
+        beanUserListValueReq.setFrom(0);
+        beanUserListValueReq.setTo(-1);
+        beanUserListValueReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListValueReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                List<String> strServiceList = JSONArray.parseObject(strJson, List.class);
+                DataSupport.deleteAll(BeanServiceList.class);//清空数据库中旧的已购买服务列表
+                for (String strService : strServiceList) {
+                    BeanServiceList beanServiceList = JSON.parseObject(strService, BeanServiceList.class);
+                    beanServiceList.save();//更新数据库中已购买服务列表
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "getServiceListReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", "获取已购买服务响应：" + strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 }

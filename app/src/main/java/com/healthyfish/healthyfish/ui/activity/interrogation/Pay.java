@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,15 +13,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
+
+import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
+import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.DateUtils;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
-
+import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.MyApplication.uid;
 
 /**
  * 描述：问诊支付页面
@@ -76,7 +89,6 @@ public class Pay extends BaseActivity {
     private Bundle bundleShopType;
     private int serviceData = 2;  //图文咨询的服务时间长度
     private String payPrice01, payPrice02, payPrice03, payPrice04, payPrice05;
-
     private BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
 
     @Override
@@ -140,6 +152,7 @@ public class Pay extends BaseActivity {
                 } else {
                     bundleShopType.putString("serviceFinishTime", "服务时间为" + DateUtils.addAndSubtractDate("D", 0) + "至" + DateUtils.addAndSubtractDate("D", serviceData));
                     jumpTo(PayServiceSuccess.class);
+                    addServiceListReq();//将购买服务记录上传服务器
                 }
                 break;
         }
@@ -316,5 +329,58 @@ public class Pay extends BaseActivity {
         Intent intent = new Intent(this, cla);
         intent.putExtras(bundleShopType);
         startActivity(intent);
+    }
+
+    private void addServiceListReq() {
+
+        String dateFormat = "yyyy-MM-dd HH-mm";
+
+        String startTime = DateUtils.getCurrentDate(dateFormat);
+        Log.i("LYQ", "startTime:" + startTime);
+
+        String endTime = DateUtils.addOrSubtractDate(dateFormat, "D", serviceData);
+        Log.i("LYQ", "endTime:" + endTime);
+
+        final BeanServiceList beanServiceList = (BeanServiceList) bundleShopType.getSerializable("BeanServiceList");
+        beanServiceList.setStartTime(startTime);
+        beanServiceList.setEndTime(endTime);
+        String serviceListJson = JSON.toJSONString(beanServiceList);
+
+        Log.i("LYQ", "serviceListJson:" + serviceListJson);
+        final String serviceKey = beanServiceList.getKey();
+        BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
+        beanBaseKeySetReq.setKey(serviceKey);
+        beanBaseKeySetReq.setValue(serviceListJson);
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
+                if (beanBaseResp.getCode() == 0) {
+                    MyToast.showToast(Pay.this, "购买服务成功");
+                    beanServiceList.saveOrUpdate("key = ?", serviceKey);//保存已购买的服务
+                    jumpTo(PayServiceSuccess.class);
+                } else {
+                    MyToast.showToast(Pay.this, "购买服务失败，请重试");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "addServiceListReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", "上传已购买服务响应：" + strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
