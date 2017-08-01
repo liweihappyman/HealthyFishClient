@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_white">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="90px"
+        android:layout_marginLeft="40px"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="39px"
+            android:layout_height="39px"
+            android:src="@mipmap/ic_appointment_open"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="37px"
+            android:text="我的挂号"
+            style="@style/textSize_36"
+            android:textColor="@color/color_general_and_title"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="10px"
+        android:background="@color/color_light_gray"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="43px"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_doctor"
+            android:layout_width="144px"
+            android:layout_height="144px"
+            android:layout_marginLeft="40px"
+            android:layout_marginTop="39px"
+            android:src="@mipmap/ic_male_select" />
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="35px"
+            android:layout_marginLeft="24px"
+            android:orientation="vertical">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_doctorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="赵倩"
+                    style="@style/textSize_42"
+                    android:textColor="@color/color_content_title"/>
+
+                <TextView
+                    android:id="@+id/tv_room_and_duties"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30px"
+                    android:text="诊室：301  主任医师"
+                    style="@style/textSize_36"
+                    android:textColor="@color/color_auxiliary_info"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:id="@+id/tv_hospital"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="17px"
+                android:text="柳州市中医院"
+                style="@style/textSize_36"
+                android:textColor="@color/color_auxiliary_info"/>
+
+            <TextView
+                android:id="@+id/tv_appointment_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19px"
+                android:maxLines="1"
+                android:ellipsize="end"
+                style="@style/textSize_36"
+                android:textColor="@color/color_content_title"
+                android:text="预约时间：2017-08-01 上午：11：20"/>
+
+            <TextView
+                android:id="@+id/tv_visitingPerson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19px"
+                android:maxLines="1"
+                android:ellipsize="end"
+                style="@style/textSize_36"
+                android:textColor="@color/color_content_title"
+                android:text="就诊人："/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <Button
+            android:id="@+id/bt_cancel_appointment"
+            android:layout_width="150px"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10px"
+            android:text="取消\n挂号"
+            style="@style/textSize_42"
+            android:textColor="@color/selector_text_color_from_priamry_to_white"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:background="@drawable/selector_1dp_btn_color_from_white_to_primary"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

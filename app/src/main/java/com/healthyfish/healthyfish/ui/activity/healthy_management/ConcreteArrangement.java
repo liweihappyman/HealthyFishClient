@@ -2,23 +2,33 @@ package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.healthyfish.healthyfish.POJO.BeanCustomPlan;
+import com.healthyfish.healthyfish.POJO.BeanHealthPlanCustomizeReq;
+import com.healthyfish.healthyfish.POJO.BeanHealthPlanListReq;
+import com.healthyfish.healthyfish.POJO.BeanHealthPlanReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ConcreteArrangementAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.DateUtils;
 import com.healthyfish.healthyfish.utils.NestingUtils;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 /**
  * 描述：健康管理自定义计划具体安排页面
@@ -45,12 +55,24 @@ public class ConcreteArrangement extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concrete_arrangement);
         ButterKnife.bind(this);
-        initToolBar(toolbar,toolbarTitle,"具体安排");
+        initToolBar(toolbar, toolbarTitle, "具体安排");
         initListView();
     }
 
     private void initListView() {
         List<BeanCustomPlan> customPlan = new ArrayList<>();
+        List<String> selectDateList = new ArrayList<>();
+        if (getIntent().getStringArrayListExtra("selectDateList") != null) {
+            selectDateList = getIntent().getStringArrayListExtra("selectDateList");
+        }
+
+        String DateType = "yyyy年MM月dd日";
+        for (String str : selectDateList) {
+            BeanCustomPlan bean = new BeanCustomPlan();
+            bean.setDateAndWeek(str.substring(4, str.length()) + " " + DateUtils.getWeekFromStr(DateType, str));
+            bean.setTime("9:00");
+            customPlan.add(bean);
+        }
 
         List<String> plan1 = new ArrayList<>();
         plan1.add("艾灸");
@@ -78,10 +100,6 @@ public class ConcreteArrangement extends BaseActivity {
         bean3.setTime("11:00");
         bean3.setIndividualPlan(plan3);
 
-        customPlan.add(bean1);
-        customPlan.add(bean2);
-        customPlan.add(bean3);
-
 
         ConcreteArrangementAdapter adapter = new ConcreteArrangementAdapter(this, customPlan);
         lvConcreteArrangement.setAdapter(adapter);
@@ -90,5 +108,37 @@ public class ConcreteArrangement extends BaseActivity {
     @OnClick(R.id.bt_next)
     public void onViewClicked() {
         //点击下一步
+        customSchemeReq();
+    }
+
+    private void customSchemeReq() {
+        BeanHealthPlanListReq beanHealthPlanListReq = new BeanHealthPlanListReq();
+
+        BeanHealthPlanReq beanHealthPlanReq = new BeanHealthPlanReq();
+        beanHealthPlanReq.setKey("hpc_");
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHealthPlanListReq), new Subscriber<ResponseBody>() {
+            String healthPlanListResp = "";
+
+            @Override
+            public void onCompleted() {
+                Log.i("LYQ", "customSchemeReq()_onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "customSchemeReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    healthPlanListResp = responseBody.string();
+                    Log.i("LYQ", "healthPlanListResp:" + healthPlanListResp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

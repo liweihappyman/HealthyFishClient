@@ -7,7 +7,7 @@ public class BeanHealthPlanCustomizeReq extends BeanBaseReq {
 	private String key; //定制的HealthPlanId
 	private String date; //起始日期
 	
-	BeanHealthPlanCustomizeReq(){super(BeanHealthPlanCustomizeReq.class.getSimpleName());}
+	public BeanHealthPlanCustomizeReq(){super(BeanHealthPlanCustomizeReq.class.getSimpleName());}
 	
 	public String getKey() {return key;}
 	public void setKey(String key) {this.key = key;}
