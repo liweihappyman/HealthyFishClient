@@ -5,16 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
+import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 /**
  * 描述：购买服务支付成功页面
@@ -42,6 +51,8 @@ public class PayServiceSuccess extends BaseActivity {
     private String doctorName;
     private String serviceFinishTime;
 
+    private BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,12 +72,15 @@ public class PayServiceSuccess extends BaseActivity {
             shopType = bundleShopType.getString("serviceType");
             doctorName = bundleShopType.getString("name");
             serviceFinishTime = bundleShopType.getString("serviceFinishTime");
+            beanDoctorChatInfo = (BeanDoctorChatInfo) bundleShopType.getSerializable("BeanDoctorChatInfo");
         }
         tvNameType.setText(doctorName+"医生"+"-"+shopType);
         if (shopType.equals("私人医生")){
             tvServiceTime.setText(serviceFinishTime);
+            //tvServiceTime.setVisibility(View.GONE);
         }else if (shopType.equals("图文咨询")){
             tvServiceTime.setText(serviceFinishTime);
+            //tvServiceTime.setVisibility(View.GONE);//目前需求不需要展示服务到期时间
         }else {
             tvServiceTime.setVisibility(View.GONE);
         }
@@ -77,8 +91,14 @@ public class PayServiceSuccess extends BaseActivity {
         if (shopType.equals("私人医生")){
             jumpTo(PerfectArchives.class);
         }else if (shopType.equals("图文咨询")){
-            jumpTo(ChoiceDocument.class);
+
+            Log.i("LYQ", beanDoctorChatInfo.getName() + beanDoctorChatInfo.getPhone() + beanDoctorChatInfo.getImgUrl());
+//            Intent intent = new Intent(this,HealthyChat.class);
+//            intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+//            startActivity(intent);
+
         }
+
     }
 
     /**
@@ -89,4 +109,5 @@ public class PayServiceSuccess extends BaseActivity {
         Intent intent = new Intent(this,cla);
         startActivity(intent);
     }
+
 }
