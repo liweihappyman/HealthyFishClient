@@ -116,6 +116,7 @@ public class SetUp extends BaseActivity {
 //                    SharedPreferences cookie = getSharedPreferences("cookie", MODE_PRIVATE);
 //                    cookie.edit().clear().commit();//清除cookie
                     MyApplication.uid = "";
+                    MyApplication.isFirstAutoLogin = false;
 
 //                    SharedPreferences test = getSharedPreferences("cookie", MODE_PRIVATE);
 //                    String s = test.getString("cookie", null);

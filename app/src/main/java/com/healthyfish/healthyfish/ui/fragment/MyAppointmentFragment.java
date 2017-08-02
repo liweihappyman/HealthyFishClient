@@ -25,9 +25,15 @@ import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MyAppointmentLvAdapter;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,7 +62,7 @@ public class MyAppointmentFragment extends Fragment {
     Unbinder unbinder;
 
     private View rootView;
-    private List<BeanMyAppointmentItem> mList;
+    private List<BeanMyAppointmentItem> mList = new ArrayList<>();
     private MyAppointmentLvAdapter adapter;
     private final List<BeanMyAppointmentItem> myAppointmentList = new ArrayList<>();
     private String uid = "";
@@ -68,14 +74,33 @@ public class MyAppointmentFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fagment_my_aappointment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         uid = MyApplication.uid;
-        if (!TextUtils.isEmpty(uid)) {
-            mList = getData();
-            initListView(mList);
-        } else {
-            MyToast.showToast(getActivity(), "您还没有登录呦！");
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
         }
 
+//        mList = getData();
+        initListView(mList);
+
         return rootView;
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshLoginState(BeanMyAppointmentItem beanMyAppointmentItem) {
+        Log.i("LYQ", "MyAppointmentFragment_refreshLoginState");
+        getDataFromDB();
+    }
+
+    /**
+     * 从数据库获取挂号信息
+     */
+    private void getDataFromDB() {
+        List<BeanMyAppointmentItem> list = DataSupport.findAll(BeanMyAppointmentItem.class);
+        Log.i("LYQ", "MyAppointmentFragment_refreshLoginState_List" + list.size());
+        if (!list.isEmpty()) {
+            mList = list;
+            adapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -124,6 +149,8 @@ public class MyAppointmentFragment extends Fragment {
         beanUserListReq.setTo(-1);
         beanUserListReq.setNum(-1);
 
+        Log.i("LYQ", "挂号信息BeanUserListReq参数json:"+ JSON.toJSONString(beanUserListReq));
+
         RetrofitManagerUtils.getInstance(getActivity(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
             String appointmentListResp = "";
 
@@ -143,7 +170,7 @@ public class MyAppointmentFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-
+                Log.i("LYQ", "appointmentListReq()_onError:" + e.toString());
             }
 
             @Override
@@ -168,6 +195,15 @@ public class MyAppointmentFragment extends Fragment {
         BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(beanMyAppointmentItem.getRespKey());
 
+        BeanUserListValueReq beanUserListReq = new BeanUserListValueReq();
+        beanUserListReq.setPrefix("reg_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+
+        Log.i("LYQ", "挂号信息BeanBaseKeyGetReq参数json:"+ JSON.toJSONString(beanBaseKeyGetReq));
+
         RetrofitManagerUtils.getInstance(getActivity(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
             String appointmentResp = "";
 
@@ -188,7 +224,7 @@ public class MyAppointmentFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-
+                Log.i("LYQ", "appointmentResp_onError:" + e.toString());
             }
 
             @Override
@@ -227,14 +263,14 @@ public class MyAppointmentFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-
+                Log.i("LYQ", "appointmentResp——onError:" + e.toString());
             }
 
             @Override
             public void onNext(ResponseBody responseBody) {
                 try {
                     doctorInfoResp = responseBody.string();
-                    Log.i("LYQ", "appointmentResp:" + doctorInfoResp);
+                    Log.i("LYQ", "doctorInfoReq（）Resp:" + doctorInfoResp);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -247,6 +283,7 @@ public class MyAppointmentFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
         myAppointmentList.clear();
         unbinder.unbind();
     }

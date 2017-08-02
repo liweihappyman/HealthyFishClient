@@ -250,6 +250,7 @@ public class ChangePersonalInformation extends BaseActivity {
         personalInformation.setBirthDate(birthDate);
         personalInformation.setIdCard(idCard);
         personalInformation.setImgUrl(imgUrl);
+        //personalInformation.setLogin(false);//不传值在获取个人信息时会空指针异常
         String jsonReq = JSON.toJSONString(personalInformation);
 
         Log.i("LYQ", "jsonReq:" + jsonReq);
@@ -273,6 +274,7 @@ public class ChangePersonalInformation extends BaseActivity {
                                 beanUploadImagesRespList.remove(beanUploadImagesRespList.size() - 1);
                                 removeKey();
                             }
+                            personalInformation.setLogin(true);
                             EventBus.getDefault().post(personalInformation);//发送消息提醒刷新个人中心的个人信息
                             Intent intent = new Intent(ChangePersonalInformation.this, PersonalInformation.class);
                             ChangePersonalInformation.this.setResult(mResultCode, intent);

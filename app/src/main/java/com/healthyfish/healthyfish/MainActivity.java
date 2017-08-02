@@ -14,13 +14,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
+import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
+import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
+import com.healthyfish.healthyfish.POJO.BeanUserListReq;
+import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
+import com.healthyfish.healthyfish.eventbus.InitAllMessage;
 import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.fragment.HealthWorkshopFragment;
 import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
@@ -29,6 +41,7 @@ import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
@@ -38,6 +51,9 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -125,12 +141,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private PersonalCenterFragment personalCenterFragment;
 
     BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
+    private final List<BeanMyAppointmentItem> myAppointmentList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         initPermision();
         init();
     }
@@ -309,6 +329,334 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void initAllUserInformation(InitAllMessage initAllMessage) {
+        Log.i("LYQ","initAllUserInformation");
+        String uid = initAllMessage.getBeanUserLoginReq().getMobileNo();
+        MyApplication.uid = uid;
+        upDatePersonalInformation(uid);//更新个人信息
+        appointmentListReq(uid);//更新我的挂号信息
+        upDateServiceListReq(uid);//更新已购买服务列表
+        upDateMyConcern(uid);//更新关注列表
+    }
 
 
+    /**
+     * 从网络获取个人信息
+     */
+    private void upDatePersonalInformation(String uid) {
+
+        final String key = "info_" + uid;
+        BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+        beanBaseKeyGetReq.setKey(key);
+
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+
+            String resp = null;
+
+            @Override
+            public void onCompleted() {
+                if (!TextUtils.isEmpty(resp)) {
+                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                    if (beanBaseKeyGetResp.getCode() == 0) {
+                        String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                        if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
+                            BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                            if (!isSave) {
+                                MyToast.showToast(MainActivity.this, "保存个人信息失败");
+                            }
+                        } else {
+                            //MyToast.showToast(MainActivity.this, "您还没有填写个人信息，请填写您的个人信息");//首页不用提醒，在个人中心页面再提醒
+                        }
+                    } else {
+                        MyToast.showToast(MainActivity.this, "获取个人信息失败");
+                    }
+                } else {
+                    MyToast.showToast(MainActivity.this, "获取个人信息失败");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.showToast(MainActivity.this, "获取个人信息失败,请更新您的个人信息");
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+
+                try {
+                    resp = responseBody.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 从网络获取已购买的服务列表
+     */
+    private void upDateServiceListReq(String uid) {
+
+        BeanUserListValueReq beanUserListValueReq = new BeanUserListValueReq();
+        beanUserListValueReq.setPrefix("service_" + uid);
+        beanUserListValueReq.setFrom(0);
+        beanUserListValueReq.setTo(-1);
+        beanUserListValueReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListValueReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                List<String> strServiceList = JSONArray.parseObject(strJson, List.class);
+                DataSupport.deleteAll(BeanServiceList.class);//清空数据库中旧的已购买服务列表
+                for (String strService : strServiceList) {
+                    BeanServiceList beanServiceList = JSON.parseObject(strService, BeanServiceList.class);
+                    beanServiceList.save();//更新数据库中已购买服务列表
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "getServiceListReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", "获取已购买服务响应：" + strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 将用户的关注列表保存到数据库
+     */
+    private void upDateMyConcern(String uid) {
+        final List<BeanConcernList> concernList = new ArrayList<>();
+
+        BeanUserListReq beanUserListReq = new BeanUserListReq();
+        beanUserListReq.setPrefix("care_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+                        if (DataSupport.findAll(BeanConcernList.class).isEmpty()) {
+                            for (BeanConcernList beanConcernList : concernList) {
+                                if (!beanConcernList.save()) {
+                                    for (BeanConcernList beanConcernList1 : concernList) {
+                                        beanConcernList1.save();
+                                    }
+                                }
+                            }
+                        } else {
+                            DataSupport.deleteAll(BeanConcernList.class);
+                            for (BeanConcernList beanConcernList : concernList) {
+                                if (!beanConcernList.save()) {
+                                    for (BeanConcernList beanConcernList1 : concernList) {
+                                        beanConcernList1.save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("LYQ", "MainActivity_upDateMyConcern_onError:" + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        String jsonStr = null;
+                        try {
+                            jsonStr = responseBody.string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
+                        for (String str : concerns) {
+                            BeanConcernList beanConcernList = new BeanConcernList();
+                            beanConcernList.setKey(str);
+                            concernList.add(beanConcernList);
+
+                        }
+                    }
+                });
+
+    }
+
+    /**
+     * 获取预约列表请求
+     */
+    private void appointmentListReq(final String uid) {
+
+        DataSupport.deleteAll(BeanMyAppointmentItem.class);//清除数据库中我的挂号信息
+
+        BeanUserListReq beanUserListReq = new BeanUserListReq();
+        beanUserListReq.setPrefix("reg_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+        Log.i("LYQ", "挂号信息BeanUserListReq参数json:"+ JSON.toJSONString(beanUserListReq));
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
+            String appointmentListResp = "";
+
+            @Override
+            public void onCompleted() {
+                List<String> list = JSONArray.parseObject(appointmentListResp, List.class);
+                for (String str : list) {
+                    BeanMyAppointmentItem myAppointment = new BeanMyAppointmentItem();
+                    myAppointment.setRespKey(str);
+                    myAppointmentList.add(myAppointment);
+                }
+                for (int i = 0; i < myAppointmentList.size(); i++) {
+                    appointmentReq(uid,myAppointmentList.get(i));
+                }
+                myAppointmentList.clear();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "appointmentListReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    appointmentListResp = responseBody.string();
+                    Log.i("LYQ", "appointmentListResp:" + appointmentListResp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+    }
+
+    /**
+     * 获取预约信息请求
+     *
+     * @param beanMyAppointmentItem
+     */
+    private void appointmentReq(String uid,final BeanMyAppointmentItem beanMyAppointmentItem) {
+
+        BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+        beanBaseKeyGetReq.setKey(beanMyAppointmentItem.getRespKey());
+
+        BeanUserListValueReq beanUserListReq = new BeanUserListValueReq();
+        beanUserListReq.setPrefix("reg_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+
+        Log.i("LYQ", "挂号信息BeanBaseKeyGetReq参数json:"+ JSON.toJSONString(beanBaseKeyGetReq));
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+            String appointmentResp = "";
+
+            @Override
+            public void onCompleted() {
+                BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(appointmentResp, BeanBaseKeyGetResp.class);
+                if (beanBaseKeyGetResp.getCode() == 0) {
+                    BeanHospRegisterReq beanHospRegisterReq = JSON.parseObject(beanBaseKeyGetResp.getValue(), BeanHospRegisterReq.class);
+                    beanMyAppointmentItem.setDoctorName(beanHospRegisterReq.getDoctTxt());
+                    beanMyAppointmentItem.setHospital(beanHospRegisterReq.getHospTxt());
+                    beanMyAppointmentItem.setVisitingPerson(beanHospRegisterReq.getName());
+                    beanMyAppointmentItem.setAppointmentTime(beanHospRegisterReq.getDateTxt());
+                    doctorInfoReq(beanMyAppointmentItem, beanHospRegisterReq.getHosp(), beanHospRegisterReq.getDept(), beanHospRegisterReq.getStaffNo());
+
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "appointmentResp_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    appointmentResp = responseBody.string();
+                    Log.i("LYQ", "appointmentResp:" + appointmentResp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 获取挂号的医生的详情
+     * @param beanMyAppointmentItem
+     * @param hosp
+     * @param dept
+     * @param staffNo
+     */
+    private void doctorInfoReq(final BeanMyAppointmentItem beanMyAppointmentItem, String hosp, String dept, String staffNo) {
+
+        BeanHospDeptDoctInfoReq beanHospDeptDoctInfoReq = new BeanHospDeptDoctInfoReq();
+        beanHospDeptDoctInfoReq.setHosp(hosp);
+        beanHospDeptDoctInfoReq.setDept(dept);
+        beanHospDeptDoctInfoReq.setStaffNo(staffNo);
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctInfoReq), new Subscriber<ResponseBody>() {
+            String doctorInfoResp = "";
+
+            @Override
+            public void onCompleted() {
+                BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(doctorInfoResp, BeanHospDeptDoctListRespItem.class);
+                beanMyAppointmentItem.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
+                beanMyAppointmentItem.setConsultationRoom(String.valueOf(beanHospDeptDoctListRespItem.getCLINIQUE_CODE()));
+                beanMyAppointmentItem.setDutise(beanHospDeptDoctListRespItem.getREISTER_NAME());
+                myAppointmentList.add(beanMyAppointmentItem);
+
+                boolean isSave = beanMyAppointmentItem.save();//将挂号信息保存到数据库
+                if (isSave) {
+                    EventBus.getDefault().post(new BeanMyAppointmentItem());//通知问诊我的挂号页面刷新数据
+                } else {
+                    beanMyAppointmentItem.save();//若保存失败则再次保存
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "appointmentResp——onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    doctorInfoResp = responseBody.string();
+                    Log.i("LYQ", "doctorInfoReq（）Resp:" + doctorInfoResp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

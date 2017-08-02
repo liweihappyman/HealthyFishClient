@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
+import com.healthyfish.healthyfish.ui.activity.personal_center.ChangePersonalInformation;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 描述：
+ * 描述：注册成功页面
  * 作者：LYQ on 2017/7/7.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
@@ -53,6 +54,8 @@ public class RegisterSuccess extends BaseActivity {
                 break;
             case R.id.bt_add_document:
                 //添加健康档案
+                Intent intent1 = new Intent(this, ChangePersonalInformation.class);
+                startActivity(intent1);
                 break;
         }
     }

@@ -13,18 +13,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
+import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRegisterReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -35,6 +41,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：注册填写昵称的密码页面
@@ -80,7 +88,10 @@ public class RegisterPassword extends BaseActivity {
 
         if (!etInputPassword.getText().toString().equals(etVerifyPassword.getText().toString())) {
             Toast.makeText(this, "输入密码不相同", Toast.LENGTH_LONG).show();
+        } else if (TextUtils.isEmpty(etInputNickname.getText().toString().trim())) {
+            Toast.makeText(this, "请填写您的昵称", Toast.LENGTH_LONG).show();
         } else {
+            nickname = etInputNickname.getText().toString().trim();
             //注册请求的bean
             final BeanUserRegisterReq beanUserRegisterReq = (BeanUserRegisterReq) getIntent().getSerializableExtra("user");
             beanUserRegisterReq.setAct(BeanUserRegisterReq.class.getSimpleName());
@@ -111,17 +122,19 @@ public class RegisterPassword extends BaseActivity {
                                 str = responseBody.string();
                                 BeanBaseResp beanBaseResp = JSON.parseObject(str, BeanBaseResp.class);
                                 int code = beanBaseResp.getCode();
-                                if (code >=0) {
+                                if (code >= 0) {
                                     Toast.makeText(RegisterPassword.this, "注册成功", Toast.LENGTH_LONG).show();
-                                    MySharedPrefUtil.saveKeyValue("user",user);
+                                    MySharedPrefUtil.saveKeyValue("user", user);
                                     //————————————————————————————————————————
-                                    EventBus.getDefault().post(new BeanPersonalInformation(true));
-                                    saveDataToNetwork(beanUserRegisterReq.getMobileNo());
+
+                                    saveDataToNetwork(beanUserRegisterReq.getMobileNo());//保存个人信息到服务器及本地数据库
+                                    getSidAndAutoLogin();//获取Sid后自动登录加载用户信息
+
                                     Intent intent = new Intent(RegisterPassword.this, RegisterSuccess.class);
                                     startActivity(intent);
                                     finish();
                                     //—————————————————————————————————————————————
-                                }else {
+                                } else {
                                     Toast.makeText(RegisterPassword.this, "注册失败", Toast.LENGTH_LONG).show();
                                 }
                             } catch (IOException e) {
@@ -147,6 +160,7 @@ public class RegisterPassword extends BaseActivity {
         personalInformation.setBirthDate(birthDate);
         personalInformation.setIdCard(idCard);
         personalInformation.setImgUrl(imgUrl);
+        //personalInformation.setLogin(false);//不传值在获取个人信息时会空指针异常
         String jsonReq = JSON.toJSONString(personalInformation);
 
         Log.i("LYQ", "jsonReq:" + jsonReq);
@@ -166,14 +180,14 @@ public class RegisterPassword extends BaseActivity {
                         if (!isSave) {
                             MyToast.showToast(RegisterPassword.this, "保存个人信息失败");
                         }
-                        EventBus.getDefault().post(personalInformation);//发送消息提醒刷新个人中心的个人信息
+                        //EventBus.getDefault().post(personalInformation);//发送消息提醒刷新个人中心的个人信息
                     } else {
                         MyToast.showToast(RegisterPassword.this, "上传个人信息失败");
-                        EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                        //EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
                     }
                 } else {
                     MyToast.showToast(RegisterPassword.this, "上传个人信息失败");
-                    EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                    //EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
                 }
                 Log.i("LYQ", "上传请求onCompleted");
             }
@@ -181,7 +195,7 @@ public class RegisterPassword extends BaseActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.showToast(RegisterPassword.this, "上传个人信息失败");
-                EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                //EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
             }
 
             @Override
@@ -194,6 +208,40 @@ public class RegisterPassword extends BaseActivity {
                 }
             }
         });
+    }
+
+    /**
+     * 获取Sid后自动登录加载用户信息
+     */
+    private void getSidAndAutoLogin() {
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), HttpHealthyFishyUrl)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanSessionIdReq()), new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+//                        String user = MySharedPrefUtil.getValue("user");
+//                        if (!TextUtils.isEmpty(user)) {
+//                            MqttUtil.startAsync();
+//                        }
+                        //EventBus.getDefault().post(new BeanPersonalInformation(true));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        try {
+                            BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
+                            Log.e("从服务器获取sid", obj.getSid());
+                            MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
+                            AutoLogin.autoLogin();//获取到sid后自动登录
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
     }
 
     /**
