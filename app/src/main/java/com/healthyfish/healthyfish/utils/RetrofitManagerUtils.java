@@ -83,7 +83,7 @@ public class RetrofitManagerUtils {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
                 .addInterceptor(new AddCookiesInterceptor(MyApplication.getContetxt(), null))
-                .addInterceptor(new ReceivedCookiesInterceptor(MyApplication.getContetxt()))
+                //.addInterceptor(new ReceivedCookiesInterceptor(MyApplication.getContetxt()))
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写的超时时间
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间

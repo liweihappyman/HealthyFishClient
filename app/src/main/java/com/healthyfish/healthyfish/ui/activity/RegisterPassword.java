@@ -115,6 +115,7 @@ public class RegisterPassword extends BaseActivity {
                                     Toast.makeText(RegisterPassword.this, "注册成功", Toast.LENGTH_LONG).show();
                                     MySharedPrefUtil.saveKeyValue("user",user);
                                     //————————————————————————————————————————
+                                    EventBus.getDefault().post(new BeanPersonalInformation(true));
                                     saveDataToNetwork(beanUserRegisterReq.getMobileNo());
                                     Intent intent = new Intent(RegisterPassword.this, RegisterSuccess.class);
                                     startActivity(intent);

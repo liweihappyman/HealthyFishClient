@@ -82,7 +82,7 @@ public class OkHttpUtils {
     public static RequestBody getRequestBody(BeanBaseReq beanBaseReq) {
         String jsonStr = JSON.toJSONString(beanBaseReq);
 
-        Log.i("请求信息"," "+jsonStr);
+        Log.i("httpReq"," "+jsonStr);
 
         MediaType MJSON = MediaType.parse("application/json; charset=utf-8");
         return RequestBody.create(MJSON,jsonStr);

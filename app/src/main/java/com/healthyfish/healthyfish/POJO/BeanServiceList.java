@@ -2,7 +2,9 @@ package com.healthyfish.healthyfish.POJO;
 
 import org.litepal.crud.DataSupport;
 
+
 import java.io.Serializable;
+
 
 /**
  * 描述：用户已购买的服务列表
@@ -11,10 +13,12 @@ import java.io.Serializable;
  * 编辑：LYQ
  */
 
-public class BeanServiceList extends DataSupport implements Serializable{
+
+public class BeanServiceList extends DataSupport {
     private int id;//数据库id
-    private String key;//唯一的key（格式为："service_"+uid_type_hosp_dept_staffNo）
-    private String type;//服务类型（图文咨询：PTC ；私人医生：PD ）
+    private String key;//唯一的key（格式为：type_uid_hosp_dept_staffNo）
+    private String type;//服务类型（图文咨询：GraphicConsultation ；私人医生：PrivateDoctor ）
+
     private String startTime;//起始时间
     private String endTime;//截止时间
 

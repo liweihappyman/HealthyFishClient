@@ -12,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
+
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
@@ -24,9 +26,7 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
-
 import java.io.IOException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -87,9 +87,8 @@ public class Pay extends BaseActivity {
     private String strPayPrice;
     private String doctorName;
     private Bundle bundleShopType;
-    private int serviceData = 1;  //图文咨询的服务时间长度
+    private int serviceData = 2;  //图文咨询的服务时间长度
     private String payPrice01, payPrice02, payPrice03, payPrice04, payPrice05;
-
     private BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
 
     @Override
@@ -152,6 +151,7 @@ public class Pay extends BaseActivity {
                     jumpTo(PaySuccess.class);
                 } else {
                     bundleShopType.putString("serviceFinishTime", "服务时间为" + DateUtils.addAndSubtractDate("D", 0) + "至" + DateUtils.addAndSubtractDate("D", serviceData));
+                    jumpTo(PayServiceSuccess.class);
                     addServiceListReq();//将购买服务记录上传服务器
                 }
                 break;

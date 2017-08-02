@@ -60,7 +60,9 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
 
+
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
+
 
 /**
  * 描述：个人中心首页
@@ -99,10 +101,8 @@ public class PersonalCenterFragment extends Fragment {
     @BindView(R.id.rly_login)
     AutoRelativeLayout rlyLogin;
     Unbinder unbinder;
-
     private Context mContext;
     private View rootView;
-
     private BeanPersonalInformation beanPersonalInformation = new BeanPersonalInformation();
 
 
@@ -114,14 +114,18 @@ public class PersonalCenterFragment extends Fragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        judgeLoginState();
+        String user = MySharedPrefUtil.getValue("user");
+        String sid = MySharedPrefUtil.getValue("sid");
+        if (!TextUtils.isEmpty(user)&&!TextUtils.isEmpty(sid)) {
+            judgeLoginState(true);
+        }
         return rootView;
     }
 
     //登录状态判断初始化相应的控件
-    private void judgeLoginState() {
-        String user = MySharedPrefUtil.getValue("user");
-        if (!TextUtils.isEmpty(user)) {
+    private void judgeLoginState(boolean isLogin) {
+        if (isLogin) {
+            String user = MySharedPrefUtil.getValue("user");
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
             String number = beanUserLoginReq.getMobileNo();
             MyApplication.uid = number;
@@ -135,7 +139,7 @@ public class PersonalCenterFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLoginState(BeanPersonalInformation beanPersonalInformation) {
         this.beanPersonalInformation = beanPersonalInformation;
-        judgeLoginState();
+        judgeLoginState(beanPersonalInformation.isLogin());
     }
 
 
@@ -380,7 +384,9 @@ public class PersonalCenterFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
+
                 MyToast.showToast(getActivity(), "获取个人信息失败,请更新您的个人信息");
+
                 initWidget();
 
             }

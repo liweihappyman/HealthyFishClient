@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRegisterResp;
@@ -97,7 +98,7 @@ public class ChangePassword extends BaseActivity {
                                 if (code >= 0){
                                     Toast.makeText(ChangePassword.this,"修改成功",Toast.LENGTH_LONG).show();
                                     MySharedPrefUtil.saveKeyValue("user",user);
-                                    EventBus.getDefault().post(new EmptyMessage());
+                                    EventBus.getDefault().post(new BeanPersonalInformation(true));
                                     Intent intent = new Intent(ChangePassword.this, ChangePasswordSuccess.class);
                                     startActivity(intent);
                                 }else {

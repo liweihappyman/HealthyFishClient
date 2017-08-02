@@ -35,12 +35,6 @@
             <include layout="@layout/home_page_health_news" />
 
             <include layout="@layout/home_page_healthy_work_shop" />
-
-
         </com.zhy.autolayout.AutoLinearLayout>
-
-
     </ScrollView>
-
-
 </com.zhy.autolayout.AutoLinearLayout>
