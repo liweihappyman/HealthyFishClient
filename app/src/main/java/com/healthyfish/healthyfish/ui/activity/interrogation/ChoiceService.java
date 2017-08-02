@@ -135,13 +135,11 @@ public class ChoiceService extends BaseActivity {
     private boolean isOpenPictureConsulting;  //是否开通图文咨询
     private boolean isOpenPrivateDoctor;  //是否开通私人医生
     private boolean isOpenAppointment;  //是否开通预约挂号
-
     private boolean isAttention = false;//是否已经关注该医生
-
     private String uid = "";
-
     private String myConcernReqKey;
-
+    private final String TYPE_GRAPHICCONSULTATION = "GraphicConsultation";
+    private final String TYPE_PRIVATEDOCTOR = "PrivateDoctor";
     private String doctorPhone = "";
 
 
@@ -251,8 +249,8 @@ public class ChoiceService extends BaseActivity {
                     isAttention = true;
                     BeanConcernList beanConcernList = new BeanConcernList();
                     beanConcernList.setKey(myConcernReqKey);
-                    if (!beanConcernList.saveOrUpdate("key = ?", myConcernReqKey)) {
-                        beanConcernList.saveOrUpdate("key = ?", myConcernReqKey);
+                    if (beanConcernList.saveOrUpdate("myConcernReqKey = ?", myConcernReqKey)) {
+                        beanConcernList.saveOrUpdate("myConcernReqKey = ?", myConcernReqKey);
                     }
                 } else {
                     MyToast.showToast(ChoiceService.this, "关注失败，请重试");
@@ -460,6 +458,16 @@ public class ChoiceService extends BaseActivity {
             beanDoctorChatInfo.setPhone(doctorPhone);
             beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
 
+            BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("serviceType", "图文咨询");
+            bundle.putString("name", doctorName);
+            bundle.putString("price", pictureConsultingPrice);
+            bundle.putSerializable("BeanDoctorChatInfo",beanDoctorChatInfo);
+            buyServiceFragment.setArguments(bundle);
+            buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
+
+
             String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
             Log.i("LYQ", "serviceKey:" + serviceKey);
 
@@ -484,6 +492,7 @@ public class ChoiceService extends BaseActivity {
             } else {//空则没有购买过该医生的图文咨询服务或者已过期
                 goToBuyService(serviceKey,false,beanDoctorChatInfo);
             }
+
         } else {
             MyToast.showToast(mContext, "该医生暂未开通此服务");
         }

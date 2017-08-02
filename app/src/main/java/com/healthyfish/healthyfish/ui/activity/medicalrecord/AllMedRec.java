@@ -35,7 +35,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MedRecLvAdapter;
-import com.healthyfish.healthyfish.constant.constants;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.utils.ComparatorDate;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;

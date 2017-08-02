@@ -20,7 +20,7 @@
         android:layout_height="72px"
         android:layout_marginLeft="30px"
         android:layout_marginTop="32px"
-        android:background="@mipmap/search_box">
+        android:background="@drawable/rounded_rectangle_white">
 
         <ImageView
             android:id="@+id/topbar_search_iv"

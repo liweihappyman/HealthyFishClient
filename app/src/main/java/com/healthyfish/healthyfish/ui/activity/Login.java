@@ -299,7 +299,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
             public void onError(Throwable e) {
 
                 MyToast.showToast(Login.this, "您还没有填写个人信息，请填写您的个人信息");
-                EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                EventBus.getDefault().post(new BeanPersonalInformation(false));//发送消息提醒刷新个人中心的个人信息
                 Log.i("LYQ", "获取个人信息失败，" + e.toString());
             }
 
@@ -315,6 +315,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                             MyToast.showToast(Login.this, "获取个人信息成功");
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                             BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                            beanPersonalInformation.setLogin(true);
                             boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
                             if (!isSave) {
 
@@ -326,11 +327,11 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                             EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
                         } else {
                             MyToast.showToast(Login.this, "获取个人信息失败");
-                            EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                            EventBus.getDefault().post(new BeanPersonalInformation(false));//发送消息提醒刷新个人中心的个人信息
                         }
                     } else {
                         MyToast.showToast(Login.this, "获取个人信息失败");
-                        EventBus.getDefault().post(new BeanPersonalInformation());//发送消息提醒刷新个人中心的个人信息
+                        EventBus.getDefault().post(new BeanPersonalInformation(false));//发送消息提醒刷新个人中心的个人信息
 
                     }
 

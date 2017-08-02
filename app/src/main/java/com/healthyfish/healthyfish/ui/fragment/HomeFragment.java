@@ -91,24 +91,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     RecyclerView healthPlanRecyclerview;
     @BindView(R.id.work_shop_recyclerview)
     RecyclerView workShopRecyclerview;
-
     @BindView(R.id.tv_add_more_plan)
     TextView tvAddMorePlan;
     @BindView(R.id.tv_add_more_news)
     TextView tvAddMoreNews;
     @BindView(R.id.lly_more_health_news)
     AutoLinearLayout llyMoreHealthNews;
-
     @BindView(R.id.date)
     TextView date;
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout swipeRefresh;
-
-
     private Context mContext;
     private View rootView;
-
-
     @BindView(R.id.topbar_scan)
     ImageView topbarScan;
     @BindView(R.id.topbar_search_iv)
@@ -133,9 +125,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.fm_remote_monitoring)
     ImageView fmRemoteMonitoring;
     private String url2 = "http://219.159.248.209/demo/TestServlet";
-
     final BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
-
     private HomePageHealthInfoAadpter healthInfoAdapter;
 
     @Override
@@ -144,55 +134,37 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        initAll(false);
-        refresh();
+        initAll();
         return rootView;
 
     }
 
-    private void refresh() {
-        swipeRefresh.setColorSchemeColors(Color.parseColor("#019b79"));
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initAll(true);
-            }
-        });
-    }
 
-    private void initAll(boolean refresh) {
+
+    private void initAll() {
+        initBannerRequest();//网络访问获取轮播图内容
         initInfoPrmopt("9");//测试消息提示文本
         initFunctionMenu();//初始化菜单监听
         initHealthNews();//初始化健康资讯
         initHealthPlan();//初始化养生计划
         initHealthWorkShop();//初始化健康工坊
-        initBannerRequest(refresh);//网络访问获取轮播图内容
+
     }
 
     //网络访问获取轮播图内容
-    private void initBannerRequest(final boolean refresh) {
+    private void initBannerRequest() {
         final List<String> imgs = new ArrayList<>();//装载图片
         final List<String> desc = new ArrayList<>();//装载描述
-        //先加载本地的
-        if (!TextUtils.isEmpty(MySharedPrefUtil.getValue("slideshow"))) {
-            List<String> imgsLocal = new ArrayList<>();//装载图片
-            imgsLocal = JSON.parseObject(MySharedPrefUtil.getValue("slideshow"), List.class);
-            setbanner(imgsLocal, desc);
-        }
         RetrofitManagerUtils.getInstance(getActivity(), null)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHomeImgSlideReq()), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-                        if (refresh) {
-                            swipeRefresh.setRefreshing(false);
-                            Toast.makeText(getActivity(), "刷新成功", Toast.LENGTH_SHORT).show();
-                        }
+                        setbanner(imgs, desc);//给轮播图设置图片
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        swipeRefresh.setRefreshing(false);
-                        Toast.makeText(getActivity(), "出错啦，请检查网络环境", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -200,15 +172,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         String str = null;
                         try {
                             str = responseBody.string();
-                            if (!TextUtils.isEmpty(str)) {
-                                BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str, BeanHomeImgSlideResp.class);
-                                for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem : beanHomeImgSlideResp.getImgList()) {
-                                    imgs.add(HttpHealthyFishyUrl + beanHomeImgSlideRespItem.getImg());
-                                    //Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
-                                    desc.add(beanHomeImgSlideRespItem.getDesc());
-                                }
-                                setbanner(imgs, desc);//给轮播图设置图片
-                                MySharedPrefUtil.saveKeyValue("slideshow", JSON.toJSONString(imgs));//保存轮播图的url，描述暂时没有
+                            BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str, BeanHomeImgSlideResp.class);
+                            for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem : beanHomeImgSlideResp.getImgList()) {
+                                imgs.add(HttpHealthyFishyUrl + beanHomeImgSlideRespItem.getImg());
+                                Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
+                                desc.add(beanHomeImgSlideRespItem.getDesc());
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

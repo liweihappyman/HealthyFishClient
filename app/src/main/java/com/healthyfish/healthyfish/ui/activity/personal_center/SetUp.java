@@ -113,17 +113,17 @@ public class SetUp extends BaseActivity {
                 @Override
                 public void onCompleted() {
                     MySharedPrefUtil.remKey("user");     //清除用户登录信息
-                    SharedPreferences cookie = getSharedPreferences("cookie", MODE_PRIVATE);
-                    cookie.edit().clear().commit();//清除cookie
+//                    SharedPreferences cookie = getSharedPreferences("cookie", MODE_PRIVATE);
+//                    cookie.edit().clear().commit();//清除cookie
                     MyApplication.uid = "";
 
-                    SharedPreferences test = getSharedPreferences("cookie", MODE_PRIVATE);
-                    String s = test.getString("cookie", null);
-                    Log.i("cookie", " " + s);
+//                    SharedPreferences test = getSharedPreferences("cookie", MODE_PRIVATE);
+//                    String s = test.getString("cookie", null);
+//                    Log.i("cookie", " " + s);
 
                     DataSupport.deleteAll(BeanMedRec.class);//清除所有病历
 
-                    EventBus.getDefault().post(new BeanPersonalInformation());
+                    EventBus.getDefault().post(new BeanPersonalInformation(false));
                     Intent intent = new Intent(SetUp.this, MainActivity.class);
                     startActivity(intent);
                     finish();

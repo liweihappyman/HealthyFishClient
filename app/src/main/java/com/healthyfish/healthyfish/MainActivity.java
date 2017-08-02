@@ -13,18 +13,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
+import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
+import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.fragment.HealthWorkshopFragment;
 import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
 import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.Sha256;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -285,7 +292,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
 
                     @Override
@@ -294,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
                             Log.e("从服务器获取sid", obj.getSid());
                             MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
+                            AutoLogin.autoLogin();//获取到sid后自动登录
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -301,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
 
     }
+
 
 
 }
