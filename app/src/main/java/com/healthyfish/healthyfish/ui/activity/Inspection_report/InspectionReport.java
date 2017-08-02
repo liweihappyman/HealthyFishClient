@@ -54,7 +54,7 @@ public class InspectionReport extends BaseActivity implements View.OnClickListen
         initToolBar(toolbar, toolbarTitle, "我的化验单");
         search.setOnClickListener(this);
         initFromDB();
-        AutoLogin.autoLogin();
+        //AutoLogin.autoLogin();
         RequestForNetWorkData();
     }
 
