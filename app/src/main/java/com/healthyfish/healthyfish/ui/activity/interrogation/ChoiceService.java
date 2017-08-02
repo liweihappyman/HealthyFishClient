@@ -452,25 +452,12 @@ public class ChoiceService extends BaseActivity {
      */
     private void buyPictureConsultingService() {
         if (isOpenPictureConsulting) {
-
             BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
             beanDoctorChatInfo.setName(beanDoctorInfo.getName());
             beanDoctorChatInfo.setPhone(doctorPhone);
             beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
-
-            BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("serviceType", "图文咨询");
-            bundle.putString("name", doctorName);
-            bundle.putString("price", pictureConsultingPrice);
-            bundle.putSerializable("BeanDoctorChatInfo",beanDoctorChatInfo);
-            buyServiceFragment.setArguments(bundle);
-            buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
-
-
             String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
             Log.i("LYQ", "serviceKey:" + serviceKey);
-
             List<BeanServiceList> serviceLists = DataSupport.where("key = ?", serviceKey).find(BeanServiceList.class);//查找数据库
             if (!serviceLists.isEmpty()) {//不为空则购买过该医生的图文咨询服务
                 BeanServiceList beanServiceList = serviceLists.get(0);

@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 
 
-public class BeanServiceList extends DataSupport {
+public class BeanServiceList extends DataSupport implements Serializable{
     private int id;//数据库id
     private String key;//唯一的key（格式为：type_uid_hosp_dept_staffNo）
     private String type;//服务类型（图文咨询：GraphicConsultation ；私人医生：PrivateDoctor ）

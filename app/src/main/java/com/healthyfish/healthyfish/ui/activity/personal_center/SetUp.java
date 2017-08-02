@@ -17,8 +17,10 @@ import android.widget.ToggleButton;
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanInspectionReport;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
+import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLogoutReq;
 import com.healthyfish.healthyfish.R;
@@ -113,16 +115,10 @@ public class SetUp extends BaseActivity {
                 @Override
                 public void onCompleted() {
                     MySharedPrefUtil.remKey("user");     //清除用户登录信息
-//                    SharedPreferences cookie = getSharedPreferences("cookie", MODE_PRIVATE);
-//                    cookie.edit().clear().commit();//清除cookie
                     MyApplication.uid = "";
-
-//                    SharedPreferences test = getSharedPreferences("cookie", MODE_PRIVATE);
-//                    String s = test.getString("cookie", null);
-//                    Log.i("cookie", " " + s);
-
                     DataSupport.deleteAll(BeanMedRec.class);//清除所有病历
-
+                    DataSupport.deleteAll(BeanInspectionReport.class);//清除检查报告化验单
+                    DataSupport.deleteAll(BeanPrescriptiom.class);//清除处方
                     EventBus.getDefault().post(new BeanPersonalInformation(false));
                     Intent intent = new Intent(SetUp.this, MainActivity.class);
                     startActivity(intent);

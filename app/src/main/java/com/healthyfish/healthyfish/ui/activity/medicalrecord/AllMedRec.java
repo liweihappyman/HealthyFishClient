@@ -81,13 +81,13 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
     private boolean hasNewData = false;
     private List<BeanMedRec> listMecRec = new ArrayList<>();
     private int size;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_med_rec_all);
         ButterKnife.bind(this);
         toolbar.setTitle("");
+        toolbarTitle.setText("全部病历");
         //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.three_points));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -119,10 +119,9 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         listMecRec.clear();
         listMecRec = DataSupport.findAll(BeanMedRec.class);
         if (listMecRec.size() == 0) {
-            initNullLV();
+            //initNullLV();
             reqForNetworkData(false);//如果本地数据为空，则从网上加载，否则要刷新数据，只有下拉刷新
-        }
-        if (listMecRec.size() > 0) {
+        } else {
             //将日期按时间先后排序
             ComparatorDate c = new ComparatorDate();
             Collections.sort(listMecRec, c);
@@ -153,11 +152,6 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         beanUserListReq.setFrom(0);
         beanUserListReq.setNum(-1);
         beanUserListReq.setTo(-1);
-//        BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
-//        userListValueReq.setPrefix(prefix.toString());
-//        userListValueReq.setFrom(0);
-//        userListValueReq.setNum(-1);
-//        userListValueReq.setTo(-1);
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
@@ -165,6 +159,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
             @Override
             public void onError(Throwable e) {
+                swipeRefresh.setRefreshing(false);
                 Toast.makeText(AllMedRec.this, "出错啦，请检查网络环境", Toast.LENGTH_SHORT).show();
             }
 
@@ -194,6 +189,9 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                                 swipeRefresh.setRefreshing(false);
                                 Toast.makeText(AllMedRec.this, "已经是最新数据了", Toast.LENGTH_SHORT).show();
                             }
+                        }else {
+                            swipeRefresh.setRefreshing(false);
+                            Toast.makeText(AllMedRec.this, "没有可加载的数据哦", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (IOException e) {
@@ -209,18 +207,6 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
      * 删除网络数据空值key，造成空值key的原因还不清楚，出现过
      */
     private void networkReqDelMedRec(String key) {
-        //删除多个用
-//        String userStr = MySharedPrefUtil.getValue("user");
-//        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
-//
-//        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
-//        StringBuilder prefix = new StringBuilder("medRec_");
-//        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
-//        //Log.i("电子病历","prefix:"+prefix.toString());
-//        beanBaseKeysRemReq.setPrefix(prefix.toString());
-//        beanBaseKeysRemReq.getKeyList().add(medRec.getKey());
-//        Log.i("keyiiiii", "addkey" + beanBaseKeysRemReq.getKeyList().get(0));
-
         BeanBaseKeyRemReq baseKeyRemReq = new BeanBaseKeyRemReq();//删除单个
         baseKeyRemReq.setKey(key);
         RetrofitManagerUtils.getInstance(AllMedRec.this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(baseKeyRemReq), new Subscriber<ResponseBody>() {
@@ -309,6 +295,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         medRecAll.setEmptyView(imageView);
         imageView.setImageResource(R.mipmap.personal_center);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

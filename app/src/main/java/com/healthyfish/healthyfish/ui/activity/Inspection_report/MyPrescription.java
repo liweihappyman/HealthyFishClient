@@ -57,7 +57,7 @@ public class MyPrescription extends BaseActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "我的处方");
         initDataFromDB();
-        AutoLogin.autoLogin();//登录，保证会话
+        //AutoLogin.autoLogin();//登录，保证会话
         requestForPrescription();
     }
 
