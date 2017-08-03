@@ -69,20 +69,20 @@
                     android:text="登录/注册"
                     android:textColor="@color/selector_text_color_from_white_to_primary" />
 
-                <com.zhy.autolayout.AutoRelativeLayout
-                    android:id="@+id/rly_mail"
-                    android:layout_width="160px"
-                    android:layout_height="84px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="27px">
+                <!--<com.zhy.autolayout.AutoRelativeLayout-->
+                    <!--android:id="@+id/rly_mail"-->
+                    <!--android:layout_width="160px"-->
+                    <!--android:layout_height="84px"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginTop="27px">-->
 
-                    <ImageView
-                        android:layout_width="86px"
-                        android:layout_height="60px"
-                        android:layout_marginTop="24px"
-                        android:src="@mipmap/ic_mail" />
+                    <!--<ImageView-->
+                        <!--android:layout_width="86px"-->
+                        <!--android:layout_height="60px"-->
+                        <!--android:layout_marginTop="24px"-->
+                        <!--android:src="@mipmap/ic_mail" />-->
 
-                </com.zhy.autolayout.AutoRelativeLayout>
+                <!--</com.zhy.autolayout.AutoRelativeLayout>-->
 
             </com.zhy.autolayout.AutoRelativeLayout>
 

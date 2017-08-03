@@ -74,8 +74,8 @@ public class PersonalCenterFragment extends Fragment {
     CircleImageView civHeadPortrait;
     @BindView(R.id.tv_login_or_register)
     TextView tvLoginOrRegister;
-    @BindView(R.id.rly_mail)
-    AutoRelativeLayout rlyMail;
+//    @BindView(R.id.rly_mail)
+//    AutoRelativeLayout rlyMail;
     @BindView(R.id.lly_personal_information)
     AutoLinearLayout llyPersonalInformation;
     @BindView(R.id.lly_my_news)
@@ -101,6 +101,7 @@ public class PersonalCenterFragment extends Fragment {
     @BindView(R.id.rly_login)
     AutoRelativeLayout rlyLogin;
     Unbinder unbinder;
+
     private Context mContext;
     private View rootView;
     private BeanPersonalInformation beanPersonalInformation = new BeanPersonalInformation();
@@ -128,8 +129,6 @@ public class PersonalCenterFragment extends Fragment {
             String user = MySharedPrefUtil.getValue("user");
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
             String number = beanUserLoginReq.getMobileNo();
-            MyApplication.uid = number;
-            upDateMyConcern(number);
             isLogin(true, number);
         } else {
             isLogin(false, null);
@@ -139,8 +138,12 @@ public class PersonalCenterFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLoginState(BeanPersonalInformation beanPersonalInformation) {
         this.beanPersonalInformation = beanPersonalInformation;
+        Log.i("LYQ","refreshLoginState");
+
         judgeLoginState(beanPersonalInformation.isLogin());
     }
+
+
 
 
     /**
@@ -168,7 +171,7 @@ public class PersonalCenterFragment extends Fragment {
         } else {
             rlyLogin.setVisibility(View.GONE);
             rlyNotLogin.setVisibility(View.VISIBLE);
-            rlyMail.setVisibility(View.GONE);
+//            rlyMail.setVisibility(View.GONE);
             rlyNotLogin.setBackgroundResource(R.color.color_divider);
         }
     }
@@ -237,7 +240,7 @@ public class PersonalCenterFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.civ_head_portrait, R.id.tv_login_or_register, R.id.rly_mail, R.id.lly_personal_information, R.id.lly_my_news, R.id.lly_my_concern, R.id.lly_feedback, R.id.lly_set, R.id.civ_head_portrait_login, R.id.tv_name_login, R.id.tv_constitution_login, R.id.iv_go, R.id.rly_mail_login})
+    @OnClick({R.id.civ_head_portrait, R.id.tv_login_or_register, R.id.lly_personal_information, R.id.lly_my_news, R.id.lly_my_concern, R.id.lly_feedback, R.id.lly_set, R.id.civ_head_portrait_login, R.id.tv_name_login, R.id.tv_constitution_login, R.id.iv_go, R.id.rly_mail_login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.civ_head_portrait:
@@ -248,9 +251,9 @@ public class PersonalCenterFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 break;
-            case R.id.rly_mail:
-                //点击右上角消息邮箱
-                break;
+//            case R.id.rly_mail:
+//                //点击右上角消息邮箱
+//                break;
             case R.id.lly_personal_information:
                 //点击个人信息
                 if (!TextUtils.isEmpty(MyApplication.uid)) {
@@ -377,8 +380,31 @@ public class PersonalCenterFragment extends Fragment {
         beanBaseKeyGetReq.setKey(key);
 
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+
+            String resp = null;
+
             @Override
             public void onCompleted() {
+                if (!TextUtils.isEmpty(resp)) {
+                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                    if (beanBaseKeyGetResp.getCode() == 0) {
+                        String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                        if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
+                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                            if (!isSave) {
+                                MyToast.showToast(getActivity(), "保存个人信息失败");
+                            }
+                        } else {
+                            MyToast.showToast(getActivity(), "您还没有填写个人信息，请填写您的个人信息");
+                        }
+                    } else {
+                        MyToast.showToast(getActivity(), "获取个人信息失败");
+                    }
+                } else {
+                    MyToast.showToast(getActivity(), "获取个人信息失败");
+                }
+
                 initWidget();
             }
 
@@ -393,25 +419,8 @@ public class PersonalCenterFragment extends Fragment {
 
             @Override
             public void onNext(ResponseBody responseBody) {
-                String resp = null;
                 try {
                     resp = responseBody.string();
-                    if (!TextUtils.isEmpty(resp)) {
-                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                        if (beanBaseKeyGetResp.getCode() == 0) {
-                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
-                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                            if (!isSave) {
-                                MyToast.showToast(getActivity(), "保存个人信息失败");
-                            }
-                        } else {
-                            MyToast.showToast(getActivity(), "获取个人信息失败");
-                        }
-                    } else {
-                        MyToast.showToast(getActivity(), "获取个人信息失败");
-                    }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

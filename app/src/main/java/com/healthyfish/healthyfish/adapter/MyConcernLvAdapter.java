@@ -167,8 +167,8 @@ public class MyConcernLvAdapter extends BaseSwipeAdapter {
         final String key = "care_" + uid + "_" + hosp + "_" + dept + "_" + staffNo;
 
         BeanBaseKeyRemReq beanBaseKeyRemReq = new BeanBaseKeyRemReq();
-        //beanBaseKeyRemReq.setKey(key);
-        beanBaseKeyRemReq.setKey("info_15278898523");
+        beanBaseKeyRemReq.setKey(key);
+        //beanBaseKeyRemReq.setKey("info_15278898523");
 
         RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyRemReq), new Subscriber<ResponseBody>() {
             @Override

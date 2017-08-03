@@ -223,7 +223,7 @@ public class ConfirmReservationInformation extends BaseActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                Log.e("LYQ", "挂号666：" + jsonStr);
+                Log.e("LYQ", "挂号666：" + jsonStr);
                 beanKeyValue = JSON.parseObject(jsonStr, BeanKeyValue.class);
 //                Log.e("LYQ", "挂号：" + value);
             }

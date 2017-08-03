@@ -458,16 +458,6 @@ public class ChoiceService extends BaseActivity {
             beanDoctorChatInfo.setPhone(doctorPhone);
             beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
 
-            BuyServiceFragment buyServiceFragment = new BuyServiceFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("serviceType", "图文咨询");
-            bundle.putString("name", doctorName);
-            bundle.putString("price", pictureConsultingPrice);
-            bundle.putSerializable("BeanDoctorChatInfo",beanDoctorChatInfo);
-            buyServiceFragment.setArguments(bundle);
-            buyServiceFragment.show(getSupportFragmentManager(), "buyServiceFragment");
-
-
             String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
             Log.i("LYQ", "serviceKey:" + serviceKey);
 
@@ -620,46 +610,6 @@ public class ChoiceService extends BaseActivity {
         });
     }
 
-    /**
-     * 从网络获取已购买的服务列表
-     */
-    private void getServiceListReq() {
 
-        BeanUserListValueReq beanUserListValueReq = new BeanUserListValueReq();
-        beanUserListValueReq.setPrefix("service_" + uid);
-        beanUserListValueReq.setFrom(0);
-        beanUserListValueReq.setTo(-1);
-        beanUserListValueReq.setNum(-1);
-
-        RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListValueReq), new Subscriber<ResponseBody>() {
-            String strJson = "";
-
-            @Override
-            public void onCompleted() {
-                List<String> strServiceList = JSONArray.parseObject(strJson, List.class);
-                DataSupport.deleteAll(BeanServiceList.class);//清空数据库中旧的已购买服务列表
-                for (String strService : strServiceList) {
-                    BeanServiceList beanServiceList = JSON.parseObject(strService, BeanServiceList.class);
-                    beanServiceList.save();//更新数据库中已购买服务列表
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i("LYQ", "getServiceListReq()_onError:" + e.toString());
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    strJson = responseBody.string();
-                    Log.i("LYQ", "获取已购买服务响应：" + strJson);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
 
 }

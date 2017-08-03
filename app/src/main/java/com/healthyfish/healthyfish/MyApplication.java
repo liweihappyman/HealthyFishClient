@@ -21,6 +21,7 @@ import org.litepal.LitePal;
 public class MyApplication extends Application{
     private static Context applicationContext;
     public static String uid = "";//暂时设置用
+    public static boolean isFirstAutoLogin = true;//用来标识是否是打开App登录后第一次进行自动登录
 
 
     @Override

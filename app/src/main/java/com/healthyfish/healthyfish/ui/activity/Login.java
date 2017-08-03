@@ -21,7 +21,9 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
+import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
+import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.EmptyMessage;
@@ -186,8 +188,10 @@ public class Login extends AutoLayoutActivity implements ILoginView {
 
             MySharedPrefUtil.saveKeyValue("user", user);  //登录成功由shareprefrence保存
             MyApplication.uid = getUserName();
-            upDateMyConcern();
             upDatePersonalInformation(getUserName());
+            upDateServiceListReq(getUserName());
+            upDateMyConcern();
+
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -289,33 +293,22 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(key);
         Log.i("LYQ", "KEY:" + key);
+
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+
+            String resp = null;
+
             @Override
             public void onCompleted() {
+                if (!TextUtils.isEmpty(resp)) {
+                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
 
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-                MyToast.showToast(Login.this, "您还没有填写个人信息，请填写您的个人信息");
-                EventBus.getDefault().post(new BeanPersonalInformation(false));//发送消息提醒刷新个人中心的个人信息
-                Log.i("LYQ", "获取个人信息失败，" + e.toString());
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                String resp = null;
-                try {
-                    resp = responseBody.string();
-                    if (!TextUtils.isEmpty(resp)) {
-                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-
-                        if (beanBaseKeyGetResp.getCode() == 0) {
-                            MyToast.showToast(Login.this, "获取个人信息成功");
-                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                    if (beanBaseKeyGetResp.getCode() == 0) {
+                        //MyToast.showToast(Login.this, "获取个人信息成功");
+                        String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                        if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
                             BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            beanPersonalInformation.setLogin(true);
+
                             boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
                             if (!isSave) {
 
@@ -323,24 +316,83 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                                     MyToast.showToast(Login.this, "保存个人信息失败");
                                 }
                             }
-
+                            beanPersonalInformation.setLogin(true);
                             EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
                         } else {
-                            MyToast.showToast(Login.this, "获取个人信息失败");
-                            EventBus.getDefault().post(new BeanPersonalInformation(false));//发送消息提醒刷新个人中心的个人信息
+                            MyToast.showToast(Login.this, "您还没有填写个人信息，请填写您的个人信息");
                         }
+                        EventBus.getDefault().post(new BeanPersonalInformation(true));//发送消息提醒刷新个人中心的个人信息
                     } else {
                         MyToast.showToast(Login.this, "获取个人信息失败");
-                        EventBus.getDefault().post(new BeanPersonalInformation(false));//发送消息提醒刷新个人中心的个人信息
-
+                        EventBus.getDefault().post(new BeanPersonalInformation(true));//发送消息提醒刷新个人中心的个人信息
                     }
+                } else {
+                    MyToast.showToast(Login.this, "获取个人信息失败");
+                    EventBus.getDefault().post(new BeanPersonalInformation(true));//发送消息提醒刷新个人中心的个人信息
 
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.showToast(Login.this, "获取个人信息失败,请更新您的个人信息");
+                EventBus.getDefault().post(new BeanPersonalInformation(true));//发送消息提醒刷新个人中心的个人信息
+                Log.i("LYQ", "获取个人信息失败，" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+
+                try {
+                    resp = responseBody.string();
                     Log.i("LYQ", "个人信息：" + resp);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    /**
+     * 从网络获取已购买的服务列表
+     */
+    private void upDateServiceListReq(String uid) {
+
+        BeanUserListValueReq beanUserListValueReq = new BeanUserListValueReq();
+        beanUserListValueReq.setPrefix("service_" + uid);
+        beanUserListValueReq.setFrom(0);
+        beanUserListValueReq.setTo(-1);
+        beanUserListValueReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListValueReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                List<String> strServiceList = JSONArray.parseObject(strJson, List.class);
+                DataSupport.deleteAll(BeanServiceList.class);//清空数据库中旧的已购买服务列表
+                for (String strService : strServiceList) {
+                    BeanServiceList beanServiceList = JSON.parseObject(strService, BeanServiceList.class);
+                    beanServiceList.save();//更新数据库中已购买服务列表
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "getServiceListReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", "获取已购买服务响应：" + strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 }
