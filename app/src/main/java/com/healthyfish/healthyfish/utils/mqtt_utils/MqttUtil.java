@@ -163,6 +163,7 @@ public class MqttUtil {
         connectingFlag = true;
         // sid_397C5B4390424970D2DEDD490DFC2181
         String passwd = MySharedPrefUtil.getValue("sid").substring(4);
+        Log.e("MQTT Connect sid", passwd);
         // String passwd = "E7FF9D647A8FB76D0E0F00A1F48F9132";
         try {
             String clientId = "" + userType + user;
@@ -339,7 +340,7 @@ public class MqttUtil {
                     Log.e("todo发布消息的方法和状态", "发布失败");
 
                     bean.setToDefault("isLoading");
-                    bean.updateAll("time = ?", bean.getTime());
+                    bean.updateAll("time = ?", bean.getTime() + "");
                     // 异步传送发送失败状态
                     EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
                 }
@@ -348,13 +349,13 @@ public class MqttUtil {
                     Log.e("MQTT", "publish onSuccess---------" + token.getMessageId());
                     Log.e("todo发布消息的方法和状态", "发布成功");
 
-                     bean.setSuccess(true);
+                    bean.setSuccess(true);
                     // 在使用updateAll()方法时，不能使用set方法来将字段设置为默认值
                     bean.setToDefault("isLoading");
-                    bean.updateAll("time = ?", bean.getTime());
+                    bean.updateAll("time = ?", bean.getTime() + "");
 
-                     // 异步传送发送成功状态
-                     EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+                    // 异步传送发送成功状态
+                    EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
                 }
             });
         } catch (IOException e) {
@@ -455,7 +456,20 @@ class PushCallback implements MqttCallback {
                         }
                         break;
                     }
-                    case 't'://text
+
+                    case 't':{//文本信息
+                        int msg_len = payload.length - uid_len - 2;
+                        byte[] msg_array = new byte[msg_len];
+                        System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
+                        char c = (char) type;
+                        String content = new String(msg_array, "utf-8");
+
+                        // TODO: 2017/7/27 保存msg
+
+                        MqttMsgText.process(bean, peer, content, topic);
+                        break;
+                    }
+
                     case 'm': {//电子病历
                         int msg_len = payload.length - uid_len - 2;
                         byte[] msg_array = new byte[msg_len];
@@ -465,7 +479,7 @@ class PushCallback implements MqttCallback {
 
                         // TODO: 2017/7/27 保存msg
 
-                        MqttMsgText.process(bean, content, topic);
+                        MqttMsgText.process(bean, peer, content, topic);
                         break;
                     }
                     // TODO: 2017/7/25 发送收到图片处理
@@ -496,10 +510,13 @@ class MqttMsgText {
         //需要根据peer去找到主题，更新content
     }
 
-    public static void process(ImMsgBean bean, String content, String topic) {
+    // 发送文本
+    public static void process(ImMsgBean bean, String peer, String content, String topic) {
         bean.setContent(content);
         bean.setToDefault("isSender");
-        bean.setTime(DateTimeUtil.getTime());
+        bean.setName(peer);
+
+        bean.setTime(DateTimeUtil.getLongMs());
         bean.setType("t");
         bean.setTopic(topic);
         bean.save();

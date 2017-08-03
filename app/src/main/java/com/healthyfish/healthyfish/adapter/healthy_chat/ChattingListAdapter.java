@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.constant.Constants;
+import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.chat_utils.ImageLoadUtils;
 import com.healthyfish.healthyfish.utils.chat_utils.PicViewActivity;
 import com.healthyfish.healthyfish.utils.chat_utils.PinchImageSource;
@@ -270,7 +272,8 @@ public class ChattingListAdapter extends BaseAdapter {
 
     public void disPlayLeftTextView(int position, View view, ViewHolderText holder, ImMsgBean bean) {
         setContent(holder.tv_content, bean.getContent());
-        holder.sendtime.setText(bean.getTime());
+        holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
+        Glide.with(mActivity).load(Constants.HttpHealthyFishyUrl + bean.getPortrait()).into(holder.iv_portrait);
     }
 
     public void disPlayLeftImageView(int position, View view, ViewHolderImage holder, ImMsgBean bean) {
@@ -280,10 +283,10 @@ public class ChattingListAdapter extends BaseAdapter {
                 Glide.with(holder.iv_image.getContext())
                         .load(filePath)
                         .into(holder.iv_image);
-                holder.sendtime.setText(bean.getTime());
+                holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
             } else {
                 ImageLoadUtils.getInstance(mActivity).displayImage(bean.getImage(), holder.iv_image);
-                holder.sendtime.setText(bean.getTime());
+                holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -292,7 +295,7 @@ public class ChattingListAdapter extends BaseAdapter {
 
     public void disPlayRightTextView(int position, View view, ViewHolderText holder, ImMsgBean bean) {
         setContent(holder.tv_content, bean.getContent());
-        holder.sendtime.setText(bean.getTime());
+        holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
 
         holder.iv_failure_send.setVisibility(View.INVISIBLE);
         holder.iv_loading.setVisibility(View.INVISIBLE);
@@ -325,10 +328,10 @@ public class ChattingListAdapter extends BaseAdapter {
                 Glide.with(holder.iv_image.getContext())
                         .load(filePath)
                         .into(holder.iv_image);
-                holder.sendtime.setText(bean.getTime());
+                holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
             } else {
                 ImageLoadUtils.getInstance(mActivity).displayImage(bean.getImage(), holder.iv_image);
-                holder.sendtime.setText(bean.getTime());
+                holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
             }
         } catch (IOException e) {
             e.printStackTrace();

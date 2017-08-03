@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.google.gson.Gson;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
@@ -21,6 +22,8 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
+import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
@@ -154,7 +157,10 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserLoginReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-
+                        String user = MySharedPrefUtil.getValue("user");
+                        if (!TextUtils.isEmpty(user)) {
+                            MqttUtil.connect();
+                        }
                     }
 
                     @Override
@@ -293,7 +299,6 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(key);
         Log.i("LYQ", "KEY:" + key);
-
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
 
             String resp = null;

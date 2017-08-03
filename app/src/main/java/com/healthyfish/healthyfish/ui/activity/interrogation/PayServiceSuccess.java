@@ -16,6 +16,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 
 import java.io.IOException;
 
@@ -58,7 +59,7 @@ public class PayServiceSuccess extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_success);
         ButterKnife.bind(this);
-        initToolBar(toolbar,tvTitle,"购买成功");
+        initToolBar(toolbar, tvTitle, "购买成功");
         initData();
     }
 
@@ -67,34 +68,35 @@ public class PayServiceSuccess extends BaseActivity {
      */
     private void initData() {
         intent = this.getIntent();
-        if (intent.getExtras() != null){
+        if (intent.getExtras() != null) {
             bundleShopType = intent.getExtras();
             shopType = bundleShopType.getString("serviceType");
             doctorName = bundleShopType.getString("name");
             serviceFinishTime = bundleShopType.getString("serviceFinishTime");
             beanDoctorChatInfo = (BeanDoctorChatInfo) bundleShopType.getSerializable("BeanDoctorChatInfo");
         }
-        tvNameType.setText(doctorName+"医生"+"-"+shopType);
-        if (shopType.equals("私人医生")){
+        tvNameType.setText(doctorName + "医生" + "-" + shopType);
+        if (shopType.equals("私人医生")) {
             tvServiceTime.setText(serviceFinishTime);
             //tvServiceTime.setVisibility(View.GONE);
-        }else if (shopType.equals("图文咨询")){
+        } else if (shopType.equals("图文咨询")) {
             tvServiceTime.setText(serviceFinishTime);
             //tvServiceTime.setVisibility(View.GONE);//目前需求不需要展示服务到期时间
-        }else {
+        } else {
             tvServiceTime.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.btn_next)
     public void onViewClicked() {
-        if (shopType.equals("私人医生")){
+        if (shopType.equals("私人医生")) {
             jumpTo(PerfectArchives.class);
-        }else if (shopType.equals("图文咨询")){
+        } else if (shopType.equals("图文咨询")) {
 
             Log.i("LYQ", beanDoctorChatInfo.getName() + beanDoctorChatInfo.getPhone() + beanDoctorChatInfo.getImgUrl());
-            Intent intent = new Intent(this,HealthyChat.class);
+            Intent intent = new Intent(this, HealthyChat.class);
             intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+            MqttUtil.connect();
             startActivity(intent);
 
         }
@@ -103,10 +105,11 @@ public class PayServiceSuccess extends BaseActivity {
 
     /**
      * 页面跳转
+     *
      * @param cla
      */
-    public void jumpTo(Class<? extends Activity> cla){
-        Intent intent = new Intent(this,cla);
+    public void jumpTo(Class<? extends Activity> cla) {
+        Intent intent = new Intent(this, cla);
         startActivity(intent);
     }
 

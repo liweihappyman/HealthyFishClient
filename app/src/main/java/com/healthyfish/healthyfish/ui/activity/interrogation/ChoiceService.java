@@ -39,6 +39,7 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NestingUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.litepal.crud.DataSupport;
@@ -156,6 +157,8 @@ public class ChoiceService extends BaseActivity {
         tvAttentionListener();
         initData();
         initListView();
+
+        MqttUtil.connect();
     }
 
 

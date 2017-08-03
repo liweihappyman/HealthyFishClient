@@ -15,7 +15,7 @@ public class ImMsgBean extends DataSupport {
     public ImMsgBean() {
     }
 
-    public ImMsgBean(String time) {
+    public ImMsgBean(long time) {
         this.time = time;
     }
 
@@ -25,8 +25,8 @@ public class ImMsgBean extends DataSupport {
     // MQTT判断发送类型：t(text) i(image) v s(system)
     private String type;
     // 发送时间
-    private String time;
-    // 图片
+    private long time;
+    // 图片内容
     private String image;
     // 姓名
     private String name;
@@ -34,6 +34,8 @@ public class ImMsgBean extends DataSupport {
     private String content;
     // 发送主题
     private String topic;
+    // 发送者肖像
+    private String portrait;
     // 是发送者还是接收者
     private boolean isSender = false;
     // 发送状态
@@ -65,11 +67,11 @@ public class ImMsgBean extends DataSupport {
         this.type = type;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -119,6 +121,14 @@ public class ImMsgBean extends DataSupport {
 
     public void setMsgType(int msgType) {
         this.msgType = msgType;
+    }
+
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
     public boolean isLoading() {
