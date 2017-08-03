@@ -194,10 +194,8 @@ public class Login extends AutoLayoutActivity implements ILoginView {
 
             MySharedPrefUtil.saveKeyValue("user", user);  //登录成功由shareprefrence保存
             MyApplication.uid = getUserName();
-            upDatePersonalInformation(getUserName());
-            upDateServiceListReq(getUserName());
-            upDateMyConcern();
-
+            MyApplication.isFirstAutoLogin = false;
+            upDatePersonalInformation(getUserName());//更新用户个人信息
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -246,22 +244,11 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-                        if (DataSupport.findAll(BeanConcernList.class).isEmpty()) {
-                            for (BeanConcernList beanConcernList : concernList) {
-                                if (!beanConcernList.save()) {
-                                    for (BeanConcernList beanConcernList1 : concernList) {
-                                        beanConcernList1.save();
-                                    }
-                                }
-                            }
-                        } else {
-                            DataSupport.deleteAll(BeanConcernList.class);
-                            for (BeanConcernList beanConcernList : concernList) {
-                                if (!beanConcernList.save()) {
-                                    for (BeanConcernList beanConcernList1 : concernList) {
-                                        beanConcernList1.save();
-                                    }
-                                }
+                        DataSupport.deleteAll(BeanConcernList.class);
+                        for (BeanConcernList beanConcernList : concernList) {
+                            boolean isSave = beanConcernList.save();
+                            if (!isSave) {
+                                beanConcernList.save();
                             }
                         }
                     }
@@ -276,6 +263,7 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                         String jsonStr = null;
                         try {
                             jsonStr = responseBody.string();
+                            Log.i("LYQ", "Login_upDateMyConcern响应:" + jsonStr);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -309,14 +297,11 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                     BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
 
                     if (beanBaseKeyGetResp.getCode() == 0) {
-                        //MyToast.showToast(Login.this, "获取个人信息成功");
                         String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                         if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
                             BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-
                             boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
                             if (!isSave) {
-
                                 if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
                                     MyToast.showToast(Login.this, "保存个人信息失败");
                                 }

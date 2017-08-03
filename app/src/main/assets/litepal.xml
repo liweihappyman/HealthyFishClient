@@ -30,6 +30,9 @@
         <mapping class="com.healthyfish.healthyfish.POJO.BeanInspectionReport" />
         <!--挂号信息-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem" />
+        <!--用户体质-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanUserPhy" />
+
     </list>
 
 </litepal>

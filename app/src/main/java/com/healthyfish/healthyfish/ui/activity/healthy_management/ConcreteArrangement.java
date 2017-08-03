@@ -108,7 +108,7 @@ public class ConcreteArrangement extends BaseActivity {
         beanBaseKeyGetReq.setKey("hpc_20170516_be36facd-9890-433d-bb21-dc0830bf80b4");
 
 
-        RetrofitManagerUtils.getInstance(this, HttpsHealthyFishyUrl).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanListReq), new Subscriber<ResponseBody>() {
+        RetrofitManagerUtils.getInstance(this, HttpsHealthyFishyUrl).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
             String healthPlanListResp = "";
 
             @Override

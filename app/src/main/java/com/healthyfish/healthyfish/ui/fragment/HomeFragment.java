@@ -153,7 +153,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                initHealthNews();//初始化健康资讯
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initHealthNews();//初始化健康资讯
+                    }
+                });
+
             }
         }).start();
 

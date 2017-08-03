@@ -147,22 +147,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-        initPermision();
+
+        //初始化界面
         init();
 
         // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
         initMQTT();
+
+        //初始化相机和内存卡读写权限
+        initPermission();
+
+        //更新用户的个人信息
+        upDatePersonalInformation();
+
     }
 
-    //初始化接界面
+
+    /**
+     * 初始化界面
+     */
     private void init() {
-        initpgAdapter();//初始化viewpage
+        initVpAdapter();//初始化ViewPage
         setTab(0);//初始化界面设置，即指定刚进入是可见的界面
-
-
 
         //菜单监听
         lyHome.setOnClickListener(this);
@@ -210,8 +216,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //初始化ViewPage
-    private void initpgAdapter() {
+    /**
+     * 初始化ViewPage
+     */
+    private void initVpAdapter() {
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
         interrogationFragment = new InterrogationFragment();
@@ -231,7 +239,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fgViewpage.setAdapter(ViewpageAdapter);
     }
 
-    //重置菜单状态
+
+    /**
+     * 重置菜单状态
+     */
     private void reSet() {
         ivHome.setImageResource(R.mipmap.home_unselected);
         ivInterrogation.setImageResource(R.mipmap.interrogation_unselect);
@@ -245,7 +256,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvPersonalCenter.setTextColor(getResources().getColor(R.color.color_general_and_title));
     }
 
-    //设置菜单的选中状态
+    /**
+     * 设置菜单的选中状态
+     * @param i
+     */
     private void setTab(int i) {
         switch (i) {
             case 0:
@@ -283,7 +297,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void initPermision() {
+    /**
+     * 获取相机和内存卡权限
+     */
+    public void initPermission() {
         Observable.timer(2000, TimeUnit.MILLISECONDS)
                 .compose(RxPermissions.getInstance(this).ensureEach(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION))
@@ -329,28 +346,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void initAllUserInformation(InitAllMessage initAllMessage) {
-        Log.i("LYQ","initAllUserInformation");
-        String uid = initAllMessage.getBeanUserLoginReq().getMobileNo();
-        MyApplication.uid = uid;
-        upDatePersonalInformation(uid);//更新个人信息
-        appointmentListReq(uid);//更新我的挂号信息
-        upDateServiceListReq(uid);//更新已购买服务列表
-        upDateMyConcern(uid);//更新关注列表
+    /**
+     * 更新用户的个人信息
+     */
+    private void upDatePersonalInformation() {
+        String user = MySharedPrefUtil.getValue("user");
+        if (!TextUtils.isEmpty(user)) {
+
+            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
+            final String uid = beanUserLoginReq.getMobileNo();
+            MyApplication.uid = uid;
+            if (MyApplication.isIsFirstUpdatePersonalInfo) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        upDatePersonalInformationReq(uid);
+                    }
+                }).start();
+            }
+        }
+
     }
 
-
     /**
-     * 从网络获取个人信息
+     * 更新个人信息请求
      */
-    private void upDatePersonalInformation(String uid) {
+    private void upDatePersonalInformationReq(String uid) {
 
         final String key = "info_" + uid;
         BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(key);
 
-        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
 
             String resp = null;
 
@@ -369,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             //MyToast.showToast(MainActivity.this, "您还没有填写个人信息，请填写您的个人信息");//首页不用提醒，在个人中心页面再提醒
                         }
+                        MyApplication.isIsFirstUpdatePersonalInfo = false;
                     } else {
                         MyToast.showToast(MainActivity.this, "获取个人信息失败");
                     }
@@ -387,6 +420,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 try {
                     resp = responseBody.string();
+                    Log.i("LYQ", "MainActivity个人信息响应：" + resp);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -452,24 +486,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-                        if (DataSupport.findAll(BeanConcernList.class).isEmpty()) {
-                            for (BeanConcernList beanConcernList : concernList) {
-                                if (!beanConcernList.save()) {
-                                    for (BeanConcernList beanConcernList1 : concernList) {
-                                        beanConcernList1.save();
-                                    }
-                                }
+                        DataSupport.deleteAll(BeanConcernList.class);
+                        for (BeanConcernList beanConcernList : concernList) {
+                            boolean isSave = beanConcernList.save();
+                            if (!isSave) {
+                                beanConcernList.save();
                             }
-                        } else {
-                            DataSupport.deleteAll(BeanConcernList.class);
-                            for (BeanConcernList beanConcernList : concernList) {
-                                if (!beanConcernList.save()) {
-                                    for (BeanConcernList beanConcernList1 : concernList) {
-                                        beanConcernList1.save();
-                                    }
-                                }
-                            }
+                            Log.i("LYQ", "upDateMyConcern关注列表1：" + beanConcernList.getKey().toString());
                         }
+
+                        Log.i("LYQ", "MainActivity_upDateMyConcern_onCompleted()");
+
                     }
 
                     @Override
@@ -482,6 +509,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String jsonStr = null;
                         try {
                             jsonStr = responseBody.string();
+                            Log.i("LYQ", "MainActivity关注列表响应：" + jsonStr);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -497,166 +525,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    /**
-     * 获取预约列表请求
-     */
-    private void appointmentListReq(final String uid) {
-
-        DataSupport.deleteAll(BeanMyAppointmentItem.class);//清除数据库中我的挂号信息
-
-        BeanUserListReq beanUserListReq = new BeanUserListReq();
-        beanUserListReq.setPrefix("reg_" + uid);
-        beanUserListReq.setFrom(0);
-        beanUserListReq.setTo(-1);
-        beanUserListReq.setNum(-1);
-
-        Log.i("LYQ", "挂号信息BeanUserListReq参数json:"+ JSON.toJSONString(beanUserListReq));
-
-        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
-            String appointmentListResp = "";
-
-            @Override
-            public void onCompleted() {
-                List<String> list = JSONArray.parseObject(appointmentListResp, List.class);
-                for (String str : list) {
-                    BeanMyAppointmentItem myAppointment = new BeanMyAppointmentItem();
-                    myAppointment.setRespKey(str);
-                    myAppointmentList.add(myAppointment);
-                }
-                for (int i = 0; i < myAppointmentList.size(); i++) {
-                    appointmentReq(uid,myAppointmentList.get(i));
-                }
-                myAppointmentList.clear();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i("LYQ", "appointmentListReq()_onError:" + e.toString());
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    appointmentListResp = responseBody.string();
-                    Log.i("LYQ", "appointmentListResp:" + appointmentListResp);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
-    }
-
-    /**
-     * 获取预约信息请求
-     *
-     * @param beanMyAppointmentItem
-     */
-    private void appointmentReq(String uid,final BeanMyAppointmentItem beanMyAppointmentItem) {
-
-        BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
-        beanBaseKeyGetReq.setKey(beanMyAppointmentItem.getRespKey());
-
-        BeanUserListValueReq beanUserListReq = new BeanUserListValueReq();
-        beanUserListReq.setPrefix("reg_" + uid);
-        beanUserListReq.setFrom(0);
-        beanUserListReq.setTo(-1);
-        beanUserListReq.setNum(-1);
-
-
-        Log.i("LYQ", "挂号信息BeanBaseKeyGetReq参数json:"+ JSON.toJSONString(beanBaseKeyGetReq));
-
-        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
-            String appointmentResp = "";
-
-            @Override
-            public void onCompleted() {
-                BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(appointmentResp, BeanBaseKeyGetResp.class);
-                if (beanBaseKeyGetResp.getCode() == 0) {
-                    BeanHospRegisterReq beanHospRegisterReq = JSON.parseObject(beanBaseKeyGetResp.getValue(), BeanHospRegisterReq.class);
-                    beanMyAppointmentItem.setDoctorName(beanHospRegisterReq.getDoctTxt());
-                    beanMyAppointmentItem.setHospital(beanHospRegisterReq.getHospTxt());
-                    beanMyAppointmentItem.setVisitingPerson(beanHospRegisterReq.getName());
-                    beanMyAppointmentItem.setAppointmentTime(beanHospRegisterReq.getDateTxt());
-                    doctorInfoReq(beanMyAppointmentItem, beanHospRegisterReq.getHosp(), beanHospRegisterReq.getDept(), beanHospRegisterReq.getStaffNo());
-
-                }
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i("LYQ", "appointmentResp_onError:" + e.toString());
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    appointmentResp = responseBody.string();
-                    Log.i("LYQ", "appointmentResp:" + appointmentResp);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
-
-    /**
-     * 获取挂号的医生的详情
-     * @param beanMyAppointmentItem
-     * @param hosp
-     * @param dept
-     * @param staffNo
-     */
-    private void doctorInfoReq(final BeanMyAppointmentItem beanMyAppointmentItem, String hosp, String dept, String staffNo) {
-
-        BeanHospDeptDoctInfoReq beanHospDeptDoctInfoReq = new BeanHospDeptDoctInfoReq();
-        beanHospDeptDoctInfoReq.setHosp(hosp);
-        beanHospDeptDoctInfoReq.setDept(dept);
-        beanHospDeptDoctInfoReq.setStaffNo(staffNo);
-
-        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctInfoReq), new Subscriber<ResponseBody>() {
-            String doctorInfoResp = "";
-
-            @Override
-            public void onCompleted() {
-                BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(doctorInfoResp, BeanHospDeptDoctListRespItem.class);
-                beanMyAppointmentItem.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
-                beanMyAppointmentItem.setConsultationRoom(String.valueOf(beanHospDeptDoctListRespItem.getCLINIQUE_CODE()));
-                beanMyAppointmentItem.setDutise(beanHospDeptDoctListRespItem.getREISTER_NAME());
-                myAppointmentList.add(beanMyAppointmentItem);
-
-                boolean isSave = beanMyAppointmentItem.save();//将挂号信息保存到数据库
-                if (isSave) {
-                    EventBus.getDefault().post(new BeanMyAppointmentItem());//通知问诊我的挂号页面刷新数据
-                } else {
-                    beanMyAppointmentItem.save();//若保存失败则再次保存
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i("LYQ", "appointmentResp——onError:" + e.toString());
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    doctorInfoResp = responseBody.string();
-                    Log.i("LYQ", "doctorInfoReq（）Resp:" + doctorInfoResp);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

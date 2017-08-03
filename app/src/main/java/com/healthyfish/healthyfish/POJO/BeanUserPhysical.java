@@ -1,5 +1,9 @@
 package com.healthyfish.healthyfish.POJO;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
+
 public class BeanUserPhysical {
 	public BeanUserPhysical(){}
 
@@ -8,9 +12,10 @@ public class BeanUserPhysical {
 		desc = d;
 		suggest = s;
 	}
-	public String title;
-	public String desc;
-	public String suggest;
+
+	private String title;
+	private String desc;
+	private String suggest;
 
 	public String getTitle() {
 		return title;

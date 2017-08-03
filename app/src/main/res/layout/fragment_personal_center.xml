@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="374px"
                     android:layout_marginTop="300px"
-                    android:text="气虚质"
+                    android:text=""
                     android:textColor="@color/selector_text_color_from_white_to_primary"
                     android:textStyle="bold" />
 
