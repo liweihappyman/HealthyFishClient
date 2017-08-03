@@ -26,7 +26,6 @@ import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceService;
-import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -103,7 +102,6 @@ public class ConfirmReservationInformation extends BaseActivity {
         setContentView(R.layout.activity_confirm_information);
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "确认信息");
-        AutoLogin.autoLogin();//自动登录
         iniData();
     }
 

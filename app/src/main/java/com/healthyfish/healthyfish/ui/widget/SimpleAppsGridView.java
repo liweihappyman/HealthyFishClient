@@ -67,9 +67,4 @@ public class SimpleAppsGridView extends RelativeLayout {
     private void clickToGetImage() {
 
     }
-
-
-
-
-
 }

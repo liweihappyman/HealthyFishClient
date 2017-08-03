@@ -22,7 +22,6 @@ import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PrescriptionRvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
-import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -57,7 +56,6 @@ public class MyPrescription extends BaseActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "我的处方");
         initDataFromDB();
-        AutoLogin.autoLogin();//登录，保证会话
         requestForPrescription();
     }
 

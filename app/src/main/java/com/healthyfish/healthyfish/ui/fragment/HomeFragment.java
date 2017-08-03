@@ -440,7 +440,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fm_interrogation2:
-                //initMQTT();
                 startActivity(new Intent(mContext, ChoiceDepartment.class));
                 break;
 
@@ -465,40 +464,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(toInspectionReport);
                 break;
         }
-
-    }
-
-    /**
-     * 初始化MQTT
-     */
-    private void initMQTT() {
-        RetrofitManagerUtils.getInstance(getContext(), HttpHealthyFishyUrl)
-                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
-                    @Override
-                    public void onCompleted() {
-                        String user = MySharedPrefUtil.getValue("user");
-                        if (!TextUtils.isEmpty(user)) {
-                            MqttUtil.startAsync();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseBody responseBody) {
-                        try {
-                            BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
-                            Log.e("从服务器获取sid", obj.getSid());
-                            MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
     }
 }
 

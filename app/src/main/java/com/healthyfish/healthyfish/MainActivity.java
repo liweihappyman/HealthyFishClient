@@ -39,7 +39,6 @@ import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
 import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
-import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -153,6 +152,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         initPermision();
         init();
+
+        // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
+        initMQTT();
     }
 
     //初始化接界面
@@ -160,8 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initpgAdapter();//初始化viewpage
         setTab(0);//初始化界面设置，即指定刚进入是可见的界面
 
-        // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
-        initMQTT();
+
 
         //菜单监听
         lyHome.setOnClickListener(this);
@@ -306,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onCompleted() {
                         String user = MySharedPrefUtil.getValue("user");
                         if (!TextUtils.isEmpty(user)) {
-                            MqttUtil.startAsync();
+                            MqttUtil.connect();
                         }
                     }
 
@@ -318,9 +319,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onNext(ResponseBody responseBody) {
                         try {
                             BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
-                            Log.e("从服务器获取sid", obj.getSid());
+                            Log.e("MainActivity从服务器获取sid", obj.getSid());
                             MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
-                            AutoLogin.autoLogin();//获取到sid后自动登录
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

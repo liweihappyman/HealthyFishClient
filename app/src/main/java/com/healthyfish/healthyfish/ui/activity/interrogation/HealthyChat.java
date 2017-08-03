@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.foamtrace.photopicker.ImageCaptureManager;
 import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.PhotoPreviewActivity;
@@ -25,6 +26,8 @@ import com.foamtrace.photopicker.SelectModel;
 import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.AppFuncBean;
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.healthy_chat.AppFuncAdapter;
@@ -32,6 +35,7 @@ import com.healthyfish.healthyfish.adapter.healthy_chat.ChattingListAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.ui.widget.SessionChatKeyboardBase;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.chat_utils.SimpleCommonUtils;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.sj.emoji.EmojiBean;
@@ -51,7 +55,9 @@ import sj.keyboard.interfaces.EmoticonClickListener;
 import sj.keyboard.widget.AutoHeightLayout;
 import sj.keyboard.widget.FuncLayout;
 
-public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncKeyBoardListener, AutoHeightLayout.OnMaxParentHeightChangeListener{
+import static java.lang.Thread.sleep;
+
+public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncKeyBoardListener, AutoHeightLayout.OnMaxParentHeightChangeListener {
 
     private static final int REQUEST_CAMERA_CODE = 12;
     private static final int REQUEST_PREVIEW_CODE = 13;
@@ -68,6 +74,14 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     private ArrayList<String> imagePaths;
     // 拍照照片的路径
     private String imagePath;
+    // 获取全局登录信息
+    private BeanUserLoginReq beanUserLoginReq;
+    // 获取医生手机信息
+    private String topic;
+    // 本机登录者
+    private String sender;
+    // 医生头像
+    private String doctorPortrait;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +92,19 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
         lvChat = (ListView) findViewById(R.id.lv_chat);
         sessionChat = (SessionChatKeyboardBase) findViewById(R.id.session_chat);
 
-        toolbar.setTitle("用户名");
+        //
+        BeanDoctorChatInfo beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
+
+        // 医生姓名
+        toolbar.setTitle(beanDoctorChatInfo.getName());
         setSupportActionBar(toolbar);
+
+        beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
+        //topic = "d" + beanDoctorChatInfo.getPhone();
+        topic = "d" + "13977211042";
+        sender = "u" + beanUserLoginReq.getMobileNo();
+        //medRECKey = "dmr" + beanDoctorChatInfo.getPhone() + beanUserLoginReq.getMobileNo();
+        doctorPortrait = beanDoctorChatInfo.getImgUrl();
 
         initView();
         // 注册EventBus
@@ -184,8 +209,13 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     // 初始化聊天队列 通过网络访问获取
     private void initListView() {
         chattingListAdapter = new ChattingListAdapter(this);
+        // 从总的列表中选出一一对应的聊天关系，本机用户与选中的医生
+        List<ImMsgBean> beanList = DataSupport.where("topic = ? and name = ? or topic = ? and name = ?", topic, sender, sender, topic).find(ImMsgBean.class);
 
-        List<ImMsgBean> beanList = DataSupport.findAll(ImMsgBean.class);
+        for (ImMsgBean b : beanList) {
+            b.setPortrait(doctorPortrait);
+        }
+
         chattingListAdapter.addData(beanList);
         lvChat.setAdapter(chattingListAdapter);
         lvChat.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -222,7 +252,12 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
 
         // 刷新列表状态
         chattingListAdapter = new ChattingListAdapter(this);
-        List<ImMsgBean> beanList = DataSupport.findAll(ImMsgBean.class);
+        List<ImMsgBean> beanList = DataSupport.where("topic = ? and name = ? or topic = ? and name = ?", topic, sender, sender, topic).find(ImMsgBean.class);
+
+        for (ImMsgBean b : beanList) {
+            b.setPortrait(doctorPortrait);
+        }
+
         chattingListAdapter.addData(beanList);
         lvChat.setAdapter(chattingListAdapter);
     }
@@ -231,22 +266,49 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     private void OnSendBtnClick(String msg) {
         if (!TextUtils.isEmpty(msg)) {
             ImMsgBean bean = new ImMsgBean();
-            bean.setSender(true);
-            bean.setType("t");
-            bean.setTime(DateTimeUtil.getTime());
-            bean.setLoading(true);
+            bean.setName(sender);
+            bean.setSender(true);// 是否是发送者
+            bean.setType("t");// 类型：文字
+            bean.setTime(DateTimeUtil.getLongMs());// 发送时间
+            bean.setLoading(true);// loading状态
+            bean.setSuccess(true);// 开始去掉发送失败标识
             bean.setContent(msg);
 
-            // TODO: 2017/7/31 设置聊天的对象
-            bean.setTopic("d" + "13977211042");
+            // 开启线程，几秒钟之后自动设置发送失败
+            autoFailureAfterSeconds(bean);
 
+            // TODO: 2017/7/31 设置聊天的对象
+            bean.setTopic(topic);
             // UI添加消息
             chattingListAdapter.addData(bean, true, false);
             // MQTT发送数据
             MqttUtil.sendTxt(bean);
 
+            // 跳转到底部
             scrollToBottom();
         }
+    }
+
+    // 开启线程，几秒钟之后自动设置发送失败
+    private void autoFailureAfterSeconds(final ImMsgBean bean) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    sleep(10 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<ImMsgBean> currentBean = DataSupport.where("time = ?", bean.getTime() + "").find(ImMsgBean.class);
+                // 如果此时状态为loading状态，UI改为失败状态
+                if (currentBean.get(0).isLoading()) {
+                    bean.setToDefault("isSuccess");
+                    bean.setToDefault("isLoading");
+                    bean.updateAll("time = ?", bean.getTime() + "");
+                    EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+                }
+            }
+        }).start();
     }
 
     // 发送图标
@@ -352,10 +414,12 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     switch (mAppFuncBeanList.get(position).getId()) {
                         case 1:
-                            clickToLoadImage();
+                            // clickToLoadImage();
+                            Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
                             break;
                         case 2:
-                            clickToTakePhoto();
+                            //clickToTakePhoto();
+                            Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
                             break;
                         case 3:
                             Toast.makeText(MyApplication.getContetxt(), "还未实现", Toast.LENGTH_SHORT).show();
