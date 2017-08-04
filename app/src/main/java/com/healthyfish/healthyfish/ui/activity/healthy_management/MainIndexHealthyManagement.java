@@ -17,24 +17,41 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanSinglePlan;
+import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
+import com.healthyfish.healthyfish.POJO.BeanUserPhy;
+import com.healthyfish.healthyfish.POJO.BeanUserPhyIdResp;
+import com.healthyfish.healthyfish.POJO.BeanUserPhysical;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SinglePlanAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 public class MainIndexHealthyManagement extends BaseActivity {
 
@@ -55,13 +72,16 @@ public class MainIndexHealthyManagement extends BaseActivity {
     RecyclerView rvSinglePlan;
 
     private boolean isTested = false;
+    private String uid = "";
+    private final String phyNames[] = {"气虚", "阳虚", "阴虚", "痰湿", "湿热", "血淤", "气郁", "特禀", "平和"};//0-8
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_index_healthy_management);
         ButterKnife.bind(this);
-        initToolBar(toolbar,toolbarTitle,"我的健康管理");
+        initToolBar(toolbar, toolbarTitle, "我的健康管理");
+        uid = MyApplication.uid;
         initHealthIdentityView();
         intiTotalHealthyscheme();
         intiSingleHealthyPlan();
@@ -70,20 +90,19 @@ public class MainIndexHealthyManagement extends BaseActivity {
 
     // 初始化体质选项
     private void initHealthIdentityView() {
-        healthyIdentication = new SpannableString("体质：阳虚  阴虚  气虚  气郁  血瘀  痰湿  湿热  特禀");
-        if (isTested) {//已经测试过体质，则对体质进行标识
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#009ad6"));
-            AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(36);
-            healthyIdentication.setSpan(colorSpan, 3, 5, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-            healthyIdentication.setSpan(absoluteSizeSpan, 3, 5, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        healthyIdentication = new SpannableString("体质：气虚  阳虚  阴虚  痰湿  湿热  血淤  气郁  特禀  平和");
+
+        if (MyApplication.isFirstUpdateUsrPhy) {
+            upDateUserPhyFromNetwork(uid);
+        } else {
+            getUserPhyFromDB(uid);
         }
-        tvHealthyIdentification.setText(healthyIdentication);
 
         tvHealthyIdentification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isTested) {//已经做过体质测试
-                    Intent intent = new Intent(MainIndexHealthyManagement.this,PhyIdeReport.class);
+                    Intent intent = new Intent(MainIndexHealthyManagement.this, PhyIdeReport.class);
                     intent.putExtra("IS_TESTED", isTested);
                     startActivity(intent);
                 } else {//未做过体质测试
@@ -93,6 +112,31 @@ public class MainIndexHealthyManagement extends BaseActivity {
             }
         });
     }
+
+    /**
+     *从数据库查找用户体质报告
+     * @param uid
+     */
+    private void getUserPhyFromDB(String uid) {
+        List<BeanUserPhy> beanUserPhyList = DataSupport.where("uid = ?", uid).find(BeanUserPhy.class);
+        if (!beanUserPhyList.isEmpty()) {
+            isTested = true;
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#009ad6"));
+            AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(36);
+            BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(beanUserPhyList.get(0).getJsonStrPhysicalList(), BeanUserPhyIdResp.class);
+            List<BeanUserPhysical> physicals = beanUserPhyIdResp.getPhyList();
+
+            for (int i = 0; i < phyNames.length; i++) {
+                if (physicals.get(0).getTitle().equals(phyNames[i])) {
+                    healthyIdentication.setSpan(colorSpan, i * 4 + 3, i * 4 + 5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    healthyIdentication.setSpan(absoluteSizeSpan, i * 4 + 3, i * 4 + 5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+                }
+            }
+        }
+        tvHealthyIdentification.setText(healthyIdentication);
+    }
+
 
     // 初始化整体健康计划
     private void intiTotalHealthyscheme() {
@@ -130,4 +174,58 @@ public class MainIndexHealthyManagement extends BaseActivity {
         });
     }
 
+
+    /**
+     * 从服务器更新本地数据库的用户体质
+     * @param uid
+     */
+    private void upDateUserPhyFromNetwork(final String uid) {
+        BeanUserListValueReq beanUserListReq = new BeanUserListValueReq();
+        beanUserListReq.setPrefix("phyad_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
+
+            String strResp = "";
+
+            @Override
+            public void onCompleted() {
+                if (!TextUtils.isEmpty(strResp)) {
+                    List<String> strList = JSONArray.parseObject(strResp, List.class);
+                    for (String str : strList) {
+                        BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(str, BeanUserPhyIdResp.class);
+                        if (beanUserPhyIdResp.getCode() == 0) {
+                            BeanUserPhy beanuserPhy = new BeanUserPhy();
+                            beanuserPhy.setUid(uid);
+                            beanuserPhy.setJsonStrPhysicalList(str);
+                            boolean isSave = beanuserPhy.saveOrUpdate("uid = ?", uid);
+                            if (!isSave) {
+                                beanuserPhy.saveOrUpdate("uid = ?", uid);
+                            }
+                            MyApplication.isFirstUpdateUsrPhy = false;
+                            getUserPhyFromDB(uid);
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "健康管理体质报告onError：" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strResp = responseBody.string();
+                    Log.i("LYQ", "健康管理体质报告：" + strResp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }

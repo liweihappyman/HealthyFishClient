@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.eventbus.InitAllMessage;
@@ -60,13 +61,7 @@ public class AutoLogin {
                                 BeanBaseResp beanBaseResp = JSON.parseObject(str, BeanBaseResp.class);
                                 int code = beanBaseResp.getCode();
                                 if (code >= 0) {
-                                    if (MyApplication.isFirstAutoLogin) {//如果是打开App后第一次则提示自动登录成功和加载用户信息
-                                        Toast.makeText(MyApplication.getContetxt(), "自动登录成功", Toast.LENGTH_LONG).show();
-                                        EventBus.getDefault().post(new InitAllMessage(beanUserLoginReq));//通知MainActivity初始化用户相关信息
-                                        EventBus.getDefault().post(new BeanPersonalInformation(true));//通知个人中心已登录
-                                        MyApplication.isFirstAutoLogin = false;
-                                        Log.i("LYQ", "AutoLogin_autoLogin()");
-                                    }
+
 
                                 }
                             } catch (IOException e) {

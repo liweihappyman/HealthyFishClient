@@ -252,8 +252,8 @@ public class ChoiceService extends BaseActivity {
                     isAttention = true;
                     BeanConcernList beanConcernList = new BeanConcernList();
                     beanConcernList.setKey(myConcernReqKey);
-                    if (beanConcernList.saveOrUpdate("myConcernReqKey = ?", myConcernReqKey)) {
-                        beanConcernList.saveOrUpdate("myConcernReqKey = ?", myConcernReqKey);
+                    if (beanConcernList.saveOrUpdate("key = ?", myConcernReqKey)) {
+                        beanConcernList.saveOrUpdate("key = ?", myConcernReqKey);
                     }
                 } else {
                     MyToast.showToast(ChoiceService.this, "关注失败，请重试");
