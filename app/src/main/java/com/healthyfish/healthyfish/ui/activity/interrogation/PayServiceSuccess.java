@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.AutoLogin;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
@@ -98,8 +100,10 @@ public class PayServiceSuccess extends BaseActivity {
             Intent intent = new Intent(this, HealthyChat.class);
             intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
 
-            AutoLogin.autoLogin();
-            MqttUtil.startAsync();
+            if (!TextUtils.isEmpty(MySharedPrefUtil.getValue("sid"))) {
+                AutoLogin.autoLogin();
+                MqttUtil.startAsync();
+            }
             startActivity(intent);
 
         }

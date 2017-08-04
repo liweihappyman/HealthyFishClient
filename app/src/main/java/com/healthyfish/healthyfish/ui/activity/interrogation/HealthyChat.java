@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -50,6 +51,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +66,10 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
 
     private static final int REQUEST_CAMERA_CODE = 12;
     private static final int REQUEST_PREVIEW_CODE = 13;
+    private static final int AUTO_SET_FAILURE = 12;
+
+    private static final String MQTT_SEND_IMG_TYPE = "i";
+    public static final String MQTT_SEND_TXT_TYPE = "t";
 
     private Toolbar toolbar;
     private ListView lvChat;
@@ -85,6 +91,7 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     private String sender;
     // 医生头像
     private String doctorPortrait;
+    private String imgUrl = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +145,10 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
 
         // 点击发送按钮事件
         sessionChat.getBtnSend().setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                OnSendBtnClick(sessionChat.getEtChat().getText().toString());
+                OnSendBtnClick(sessionChat.getEtChat().getText().toString(), MQTT_SEND_TXT_TYPE);
                 sessionChat.getEtChat().setText("");
             }
         });
@@ -249,6 +257,48 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
 
     }
 
+    // 点击发送按钮发送消息
+    private void OnSendBtnClick(String msg, String mqttMsgType) {
+        if (!TextUtils.isEmpty(msg)) {
+            ImMsgBean bean = new ImMsgBean();
+            bean.setName(sender);
+            bean.setSender(true);// 是否是发送者
+            bean.setTime(DateTimeUtil.getLongMs());// 发送时间
+            bean.setLoading(true);// loading状态
+            bean.setSuccess(true);// 开始去掉发送失败标识
+            bean.setContent(msg);
+            // 开启线程，AUTO_SET_FAILURE秒钟之后自动设置发送失败
+            // autoFailureAfterSeconds(bean);
+            bean.setTopic(topic);
+            switch (mqttMsgType) {
+                case MQTT_SEND_TXT_TYPE:
+                    bean.setType(mqttMsgType);// 类型：文字
+                    // UI添加消息
+                    chattingListAdapter.addData(bean, true, false);
+                    // MQTT发送数据
+                    MqttUtil.sendTxt(bean);
+                    break;
+                case MQTT_SEND_IMG_TYPE:
+                    bean.setImage(msg.replace("[img]file://", ""));
+                    bean.setType(mqttMsgType);// 类型：图片
+                    // 开启服务默默上传图片
+                    Intent startUploadImage = new Intent(this, WeChatUploadImage.class);
+                    startUploadImage.putExtra("WeChatImage", bean);
+                    startService(startUploadImage);
+                    // UI添加消息
+                    chattingListAdapter.addData(bean, true, false);
+                    // MQTT发送数据
+                    MqttUtil.sendImg(bean);
+                    break;
+                default:
+                    break;
+            }
+
+            // 跳转到底部
+            scrollToBottom();
+        }
+    }
+
     // 接收到消息，并更新发送成功或者失败状态
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdateSendingStatus(ImMsgBean bean) {
@@ -265,31 +315,11 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
         lvChat.setAdapter(chattingListAdapter);
     }
 
-    // 点击发送按钮发送消息
-    private void OnSendBtnClick(String msg) {
-        if (!TextUtils.isEmpty(msg)) {
-            ImMsgBean bean = new ImMsgBean();
-            bean.setName(sender);
-            bean.setSender(true);// 是否是发送者
-            bean.setType("t");// 类型：文字
-            bean.setTime(DateTimeUtil.getLongMs());// 发送时间
-            bean.setLoading(true);// loading状态
-            bean.setSuccess(true);// 开始去掉发送失败标识
-            bean.setContent(msg);
-
-            // 开启线程，几秒钟之后自动设置发送失败
-            autoFailureAfterSeconds(bean);
-
-            bean.setTopic(topic);
-            // UI添加消息
-            chattingListAdapter.addData(bean, true, false);
-            // MQTT发送数据
-            MqttUtil.sendTxt(bean);
-
-            // 跳转到底部
-            scrollToBottom();
-        }
-    }
+    // 返回已经上传图片在服务器的URL
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
+    public void setUploadImgUrl(ImMsgBean bean) {
+        imgUrl = bean.getImgUrl();
+    }*/
 
     // 开启线程，几秒钟之后自动设置发送失败
     private void autoFailureAfterSeconds(final ImMsgBean bean) {
@@ -297,7 +327,7 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
             @Override
             public void run() {
                 try {
-                    sleep(10 * 1000);
+                    sleep(AUTO_SET_FAILURE * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -316,7 +346,7 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     // 发送图标
     private void OnSendImage(String iconUri) {
         if (!TextUtils.isEmpty(iconUri)) {
-            OnSendBtnClick("[img]" + iconUri);//给大图片加标记
+            OnSendBtnClick("[img]" + iconUri, MQTT_SEND_IMG_TYPE);//给大图片加标记
         }
     }
 
@@ -443,10 +473,8 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
 
         for (int i = 0; i < imagePaths.size(); i++) {
             String msg = "[img]" + Uri.fromFile(new File(imagePaths.get(i)));
-            OnSendBtnClick(msg);
-            Intent startUploadImage = new Intent(this, WeChatUploadImage.class);
-            startUploadImage.putExtra("WeChatImage", imagePaths.get(i));
-            startService(startUploadImage);
+            OnSendBtnClick(msg, MQTT_SEND_IMG_TYPE);
+            Log.e("imagePaths: ", imagePaths.get(i));
         }
         imagePaths.clear();
     }
