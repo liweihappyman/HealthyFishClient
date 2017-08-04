@@ -279,7 +279,7 @@ public class ChattingListAdapter extends BaseAdapter {
     public void disPlayLeftTextView(int position, View view, ViewHolderText holder, ImMsgBean bean) {
         setContent(holder.tv_content, bean.getContent());
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
-        Glide.with(mActivity).load(HttpHealthyFishyUrl + bean.getPortrait()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(HttpHealthyFishyUrl + bean.getPortrait()).into(holder.iv_portrait);
     }
 
     public void disPlayLeftImageView(int position, View view, ViewHolderImage holder, ImMsgBean bean) {
@@ -294,7 +294,7 @@ public class ChattingListAdapter extends BaseAdapter {
                 ImageLoadUtils.getInstance(mActivity).displayImage(bean.getImage(), holder.iv_image);
                 holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
             }
-            Glide.with(mActivity).load(HttpHealthyFishyUrl + bean.getPortrait()).into(holder.iv_portrait);
+            Glide.with(holder.iv_portrait.getContext()).load(HttpHealthyFishyUrl + bean.getPortrait()).into(holder.iv_portrait);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -303,7 +303,7 @@ public class ChattingListAdapter extends BaseAdapter {
     public void disPlayRightTextView(int position, View view, ViewHolderText holder, ImMsgBean bean) {
         setContent(holder.tv_content, bean.getContent());
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
-        Glide.with(mActivity).load(getLocalUserImg()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(getLocalUserImg()).into(holder.iv_portrait);
 
         holder.iv_failure_send.setVisibility(View.INVISIBLE);
         holder.iv_loading.setVisibility(View.INVISIBLE);
@@ -341,7 +341,7 @@ public class ChattingListAdapter extends BaseAdapter {
                 ImageLoadUtils.getInstance(mActivity).displayImage(bean.getImage(), holder.iv_image);
                 holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
             }
-            Glide.with(mActivity).load(getLocalUserImg()).into(holder.iv_portrait);
+            Glide.with(holder.iv_portrait.getContext()).load(getLocalUserImg()).into(holder.iv_portrait);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -430,7 +430,6 @@ class PushCallback implements MqttCallback {
                         int msg_len = payload.length - uid_len - 2;
                         byte[] msg_array = new byte[msg_len];
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
-                        char c = (char) type;
                         String content = new String(msg_array, "utf-8");
                         // TODO: 2017/7/27 保存msg
                         MqttMsgText.process(bean, peer, content, topic);
@@ -441,20 +440,20 @@ class PushCallback implements MqttCallback {
                         int msg_len = payload.length - uid_len - 2;
                         byte[] msg_array = new byte[msg_len];
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
-                        char c = (char) type;
                         String content = new String(msg_array, "utf-8");
                         // TODO: 2017/7/27 保存msg
                         MqttMsgText.process(bean, peer, content, topic);
                         break;
                     }
                     // TODO: 2017/7/25 发送收到图片处理
-                        /*case 'i': {//image
+                        case 'i': {//image
                             int msg_len = payload.length - uid_len - 2;
                             byte[] msg_array = new byte[msg_len];
                             System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
-                            MqttMsgImage.process(topic, peer, msg_array);
+                            String url = new String(msg_array, "utf-8");
+                            MqttMsgImage.process(bean, peer, url, topic);
                             break;
-                        }*/
+                        }
                     case 'v': //video
                         break;
                     case 'a': //audio
@@ -491,42 +490,19 @@ class MqttMsgText {
 }
 
 //i|len|<src="...">|img_bytes
-/*class MqttMsgImage {
-    public static void process(String topic, String peer, byte[] content) {
-        try {
-            byte src_len = content[0];
-            byte[] src_array = new byte[src_len];
-            System.arraycopy(content, 1, src_array, 0, src_len);
-            String src = new String(src_array, "utf-8");
-//            long ts = MqttDao.saveMsg(topic, peer, src, "i");
-            long ts = MqttDao.saveMsg(peer, peer, src, "i");
-            int index = src.lastIndexOf("/");
-            String fileName = src.substring(index + 1);
-            File cropFile = FileUtil.getCorpFile(fileName);
-            if (!cropFile.exists())
-                cropFile.createNewFile();
+class MqttMsgImage {
+    public static void process(ImMsgBean bean, String peer, String url, String topic) {
+        bean.setContent(url);
+        bean.setToDefault("isSender");
+        bean.setName(peer);
 
-            FileOutputStream fos = new FileOutputStream(cropFile);
-            fos.write(content, 1 + src_len, content.length - (1 + src_len));
-            fos.close();
-            //写入crop key
-            String key = fileName.replace(".", "_crop.");
-            SqliteDao dao = new SqliteDao();
-            if (!dao.existKey(key)) {
-                String cropFileName = cropFile.getAbsolutePath();
-                BitMapUtil.getThumbnails(fileName, cropFileName, BitMapUtil.WIDTH_CROP_ICON, BitMapUtil.HEIGHT_CROP_ICON);
-                dao.insert(key, cropFileName);
-            }
-
-            BeanMqttMsgItem bean = new BeanMqttMsgItem(ts, topic, peer, src, "i", false);
-            MqttUtil.callHandler("nativeRecvMsg", JSON.toJSONString(bean));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        bean.setTime(DateTimeUtil.getLongMs());
+        bean.setType("t");
+        bean.setTopic(topic);
+        bean.save();
+        EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
     }
-}*/
+}
 
 /*class MqttUserStatusChange {
     public static void process(String topic, byte status) {

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanUploadImagesResp;
+import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -34,6 +35,9 @@ import top.zibin.luban.Luban;
  */
 public class WeChatUploadImage extends IntentService {
 
+    String imgUrl = null;
+    ImMsgBean bean = new ImMsgBean();
+
     public WeChatUploadImage() {
         super("WeChatUploadImage");
     }
@@ -55,14 +59,17 @@ public class WeChatUploadImage extends IntentService {
             RetrofitManagerUtils.getInstance(this, null).uploadFilesRetrofit(compressFiles, 1, new Subscriber<ResponseBody>() {//没有特别的意义
                 @Override
                 public void onCompleted() {
-                    //Log.i("图片上传", "完成");
-
-                    //EventBus.getDefault().post();
+                    Log.i("图片上传", "完成");
+                    bean.setImgUrl(imgUrl);
+                    bean.updateAll("time = ?", bean.getTime() + "");
+                    EventBus.getDefault().post(new ImMsgBean(imgUrl));
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    //Log.i("图片上传", "图片上传失败" + e.toString());
+                    Log.i("图片上传", "图片上传失败" + e.toString());
+                    bean.setImgUrl("failure");
+                    bean.updateAll("time = ?", bean.getTime() + "");
                 }
 
                 @Override
@@ -73,8 +80,7 @@ public class WeChatUploadImage extends IntentService {
                         if (str != null) {
                             BeanUploadImagesResp beanUploadImagesResp = new BeanUploadImagesResp();
                             beanUploadImagesResp = JSON.parseObject(str, BeanUploadImagesResp.class);
-                            String url = "http://www.kangfish.cn" + beanUploadImagesResp.getUrl();
-
+                            imgUrl = "http://www.kangfish.cn" + beanUploadImagesResp.getUrl();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -120,8 +126,8 @@ public class WeChatUploadImage extends IntentService {
      */
     private List initData(Intent intent) {
         List<String> imagePathList = new ArrayList<>();
-        String imagePath = intent.getStringExtra("WeChatImage");
-        imagePathList.add(imagePath);
+        bean = (ImMsgBean) intent.getSerializableExtra("WeChatImage");
+        imagePathList.add(bean.getImage());
         return imagePathList;
     }
 

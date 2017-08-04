@@ -158,11 +158,11 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserLoginReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-                        String user = MySharedPrefUtil.getValue("user");
+                        /*String user = MySharedPrefUtil.getValue("user");
                         if (!TextUtils.isEmpty(user)) {
                             AutoLogin.autoLogin();
                             MqttUtil.startAsync();
-                        }
+                        }*/
                     }
 
                     @Override

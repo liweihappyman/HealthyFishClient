@@ -36,6 +36,7 @@ import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
 import com.healthyfish.healthyfish.ui.fragment.BuyServiceFragment;
 import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.DateUtils;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NestingUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -158,9 +159,10 @@ public class ChoiceService extends BaseActivity {
         tvAttentionListener();
         initData();
         initListView();
-
-        AutoLogin.autoLogin();
-        MqttUtil.startAsync();
+        if (!TextUtils.isEmpty(MySharedPrefUtil.getValue("sid"))) {
+            AutoLogin.autoLogin();
+            MqttUtil.startAsync();
+        }
     }
 
 

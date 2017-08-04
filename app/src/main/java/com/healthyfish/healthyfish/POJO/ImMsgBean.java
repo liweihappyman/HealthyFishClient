@@ -2,7 +2,9 @@ package com.healthyfish.healthyfish.POJO;
 
 import org.litepal.crud.DataSupport;
 
-public class ImMsgBean extends DataSupport {
+import java.io.Serializable;
+
+public class ImMsgBean extends DataSupport implements Serializable{
 
     public final static int CHAT_SENDER_OTHER= 0;
     public final static int CHAT_SENDER_ME = 1;
@@ -19,6 +21,10 @@ public class ImMsgBean extends DataSupport {
         this.time = time;
     }
 
+    public ImMsgBean(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     private int id;
     // 界面UI的发送类型：图片，文字
     private int msgType;
@@ -32,6 +38,8 @@ public class ImMsgBean extends DataSupport {
     private String name;
     // 发送内容
     private String content;
+    // 发送图片在服务器的地址
+    private String imgUrl;
     // 发送主题
     private String topic;
     // 发送者肖像
@@ -45,20 +53,20 @@ public class ImMsgBean extends DataSupport {
     // 是否在loading
     private boolean isLoading = false;
 
-    public boolean isSuccess() {
-        return isSuccess;
+    public int getId() {
+        return id;
     }
 
-    public void setSuccess(boolean success) {
-        isSuccess = success;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public boolean isSender() {
-        return isSender;
+    public int getMsgType() {
+        return msgType;
     }
 
-    public void setSender(boolean sender) {
-        isSender = sender;
+    public void setMsgType(int msgType) {
+        this.msgType = msgType;
     }
 
     public String getType() {
@@ -101,28 +109,20 @@ public class ImMsgBean extends DataSupport {
         this.content = content;
     }
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     public String getTopic() {
         return topic;
     }
 
     public void setTopic(String topic) {
         this.topic = topic;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getMsgType() {
-        return msgType;
-    }
-
-    public void setMsgType(int msgType) {
-        this.msgType = msgType;
     }
 
     public String getPortrait() {
@@ -139,6 +139,22 @@ public class ImMsgBean extends DataSupport {
 
     public void setDmrKey(String dmrKey) {
         this.dmrKey = dmrKey;
+    }
+
+    public boolean isSender() {
+        return isSender;
+    }
+
+    public void setSender(boolean sender) {
+        isSender = sender;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setSuccess(boolean success) {
+        isSuccess = success;
     }
 
     public boolean isLoading() {
