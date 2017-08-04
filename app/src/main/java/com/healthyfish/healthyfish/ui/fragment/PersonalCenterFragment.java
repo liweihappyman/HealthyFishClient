@@ -23,9 +23,7 @@ import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
-import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
-import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserPhy;
@@ -53,7 +51,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -80,8 +77,6 @@ public class PersonalCenterFragment extends Fragment {
     CircleImageView civHeadPortrait;
     @BindView(R.id.tv_login_or_register)
     TextView tvLoginOrRegister;
-    //    @BindView(R.id.rly_mail)
-//    AutoRelativeLayout rlyMail;
     @BindView(R.id.lly_personal_information)
     AutoLinearLayout llyPersonalInformation;
     @BindView(R.id.lly_my_news)
@@ -315,13 +310,23 @@ public class PersonalCenterFragment extends Fragment {
         if (MyApplication.isFirstUpdateUsrPhy) {
             upDateUserPhyFromNetwork(uid);
         } else {
-            List<BeanUserPhy> beanUserPhyList = DataSupport.where("uid = ?", uid).find(BeanUserPhy.class);
-            if (!beanUserPhyList.isEmpty()) {
-                isTestPhy = true;
-                BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(beanUserPhyList.get(0).getJsonStrPhysicalList(), BeanUserPhyIdResp.class);
-                List<BeanUserPhysical> physicals = beanUserPhyIdResp.getPhyList();
-                tvConstitutionLogin.setText(physicals.get(0).getTitle() + "质");
-            }
+            getUserPhyFromDB(uid);
+        }
+    }
+
+    /**
+     * 从数据库查找用户体质并初始化
+     * @param uid
+     */
+    private void getUserPhyFromDB(String uid) {
+        List<BeanUserPhy> beanUserPhyList = DataSupport.where("uid = ?", uid).find(BeanUserPhy.class);
+        if (!beanUserPhyList.isEmpty()) {
+            isTestPhy = true;
+            BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(beanUserPhyList.get(0).getJsonStrPhysicalList(), BeanUserPhyIdResp.class);
+            List<BeanUserPhysical> physicals = beanUserPhyIdResp.getPhyList();
+            tvConstitutionLogin.setText(physicals.get(0).getTitle() + "质");
+        } else {
+            tvConstitutionLogin.setText("");
         }
     }
 
@@ -365,20 +370,24 @@ public class PersonalCenterFragment extends Fragment {
             @Override
             public void onCompleted() {
                 if (!TextUtils.isEmpty(resp)) {
-                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                    if (beanBaseKeyGetResp.getCode() == 0) {
-                        String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
-                        if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                            if (!isSave) {
-                                MyToast.showToast(getActivity(), "保存个人信息失败");
+                    if (resp.toString().substring(0, 1).equals("{")) {
+                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                        if (beanBaseKeyGetResp.getCode() == 0) {
+                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                            if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
+                                beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                if (!isSave) {
+                                    MyToast.showToast(getActivity(), "保存个人信息失败");
+                                }
+                            } else {
+                                MyToast.showToast(getActivity(), "您还没有填写个人信息，请填写您的个人信息");
                             }
                         } else {
-                            MyToast.showToast(getActivity(), "您还没有填写个人信息，请填写您的个人信息");
+                            MyToast.showToast(getActivity(), "获取个人信息失败");
                         }
                     } else {
-                        MyToast.showToast(getActivity(), "获取个人信息失败");
+                        MyToast.showToast(getActivity(), "加载个人信息出错啦");
                     }
                 } else {
                     MyToast.showToast(getActivity(), "获取个人信息失败");
@@ -427,21 +436,29 @@ public class PersonalCenterFragment extends Fragment {
             @Override
             public void onCompleted() {
                 if (!TextUtils.isEmpty(strResp)) {
-                    List<String> strList = JSONArray.parseObject(strResp, List.class);
-                    for (String str : strList) {
-                        BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(str, BeanUserPhyIdResp.class);
-                        if (beanUserPhyIdResp.getCode() == 0) {
-                            MyApplication.isFirstUpdateUsrPhy = false;
-                            isTestPhy = true;
-                            tvConstitutionLogin.setText(beanUserPhyIdResp.getPhyList().get(0).getTitle() + "质");
-                            BeanUserPhy beanuserPhy = new BeanUserPhy();
-                            beanuserPhy.setUid(uid);
-                            beanuserPhy.setJsonStrPhysicalList(str);
-                            boolean isSave = beanuserPhy.saveOrUpdate("uid = ?", uid);
-                            if (!isSave) {
-                                beanuserPhy.saveOrUpdate("uid = ?", uid);
+                    if (strResp.toString().substring(0, 1).equals("[")) {
+                        MyApplication.isFirstUpdateUsrPhy = false;
+                        List<String> strList = JSONArray.parseObject(strResp, List.class);
+                        if (!strList.isEmpty()) {
+                            for (String str : strList) {
+                                BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(str, BeanUserPhyIdResp.class);
+                                if (beanUserPhyIdResp.getCode() == 0) {
+                                    MyApplication.isFirstUpdateUsrPhy = false;
+                                    isTestPhy = true;
+                                    tvConstitutionLogin.setText(beanUserPhyIdResp.getPhyList().get(0).getTitle() + "质");
+                                    BeanUserPhy beanuserPhy = new BeanUserPhy();
+                                    beanuserPhy.setUid(uid);
+                                    beanuserPhy.setJsonStrPhysicalList(str);
+                                    boolean isSave = beanuserPhy.saveOrUpdate("uid = ?", uid);
+                                    if (!isSave) {
+                                        beanuserPhy.saveOrUpdate("uid = ?", uid);
+                                    }
+                                }
                             }
                         }
+                        getUserPhyFromDB(uid);
+                    } else {
+                        MyToast.showToast(getActivity(), "加载个人体质信息出错");
                     }
                 }
             }
@@ -461,67 +478,6 @@ public class PersonalCenterFragment extends Fragment {
                 }
             }
         });
-    }
-
-    /**
-     * 将用户的关注列表保存到数据库
-     */
-    private void upDateMyConcern(String uid) {
-        final List<BeanConcernList> concernList = new ArrayList<>();
-
-        BeanUserListReq beanUserListReq = new BeanUserListReq();
-        beanUserListReq.setPrefix("care_" + uid);
-        beanUserListReq.setFrom(0);
-        beanUserListReq.setTo(-1);
-        beanUserListReq.setNum(-1);
-
-        RetrofitManagerUtils.getInstance(getActivity(), null)
-                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
-                    @Override
-                    public void onCompleted() {
-                        if (DataSupport.findAll(BeanConcernList.class).isEmpty()) {
-                            for (BeanConcernList beanConcernList : concernList) {
-                                if (!beanConcernList.save()) {
-                                    for (BeanConcernList beanConcernList1 : concernList) {
-                                        beanConcernList1.save();
-                                    }
-                                }
-                            }
-                        } else {
-                            DataSupport.deleteAll(BeanConcernList.class);
-                            for (BeanConcernList beanConcernList : concernList) {
-                                if (!beanConcernList.save()) {
-                                    for (BeanConcernList beanConcernList1 : concernList) {
-                                        beanConcernList1.save();
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i("LYQ", "Login_upDateMyConcern_onError:" + e.toString());
-                    }
-
-                    @Override
-                    public void onNext(ResponseBody responseBody) {
-                        String jsonStr = null;
-                        try {
-                            jsonStr = responseBody.string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
-                        for (String str : concerns) {
-                            BeanConcernList beanConcernList = new BeanConcernList();
-                            beanConcernList.setKey(str);
-                            concernList.add(beanConcernList);
-
-                        }
-                    }
-                });
-
     }
 
 

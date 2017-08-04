@@ -141,8 +141,6 @@ public class ChoiceService extends BaseActivity {
     private boolean isAttention = false;//是否已经关注该医生
     private String uid = "";
     private String myConcernReqKey;
-    private final String TYPE_GRAPHICCONSULTATION = "GraphicConsultation";
-    private final String TYPE_PRIVATEDOCTOR = "PrivateDoctor";
     private String doctorPhone = "";
 
 
@@ -156,18 +154,21 @@ public class ChoiceService extends BaseActivity {
         uid = MyApplication.uid;
         getData();
         isOpenPictureConsultingReq();
-        tvAttentionListener();
         initData();
-        initListView();
+
+        tvAttentionListener();
+
+
         if (!TextUtils.isEmpty(MySharedPrefUtil.getValue("sid"))) {
             AutoLogin.autoLogin();
             MqttUtil.startAsync();
         }
+
     }
 
 
     /**
-     * 模拟医生数据
+     * 从上一页面获取医生数据
      */
     private void getData() {
 
@@ -185,18 +186,17 @@ public class ChoiceService extends BaseActivity {
 
         pictureConsultingPrice = "免费";
         privateDoctorPrice = "免费";
-        isOpenPictureConsulting = true;
+        isOpenPictureConsulting = false;
         isOpenPrivateDoctor = false;
         isOpenAppointment = true;
 
     }
 
     /**
-     * 模拟用户评价数据
+     * 用户评价数据
      */
     private List<Map<String, Object>> getLisViewData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
         return list;
     }
 
@@ -204,16 +204,7 @@ public class ChoiceService extends BaseActivity {
      * 设置是否关注按钮的监听
      */
     private void tvAttentionListener() {
-        if (!TextUtils.isEmpty(uid)) {
-            myConcernReqKey = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
-            if (!DataSupport.where("key = ?", myConcernReqKey).find(BeanConcernList.class).isEmpty()) {
-                isAttention = true;
-                tvAttention.setClickable(false);
-            } else {
-                isAttention = false;
-            }
-        }
-
+        initMyConcern(uid);//初始化我的关注
         tvAttention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,6 +218,47 @@ public class ChoiceService extends BaseActivity {
             }
         });
 
+    }
+
+    /**
+     * 初始化我的关注
+     * @param uid
+     */
+    private void initMyConcern(String uid) {
+        if (MyApplication.isFirstUpdateMyConcern) {
+            upDateMyConcern(uid);
+        } else {
+            getMyConcernFromDB(uid);
+        }
+    }
+
+
+    /**
+     * 从数据库获取我的关注列表
+     * @param uid
+     */
+    private void getMyConcernFromDB(String uid) {
+        if (!TextUtils.isEmpty(uid)) {
+            myConcernReqKey = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
+            if (!DataSupport.where("key = ?", myConcernReqKey).find(BeanConcernList.class).isEmpty()) {
+                isAttention = true;
+                tvAttention.setClickable(false);
+            } else {
+                isAttention = false;
+            }
+        }
+        //判断是否已经关注该医生
+        if (isAttention) {
+            tvAttention.setText("已关注");
+            tvAttention.setBackgroundResource(R.drawable.concern);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_white));
+            tvAttention.setClickable(false);
+        } else {
+            tvAttention.setText("+关注");
+            tvAttention.setBackgroundResource(R.drawable.concern_not);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
+            tvAttention.setClickable(true);
+        }
     }
 
     /**
@@ -247,25 +279,33 @@ public class ChoiceService extends BaseActivity {
 
             @Override
             public void onCompleted() {
-                BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
-                if (beanBaseResp.getCode() == 0) {
-                    tvAttention.setText("已关注");
-                    tvAttention.setBackgroundResource(R.drawable.concern);
-                    tvAttention.setTextColor(getResources().getColor(R.color.color_white));
-                    tvAttention.setClickable(false);
-                    isAttention = true;
-                    BeanConcernList beanConcernList = new BeanConcernList();
-                    beanConcernList.setKey(myConcernReqKey);
-                    if (beanConcernList.saveOrUpdate("key = ?", myConcernReqKey)) {
-                        beanConcernList.saveOrUpdate("key = ?", myConcernReqKey);
+                if (!TextUtils.isEmpty(strJson)) {
+                    if (strJson.substring(0, 1).equals("{")) {
+                        BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
+                        if (beanBaseResp.getCode() == 0) {
+                            tvAttention.setText("已关注");
+                            tvAttention.setBackgroundResource(R.drawable.concern);
+                            tvAttention.setTextColor(getResources().getColor(R.color.color_white));
+                            tvAttention.setClickable(false);
+                            isAttention = true;
+                            BeanConcernList beanConcernList = new BeanConcernList();
+                            beanConcernList.setKey(myConcernReqKey);
+                            if (beanConcernList.saveOrUpdate("key = ?", myConcernReqKey)) {
+                                beanConcernList.saveOrUpdate("key = ?", myConcernReqKey);
+                            }
+                        } else {
+                            MyToast.showToast(ChoiceService.this, "关注失败，请重试");
+                            tvAttention.setText("+关注");
+                            tvAttention.setBackgroundResource(R.drawable.concern_not);
+                            tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
+                            tvAttention.setClickable(true);
+                            isAttention = false;
+                        }
+                    } else {
+                        MyToast.showToast(ChoiceService.this, "关注出错啦，请重试");
                     }
                 } else {
                     MyToast.showToast(ChoiceService.this, "关注失败，请重试");
-                    tvAttention.setText("+关注");
-                    tvAttention.setBackgroundResource(R.drawable.concern_not);
-                    tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
-                    tvAttention.setClickable(true);
-                    isAttention = false;
                 }
             }
 
@@ -357,18 +397,7 @@ public class ChoiceService extends BaseActivity {
         tvName.setText(doctorName);  //设置医生名字
         tvDepartmentAndTitle.setText(doctorDepartment + "   " + beanDoctorInfo.getDuties());  //设置医生的科室和职称
         tvDoctorCompany.setText(doctorCompany);  //设置医生工作的医院
-        //判断是否已经关注该医生
-        if (isAttention) {
-            tvAttention.setText("已关注");
-            tvAttention.setBackgroundResource(R.drawable.concern);
-            tvAttention.setTextColor(getResources().getColor(R.color.color_white));
-            tvAttention.setClickable(false);
-        } else {
-            tvAttention.setText("+关注");
-            tvAttention.setBackgroundResource(R.drawable.concern_not);
-            tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
-            tvAttention.setClickable(true);
-        }
+
         //判断是否已开通私人医生服务
         if (isOpenPrivateDoctor) {
             imgPrivateDoctor.setImageResource(R.mipmap.ic_private_doctor_open);
@@ -459,42 +488,51 @@ public class ChoiceService extends BaseActivity {
      */
     private void buyPictureConsultingService() {
         if (isOpenPictureConsulting) {
-
-            BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
-            beanDoctorChatInfo.setName(beanDoctorInfo.getName());
-            beanDoctorChatInfo.setPhone(doctorPhone);
-            beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
-
-            String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
-            Log.i("LYQ", "serviceKey:" + serviceKey);
-
-            List<BeanServiceList> serviceLists = DataSupport.where("key = ?", serviceKey).find(BeanServiceList.class);//查找数据库
-            if (!serviceLists.isEmpty()) {//不为空则购买过该医生的图文咨询服务
-                BeanServiceList beanServiceList = serviceLists.get(0);
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-                Date endDate = dateFormat.parse(beanServiceList.getEndTime(), new ParsePosition(0));
-                Date currentDate = new Date(System.currentTimeMillis());
-
-                if (currentDate.getTime() <= endDate.getTime()) {//服务未过期
-                    Intent intent = new Intent(this, HealthyChat.class);
-                    intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-                    startActivity(intent);
-                } else {//服务已过期
-                    DataSupport.delete(BeanServiceList.class, beanServiceList.getId());//删除本地数据库该购买服务记录
-                    deleteServiceReq(serviceKey);//删除服务器端该购买服务记录
-
-                    goToBuyService(serviceKey,true,beanDoctorChatInfo);
-                }
-            } else {//空则没有购买过该医生的图文咨询服务或者已过期
-                goToBuyService(serviceKey,false,beanDoctorChatInfo);
+            if (MyApplication.isFirstUpdateMyService) {
+                upDateServiceListReq(uid);
+            } else {
+                getMyServiceFromDB(uid);
             }
-
         } else {
             MyToast.showToast(mContext, "该医生暂未开通此服务");
         }
 
+    }
 
+    /**
+     * 从数据库检查我已购买的服务
+     * @param uid
+     */
+    private void getMyServiceFromDB(String uid) {
+        BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
+        beanDoctorChatInfo.setName(beanDoctorInfo.getName());
+        beanDoctorChatInfo.setPhone(doctorPhone);
+        beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
+
+        String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
+        Log.i("LYQ", "serviceKey:" + serviceKey);
+
+        List<BeanServiceList> serviceLists = DataSupport.where("key = ?", serviceKey).find(BeanServiceList.class);//查找数据库
+        if (!serviceLists.isEmpty()) {//不为空则购买过该医生的图文咨询服务
+            BeanServiceList beanServiceList = serviceLists.get(0);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+            Date endDate = dateFormat.parse(beanServiceList.getEndTime(), new ParsePosition(0));
+            Date currentDate = new Date(System.currentTimeMillis());
+
+            if (currentDate.getTime() <= endDate.getTime()) {//服务未过期
+                Intent intent = new Intent(this, HealthyChat.class);
+                intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+                startActivity(intent);
+            } else {//服务已过期
+                DataSupport.delete(BeanServiceList.class, beanServiceList.getId());//删除本地数据库该购买服务记录
+                deleteServiceReq(serviceKey);//删除服务器端该购买服务记录
+
+                goToBuyService(serviceKey,true,beanDoctorChatInfo);
+            }
+        } else {//空则没有购买过该医生的图文咨询服务或者已过期
+            goToBuyService(serviceKey,false,beanDoctorChatInfo);
+        }
     }
 
     /**
@@ -599,22 +637,142 @@ public class ChoiceService extends BaseActivity {
                     e.printStackTrace();
                 }
                 if (!TextUtils.isEmpty(resp)) {
-                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                    if (beanBaseKeyGetResp.getCode() == 0) {
-                        if (!TextUtils.isEmpty(beanBaseKeyGetResp.getValue())) {
-                            doctorPhone = beanBaseKeyGetResp.getValue();
-                            isOpenPictureConsulting = true;
+                    if (resp.substring(0, 1).equals("{")) {
+                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                        if (beanBaseKeyGetResp.getCode() == 0) {
+                            if (!TextUtils.isEmpty(beanBaseKeyGetResp.getValue())) {
+                                doctorPhone = beanBaseKeyGetResp.getValue();
+                                isOpenPictureConsulting = true;
+                            } else {
+                                isOpenPictureConsulting = false;
+                            }
                         } else {
-                            isOpenPictureConsulting = false;
+                            MyToast.showToast(ChoiceService.this, "获取开通服务情况失败");
                         }
                     } else {
-                        MyToast.showToast(ChoiceService.this, "获取开通服务情况失败");
+                        MyToast.showToast(ChoiceService.this, "获取开通服务情况出错啦");
                     }
                 } else {
-                    MyToast.showToast(ChoiceService.this, "获取开通服务情况失败");
+                    MyToast.showToast(ChoiceService.this, "获取开通服务情况出错");
                 }
             }
         });
+    }
+
+    /**
+     * 更新用户的关注列表并保存到数据库
+     */
+    private void upDateMyConcern(final String uid) {
+        BeanUserListReq beanUserListReq = new BeanUserListReq();
+        beanUserListReq.setPrefix("care_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
+
+                    String jsonStr = null;
+
+                    @Override
+                    public void onCompleted() {
+                        if (!TextUtils.isEmpty(jsonStr)) {
+                            if (jsonStr.substring(0, 1).equals("[")) {
+                                MyApplication.isFirstUpdateMyConcern = false;
+                                DataSupport.deleteAll(BeanConcernList.class);
+                                List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
+                                if (!concerns.isEmpty()) {
+                                    for (String str : concerns) {
+                                        BeanConcernList beanConcernList = new BeanConcernList();
+                                        beanConcernList.setKey(str);
+                                        boolean isSave = beanConcernList.save();
+                                        if (!isSave) {
+                                            beanConcernList.save();
+                                        }
+                                    }
+                                }
+                                getMyConcernFromDB(uid);
+
+                            } else {
+                                MyToast.showToast(ChoiceService.this, "更新关注信息出错啦");
+                            }
+                        } else {
+                            MyToast.showToast(ChoiceService.this, "更新关注信息出错");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("LYQ", "问诊upDateMyConcern_onError:" + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        try {
+                            jsonStr = responseBody.string();
+                            Log.i("LYQ", "问诊关注列表响应：" + jsonStr);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+    }
+
+
+    /**
+     * 从网络更新已购买的服务列表
+     */
+    private void upDateServiceListReq(final String uid) {
+
+        BeanUserListValueReq beanUserListValueReq = new BeanUserListValueReq();
+        beanUserListValueReq.setPrefix("service_" + uid);
+        beanUserListValueReq.setFrom(0);
+        beanUserListValueReq.setTo(-1);
+        beanUserListValueReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListValueReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+
+            @Override
+            public void onCompleted() {
+                if (!TextUtils.isEmpty(strJson)) {
+                    if (strJson.substring(0, 1).equals("[")) {
+                        MyApplication.isFirstUpdateMyService = false;
+                        DataSupport.deleteAll(BeanServiceList.class);//清空数据库中旧的已购买服务列表
+                        List<String> strServiceList = JSONArray.parseObject(strJson, List.class);
+                        if (!strServiceList.isEmpty()) {
+                            for (String strService : strServiceList) {
+                                BeanServiceList beanServiceList = JSON.parseObject(strService, BeanServiceList.class);
+                                beanServiceList.save();//更新数据库中已购买服务列表
+                            }
+                        }
+                        getMyServiceFromDB(uid);
+                    } else {
+                        MyToast.showToast(ChoiceService.this,"更新已购买服务出错啦");
+                    }
+                } else {
+                    MyToast.showToast(ChoiceService.this,"更新已购买服务出错");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("LYQ", "getServiceListReq()_onError:" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.i("LYQ", "获取已购买服务响应：" + strJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 

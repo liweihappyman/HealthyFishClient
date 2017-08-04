@@ -39,6 +39,8 @@ import com.healthyfish.healthyfish.POJO.BeanUserPhysical;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SinglePlanAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
+import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -193,22 +195,29 @@ public class MainIndexHealthyManagement extends BaseActivity {
             @Override
             public void onCompleted() {
                 if (!TextUtils.isEmpty(strResp)) {
-                    List<String> strList = JSONArray.parseObject(strResp, List.class);
-                    for (String str : strList) {
-                        BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(str, BeanUserPhyIdResp.class);
-                        if (beanUserPhyIdResp.getCode() == 0) {
-                            BeanUserPhy beanuserPhy = new BeanUserPhy();
-                            beanuserPhy.setUid(uid);
-                            beanuserPhy.setJsonStrPhysicalList(str);
-                            boolean isSave = beanuserPhy.saveOrUpdate("uid = ?", uid);
-                            if (!isSave) {
-                                beanuserPhy.saveOrUpdate("uid = ?", uid);
+                    if (strResp.toString().substring(0, 1).equals("[")) {
+                        MyApplication.isFirstUpdateUsrPhy = false;
+                        DataSupport.deleteAll(BeanUserPhy.class);
+                        List<String> strList = JSONArray.parseObject(strResp, List.class);
+                        if (!strList.isEmpty()) {
+                            for (String str : strList) {
+                                BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(str, BeanUserPhyIdResp.class);
+                                if (beanUserPhyIdResp.getCode() == 0) {
+                                    BeanUserPhy beanuserPhy = new BeanUserPhy();
+                                    beanuserPhy.setUid(uid);
+                                    beanuserPhy.setJsonStrPhysicalList(str);
+                                    boolean isSave = beanuserPhy.saveOrUpdate("uid = ?", uid);
+                                    if (!isSave) {
+                                        beanuserPhy.saveOrUpdate("uid = ?", uid);
+                                    }
+                                }
                             }
-                            MyApplication.isFirstUpdateUsrPhy = false;
-                            getUserPhyFromDB(uid);
                         }
-                    }
+                        getUserPhyFromDB(uid);
 
+                    } else {
+                        MyToast.showToast(MainIndexHealthyManagement.this,"加载个人体质信息出错啦");
+                    }
                 }
             }
 

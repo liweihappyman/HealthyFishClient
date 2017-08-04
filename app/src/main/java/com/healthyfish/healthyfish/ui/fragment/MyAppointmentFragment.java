@@ -64,7 +64,7 @@ public class MyAppointmentFragment extends Fragment {
     Unbinder unbinder;
 
     private View rootView;
-    private List<BeanMyAppointmentItem> mList = new ArrayList<>();
+    private final List<BeanMyAppointmentItem> mList = new ArrayList<>();
     private MyAppointmentLvAdapter adapter;
     private final List<BeanMyAppointmentItem> myAppointmentList = new ArrayList<>();
     private String uid = "";
@@ -75,33 +75,50 @@ public class MyAppointmentFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fagment_my_aappointment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
-//        mList.clear();
-////
-//        String user = MySharedPrefUtil.getValue("user");
-//        if (!TextUtils.isEmpty(user)) {
-//            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
-//            final String uid = beanUserLoginReq.getMobileNo();
-//            //appointmentListReq(uid);
-//
-//        }
+        String user = MySharedPrefUtil.getValue("user");
+        if (!TextUtils.isEmpty(user)) {
+            //mList.clear();
+            if (MyApplication.isFirstUpdateMyAppointment) {
+                BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
+                uid = beanUserLoginReq.getMobileNo();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                appointmentListReq(uid);
+                            }
+                        });
+                    }
+                }).start();
+            } else {
+                getDataFromDB();
+            }
 
-        //initListView(mList);
+        }
+
+        initListView(mList);
 
         return rootView;
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshLoginState(BeanMyAppointmentItem beanMyAppointmentItem) {
-        Log.i("LYQ", "MyAppointmentFragment_refreshLoginState");
-        mList.clear();
-        uid = MyApplication.uid;
-        Log.i("LYQ", "uid:" + uid);
-        //appointmentListReq("15278898523");//更新我的挂号信息
+    public void refreshMyAppointment(BeanMyAppointmentItem beanMyAppointmentItem) {
+        Log.i("LYQ", "MyAppointmentFragment_refreshMyAppointment");
+        myAppointmentList.clear();
+        myAppointmentList.add(beanMyAppointmentItem);
+        appointmentReq(myAppointmentList);
 
     }
 
@@ -111,7 +128,6 @@ public class MyAppointmentFragment extends Fragment {
     private void getDataFromDB() {
         List<BeanMyAppointmentItem> list = DataSupport.findAll(BeanMyAppointmentItem.class);
         if (!list.isEmpty()) {
-
             for (BeanMyAppointmentItem beanMyAppointmentItem : list) {
                 mList.add(beanMyAppointmentItem);
             }
@@ -141,161 +157,6 @@ public class MyAppointmentFragment extends Fragment {
         lvMyAppointment.setAdapter(adapter);
     }
 
-    /**
-     * 初始化数据
-     *
-     * @return
-     */
-    private List<BeanMyAppointmentItem> getData() {
-
-        //appointmentListReq();
-
-        return myAppointmentList;
-    }
-
-
-//    /**
-//     * 获取预约列表请求
-//     */
-//    private void appointmentListReq() {
-//
-//        BeanUserListReq beanUserListReq = new BeanUserListReq();
-//        beanUserListReq.setPrefix("reg_" + uid);
-//        beanUserListReq.setFrom(0);
-//        beanUserListReq.setTo(-1);
-//        beanUserListReq.setNum(-1);
-//
-//        Log.i("LYQ", "挂号信息BeanUserListReq参数json:"+ JSON.toJSONString(beanUserListReq));
-//
-//        RetrofitManagerUtils.getInstance(getActivity(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
-//            String appointmentListResp = "";
-//
-//            @Override
-//            public void onCompleted() {
-//                List<String> list = JSONArray.parseObject(appointmentListResp, List.class);
-//                for (String str : list) {
-//                    BeanMyAppointmentItem myAppointment = new BeanMyAppointmentItem();
-//                    myAppointment.setRespKey(str);
-//                    myAppointmentList.add(myAppointment);
-//                }
-//                for (int i = 0; i < myAppointmentList.size(); i++) {
-//                    appointmentReq(myAppointmentList.get(i));
-//                }
-//                myAppointmentList.clear();
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.i("LYQ", "appointmentListReq()_onError:" + e.toString());
-//            }
-//
-//            @Override
-//            public void onNext(ResponseBody responseBody) {
-//                try {
-//                    appointmentListResp = responseBody.string();
-//                    Log.i("LYQ", "appointmentListResp:" + appointmentListResp);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
-//
-//    /**
-//     * 获取预约信息请求
-//     *
-//     * @param beanMyAppointmentItem
-//     */
-//    private void appointmentReq(final BeanMyAppointmentItem beanMyAppointmentItem) {
-//
-//        BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
-//        beanBaseKeyGetReq.setKey(beanMyAppointmentItem.getRespKey());
-//
-//        BeanUserListValueReq beanUserListReq = new BeanUserListValueReq();
-//        beanUserListReq.setPrefix("reg_" + uid);
-//        beanUserListReq.setFrom(0);
-//        beanUserListReq.setTo(-1);
-//        beanUserListReq.setNum(-1);
-//
-//
-//        Log.i("LYQ", "挂号信息BeanBaseKeyGetReq参数json:"+ JSON.toJSONString(beanBaseKeyGetReq));
-//
-//        RetrofitManagerUtils.getInstance(getActivity(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
-//            String appointmentResp = "";
-//
-//            @Override
-//            public void onCompleted() {
-//                BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(appointmentResp, BeanBaseKeyGetResp.class);
-//                if (beanBaseKeyGetResp.getCode() == 0) {
-//                    BeanHospRegisterReq beanHospRegisterReq = JSON.parseObject(beanBaseKeyGetResp.getValue(), BeanHospRegisterReq.class);
-//                    beanMyAppointmentItem.setDoctorName(beanHospRegisterReq.getDoctTxt());
-//                    beanMyAppointmentItem.setHospital(beanHospRegisterReq.getHospTxt());
-//                    beanMyAppointmentItem.setVisitingPerson(beanHospRegisterReq.getName());
-//                    beanMyAppointmentItem.setAppointmentTime(beanHospRegisterReq.getDateTxt());
-//                    doctorInfoReq(beanMyAppointmentItem, beanHospRegisterReq.getHosp(), beanHospRegisterReq.getDept(), beanHospRegisterReq.getStaffNo());
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.i("LYQ", "appointmentResp_onError:" + e.toString());
-//            }
-//
-//            @Override
-//            public void onNext(ResponseBody responseBody) {
-//                try {
-//                    appointmentResp = responseBody.string();
-//                    Log.i("LYQ", "appointmentResp:" + appointmentResp);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//    }
-//
-//    private void doctorInfoReq(final BeanMyAppointmentItem beanMyAppointmentItem, String hosp, String dept, String staffNo) {
-//
-//        BeanHospDeptDoctInfoReq beanHospDeptDoctInfoReq = new BeanHospDeptDoctInfoReq();
-//        beanHospDeptDoctInfoReq.setHosp(hosp);
-//        beanHospDeptDoctInfoReq.setDept(dept);
-//        beanHospDeptDoctInfoReq.setStaffNo(staffNo);
-//
-//        RetrofitManagerUtils.getInstance(getActivity(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctInfoReq), new Subscriber<ResponseBody>() {
-//            String doctorInfoResp = "";
-//
-//            @Override
-//            public void onCompleted() {
-//                BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(doctorInfoResp, BeanHospDeptDoctListRespItem.class);
-//                beanMyAppointmentItem.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
-//                beanMyAppointmentItem.setConsultationRoom(String.valueOf(beanHospDeptDoctListRespItem.getCLINIQUE_CODE()));
-//                beanMyAppointmentItem.setDutise(beanHospDeptDoctListRespItem.getREISTER_NAME());
-//                myAppointmentList.add(beanMyAppointmentItem);
-//                adapter.notifyDataSetChanged();
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.i("LYQ", "appointmentResp——onError:" + e.toString());
-//            }
-//
-//            @Override
-//            public void onNext(ResponseBody responseBody) {
-//                try {
-//                    doctorInfoResp = responseBody.string();
-//                    Log.i("LYQ", "doctorInfoReq（）Resp:" + doctorInfoResp);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//    }
-
-
 
     /**
      * 获取预约列表请求
@@ -317,16 +178,25 @@ public class MyAppointmentFragment extends Fragment {
 
             @Override
             public void onCompleted() {
-                List<String> list = JSONArray.parseObject(appointmentListResp, List.class);
-                for (String str : list) {
-                    BeanMyAppointmentItem myAppointment = new BeanMyAppointmentItem();
-                    myAppointment.setRespKey(str);
-                    myAppointmentList.add(myAppointment);
+                if (!TextUtils.isEmpty(appointmentListResp)) {
+                    if (appointmentListResp.substring(0, 1).equals("[")) {
+                        List<String> list = JSONArray.parseObject(appointmentListResp, List.class);
+                        if (!list.isEmpty()) {
+                            for (String str : list) {
+                                BeanMyAppointmentItem myAppointment = new BeanMyAppointmentItem();
+                                myAppointment.setRespKey(str);
+                                myAppointmentList.add(myAppointment);
+                            }
+
+                            appointmentReq(myAppointmentList);
+
+                        }
+                    } else {
+                        MyToast.showToast(getActivity(), "获取挂号列表出错啦");
+                    }
+                } else {
+                    MyToast.showToast(getActivity(), "获取挂号列表出错");
                 }
-                for (int i = 0; i < myAppointmentList.size(); i++) {
-                    appointmentReq(uid, myAppointmentList.get(i));
-                }
-                myAppointmentList.clear();
             }
 
             @Override
@@ -350,10 +220,10 @@ public class MyAppointmentFragment extends Fragment {
 
     /**
      * 获取预约信息请求
-     *
-     * @param beanMyAppointmentItem
      */
-    private void appointmentReq(String uid, final BeanMyAppointmentItem beanMyAppointmentItem) {
+    private void appointmentReq(List<BeanMyAppointmentItem> beanMyAppointmentItemList) {
+
+        final BeanMyAppointmentItem beanMyAppointmentItem = beanMyAppointmentItemList.get(0);
 
         BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
         beanBaseKeyGetReq.setKey(beanMyAppointmentItem.getRespKey());
@@ -372,16 +242,26 @@ public class MyAppointmentFragment extends Fragment {
 
             @Override
             public void onCompleted() {
-                BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(appointmentResp, BeanBaseKeyGetResp.class);
-                if (beanBaseKeyGetResp.getCode() == 0) {
-                    BeanHospRegisterReq beanHospRegisterReq = JSON.parseObject(beanBaseKeyGetResp.getValue(), BeanHospRegisterReq.class);
-                    beanMyAppointmentItem.setDoctorName(beanHospRegisterReq.getDoctTxt());
-                    beanMyAppointmentItem.setHospital(beanHospRegisterReq.getHospTxt());
-                    beanMyAppointmentItem.setVisitingPerson(beanHospRegisterReq.getName());
-                    beanMyAppointmentItem.setAppointmentTime(beanHospRegisterReq.getDateTxt());
-                    doctorInfoReq(beanMyAppointmentItem, beanHospRegisterReq.getHosp(), beanHospRegisterReq.getDept(), beanHospRegisterReq.getStaffNo());
-
+                if (!TextUtils.isEmpty(appointmentResp)) {
+                    if (appointmentResp.substring(0, 1).equals("{")) {
+                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(appointmentResp, BeanBaseKeyGetResp.class);
+                        if (beanBaseKeyGetResp.getCode() == 0) {
+                            BeanHospRegisterReq beanHospRegisterReq = JSON.parseObject(beanBaseKeyGetResp.getValue(), BeanHospRegisterReq.class);
+                            beanMyAppointmentItem.setDoctorName(beanHospRegisterReq.getDoctTxt());
+                            beanMyAppointmentItem.setHospital(beanHospRegisterReq.getHospTxt());
+                            beanMyAppointmentItem.setVisitingPerson(beanHospRegisterReq.getName());
+                            beanMyAppointmentItem.setAppointmentTime(beanHospRegisterReq.getDateTxt());
+                            doctorInfoReq(beanMyAppointmentItem, beanHospRegisterReq.getHosp(), beanHospRegisterReq.getDept(), beanHospRegisterReq.getStaffNo());
+                        } else {
+                            MyToast.showToast(getActivity(), "获取挂号信息失败");
+                        }
+                    } else {
+                        MyToast.showToast(getActivity(), "获取挂号信息出错啦");
+                    }
+                } else {
+                    MyToast.showToast(getActivity(), "获取挂号信息出错");
                 }
+
 
             }
 
@@ -423,20 +303,35 @@ public class MyAppointmentFragment extends Fragment {
 
             @Override
             public void onCompleted() {
-                BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(doctorInfoResp, BeanHospDeptDoctListRespItem.class);
-                beanMyAppointmentItem.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
-                beanMyAppointmentItem.setConsultationRoom(String.valueOf(beanHospDeptDoctListRespItem.getCLINIQUE_CODE()));
-                beanMyAppointmentItem.setDutise(beanHospDeptDoctListRespItem.getREISTER_NAME());
-                myAppointmentList.add(beanMyAppointmentItem);
+                if (!TextUtils.isEmpty(doctorInfoResp)) {
+                    if (doctorInfoResp.substring(0, 1).equals("{")) {
 
-                boolean isSave = beanMyAppointmentItem.save();//将挂号信息保存到数据库
-                if (isSave) {
-                    //EventBus.getDefault().post(new BeanMyAppointmentItem());//通知问诊我的挂号页面刷新数据
+                        myAppointmentList.remove(0);
+                        if (myAppointmentList.size() > 0) {
+                            appointmentReq(myAppointmentList);
+                        }
+
+                        MyApplication.isFirstUpdateMyAppointment = false;
+                        BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(doctorInfoResp, BeanHospDeptDoctListRespItem.class);
+                        beanMyAppointmentItem.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
+                        beanMyAppointmentItem.setConsultationRoom(String.valueOf(beanHospDeptDoctListRespItem.getCLINIQUE_CODE()));
+                        beanMyAppointmentItem.setDuties(beanHospDeptDoctListRespItem.getREISTER_NAME());
+                        //myAppointmentList.add(beanMyAppointmentItem);
+                        Log.i("LYQ", "beanMyAppointmentItem.getRespKey():" + beanMyAppointmentItem.getRespKey());
+                        boolean isSave = beanMyAppointmentItem.save();//将挂号信息保存到数据库
+                        if (!isSave) {
+                            beanMyAppointmentItem.save();//若保存失败则再次保存
+                        }
+
+                        mList.add(beanMyAppointmentItem);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        MyToast.showToast(getActivity(), "获取挂号医生信息出错啦");
+                    }
                 } else {
-                    beanMyAppointmentItem.save();//若保存失败则再次保存
+                    MyToast.showToast(getActivity(), "获取挂号医生信息出错");
                 }
 
-                getDataFromDB();
             }
 
             @Override

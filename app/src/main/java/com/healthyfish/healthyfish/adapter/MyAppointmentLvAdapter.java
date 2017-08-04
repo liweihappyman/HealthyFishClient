@@ -22,6 +22,8 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.utils.AutoUtils;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +82,7 @@ public class MyAppointmentLvAdapter extends BaseAdapter {
 
         Glide.with(mContext).load(HttpHealthyFishyUrl + appointmentList.get(position).getImgUrl()).error(R.mipmap.error).into(holder.civDoctor);
         holder.tvDoctorName.setText(appointmentList.get(position).getDoctorName());
-        holder.tvRoomAndDuties.setText("诊室：" + appointmentList.get(position).getConsultationRoom() + "  " + appointmentList.get(position).getDutise());
+        holder.tvRoomAndDuties.setText("诊室：" + appointmentList.get(position).getConsultationRoom() + "  " + appointmentList.get(position).getDuties());
         holder.tvHospital.setText(appointmentList.get(position).getHospital());
         holder.tvAppointmentTime.setText("预约时间：" + appointmentList.get(position).getAppointmentTime());
         holder.tvVisitingPerson.setText("就诊人：" + appointmentList.get(position).getVisitingPerson());
@@ -141,7 +143,7 @@ public class MyAppointmentLvAdapter extends BaseAdapter {
      */
     private void cancelAppointmentReq(final int position) {
         String key = appointmentList.get(position).getRespKey();
-
+        final int id = appointmentList.get(position).getId();
         BeanUserRegCancelReq beanUserRegCancelReq = new BeanUserRegCancelReq();
         beanUserRegCancelReq.setKey(key);
 
@@ -153,6 +155,10 @@ public class MyAppointmentLvAdapter extends BaseAdapter {
                 //BeanBaseResp beanBaseResp = JSON.parseObject(cancelAppointmentResp, BeanBaseResp.class);
                 if (cancelAppointmentResp.equals("success")) {
                     MyToast.showToast(mContext, "成功取消挂号");
+                    int deleteCount = DataSupport.delete(BeanMyAppointmentItem.class, id);
+                    if (deleteCount != 1) {
+                        DataSupport.delete(BeanMyAppointmentItem.class, id);
+                    }
                     appointmentList.remove(position);
                     MyAppointmentLvAdapter.this.notifyDataSetChanged();
                 } else {
