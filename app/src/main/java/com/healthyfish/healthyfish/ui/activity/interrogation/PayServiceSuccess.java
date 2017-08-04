@@ -14,6 +14,7 @@ import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
@@ -96,7 +97,9 @@ public class PayServiceSuccess extends BaseActivity {
             Log.i("LYQ", beanDoctorChatInfo.getName() + beanDoctorChatInfo.getPhone() + beanDoctorChatInfo.getImgUrl());
             Intent intent = new Intent(this, HealthyChat.class);
             intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-            MqttUtil.connect();
+
+            AutoLogin.autoLogin();
+            MqttUtil.startAsync();
             startActivity(intent);
 
         }

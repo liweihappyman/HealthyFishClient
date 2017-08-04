@@ -34,6 +34,7 @@ import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformati
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.ui.presenter.login.LoginPresenter;
 import com.healthyfish.healthyfish.ui.view.login.ILoginView;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -159,7 +160,8 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                     public void onCompleted() {
                         String user = MySharedPrefUtil.getValue("user");
                         if (!TextUtils.isEmpty(user)) {
-                            MqttUtil.connect();
+                            AutoLogin.autoLogin();
+                            MqttUtil.startAsync();
                         }
                     }
 

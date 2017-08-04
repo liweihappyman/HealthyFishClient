@@ -63,7 +63,7 @@ public class InterrogationFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_interrogation, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         toolbarTitle.setText("问诊服务");
-       initTabLayout();
+        initTabLayout();
         return rootView;
     }
 

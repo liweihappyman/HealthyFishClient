@@ -29,10 +29,13 @@ import com.healthyfish.healthyfish.POJO.AppFuncBean;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
+import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.healthy_chat.AppFuncAdapter;
 import com.healthyfish.healthyfish.adapter.healthy_chat.ChattingListAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
+import com.healthyfish.healthyfish.service.UploadImages;
+import com.healthyfish.healthyfish.service.WeChatUploadImage;
 import com.healthyfish.healthyfish.ui.widget.SessionChatKeyboardBase;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
@@ -246,7 +249,7 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
 
     }
 
-    // 更新发送成功或者失败状态
+    // 接收到消息，并更新发送成功或者失败状态
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdateSendingStatus(ImMsgBean bean) {
 
@@ -277,7 +280,6 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
             // 开启线程，几秒钟之后自动设置发送失败
             autoFailureAfterSeconds(bean);
 
-            // TODO: 2017/7/31 设置聊天的对象
             bean.setTopic(topic);
             // UI添加消息
             chattingListAdapter.addData(bean, true, false);
@@ -414,15 +416,15 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     switch (mAppFuncBeanList.get(position).getId()) {
                         case 1:
-                            // clickToLoadImage();
-                            Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
+                            clickToLoadImage();
+                            //Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
                             break;
                         case 2:
                             //clickToTakePhoto();
                             Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
                             break;
                         case 3:
-                            Toast.makeText(MyApplication.getContetxt(), "还未实现", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
                         default:
                             break;
                     }
@@ -442,6 +444,9 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
         for (int i = 0; i < imagePaths.size(); i++) {
             String msg = "[img]" + Uri.fromFile(new File(imagePaths.get(i)));
             OnSendBtnClick(msg);
+            Intent startUploadImage = new Intent(this, WeChatUploadImage.class);
+            startUploadImage.putExtra("WeChatImage", imagePaths.get(i));
+            startService(startUploadImage);
         }
         imagePaths.clear();
     }
@@ -450,7 +455,7 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     private void clickToLoadImage() {
         PhotoPickerIntent intent = new PhotoPickerIntent(HealthyChat.this);
         intent.setSelectModel(SelectModel.MULTI); //选择单张还是多张
-        intent.setShowCarema(true); // 是否显示拍照
+        intent.setShowCarema(false); // 是否显示拍照
         intent.setMaxTotal(9); // 最多选择照片数量，默认为6
         intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
         startActivityForResult(intent, REQUEST_CAMERA_CODE);

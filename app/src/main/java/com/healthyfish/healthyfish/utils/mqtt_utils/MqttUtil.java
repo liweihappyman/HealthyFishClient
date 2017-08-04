@@ -268,56 +268,7 @@ public class MqttUtil {
         }
     }
 
-    private static void sendMsg(String msgTime, String topic, String msg) throws JSONException {
-        sendMsg(msgTime, topic, msg.getBytes());
-    }
-
-    private static void sendMsg(final String msgTime, final String topic, byte[] msg) throws JSONException {
-
-        try {
-            String localUser = userType + userName;
-            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-            bs.write((byte) localUser.length());
-            bs.write(localUser.getBytes());
-            bs.write(msg);
-            if (mqttAsyncClient == null) {
-                connect();
-                /*callHandler(obj.getString("method"), "failed: 请先登录");*/
-                return;
-            }
-
-            mqttAsyncClient.publish(topic, bs.toByteArray(), 1, false, null, new IMqttActionListener() {
-                public void onFailure(IMqttToken arg0, Throwable arg1) {
-                    if (!connFlag) {
-                        connectingFlag = false;
-                        connect();
-                    }
-                    Log.e("todo发布消息的方法和状态", "发布失败");
-
-                    // 异步传送发送失败状态
-                    // EventBus.getDefault().post(new ImMsgBean(false));
-                }
-
-                public void onSuccess(IMqttToken token) {
-                    Log.e("MQTT", "publish onSuccess---------" + token.getMessageId());
-                    Log.e("todo发布消息的方法和状态", "发布成功");
-                    // 异步传送发送成功状态
-                    // EventBus.getDefault().post(new ImMsgBean(true));
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (MqttPersistenceException e) {
-            e.printStackTrace();
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // 发送文本
-    public static void sendTxt(final ImMsgBean bean) {
-
-        bean.save();
+    private static void sendMsg(final ImMsgBean bean) throws JSONException {
 
         try {
             String localUser = userType + userName;
@@ -365,12 +316,30 @@ public class MqttUtil {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
 
-        /*try {
-            sendMsg(bean.getTime(), bean.getTopic(), bean.getType() + bean.getContent());
+    // 发送文本
+    public static void sendTxt(final ImMsgBean bean) {
+
+        bean.save();
+
+        try {
+            sendMsg(bean);
         } catch (JSONException e) {
             e.printStackTrace();
-        }*/
+        }
+    }
+
+    // 发送图片
+    public static void sendImg(final ImMsgBean bean) {
+
+        bean.save();
+
+        try {
+            sendMsg(bean);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // 监听消息
@@ -463,9 +432,7 @@ class PushCallback implements MqttCallback {
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
                         char c = (char) type;
                         String content = new String(msg_array, "utf-8");
-
                         // TODO: 2017/7/27 保存msg
-
                         MqttMsgText.process(bean, peer, content, topic);
                         break;
                     }
@@ -476,9 +443,7 @@ class PushCallback implements MqttCallback {
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
                         char c = (char) type;
                         String content = new String(msg_array, "utf-8");
-
                         // TODO: 2017/7/27 保存msg
-
                         MqttMsgText.process(bean, peer, content, topic);
                         break;
                     }
@@ -512,6 +477,7 @@ class MqttMsgText {
 
     // 发送文本
     public static void process(ImMsgBean bean, String peer, String content, String topic) {
+        // 要显示的内容
         bean.setContent(content);
         bean.setToDefault("isSender");
         bean.setName(peer);
