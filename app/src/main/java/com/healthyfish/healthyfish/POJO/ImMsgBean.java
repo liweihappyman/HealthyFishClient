@@ -36,6 +36,8 @@ public class ImMsgBean extends DataSupport {
     private String topic;
     // 发送者肖像
     private String portrait;
+    // 发送电子病历的key
+    private String dmrKey;
     // 是发送者还是接收者
     private boolean isSender = false;
     // 发送状态
@@ -129,6 +131,14 @@ public class ImMsgBean extends DataSupport {
 
     public void setPortrait(String portrait) {
         this.portrait = portrait;
+    }
+
+    public String getDmrKey() {
+        return dmrKey;
+    }
+
+    public void setDmrKey(String dmrKey) {
+        this.dmrKey = dmrKey;
     }
 
     public boolean isLoading() {

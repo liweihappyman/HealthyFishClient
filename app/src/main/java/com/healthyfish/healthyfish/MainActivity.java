@@ -39,6 +39,7 @@ import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
 import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -324,7 +325,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onCompleted() {
                         String user = MySharedPrefUtil.getValue("user");
                         if (!TextUtils.isEmpty(user)) {
-                            MqttUtil.connect();
+                            AutoLogin.autoLogin();
+                            MqttUtil.startAsync();
                         }
                     }
 

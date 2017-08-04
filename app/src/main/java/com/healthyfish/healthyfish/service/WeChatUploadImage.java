@@ -3,17 +3,16 @@ package com.healthyfish.healthyfish.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MyApplication;
-import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
-import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanUploadImagesResp;
 import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
-import org.litepal.crud.DataSupport;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,33 +32,18 @@ import top.zibin.luban.Luban;
  * 邮箱：
  * 编辑：WKJ
  */
-public class UploadImage extends IntentService {
-    int medRecId;//病历夹在数据库中的id
-    int courseOfDiseaseId;//病程在数据库中的id
-    int sizeOfImagePathList;//总共图片的size大小
-    List<String> imagePathList;//原始图片路径
-    List<String> imageUrls;//存放图片网络路径
-    boolean updateImages = false;
+public class WeChatUploadImage extends IntentService {
 
-    public UploadImage() {
-        super("UploadImage");
+    public WeChatUploadImage() {
+        super("WeChatUploadImage");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //初始化数据，获取activity传过来的数据
-        initData(intent);
-        //获取要上传的图片的路径
-        List<String> uplaodList = getUplaodList();
-        //imagePathList.size() > 0，说明有图片要上传，否则直接保存
-        if (uplaodList.size() > 0) {
-            List<File> compressFiles = getCompressFiles();//压缩图片
-            uploadFilesAndSave(compressFiles);//上传图片并保存返回的图片路径
-        } else {
-
-        }
+        List<String> imagePathList = initData(intent);//初始化数据，获取activity传过来的数据,即要上传的图片
+        List<File> compressFiles = getCompressFiles(imagePathList);//压缩图片
+        uploadFilesAndSave(compressFiles);//上传图片并保存返回的图片路径
     }
-
 
     /**
      * 上传图片，并将返回的路径保存到数据库
@@ -67,20 +51,17 @@ public class UploadImage extends IntentService {
      * @param compressFiles 压缩后的文件
      */
     private void uploadFilesAndSave(List<File> compressFiles) {
-        for (int i = 0; i < compressFiles.size(); i++) {
-            final List<File> list = new ArrayList<>();
-            list.clear();
-            list.add(compressFiles.get(i));
-            RetrofitManagerUtils.getInstance(this, null).uploadFilesRetrofit(list, i, new Subscriber<ResponseBody>() {
+
+            RetrofitManagerUtils.getInstance(this, null).uploadFilesRetrofit(compressFiles, 1, new Subscriber<ResponseBody>() {//没有特别的意义
                 @Override
                 public void onCompleted() {
-                    //Toast.makeText(MyApplication.getContetxt(), "图片上传完成！", Toast.LENGTH_SHORT).show();
                     //Log.i("图片上传", "完成");
+
+                    //EventBus.getDefault().post();
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    Toast.makeText(MyApplication.getContetxt(), "图片上传失败", Toast.LENGTH_SHORT).show();
                     //Log.i("图片上传", "图片上传失败" + e.toString());
                 }
 
@@ -88,16 +69,12 @@ public class UploadImage extends IntentService {
                 public void onNext(ResponseBody responseBody) {
                     try {
                         String str = responseBody.string();
-                        //Log.i("图片上传", "返回数据" + str);
+                        Log.i("图片上传", "返回数据" + str);
                         if (str != null) {
                             BeanUploadImagesResp beanUploadImagesResp = new BeanUploadImagesResp();
                             beanUploadImagesResp = JSON.parseObject(str, BeanUploadImagesResp.class);
                             String url = "http://www.kangfish.cn" + beanUploadImagesResp.getUrl();
-                            imageUrls.add(url);
-                            //保存路径到数据库中
-                            if (sizeOfImagePathList == imageUrls.size()) {
 
-                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -106,7 +83,7 @@ public class UploadImage extends IntentService {
                 }
             });
         }
-    }
+
 
     /**
      * 压缩上传的图片文件
@@ -114,7 +91,7 @@ public class UploadImage extends IntentService {
      * @return
      */
     @NonNull
-    private List<File> getCompressFiles() {
+    private List<File> getCompressFiles(List<String> imagePathList) {
         List<File> compressFiles = new ArrayList<>();//暂时存放压缩后的图片，用来上传
         for (int i = 0; i < imagePathList.size(); i++) {
             File file = new File(imagePathList.get(i));
@@ -134,37 +111,18 @@ public class UploadImage extends IntentService {
         return compressFiles;
     }
 
-    /**
-     * 将从网络加载的图片筛选出来，添加到等待保存到数据库的imageUrls中，并移出imagePathList，剩下的上传
-     *
-     * @return
-     */
-    @NonNull
-    private List<String> getUplaodList() {
-        List<String> uplaodlist = new ArrayList<>();
-        for (int i = 0; i < imagePathList.size(); i++) {
-            if (!new File(imagePathList.get(i)).exists()) {
-                imageUrls.add(imagePathList.get(i));
-            } else {
-                uplaodlist.add(imagePathList.get(i));
-            }
-        }
-        return uplaodlist;
-    }
+
 
     /**
      * 初始化数据，获取activity传过来的数据
      *
      * @param intent
      */
-    private void initData(Intent intent) {
-        MessageToServise messageToServise = (MessageToServise) intent.getSerializableExtra("messageToService");
-        medRecId = messageToServise.getMedRecId();
-        courseOfDiseaseId = messageToServise.getCourseOfDiseaseId();
-        imagePathList = new ArrayList<>();
-        imagePathList = messageToServise.getImageList();
-        sizeOfImagePathList = imagePathList.size();
-        imageUrls = new ArrayList<>();//存放图片网络路径
+    private List initData(Intent intent) {
+        List<String> imagePathList = new ArrayList<>();
+        String imagePath = intent.getStringExtra("WeChatImage");
+        imagePathList.add(imagePath);
+        return imagePathList;
     }
 
 }

@@ -172,6 +172,10 @@
         <service
             android:name=".service.UploadImages"
             android:exported="false"></service>
+
+        <service
+            android:name=".service.WeChatUploadImage"
+            android:exported="false"></service>
         <!--个人中心>个人信息>修改个人信息-->
         <activity android:name=".ui.activity.personal_center.ChangePersonalInformation" />
         <!--问诊选择科室页面-->

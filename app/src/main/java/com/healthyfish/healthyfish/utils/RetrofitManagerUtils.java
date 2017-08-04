@@ -113,19 +113,7 @@ public class RetrofitManagerUtils {
     }
 
     /**
-     * @description 使用new Subscribe<ResponseBody>实现回调方法
-     * @author Wayne
-     */
-    public void getMQTTHealthyInfoByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
-        apiService.getHealthyInfoByRetrofit(requestBody)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
-    }
-
-    /**
-     * 上传图片文件(多张图片)
+     * 上传图片文件(一张图片)
      *
      * @param multipartBody 请求体
      * @param subscriber    监听
