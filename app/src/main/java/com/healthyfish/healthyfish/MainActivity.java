@@ -3,11 +3,14 @@ package com.healthyfish.healthyfish;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -143,24 +146,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
     private final List<BeanMyAppointmentItem> myAppointmentList = new ArrayList<>();
 
+    private boolean isExit = false;
+
+    private Handler mHhandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         //初始化界面
         init();
+        String user = MySharedPrefUtil.getValue("user");
+        if (!TextUtils.isEmpty(user)) {
+            // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
+            initMQTT();
 
-        // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
-        initMQTT();
+            //初始化相机和内存卡读写权限
+            initPermission();
 
-        //初始化相机和内存卡读写权限
-        initPermission();
+            //更新用户的个人信息
+            upDatePersonalInformation();
+        } else {
+            MyToast.showToast(this, "您还没有登录呦");
+            startActivity(new Intent(this, Login.class));
+        }
+    }
 
-        //更新用户的个人信息
-        upDatePersonalInformation();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshLoginState(InitAllMessage initAllMessage) {
+        Log.i("LYQ", "MainActivity_refreshLoginState");
 
+        //打开App时若未登录则跳转到登录页面，登录成功后返回通知初始化以下内容
+
+        initMQTT();// 初始化MQTT连接，首先获取sid，然后开启MQTT连接
+
+        initPermission();//初始化相机和内存卡读写权限
+
+        upDatePersonalInformation();//更新用户的个人信息
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void toInterrogationFragment(BeanMyAppointmentItem beanMyAppointmentItem) {
+        Log.i("LYQ", "MainActivity_setTab");
+        setTab(1);//挂号成功后通知跳转到问诊页面InterrogationFragment
     }
 
 
@@ -259,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 设置菜单的选中状态
+     *
      * @param i
      */
     private void setTab(int i) {
@@ -324,7 +364,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onCompleted() {
                         String user = MySharedPrefUtil.getValue("user");
-                        if (!TextUtils.isEmpty(user)) {
+                        String sid = MySharedPrefUtil.getValue("sid");
+                        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
                             AutoLogin.autoLogin();
                             MqttUtil.startAsync();
                         }
@@ -391,30 +432,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onCompleted() {
                 if (!TextUtils.isEmpty(resp)) {
-                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                    if (beanBaseKeyGetResp.getCode() == 0) {
-                        String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
-                        if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                            BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                            if (!isSave) {
-                                MyToast.showToast(MainActivity.this, "保存个人信息失败");
+                    if (resp.toString().substring(0, 1).equals("{")) {
+                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                        if (beanBaseKeyGetResp.getCode() == 0) {
+                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                            if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
+                                BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                if (!isSave) {
+                                    if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
+                                        MyToast.showToast(MainActivity.this, "更新个人信息失败");
+                                    }
+                                }
+                            } else {
+                                //MyToast.showToast(MainActivity.this, "您还没有填写个人信息，请填写您的个人信息");//首页不用提醒，在个人中心页面再提醒
                             }
+                            MyApplication.isIsFirstUpdatePersonalInfo = false;
                         } else {
-                            //MyToast.showToast(MainActivity.this, "您还没有填写个人信息，请填写您的个人信息");//首页不用提醒，在个人中心页面再提醒
+                            MyToast.showToast(MainActivity.this, "更新个人信息失败");
                         }
-                        MyApplication.isIsFirstUpdatePersonalInfo = false;
                     } else {
-                        MyToast.showToast(MainActivity.this, "获取个人信息失败");
+                        MyToast.showToast(MainActivity.this, "加载个人信息出错啦");
                     }
                 } else {
-                    MyToast.showToast(MainActivity.this, "获取个人信息失败");
+                    MyToast.showToast(MainActivity.this, "更新个人信息失败");
                 }
             }
 
             @Override
             public void onError(Throwable e) {
-                MyToast.showToast(MainActivity.this, "获取个人信息失败,请更新您的个人信息");
+                MyToast.showToast(MainActivity.this, "更新个人信息失败,请更新您的个人信息");
             }
 
             @Override
@@ -430,105 +477,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    /**
-     * 从网络获取已购买的服务列表
-     */
-    private void upDateServiceListReq(String uid) {
 
-        BeanUserListValueReq beanUserListValueReq = new BeanUserListValueReq();
-        beanUserListValueReq.setPrefix("service_" + uid);
-        beanUserListValueReq.setFrom(0);
-        beanUserListValueReq.setTo(-1);
-        beanUserListValueReq.setNum(-1);
-
-        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListValueReq), new Subscriber<ResponseBody>() {
-            String strJson = "";
-
-            @Override
-            public void onCompleted() {
-                List<String> strServiceList = JSONArray.parseObject(strJson, List.class);
-                DataSupport.deleteAll(BeanServiceList.class);//清空数据库中旧的已购买服务列表
-                for (String strService : strServiceList) {
-                    BeanServiceList beanServiceList = JSON.parseObject(strService, BeanServiceList.class);
-                    beanServiceList.save();//更新数据库中已购买服务列表
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i("LYQ", "getServiceListReq()_onError:" + e.toString());
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                try {
-                    strJson = responseBody.string();
-                    Log.i("LYQ", "获取已购买服务响应：" + strJson);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 
-    /**
-     * 将用户的关注列表保存到数据库
-     */
-    private void upDateMyConcern(String uid) {
-        final List<BeanConcernList> concernList = new ArrayList<>();
-
-        BeanUserListReq beanUserListReq = new BeanUserListReq();
-        beanUserListReq.setPrefix("care_" + uid);
-        beanUserListReq.setFrom(0);
-        beanUserListReq.setTo(-1);
-        beanUserListReq.setNum(-1);
-
-        RetrofitManagerUtils.getInstance(this, null)
-                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
-                    @Override
-                    public void onCompleted() {
-                        DataSupport.deleteAll(BeanConcernList.class);
-                        for (BeanConcernList beanConcernList : concernList) {
-                            boolean isSave = beanConcernList.save();
-                            if (!isSave) {
-                                beanConcernList.save();
-                            }
-                            Log.i("LYQ", "upDateMyConcern关注列表1：" + beanConcernList.getKey().toString());
-                        }
-
-                        Log.i("LYQ", "MainActivity_upDateMyConcern_onCompleted()");
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i("LYQ", "MainActivity_upDateMyConcern_onError:" + e.toString());
-                    }
-
-                    @Override
-                    public void onNext(ResponseBody responseBody) {
-                        String jsonStr = null;
-                        try {
-                            jsonStr = responseBody.string();
-                            Log.i("LYQ", "MainActivity关注列表响应：" + jsonStr);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
-                        for (String str : concerns) {
-                            BeanConcernList beanConcernList = new BeanConcernList();
-                            beanConcernList.setKey(str);
-                            concernList.add(beanConcernList);
-
-                        }
-                    }
-                });
-
+    private void exit() {
+        if (isExit) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+            System.exit(0);
+        } else {
+            isExit = true;
+            MyToast.showToast(MyApplication.getContetxt(),"再按一次退出程序");
+            mHhandler.sendEmptyMessageDelayed(0, 2000);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
+
 }

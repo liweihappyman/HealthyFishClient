@@ -10,14 +10,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +69,18 @@ public class InterrogationFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_interrogation, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         toolbarTitle.setText("问诊服务");
-        initTabLayout();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+       initTabLayout();
         return rootView;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void toMyAppointmentFragment(BeanMyAppointmentItem beanMyAppointmentItem) {
+        Log.i("LYQ", "MainActivity_setTab");
+        vpInterrogationService.setCurrentItem(1);//挂号成功后通知跳转到我的挂号页面MyAppointmentFragment
+
     }
 
     private void initTabLayout() {
@@ -108,6 +124,7 @@ public class InterrogationFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
         unbinder.unbind();
     }
 }

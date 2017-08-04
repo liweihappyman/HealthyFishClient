@@ -169,6 +169,8 @@
                         android:layout_marginRight="54px"
                         android:paddingLeft="5px"
                         android:paddingRight="5px"
+                        android:maxLines="1"
+                        android:inputType="text"
                         android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>
@@ -197,6 +199,7 @@
                         android:paddingRight="5px"
                         android:inputType="number"
                         android:maxLength="18"
+                        android:maxLines="1"
                         android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>
@@ -224,6 +227,7 @@
                         android:paddingLeft="5px"
                         android:paddingRight="5px"
                         android:inputType="number"
+                        android:maxLines="1"
                         android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>
@@ -252,6 +256,7 @@
                         android:paddingRight="5px"
                         android:inputType="number"
                         android:maxLength="11"
+                        android:maxLines="1"
                         android:background="@drawable/gray_1dp_rounded_rectangle" />
 
                 </com.zhy.autolayout.AutoLinearLayout>

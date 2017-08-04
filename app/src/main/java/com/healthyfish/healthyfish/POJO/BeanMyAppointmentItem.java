@@ -18,7 +18,7 @@ public class BeanMyAppointmentItem extends DataSupport implements Serializable{
     private String imgUrl;//医生头像
     private String doctorName;//医生姓名
     private String consultationRoom;//诊室
-    private String dutise;//医生门诊类型
+    private String duties;//医生门诊类型
     private String hospital;//医院
     private String appointmentTime;//预约时间
     private String visitingPerson;//就诊人
@@ -67,12 +67,12 @@ public class BeanMyAppointmentItem extends DataSupport implements Serializable{
         this.consultationRoom = consultationRoom;
     }
 
-    public String getDutise() {
-        return dutise;
+    public String getDuties() {
+        return duties;
     }
 
-    public void setDutise(String dutise) {
-        this.dutise = dutise;
+    public void setDuties(String duties) {
+        this.duties = duties;
     }
 
     public String getHospital() {

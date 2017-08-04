@@ -390,10 +390,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
-                                    for (String strJsonNews : strJsonNewsList) {
-                                        BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
-                                        newsList.add(bean);
+                                    if (!TextUtils.isEmpty(jsonNews)) {
+                                        if (jsonNews.substring(0, 1).equals("[")) {
+                                            List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
+                                            for (String strJsonNews : strJsonNewsList) {
+                                                BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
+                                                newsList.add(bean);
+                                            }
+                                        } else {
+                                            MyToast.showToast(getActivity(), "加载健康咨询出错啦");
+                                        }
+                                    } else {
+                                        MyToast.showToast(getActivity(), "加载健康咨询出错");
                                     }
                                 }
                             }
