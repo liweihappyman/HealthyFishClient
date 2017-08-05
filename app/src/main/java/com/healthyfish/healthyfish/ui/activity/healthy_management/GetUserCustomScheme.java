@@ -147,9 +147,6 @@ public class GetUserCustomScheme extends BaseActivity {
                 dateList.add(new BeanSelectDate(strDate,false));
             }
         }
-        for (BeanSelectDate b : dateList) {
-            Log.i("LYQ", "BeanSelectDate:" + b.getDate());
-        }
         return dateList;
     }
 
@@ -176,9 +173,6 @@ public class GetUserCustomScheme extends BaseActivity {
                 if (beanSelectDate.isCheck()) {
                     selectDateList.add(beanSelectDate.getDate());
                 }
-            }
-            for (String b : selectDateList) {
-                Log.i("LYQ", "selectDateList:" + b);
             }
             Intent intent = new Intent(this, ConcreteArrangement.class);
             intent.putStringArrayListExtra("selectDateList", (ArrayList<String>) selectDateList);

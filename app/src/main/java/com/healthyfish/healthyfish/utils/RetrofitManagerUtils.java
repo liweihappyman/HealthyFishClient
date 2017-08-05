@@ -82,29 +82,13 @@ public class RetrofitManagerUtils {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
-                //.addInterceptor(new AddCookiesInterceptor(MyApplication.getContetxt(), null))
-                //.addInterceptor(new ReceivedCookiesInterceptor(MyApplication.getContetxt()))
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
-                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写的超时时间
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间
+                .writeTimeout(WRITE_TIMEOUT,TimeUnit.SECONDS)//设置写的超时时间
+                .connectTimeout(CONNECT_TIMEOUT,TimeUnit.SECONDS)//设置连接超时时间
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .hostnameVerifier(HttpsUtils.getHostnameVerifier())
                 .cookieJar(new CookieMangerUtils(MyApplication.getContetxt()))//设置cookie保存
                 .build();
-
-        //这个WKJ正在使用的，如果有冲突改回原来那个，这个先不要删，注释掉，后面再修改
-        /*OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new ReceivedCookiesInterceptor(MyApplication.getContetxt()))
-                .addInterceptor(new AddCookiesInterceptor(MyApplication.getContetxt(), null))
-
-                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
-                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写的超时时间
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间
-                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
-                .hostnameVerifier(HttpsUtils.getHostnameVerifier())
-                .cookieJar(new CookieMangerUtils(MyApplication.getContetxt()))//设置cookie保存
-                .build();*/
-
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
@@ -113,6 +97,7 @@ public class RetrofitManagerUtils {
                 .baseUrl(url)
                 .build();
         apiService = retrofit.create(IApiService.class);
+
     }
 
     /**
@@ -128,7 +113,7 @@ public class RetrofitManagerUtils {
     }
 
     /**
-     * 上传图片文件(多张图片)
+     * 上传图片文件(一张图片)
      *
      * @param multipartBody 请求体
      * @param subscriber    监听

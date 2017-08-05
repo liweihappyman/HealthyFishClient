@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanAppointmentDates;
@@ -22,6 +23,7 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
+import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.POJO.Test;
 import com.healthyfish.healthyfish.R;
@@ -104,12 +106,10 @@ public class DoctorDetail extends BaseActivity {
     private FragmentManager fm;
     private FragmentTransaction ft;
 
-    //    private BeanHospDeptDoctListRespItem DeptDoctInfo;
-//    private BeanHospRegisterReq beanHospRegisterReq;
-    private BeanDoctorInfo beanDoctorInfo;
+    private BeanDoctorInfo beanDoctorInfo = new BeanDoctorInfo();
 
     private boolean isAttention = false;//是否已经关注该医生
-    private String uid = MyApplication.uid;
+    private String uid;
     private String key;
 
     @Override
@@ -118,14 +118,17 @@ public class DoctorDetail extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_detail);
         ButterKnife.bind(this);
-        beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
+        uid = MyApplication.uid;
+        if (getIntent().getSerializableExtra("BeanDoctorInfo") != null) {
+            beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
+        }
         initToolBar(toolbar, toolbarTitle, beanDoctorInfo.getName() + "医生");
         tvAttentionListener();//关注操作
         fm = this.getSupportFragmentManager();
         ft = fm.beginTransaction();
         initData();
         try {
-            initPointmentTime();//初始化预约时间
+            initApointmentTime();//初始化预约时间
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -141,28 +144,17 @@ public class DoctorDetail extends BaseActivity {
         tvDepartmentAndTitle.setText("诊室：" + beanDoctorInfo.getCLINIQUE_CODE() + "   " + beanDoctorInfo.getDuties());
         tvDoctorCompany.setText(beanDoctorInfo.getHospital());
         doctorInfo.setText(beanDoctorInfo.getIntroduce());
-
-        //判断是否已经关注该医生
-        if (isAttention) {
-            tvAttention.setText("已关注");
-            tvAttention.setBackgroundResource(R.drawable.concern);
-            tvAttention.setTextColor(getResources().getColor(R.color.color_white));
-            tvAttention.setClickable(false);
-        } else {
-            tvAttention.setText("+关注");
-            tvAttention.setBackgroundResource(R.drawable.concern_not);
-            tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
-            tvAttention.setClickable(true);
-        }
     }
 
     /**
      * 初始化预约时间
      */
-    private void initPointmentTime() throws ParseException {
+    private void initApointmentTime() throws ParseException {
         List<BeanWeekAndDate> mList = new ArrayList<>();
         List<String> schdList = beanDoctorInfo.getSchdList();
-
+        if (schdList.isEmpty()) {
+            return;
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");//设置想要的日期格式
         Calendar calendar = Calendar.getInstance();//获取日历实例
         int year = calendar.get(Calendar.YEAR);
@@ -510,12 +502,10 @@ public class DoctorDetail extends BaseActivity {
      */
     private void tvAttentionListener() {
         if (!TextUtils.isEmpty(uid)) {
-            key = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
-            if (!DataSupport.where("key = ?", key).find(BeanConcernList.class).isEmpty()) {
-                isAttention = true;
-                tvAttention.setClickable(false);
+            if (MyApplication.isFirstUpdateMyConcern) {
+                upDateMyConcern(uid);
             } else {
-                isAttention = false;
+                getMyConcernFromDB(uid);
             }
         }
 
@@ -532,6 +522,34 @@ public class DoctorDetail extends BaseActivity {
             }
         });
 
+    }
+
+    /**
+     * 查找数据库用户是否关注该医生
+     * @param uid
+     */
+    private void getMyConcernFromDB(String uid) {
+        if (!TextUtils.isEmpty(uid)) {
+            key = "care_" + uid + "_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + String.valueOf(beanDoctorInfo.getSTAFF_NO());
+            if (!DataSupport.where("key = ?", key).find(BeanConcernList.class).isEmpty()) {
+                isAttention = true;
+                tvAttention.setClickable(false);
+            } else {
+                isAttention = false;
+            }
+        }
+        //判断是否已经关注该医生
+        if (isAttention) {
+            tvAttention.setText("已关注");
+            tvAttention.setBackgroundResource(R.drawable.concern);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_white));
+            tvAttention.setClickable(false);
+        } else {
+            tvAttention.setText("+关注");
+            tvAttention.setBackgroundResource(R.drawable.concern_not);
+            tvAttention.setTextColor(getResources().getColor(R.color.color_primary));
+            tvAttention.setClickable(true);
+        }
     }
 
     /**
@@ -589,6 +607,64 @@ public class DoctorDetail extends BaseActivity {
                 }
             }
         });
+
+    }
+
+    /**
+     * 更新用户的关注列表并保存到数据库
+     */
+    private void upDateMyConcern(final String uid) {
+        BeanUserListReq beanUserListReq = new BeanUserListReq();
+        beanUserListReq.setPrefix("care_" + uid);
+        beanUserListReq.setFrom(0);
+        beanUserListReq.setTo(-1);
+        beanUserListReq.setNum(-1);
+
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
+
+                    String jsonStr = null;
+
+                    @Override
+                    public void onCompleted() {
+                        if (jsonStr.substring(0, 1).equals("[")) {
+                            MyApplication.isFirstUpdateMyConcern = false;
+                            DataSupport.deleteAll(BeanConcernList.class);
+                            List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
+                            if (!concerns.isEmpty()) {
+                                for (String str : concerns) {
+                                    BeanConcernList beanConcernList = new BeanConcernList();
+                                    beanConcernList.setKey(str);
+                                    boolean isSave = beanConcernList.save();
+                                    if (!isSave) {
+                                        beanConcernList.save();
+                                    }
+                                }
+                            }
+                            getMyConcernFromDB(uid);
+
+                        } else {
+                            MyToast.showToast(DoctorDetail.this, "更新关注信息出错啦");
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("LYQ", "挂号upDateMyConcern_onError:" + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        try {
+                            jsonStr = responseBody.string();
+                            Log.i("LYQ", "挂号关注列表响应：" + jsonStr);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
 
     }
 }

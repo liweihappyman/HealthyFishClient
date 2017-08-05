@@ -7,7 +7,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    //读取网络是否可用
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -43,7 +46,6 @@
         <activity android:name=".ui.activity.Register" />
 
         <!--健康咨询（chat）-->
-        <activity android:name=".utils.chat_utils.PicViewActivity" />
         <activity android:name=".ui.activity.interrogation.HealthyChat"></activity>
 
         <!-- 病历夹页面 -->
@@ -175,6 +177,10 @@
 
         <service
             android:name=".service.UploadImages"
+            android:exported="false"></service>
+
+        <service
+            android:name=".service.WeChatUploadImage"
             android:exported="false"></service>
         <!--个人中心>个人信息>修改个人信息-->
         <activity android:name=".ui.activity.personal_center.ChangePersonalInformation" />

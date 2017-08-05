@@ -116,6 +116,11 @@ public class SetUp extends BaseActivity {
                 public void onCompleted() {
                     MySharedPrefUtil.remKey("user");     //清除用户登录信息
                     MyApplication.uid = "";
+                    MyApplication.isFirstUpdateUsrPhy = true;
+                    MyApplication.isIsFirstUpdatePersonalInfo = true;
+                    MyApplication.isFirstUpdateMyService = true;
+                    MyApplication.isFirstUpdateMyConcern = true;
+                    MyApplication.isFirstUpdateMyAppointment = true;
                     DataSupport.deleteAll(BeanMedRec.class);//清除所有病历
                     DataSupport.deleteAll(BeanInspectionReport.class);//清除检查报告化验单
                     DataSupport.deleteAll(BeanPrescriptiom.class);//清除处方

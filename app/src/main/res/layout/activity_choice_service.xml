@@ -44,7 +44,7 @@
                 android:layout_width="110px"
                 android:layout_height="110px"
                 android:layout_marginTop="32px"
-                android:src="@mipmap/ic_picture_consulting_open"/>
+                android:src="@mipmap/ic_picture_consulting_not_open"/>
 
             <TextView
                 android:id="@+id/tv_pictureConsultingPrice"
@@ -83,7 +83,7 @@
                 android:layout_width="110px"
                 android:layout_height="110px"
                 android:layout_marginTop="32px"
-                android:src="@mipmap/ic_private_doctor_open" />
+                android:src="@mipmap/ic_private_doctor_not_open" />
 
             <TextView
                 android:id="@+id/tv_privateDoctorPrice"
@@ -122,7 +122,7 @@
                 android:layout_width="110px"
                 android:layout_height="110px"
                 android:layout_marginTop="32px"
-                android:src="@mipmap/ic_appointment_not_open"/>
+                android:src="@mipmap/ic_appointment_open"/>
 
             <TextView
                 android:id="@+id/tv_appointmentPrice"

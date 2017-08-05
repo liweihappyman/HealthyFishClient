@@ -18,7 +18,6 @@ import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InspectionReportAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
-import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -54,7 +53,6 @@ public class InspectionReport extends BaseActivity implements View.OnClickListen
         initToolBar(toolbar, toolbarTitle, "我的化验单");
         search.setOnClickListener(this);
         initFromDB();
-        //AutoLogin.autoLogin();
         RequestForNetWorkData();
     }
 

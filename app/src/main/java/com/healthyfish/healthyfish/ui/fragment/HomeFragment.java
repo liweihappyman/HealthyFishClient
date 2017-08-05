@@ -145,7 +145,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initBannerRequest();//网络访问获取轮播图内容
         initInfoPrmopt("9");//测试消息提示文本
         initFunctionMenu();//初始化菜单监听
-        initHealthNews();//初始化健康资讯
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initHealthNews();//初始化健康资讯
+                    }
+                });
+
+            }
+        }).start();
+
         initHealthPlan();//初始化养生计划
         initHealthWorkShop();//初始化健康工坊
 
@@ -373,10 +390,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
-                                    for (String strJsonNews : strJsonNewsList) {
-                                        BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
-                                        newsList.add(bean);
+                                    if (!TextUtils.isEmpty(jsonNews)) {
+                                        if (jsonNews.substring(0, 1).equals("[")) {
+                                            List<String> strJsonNewsList = JSONArray.parseObject(jsonNews, List.class);
+                                            for (String strJsonNews : strJsonNewsList) {
+                                                BeanItemNewsAbstract bean = JSON.parseObject(strJsonNews, BeanItemNewsAbstract.class);
+                                                newsList.add(bean);
+                                            }
+                                        } else {
+                                            MyToast.showToast(getActivity(), "加载健康咨询出错啦");
+                                        }
+                                    } else {
+                                        MyToast.showToast(getActivity(), "加载健康咨询出错");
                                     }
                                 }
                             }
@@ -429,7 +454,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fm_interrogation2:
-                //initMQTT();
                 startActivity(new Intent(mContext, ChoiceDepartment.class));
                 break;
 
@@ -454,40 +478,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(toInspectionReport);
                 break;
         }
-
-    }
-
-    /**
-     * 初始化MQTT
-     */
-    private void initMQTT() {
-        RetrofitManagerUtils.getInstance(getContext(), HttpHealthyFishyUrl)
-                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
-                    @Override
-                    public void onCompleted() {
-                        String user = MySharedPrefUtil.getValue("user");
-                        if (!TextUtils.isEmpty(user)) {
-                            MqttUtil.startAsync();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseBody responseBody) {
-                        try {
-                            BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
-                            Log.e("从服务器获取sid", obj.getSid());
-                            MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
     }
 }
 

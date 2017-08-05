@@ -27,7 +27,6 @@ public interface IApiService {
     @POST("demo/TestServlet")
     Observable<ResponseBody> getHealthyInfoByRetrofit(@Body RequestBody requestBody);
 
-
     /**
      * 多张图片上传
      * 通过 MultipartBody和@body作为参数来上传图片
@@ -44,10 +43,5 @@ public interface IApiService {
     @Multipart
     @POST("demo/uploadFile")
     Observable<ResponseBody> uploadFiles(@PartMap Map<String, RequestBody> imgs);
-
-
-
-
-
 
 }

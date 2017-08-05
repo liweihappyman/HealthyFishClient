@@ -98,7 +98,7 @@ public class ChangePassword extends BaseActivity {
                                 if (code >= 0){
                                     Toast.makeText(ChangePassword.this,"修改成功",Toast.LENGTH_LONG).show();
                                     MySharedPrefUtil.saveKeyValue("user",user);
-                                    EventBus.getDefault().post(new BeanPersonalInformation(true));
+                                    //EventBus.getDefault().post(new BeanPersonalInformation(true));//没必要通知更改密码
                                     Intent intent = new Intent(ChangePassword.this, ChangePasswordSuccess.class);
                                     startActivity(intent);
                                 }else {

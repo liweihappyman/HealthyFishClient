@@ -29,7 +29,7 @@ public class DateTimeUtil {
     public static String getTime(long ts){
         Date date=new Date();
         date.setTime(ts);
-        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = df.format(date);
         return dateStr;
     }

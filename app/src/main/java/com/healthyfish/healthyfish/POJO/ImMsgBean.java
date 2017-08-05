@@ -2,7 +2,9 @@ package com.healthyfish.healthyfish.POJO;
 
 import org.litepal.crud.DataSupport;
 
-public class ImMsgBean extends DataSupport {
+import java.io.Serializable;
+
+public class ImMsgBean extends DataSupport implements Serializable{
 
     public final static int CHAT_SENDER_OTHER= 0;
     public final static int CHAT_SENDER_ME = 1;
@@ -15,7 +17,7 @@ public class ImMsgBean extends DataSupport {
     public ImMsgBean() {
     }
 
-    public ImMsgBean(String time) {
+    public ImMsgBean(long time) {
         this.time = time;
     }
 
@@ -25,15 +27,21 @@ public class ImMsgBean extends DataSupport {
     // MQTT判断发送类型：t(text) i(image) v s(system)
     private String type;
     // 发送时间
-    private String time;
-    // 图片
+    private long time;
+    // 图片内容
     private String image;
     // 姓名
     private String name;
     // 发送内容
     private String content;
+    // 发送图片在服务器的地址
+    private String imgUrl;
     // 发送主题
     private String topic;
+    // 发送者肖像
+    private String portrait;
+    // 发送电子病历的key
+    private String dmrKey;
     // 是发送者还是接收者
     private boolean isSender = false;
     // 发送状态
@@ -41,20 +49,20 @@ public class ImMsgBean extends DataSupport {
     // 是否在loading
     private boolean isLoading = false;
 
-    public boolean isSuccess() {
-        return isSuccess;
+    public int getId() {
+        return id;
     }
 
-    public void setSuccess(boolean success) {
-        isSuccess = success;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public boolean isSender() {
-        return isSender;
+    public int getMsgType() {
+        return msgType;
     }
 
-    public void setSender(boolean sender) {
-        isSender = sender;
+    public void setMsgType(int msgType) {
+        this.msgType = msgType;
     }
 
     public String getType() {
@@ -65,11 +73,11 @@ public class ImMsgBean extends DataSupport {
         this.type = type;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -97,6 +105,14 @@ public class ImMsgBean extends DataSupport {
         this.content = content;
     }
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     public String getTopic() {
         return topic;
     }
@@ -105,20 +121,36 @@ public class ImMsgBean extends DataSupport {
         this.topic = topic;
     }
 
-    public int getId() {
-        return id;
+    public String getPortrait() {
+        return portrait;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
-    public int getMsgType() {
-        return msgType;
+    public String getDmrKey() {
+        return dmrKey;
     }
 
-    public void setMsgType(int msgType) {
-        this.msgType = msgType;
+    public void setDmrKey(String dmrKey) {
+        this.dmrKey = dmrKey;
+    }
+
+    public boolean isSender() {
+        return isSender;
+    }
+
+    public void setSender(boolean sender) {
+        isSender = sender;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setSuccess(boolean success) {
+        isSuccess = success;
     }
 
     public boolean isLoading() {

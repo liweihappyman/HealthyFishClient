@@ -1,5 +1,9 @@
 package com.healthyfish.healthyfish.POJO;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
+
 /**
  * 描述：我的挂号列表信息封装类
  * 作者：LYQ on 2017/8/1.
@@ -7,17 +11,29 @@ package com.healthyfish.healthyfish.POJO;
  * 编辑：LYQ
  */
 
-public class BeanMyAppointmentItem {
+public class BeanMyAppointmentItem extends DataSupport implements Serializable{
 
+    private int id;
     private String respKey;//挂号成功返回的key
     private String imgUrl;//医生头像
     private String doctorName;//医生姓名
     private String consultationRoom;//诊室
-    private String dutise;//医生门诊类型
+    private String duties;//医生门诊类型
     private String hospital;//医院
     private String appointmentTime;//预约时间
     private String visitingPerson;//就诊人
 
+    public BeanMyAppointmentItem() {
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getRespKey() {
         return respKey;
@@ -51,12 +67,12 @@ public class BeanMyAppointmentItem {
         this.consultationRoom = consultationRoom;
     }
 
-    public String getDutise() {
-        return dutise;
+    public String getDuties() {
+        return duties;
     }
 
-    public void setDutise(String dutise) {
-        this.dutise = dutise;
+    public void setDuties(String duties) {
+        this.duties = duties;
     }
 
     public String getHospital() {
@@ -82,4 +98,6 @@ public class BeanMyAppointmentItem {
     public void setVisitingPerson(String visitingPerson) {
         this.visitingPerson = visitingPerson;
     }
+
+
 }

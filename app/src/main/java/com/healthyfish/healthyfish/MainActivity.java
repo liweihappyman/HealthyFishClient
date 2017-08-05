@@ -3,24 +3,39 @@ package com.healthyfish.healthyfish;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
+import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
+import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
+import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
+import com.healthyfish.healthyfish.POJO.BeanUserListReq;
+import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
+import com.healthyfish.healthyfish.eventbus.InitAllMessage;
 import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.fragment.HealthWorkshopFragment;
 import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
@@ -29,6 +44,7 @@ import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
@@ -38,6 +54,9 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.autolayout.AutoLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -125,23 +144,71 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private PersonalCenterFragment personalCenterFragment;
 
     BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
+    private final List<BeanMyAppointmentItem> myAppointmentList = new ArrayList<>();
+
+    private boolean isExit = false;
+
+    private Handler mHhandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        initPermision();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        //初始化界面
         init();
+        String user = MySharedPrefUtil.getValue("user");
+        if (!TextUtils.isEmpty(user)) {
+            // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
+            initMQTT();
+
+            //初始化相机和内存卡读写权限
+            initPermission();
+
+            //更新用户的个人信息
+            upDatePersonalInformation();
+        } else {
+            MyToast.showToast(this, "您还没有登录呦");
+            startActivity(new Intent(this, Login.class));
+        }
     }
 
-    //初始化接界面
-    private void init() {
-        initpgAdapter();//初始化viewpage
-        setTab(0);//初始化界面设置，即指定刚进入是可见的界面
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshLoginState(InitAllMessage initAllMessage) {
+        Log.i("LYQ", "MainActivity_refreshLoginState");
 
-        // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
-        initMQTT();
+        //打开App时若未登录则跳转到登录页面，登录成功后返回通知初始化以下内容
+
+        initMQTT();// 初始化MQTT连接，首先获取sid，然后开启MQTT连接
+
+        initPermission();//初始化相机和内存卡读写权限
+
+        upDatePersonalInformation();//更新用户的个人信息
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void toInterrogationFragment(BeanMyAppointmentItem beanMyAppointmentItem) {
+        Log.i("LYQ", "MainActivity_setTab");
+        setTab(1);//挂号成功后通知跳转到问诊页面InterrogationFragment
+    }
+
+
+    /**
+     * 初始化界面
+     */
+    private void init() {
+        initVpAdapter();//初始化ViewPage
+        setTab(0);//初始化界面设置，即指定刚进入是可见的界面
 
         //菜单监听
         lyHome.setOnClickListener(this);
@@ -189,8 +256,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //初始化ViewPage
-    private void initpgAdapter() {
+    /**
+     * 初始化ViewPage
+     */
+    private void initVpAdapter() {
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
         interrogationFragment = new InterrogationFragment();
@@ -210,7 +279,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fgViewpage.setAdapter(ViewpageAdapter);
     }
 
-    //重置菜单状态
+
+    /**
+     * 重置菜单状态
+     */
     private void reSet() {
         ivHome.setImageResource(R.mipmap.home_unselected);
         ivInterrogation.setImageResource(R.mipmap.interrogation_unselect);
@@ -224,7 +296,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvPersonalCenter.setTextColor(getResources().getColor(R.color.color_general_and_title));
     }
 
-    //设置菜单的选中状态
+    /**
+     * 设置菜单的选中状态
+     *
+     * @param i
+     */
     private void setTab(int i) {
         switch (i) {
             case 0:
@@ -262,7 +338,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void initPermision() {
+    /**
+     * 获取相机和内存卡权限
+     */
+    public void initPermission() {
         Observable.timer(2000, TimeUnit.MILLISECONDS)
                 .compose(RxPermissions.getInstance(this).ensureEach(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION))
@@ -285,7 +364,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onCompleted() {
                         String user = MySharedPrefUtil.getValue("user");
-                        if (!TextUtils.isEmpty(user)) {
+                        String sid = MySharedPrefUtil.getValue("sid");
+                        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+                            AutoLogin.autoLogin();
                             MqttUtil.startAsync();
                         }
                     }
@@ -298,9 +379,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onNext(ResponseBody responseBody) {
                         try {
                             BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
-                            Log.e("从服务器获取sid", obj.getSid());
+                            //Log.e("MainActivity从服务器获取sid", obj.getSid());
                             MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
-                            AutoLogin.autoLogin();//获取到sid后自动登录
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -309,6 +389,122 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    /**
+     * 更新用户的个人信息
+     */
+    private void upDatePersonalInformation() {
+        String user = MySharedPrefUtil.getValue("user");
+        if (!TextUtils.isEmpty(user)) {
 
+            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
+            final String uid = beanUserLoginReq.getMobileNo();
+            MyApplication.uid = uid;
+            if (MyApplication.isIsFirstUpdatePersonalInfo) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        upDatePersonalInformationReq(uid);
+                    }
+                }).start();
+            }
+        }
+
+    }
+
+    /**
+     * 更新个人信息请求
+     */
+    private void upDatePersonalInformationReq(String uid) {
+
+        final String key = "info_" + uid;
+        BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+        beanBaseKeyGetReq.setKey(key);
+
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+
+            String resp = null;
+
+            @Override
+            public void onCompleted() {
+                if (!TextUtils.isEmpty(resp)) {
+                    if (resp.toString().substring(0, 1).equals("{")) {
+                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                        if (beanBaseKeyGetResp.getCode() == 0) {
+                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                            if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
+                                BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                if (!isSave) {
+                                    if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
+                                        MyToast.showToast(MainActivity.this, "更新个人信息失败");
+                                    }
+                                }
+                            } else {
+                                //MyToast.showToast(MainActivity.this, "您还没有填写个人信息，请填写您的个人信息");//首页不用提醒，在个人中心页面再提醒
+                            }
+                            MyApplication.isIsFirstUpdatePersonalInfo = false;
+                        } else {
+                            MyToast.showToast(MainActivity.this, "更新个人信息失败");
+                        }
+                    } else {
+                        MyToast.showToast(MainActivity.this, "加载个人信息出错啦");
+                    }
+                } else {
+                    MyToast.showToast(MainActivity.this, "更新个人信息失败");
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.showToast(MainActivity.this, "更新个人信息失败,请更新您的个人信息");
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+
+                try {
+                    resp = responseBody.string();
+                    Log.i("LYQ", "MainActivity个人信息响应：" + resp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    private void exit() {
+        if (isExit) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+            System.exit(0);
+        } else {
+            isExit = true;
+            MyToast.showToast(MyApplication.getContetxt(),"再按一次退出程序");
+            mHhandler.sendEmptyMessageDelayed(0, 2000);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
 }

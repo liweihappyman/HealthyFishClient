@@ -136,9 +136,27 @@ public class PersonalInformation extends BaseActivity {
 
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
 
+            String resp = null;
+
             @Override
             public void onCompleted() {
-
+                if (!TextUtils.isEmpty(resp)) {
+                    BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                    if (beanBaseKeyGetResp.getCode() == 0) {
+                        String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                        if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
+                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                            initWidget();
+                            beanPersonalInformation.saveOrUpdate("key = ?", key);
+                        } else {
+                            MyToast.showToast(PersonalInformation.this, "您还没有填写个人信息，请填写您的个人信息");
+                        }
+                    } else {
+                        MyToast.showToast(PersonalInformation.this, "获取个人信息失败，请重试");
+                    }
+                } else {
+                    MyToast.showToast(PersonalInformation.this, "获取个人信息失败，请重试");
+                }
             }
 
             @Override
@@ -151,26 +169,9 @@ public class PersonalInformation extends BaseActivity {
 
             @Override
             public void onNext(ResponseBody responseBody) {
-                String resp = null;
+
                 try {
                     resp = responseBody.string();
-                    if (!TextUtils.isEmpty(resp)) {
-                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-
-                        if (beanBaseKeyGetResp.getCode() == 0) {
-
-                            MyToast.showToast(PersonalInformation.this, "获取个人信息成功");
-                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
-                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            initWidget();
-                            beanPersonalInformation.saveOrUpdate("key = ?", key);
-                        } else {
-                            MyToast.showToast(PersonalInformation.this, "获取个人信息失败，请重试");
-                        }
-                    } else {
-                        MyToast.showToast(PersonalInformation.this, "获取个人信息失败，请重试");
-                    }
-
                     Log.i("LYQ", "个人信息：" + resp);
                 } catch (IOException e) {
                     e.printStackTrace();

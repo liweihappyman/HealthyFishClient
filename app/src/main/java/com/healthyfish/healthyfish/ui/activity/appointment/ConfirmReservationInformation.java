@@ -16,11 +16,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanHospCardAuthReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanKeyValue;
+import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.POJO.BeanVisitingPerson;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
 import com.healthyfish.healthyfish.R;
@@ -31,6 +33,7 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
@@ -102,8 +105,8 @@ public class ConfirmReservationInformation extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_information);
         ButterKnife.bind(this);
+        AutoLogin.autoLogin();//还是默默登录一遍好啊！
         initToolBar(toolbar, toolbarTitle, "确认信息");
-        AutoLogin.autoLogin();//自动登录
         iniData();
     }
 
@@ -197,10 +200,19 @@ public class ConfirmReservationInformation extends BaseActivity {
                 if (beanKeyValue != null) {
                     if (beanKeyValue.getKey().equals("failed")) {
                         MyToast.showToast(ConfirmReservationInformation.this, "挂号失败，" + beanKeyValue.getValue());
+                        if (beanKeyValue.getValue().toString().equals("login first")) {
+                            MyToast.showToast(ConfirmReservationInformation.this, "您的登录信息已过期，请重新登录");
+                        }
 //                        Log.e("LYQ", "挂号1：" + value);
                     } else {
                         MyToast.showToast(ConfirmReservationInformation.this, "挂号成功");
 //                        Log.e("LYQ", "挂号2：" + value);
+                        BeanMyAppointmentItem beanMyAppointmentItem = new BeanMyAppointmentItem();
+                        beanMyAppointmentItem.setRespKey(beanKeyValue.getKey());
+                        Intent intent = new Intent(ConfirmReservationInformation.this, MainActivity.class);
+                        startActivity(intent);
+                        EventBus.getDefault().post(beanMyAppointmentItem);
+                        finish();
                     }
                 } else {
                     MyToast.showToast(ConfirmReservationInformation.this, "挂号失败，请重试");
@@ -223,7 +235,7 @@ public class ConfirmReservationInformation extends BaseActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                Log.e("LYQ", "挂号666：" + jsonStr);
+                Log.e("LYQ", "挂号666：" + jsonStr);
                 beanKeyValue = JSON.parseObject(jsonStr, BeanKeyValue.class);
 //                Log.e("LYQ", "挂号：" + value);
             }

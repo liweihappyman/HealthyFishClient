@@ -28,7 +28,13 @@
         <mapping class="com.healthyfish.healthyfish.POJO.BeanServiceList" />
         <!--化验单-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanInspectionReport" />
+        <!--健康管理的推荐计划-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent" />
+        <!--挂号信息-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem" />
+        <!--用户体质-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanUserPhy" />
+
 
     </list>
 

@@ -167,4 +167,4 @@ public class UploadImage extends IntentService {
         imageUrls = new ArrayList<>();//存放图片网络路径
     }
 
-    }
+}
