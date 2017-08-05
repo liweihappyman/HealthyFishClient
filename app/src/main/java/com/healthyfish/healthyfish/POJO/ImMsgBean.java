@@ -21,10 +21,6 @@ public class ImMsgBean extends DataSupport implements Serializable{
         this.time = time;
     }
 
-    public ImMsgBean(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
     private int id;
     // 界面UI的发送类型：图片，文字
     private int msgType;

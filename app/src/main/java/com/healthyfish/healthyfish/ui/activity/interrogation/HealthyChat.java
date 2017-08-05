@@ -3,6 +3,7 @@ package com.healthyfish.healthyfish.ui.activity.interrogation;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,12 +12,14 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -25,18 +28,18 @@ import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.PhotoPreviewActivity;
 import com.foamtrace.photopicker.SelectModel;
 import com.foamtrace.photopicker.intent.PhotoPickerIntent;
-import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.POJO.AppFuncBean;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
-import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.healthy_chat.AppFuncAdapter;
 import com.healthyfish.healthyfish.adapter.healthy_chat.ChattingListAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
-import com.healthyfish.healthyfish.service.UploadImages;
+import com.healthyfish.healthyfish.eventbus.WeChatImageMessage;
 import com.healthyfish.healthyfish.service.WeChatUploadImage;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.SessionChatKeyboardBase;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
@@ -51,7 +54,6 @@ import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,13 +68,15 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
 
     private static final int REQUEST_CAMERA_CODE = 12;
     private static final int REQUEST_PREVIEW_CODE = 13;
-    private static final int AUTO_SET_FAILURE = 12;
+    // 发送延时显示失败（秒数）
+    private static final int AUTO_SET_FAILURE = 15;
 
     private static final String MQTT_SEND_IMG_TYPE = "i";
     public static final String MQTT_SEND_TXT_TYPE = "t";
 
     private Toolbar toolbar;
     private ListView lvChat;
+    TextView tvTitle;
     private SessionChatKeyboardBase sessionChat;
 
     // 聊天列表适配器
@@ -85,6 +89,8 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     private String imagePath;
     // 获取全局登录信息
     private BeanUserLoginReq beanUserLoginReq;
+    // 获取医生聊天信息
+    private BeanDoctorChatInfo beanDoctorChatInfo;
     // 获取医生手机信息
     private String topic;
     // 本机登录者
@@ -102,15 +108,9 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
         lvChat = (ListView) findViewById(R.id.lv_chat);
         sessionChat = (SessionChatKeyboardBase) findViewById(R.id.session_chat);
 
-        //
-        BeanDoctorChatInfo beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
-
-        // 医生姓名
-        toolbar.setTitle(beanDoctorChatInfo.getName());
-        setSupportActionBar(toolbar);
-
+        beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
         beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
-        //topic = "d" + beanDoctorChatInfo.getPhone();
+        // topic = "d" + beanDoctorChatInfo.getPhone();
         topic = "d" + "13977211042";
         sender = "u" + beanUserLoginReq.getMobileNo();
         //medRECKey = "dmr" + beanDoctorChatInfo.getPhone() + beanUserLoginReq.getMobileNo();
@@ -122,12 +122,41 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     }
 
     private void initView() {
+        // 初始化toolBar
+        initToolbar();
         // 初始化表情键盘
         initEmoticonsKeyBoardBar();
         // 初始化收到的信息列表
         initListView();
         // 初始化下拉刷新
         initSwipeToRefresh();
+    }
+
+    private void initToolbar() {
+        // 医生姓名
+        toolbar.setTitle(beanDoctorChatInfo.getName());
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
+        }
+    }
+
+    /**
+     * 返回按钮的监听
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                // startActivity(new Intent(HealthyChat.this, MainActivity.class));
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     /**
@@ -279,16 +308,13 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
                     MqttUtil.sendTxt(bean);
                     break;
                 case MQTT_SEND_IMG_TYPE:
-                    bean.setImage(msg.replace("[img]file://", ""));
                     bean.setType(mqttMsgType);// 类型：图片
+                    // UI添加消息
+                    chattingListAdapter.addData(bean, true, false);
                     // 开启服务默默上传图片
                     Intent startUploadImage = new Intent(this, WeChatUploadImage.class);
                     startUploadImage.putExtra("WeChatImage", bean);
                     startService(startUploadImage);
-                    // UI添加消息
-                    chattingListAdapter.addData(bean, true, false);
-                    // MQTT发送数据
-                    MqttUtil.sendImg(bean);
                     break;
                 default:
                     break;
@@ -316,10 +342,13 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
     }
 
     // 返回已经上传图片在服务器的URL
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void setUploadImgUrl(ImMsgBean bean) {
-        imgUrl = bean.getImgUrl();
-    }*/
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void setUploadImgUrl(final WeChatImageMessage weChatImageMessage) {
+        String time = weChatImageMessage.getTime() + "";
+        ImMsgBean bean = DataSupport.where("time = ?", time).find(ImMsgBean.class).get(0);
+        // MQTT发送数据
+        MqttUtil.sendImg(bean);
+    }
 
     // 开启线程，几秒钟之后自动设置发送失败
     private void autoFailureAfterSeconds(final ImMsgBean bean) {
@@ -339,11 +368,12 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
                     bean.updateAll("time = ?", bean.getTime() + "");
                     EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
                 }
+                Toast.makeText(HealthyChat.this, "发送信息失败", Toast.LENGTH_SHORT).show();
             }
         }).start();
     }
 
-    // 发送图标
+    // 发送大图片
     private void OnSendImage(String iconUri) {
         if (!TextUtils.isEmpty(iconUri)) {
             OnSendBtnClick("[img]" + iconUri, MQTT_SEND_IMG_TYPE);//给大图片加标记
@@ -447,14 +477,12 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
                     switch (mAppFuncBeanList.get(position).getId()) {
                         case 1:
                             clickToLoadImage();
-                            //Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
                             break;
                         case 2:
-                            //clickToTakePhoto();
-                            Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
+                            clickToTakePhoto();
                             break;
                         case 3:
-                            Toast.makeText(MyApplication.getContetxt(), "程序员正在加班实现", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HealthyChat.this, "程序员正在加班实现", Toast.LENGTH_SHORT).show();
                         default:
                             break;
                     }
@@ -474,7 +502,6 @@ public class HealthyChat extends AppCompatActivity implements FuncLayout.OnFuncK
         for (int i = 0; i < imagePaths.size(); i++) {
             String msg = "[img]" + Uri.fromFile(new File(imagePaths.get(i)));
             OnSendBtnClick(msg, MQTT_SEND_IMG_TYPE);
-            Log.e("imagePaths: ", imagePaths.get(i));
         }
         imagePaths.clear();
     }

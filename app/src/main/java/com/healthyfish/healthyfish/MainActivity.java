@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onNext(ResponseBody responseBody) {
                         try {
                             BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
-                            Log.e("MainActivity从服务器获取sid", obj.getSid());
+                            //Log.e("MainActivity从服务器获取sid", obj.getSid());
                             MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
                         } catch (IOException e) {
                             e.printStackTrace();
