@@ -97,7 +97,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
         newMedRec.setOnClickListener(this);
         medRecAll.setOnItemClickListener(this);
-        init();//先获取数据库的数据初始化列表
+        init(false);//先获取数据库的数据初始化列表
         initRefresh();
     }
 
@@ -114,11 +114,12 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
     /**
      * 思路:先加载本地数据库的内容，异步获取网络的数据，通过对比key，如果没有则添加到本地数据库，最后更新列表
+     * isGobackFromNewMedRec:   true是否在新建病历夹页面返回true
      */
-    private void init() {
+    private void init(boolean isGobackFromNewMedRec) {
         listMecRec.clear();
         listMecRec = DataSupport.findAll(BeanMedRec.class);
-        if (listMecRec.size() == 0) {
+        if (listMecRec.size() == 0&&!isGobackFromNewMedRec) {
             //initNullLV();
             reqForNetworkData(false);//如果本地数据为空，则从网上加载，否则要刷新数据，只有下拉刷新
         } else {
@@ -349,7 +350,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         switch (resultCode) {
             case ALL_MED_REC_RESULT:
                 listMecRec.clear();
-                init();
+                init(true);
                 break;
 
         }
@@ -359,7 +360,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0x11) {
-                init();//更新列表
+                init(false);//更新列表
                 hasNewData=false;
                 if (hasNullValueKey) {
                     for (String key : nullValueKey)

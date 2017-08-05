@@ -64,6 +64,9 @@ public class MyApplication extends Application{
                 case 0x13:
                     Toast.makeText(getContetxt(),"图片保存成功",Toast.LENGTH_SHORT).show();
                     break;
+                case 0x14:
+                    Toast.makeText(getContetxt(),"图片上传中，请稍等...",Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };

@@ -217,7 +217,6 @@ public class NewMedRec extends AppCompatActivity implements View.OnClickListener
                             networkReqDelMedRec();
                         }
                         dialog.dismiss();
-
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override

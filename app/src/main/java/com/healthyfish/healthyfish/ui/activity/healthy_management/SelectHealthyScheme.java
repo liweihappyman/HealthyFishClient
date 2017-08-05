@@ -14,6 +14,7 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.healthyfish.healthyfish.POJO.BeanHealthyScheme;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.fragment.HealthyPlanHot;
 import com.healthyfish.healthyfish.ui.fragment.SingleHealthySchemeFragment;
 import com.healthyfish.healthyfish.utils.ViewFindUtils;
 
@@ -39,7 +40,7 @@ public class SelectHealthyScheme extends BaseActivity {
     private Context mContext = this;
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private final String[] mTitles = {
-            "热门", "气虚质", "阳虚质", "痰湿质", "阴虚质"
+            "我的推荐计划","热门", "气虚质", "阳虚质", "痰湿质", "阴虚质"
     };
 
     @Override
@@ -65,8 +66,8 @@ public class SelectHealthyScheme extends BaseActivity {
         bean.setHealthySchemeParticipant("200");
 
         listHealthyScheme.add(bean);
-
-        for (int i = 0; i < mTitles.length; i++) {
+        mFragments.add(new HealthyPlanHot());
+        for (int i = 0; i < mTitles.length-1; i++) {
             mFragments.add(new SingleHealthySchemeFragment(mContext, listHealthyScheme));
         }
 

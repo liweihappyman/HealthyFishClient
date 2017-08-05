@@ -73,8 +73,9 @@
             android:layout_width="200px"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:background="@drawable/gray_rectangle"
-            android:text="确定" />
+            android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+            android:text="确定"
+            android:textColor="@color/color_white"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,8 +85,9 @@
             android:layout_width="200px"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:background="@drawable/gray_rectangle"
-            android:text="取消" />
+            android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
+            android:text="取消"
+            android:textColor="@color/color_white"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

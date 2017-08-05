@@ -180,7 +180,7 @@
         android:id="@+id/share_tv"
         android:layout_width="match_parent"
         android:layout_height="126px"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/selector_1dp_btn_color_from_priamry_to_white"
         android:clickable="true"
         android:gravity="center_horizontal|center_vertical"
         android:text="确认共享"

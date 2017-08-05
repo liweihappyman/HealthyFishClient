@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent;
 import com.healthyfish.healthyfish.R;
+
+import org.litepal.crud.DataSupport;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,13 +56,27 @@ public class GetRecommendedHealthyScheme extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
     @OnClick({R.id.btn_trad_chinese_scheme, R.id.btn_chronic_disease_scheme})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_trad_chinese_scheme:
-                Intent intentTradChinese = new Intent(GetRecommendedHealthyScheme.this, SelectHealthyScheme.class);
-                startActivity(intentTradChinese);
+                if (DataSupport.findLast(BeanHealthPlanCommendContent.class) == null) {
+                    Intent intentTradChinese = new Intent(GetRecommendedHealthyScheme.this, PreviewMyHealthyScheme.class);
+                    startActivity(intentTradChinese);
+                } else {
+                    Intent intent = new Intent(GetRecommendedHealthyScheme.this, SelectHealthyScheme.class);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.btn_chronic_disease_scheme:
                 break;
