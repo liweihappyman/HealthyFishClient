@@ -47,11 +47,10 @@ public class WkjNumberPicker extends NumberPicker {
         public void updateView(View view) {
             if (view instanceof EditText) {
                 //这里修改字体的属性
-                ((EditText) view).setTextColor(Color.parseColor("#FF335BDE"));
+                ((EditText) view).setTextColor(Color.parseColor("#FF019b79"));
 //            ((EditText) view).setTextSize();
             }
         }
-
     }
     //设置分割线的颜色
 //    private void setNumberPickerDividerColor(NumberPicker numberPicker) {

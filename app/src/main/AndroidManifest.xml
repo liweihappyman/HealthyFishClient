@@ -143,17 +143,21 @@
         <activity android:name=".ui.activity.appointment.DepartmentDoctorList" />
 
         <!-- 健康管理 -->
-        <activity android:name=".ui.activity.healthy_management.MainIndexHealthyManagement" />
+        <activity android:name=".ui.activity.healthy_management.MainIndexHealthyManagement"
+            android:launchMode="singleTask"/>
         <activity android:name=".ui.activity.healthy_management.IndexPhysicalIdentification" />
         <activity android:name=".ui.activity.healthy_management.PhyIdeQuestionnaireTest" />
         <activity android:name=".ui.activity.healthy_management.PhyIdeInfraredTest" />
-        <activity android:name=".ui.activity.healthy_management.MakeWholeHealthyScheme" />
+        <activity android:name=".ui.activity.healthy_management.MakeWholeHealthyScheme"
+            android:launchMode="singleTask"/>
         <activity android:name=".ui.activity.healthy_management.GetRecommendedHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.GetUserCustomScheme" />
         <activity android:name=".ui.activity.healthy_management.SelectPhyIdeHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.StartingSchemeDate" />
-        <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme" />
-        <activity android:name=".ui.activity.healthy_management.MyHealthyScheme" />
+        <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme"
+            android:theme="@style/ActivityTheme"/>
+        <activity android:name=".ui.activity.healthy_management.MyHealthyScheme"
+            android:theme="@style/ActivityTheme"/>
         <activity android:name=".ui.activity.healthy_management.SinglePlanDetail" />
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />

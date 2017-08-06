@@ -5,28 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_content_area_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.activity.healthy_management.MyHealthyScheme">
 
     <!--可折叠Toolbar-->
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_my_scheme"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="230dp"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/color_forth"
-            app:contentScrim="@color/color_forth"
+            android:background="@color/colorPrimaryDark"
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/colorPrimaryDark"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <ImageView
+            <com.zhy.autolayout.AutoLinearLayout
                 android:id="@+id/iv_banner_my_healthy_scheme"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@mipmap/health_plan_bg2"
+                android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="parallax"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_marginTop="300px"
+                    android:layout_marginLeft="55px"
+                    android:id="@+id/title"
+                    android:text="一周针灸"
+                    style="@style/textSize_60"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_progress"
+                    android:layout_marginTop="30px"
+                    android:layout_marginLeft="55px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/textSize_54"
+                    android:textColor="@color/color_white"
+                    android:text="已完成82%"/>
+
+                <ProgressBar
+                    android:id="@+id/progressbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="600px"
+                    android:layout_height="48px"
+                    android:layout_marginLeft="60px"
+                    android:layout_marginTop="30px"
+                    android:max="10"
+                    android:progress="6"
+                    android:progressDrawable="@drawable/progrssbar" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -39,7 +79,8 @@
                     style="@style/big_content_title_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_marginRight="70px"
+                    android:gravity="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </android.support.v7.widget.Toolbar>
@@ -48,98 +89,138 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!---->
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <!---->
         <com.zhy.autolayout.AutoLinearLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="196px"
-                android:background="@color/color_third"
-                android:text="日历" />
-
-            <!--这里是一天的计划内容-->
             <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_height="200px"
                 android:background="@color/color_white"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-                <!--项目1-->
-                <com.zhy.autolayout.AutoLinearLayout
+                android:orientation="vertical">
+
+
+                <com.flyco.tablayout.CommonTabLayout
+                    android:id="@+id/tab_up"
                     android:layout_width="match_parent"
-                    android:layout_height="160px"
-                    android:orientation="horizontal">
+                    android:layout_height="100px"
+                    android:background="@color/color_white"
+                    app:tl_iconVisible="false"
+                    app:tl_indicator_color="@color/color_white"
+                    app:tl_indicator_corner_radius="4px"
+                    app:tl_indicator_height="20px"
+                    app:tl_indicator_style="@null"
+                    app:tl_indicator_width="30px"
+                    app:tl_textSelectColor="@color/color_divider"
+                    app:tl_textUnselectColor="@color/color_divider"
+                    app:tl_textsize="48px" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="益阳罐"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/btn_go_to_single_scheme1"
-                        android:layout_width="180px"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
-                        android:text="@string/go_to_single_scheme"
-                        android:textColor="@color/color_white" />
-
-                </com.zhy.autolayout.AutoLinearLayout>
-
-                <include layout="@layout/item_divider" />
-
-                <!--项目2-->
-                <com.zhy.autolayout.AutoLinearLayout
+                <com.flyco.tablayout.CommonTabLayout
+                    android:id="@+id/tab_down"
                     android:layout_width="match_parent"
-                    android:layout_height="160px"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="针灸"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/btn_go_to_single_scheme2"
-                        android:layout_width="180px"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
-                        android:text="@string/go_to_single_scheme"
-                        android:textColor="@color/color_white" />
-
-                </com.zhy.autolayout.AutoLinearLayout>
-
+                    android:layout_height="100px"
+                    android:background="@color/color_white"
+                    app:tl_iconVisible="false"
+                    app:tl_indicator_color="#eeeeee"
+                    app:tl_indicator_corner_radius="4px"
+                    app:tl_indicator_height="20px"
+                    app:tl_indicator_style="TRIANGLE"
+                    app:tl_indicator_width="30px"
+                    app:tl_textSelectColor="@color/color_primary_dark"
+                    app:tl_textUnselectColor="@color/color_divider"
+                    app:tl_textsize="48px" />
 
             </com.zhy.autolayout.AutoLinearLayout>
 
-        </com.zhy.autolayout.AutoLinearLayout>
-    </android.support.v4.widget.NestedScrollView>
 
+
+            <!--这里是一天的计划内容-->
+            <!--<com.zhy.autolayout.AutoLinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@color/color_white"-->
+            <!--android:orientation="vertical"-->
+            <!--android:paddingLeft="15dp"-->
+            <!--android:paddingRight="15dp">-->
+            <!--&lt;!&ndash;项目1&ndash;&gt;
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="益阳罐"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btn_go_to_single_scheme1"
+                    android:layout_width="180px"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
+                    android:text="@string/go_to_single_scheme"
+                    android:textColor="@color/color_white" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <include layout="@layout/item_divider" />
+
+            &lt;!&ndash;项目2&ndash;&gt;
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="针灸"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btn_go_to_single_scheme2"
+                    android:layout_width="180px"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/selector_2dp_btn_color_from_priamry_to_white"
+                    android:text="@string/go_to_single_scheme"
+                    android:textColor="@color/color_white" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+-->
+
+
+            <!--</com.zhy.autolayout.AutoLinearLayout>-->
+            <android.support.v4.view.ViewPager
+                android:layout_marginTop="20px"
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="700px"
+                >
+            </android.support.v4.view.ViewPager>
+        </com.zhy.autolayout.AutoLinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

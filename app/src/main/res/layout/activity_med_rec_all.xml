@@ -39,7 +39,8 @@
         <ListView
             android:id="@+id/med_rec_all"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content">
+        </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </com.zhy.autolayout.AutoLinearLayout>

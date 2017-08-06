@@ -36,7 +36,7 @@ import top.zibin.luban.Luban;
 
 
 /**
- * 描述：1.压缩图片；2.上传图片；3.保存到本地数据库
+ * 描述：病历夹上传图片1.压缩图片；2.上传图片；3.保存到本地数据库
  * 作者：WKJ on 2017/7/27.
  * 邮箱：
  * 编辑：WKJ
@@ -64,6 +64,7 @@ public class UploadImages extends IntentService {
         List<String> uplaodlist = getUplaodList();
         //imagePathList.size() > 0，说明有图片要上传，否则直接保存
         if (uplaodlist.size() > 0) {
+            MyApplication.getApplicationHandler().sendEmptyMessage(0x14);
             List<File> list = new ArrayList<>();//每次上传往里面放一张图片
             List<File> compressFiles = getCompressFiles();//压缩图片
             for (int i = 0; i < compressFiles.size(); i++) {

@@ -5,16 +5,16 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanUploadImagesResp;
+import com.healthyfish.healthyfish.POJO.MessageToServise;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.eventbus.WeChatImageMessage;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 import top.zibin.luban.Luban;
@@ -36,10 +35,8 @@ import top.zibin.luban.Luban;
  * 编辑：WKJ
  */
 public class WeChatUploadImage extends IntentService {
-
     private String imgUrl;
     private ImMsgBean bean;
-
     public WeChatUploadImage() {
         super("WeChatUploadImage");
     }
@@ -96,6 +93,7 @@ public class WeChatUploadImage extends IntentService {
     }
 
 
+
     /**
      * 压缩上传的图片文件
      *
@@ -123,6 +121,7 @@ public class WeChatUploadImage extends IntentService {
     }
 
 
+
     /**
      * 初始化数据，获取activity传过来的数据
      *
@@ -141,5 +140,6 @@ public class WeChatUploadImage extends IntentService {
         imagePathList.add(imagePath);
         return imagePathList;
     }*/
+
 
 }
