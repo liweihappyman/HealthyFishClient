@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.ui.activity.healthy_management;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +29,8 @@ import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.TabEntity;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec;
 import com.healthyfish.healthyfish.ui.fragment.HealthPlanItemDetailFragment;
 import com.healthyfish.healthyfish.utils.Utils1;
 import com.healthyfish.healthyfish.utils.ViewFindUtils;
@@ -71,10 +75,9 @@ public class MyHealthyScheme extends AppCompatActivity {
     private String[] mTitlesWeek = {"一", "二", "三", "四", "五", "六", "日"};
     private String[] mTitlesDate = {"1", "2", "3", "4", "5", "6", "7"};
     private View mDecorView;
-    private int mPosition = 0;//标志点击的item的位置
-    BeanHealthPlanCommendContent beanHealthPlanCommendContent;
-    List<String> HotPlanListStr;
-    BeanHotPlanItem beanHotPlanItem;
+    private int id = 0;//标志点击的item的位置
+    BeanHealthPlanCommendContent beanHealthPlanCommendContent = new BeanHealthPlanCommendContent();
+    BeanHotPlanItem beanHotPlanItem = new BeanHotPlanItem();
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -88,30 +91,28 @@ public class MyHealthyScheme extends AppCompatActivity {
         setContentView(R.layout.activity_my_healthy_scheme);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        mPosition = getIntent().getIntExtra("position", 0);//获取点击item的位置
+        id = getIntent().getIntExtra("id", 0);//获取点击item的位置
         intiToolbarView();
         initAll();
     }
 
     private void initAll() {
-        beanHealthPlanCommendContent = DataSupport.findLast(BeanHealthPlanCommendContent.class);
-        HotPlanListStr = JSON.parseObject(beanHealthPlanCommendContent.getHotPlanListJsonStr(), List.class);
-        beanHotPlanItem = JSON.parseObject(HotPlanListStr.get(mPosition), BeanHotPlanItem.class);
+        beanHealthPlanCommendContent = DataSupport.find(BeanHealthPlanCommendContent.class, id);
+        beanHotPlanItem = JSON.parseObject(beanHealthPlanCommendContent.getMyHealthyPlanItemJsonStr(),BeanHotPlanItem.class);
         title.setText("一周" + beanHotPlanItem.getTitle() + "计划");
         refreshProgressUI(beanHotPlanItem);
-
         calendarDate = JSON.parseObject(beanHealthPlanCommendContent.getCalendarDateJsonStr(), List.class);
         week = JSON.parseObject(beanHealthPlanCommendContent.getWeekJsonStr(), List.class);
         date = JSON.parseObject(beanHealthPlanCommendContent.getDateJsonStr(), List.class);
         for (int i = 0; i < beanHotPlanItem.getTodoList().size(); i++) {
-            mFragments.add(new HealthPlanItemDetailFragment(beanHotPlanItem.getTodoList().get(i), mPosition, i, calendarDate));
+            mFragments.add(new HealthPlanItemDetailFragment(beanHotPlanItem.getTodoList().get(i), id, i, calendarDate));
         }
         initViewPager();
         boolean isShowRedPoint = false;//今天之后的有计划的日期显示红点
         for (int k = 0; k < beanHotPlanItem.getTodoList().size(); k++) {
             if (calendarDate.get(k).equals(Utils1.getTime()) || isShowRedPoint) {
                 //if (calendarDate.get(i).equals("2017年8月7日") || isShowRedPoint) {//测试用
-                if (!beanHotPlanItem.getTodoList().get(k).getProgress().equals("nothing")&& !beanHotPlanItem.getTodoList().get(k).isDone()) {
+                if (!beanHotPlanItem.getTodoList().get(k).getProgress().equals("nothing") && !beanHotPlanItem.getTodoList().get(k).isDone()) {
                     tabDown.showDot(k);
                 }
                 isShowRedPoint = true;
@@ -139,17 +140,34 @@ public class MyHealthyScheme extends AppCompatActivity {
                 finish();
                 break;
             case R.id.quit_scheme:
-                Toast.makeText(this, "退出计划", Toast.LENGTH_SHORT).show();
-                DataSupport.deleteAll(BeanHealthPlanCommendContent.class);
-                EventBus.getDefault().post(new NoticeMessage(1));
-                Intent intent = new Intent(this, MainIndexHealthyManagement.class);
-                startActivity(intent);
-                finish();
+                //Toast.makeText(this, "退出计划", Toast.LENGTH_SHORT).show();
+                showDelDialog();
                 break;
         }
         return true;
     }
-
+    /**
+     * 删除提示对话框
+     */
+    private void showDelDialog() {
+        new AlertDialog.Builder(this).setMessage("是否要删除此计划")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        DataSupport.delete(BeanHealthPlanCommendContent.class, id);
+                        EventBus.getDefault().post(new NoticeMessage(1));
+                        Intent intent = new Intent(MyHealthyScheme.this, MainIndexHealthyManagement.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my_healthy_scheme, menu);
@@ -238,9 +256,8 @@ public class MyHealthyScheme extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshUI(NoticeMessage noticeMessage) {
         if (noticeMessage.getMsg() == 1) {
-            beanHealthPlanCommendContent = DataSupport.findLast(BeanHealthPlanCommendContent.class);
-            HotPlanListStr = JSON.parseObject(beanHealthPlanCommendContent.getHotPlanListJsonStr(), List.class);
-            beanHotPlanItem = JSON.parseObject(HotPlanListStr.get(mPosition), BeanHotPlanItem.class);
+            beanHealthPlanCommendContent = DataSupport.find(BeanHealthPlanCommendContent.class,id);
+            beanHotPlanItem = JSON.parseObject(beanHealthPlanCommendContent.getMyHealthyPlanItemJsonStr(), BeanHotPlanItem.class);
             refreshProgressUI(beanHotPlanItem);
         }
     }

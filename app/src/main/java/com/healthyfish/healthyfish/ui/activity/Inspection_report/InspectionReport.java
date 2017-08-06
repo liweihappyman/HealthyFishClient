@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,12 +33,9 @@ import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
-public class InspectionReport extends BaseActivity implements View.OnClickListener {
-
+public class InspectionReport extends BaseActivity {
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
-    @BindView(R.id.search)
-    ImageView search;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.recyclerview)
@@ -51,7 +50,6 @@ public class InspectionReport extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_inspection_report);
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "我的化验单");
-        search.setOnClickListener(this);
         initFromDB();
         RequestForNetWorkData();
     }
@@ -119,10 +117,24 @@ public class InspectionReport extends BaseActivity implements View.OnClickListen
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.prescription, menu);
+        return true;
+    }
 
     @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(this, MyPrescription.class);
-        startActivity(intent);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.prescrption:
+                Intent intent = new Intent(this, MyPrescription.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
+
 }

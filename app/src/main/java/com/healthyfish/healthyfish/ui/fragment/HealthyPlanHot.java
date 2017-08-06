@@ -47,7 +47,6 @@ public class HealthyPlanHot extends Fragment {
     Unbinder unbinder;
     LinearLayoutManager lmg;
     private List<BeanHotPlanItem> mList;
-
     public HealthyPlanHot() {
         // Required empty public constructor
     }
@@ -58,36 +57,12 @@ public class HealthyPlanHot extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_healthy_plan_hot, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        initUI();
+        //initUI();
+        requestForRecommendPlan();
         //init();
         return rootView;
     }
 
-    private void init() {
-        if (DataSupport.findLast(BeanHealthPlanCommendContent.class) == null) {
-            requestForRecommendPlan();
-        } else {
-            BeanHealthPlanCommendContent beanHealthPlanCommendContent = DataSupport.findLast(BeanHealthPlanCommendContent.class);
-            if (beanHealthPlanCommendContent.getCalendarDateJsonStr().equals("还没有计划")) {
-                beanHealthPlanCommendContent.delete();
-                requestForRecommendPlan();
-            } else {
-                List<String> calendarDateList = JSON.parseObject(beanHealthPlanCommendContent.getCalendarDateJsonStr(), List.class);
-                for (int i = 0; i < calendarDateList.size(); i++) {
-                    if (calendarDateList.get(i).equals(Utils1.getTime())) {
-                        initUI();
-                        break;
-                    } else {
-                        beanHealthPlanCommendContent.delete();
-                        requestForRecommendPlan();
-                    }
-                }
-            }
-
-        }
-
-
-    }
 
     private void requestForRecommendPlanByKeyGet(final List<String> keys) {
         BeanBaseKeysGetReq beanBaseKeysGet = new BeanBaseKeysGetReq();
@@ -112,21 +87,21 @@ public class HealthyPlanHot extends Fragment {
                         BeanBaseKeysGetResp keysGet = JSON.parseObject(str, BeanBaseKeysGetResp.class);
                         //Log.i("healthPlan","keysGetlist" +keysGet.getValueList());
                         if (keysGet.getValueList().size() > 0) {
-                            BeanHealthPlanCommendContent beanHealthPlanCommendContent = new BeanHealthPlanCommendContent();
-                            beanHealthPlanCommendContent.setHotPlanListJsonStr(JSON.toJSONString(keysGet.getValueList()));
-                            beanHealthPlanCommendContent.setCalendarDateJsonStr("还没有计划");
-                            beanHealthPlanCommendContent.save();
-//                            mList = new ArrayList<BeanHotPlanItem>();
-//                            for (String hotPlanItemString : keysGet.getValueList()) {
-//                                BeanHotPlanItem hotPlanItem = JSON.parseObject(hotPlanItemString, BeanHotPlanItem.class);
-//                                mList.add(hotPlanItem);
+//                            BeanHealthPlanCommendContent beanHealthPlanCommendContent = new BeanHealthPlanCommendContent();
+//                            beanHealthPlanCommendContent.setHotPlanListJsonStr(JSON.toJSONString(keysGet.getValueList()));
+//                            beanHealthPlanCommendContent.setCalendarDateJsonStr("还没有计划");
+//                            beanHealthPlanCommendContent.save();
+                            mList = new ArrayList<BeanHotPlanItem>();
+                            for (String hotPlanItemString : keysGet.getValueList()) {
+                                BeanHotPlanItem hotPlanItem = JSON.parseObject(hotPlanItemString, BeanHotPlanItem.class);
+                                mList.add(hotPlanItem);
 //                                hotPlanItem.setDescription(JSON.toJSONString(hotPlanItem.getTodoList()));
 //                                hotPlanItem.save();
 //                                Log.i("healthPlan","keysGetItem" +hotPlanItem.getTitle());
 //                                for (BeanHotPlanItem.TodoListBean todoList:hotPlanItem.getTodoList()){
 //                                    Log.i("healthPlan","keysGetItemTodo" +todoList.getTodo());
 //                                }
-//                            }
+                            }
                         }
                     }
 
@@ -140,14 +115,14 @@ public class HealthyPlanHot extends Fragment {
     }
 
     private void initUI() {
-        BeanHealthPlanCommendContent beanHealthPlanCommendContent = DataSupport.findLast(BeanHealthPlanCommendContent.class);
-        mList = new ArrayList<BeanHotPlanItem>();
-        List<String> listStr = JSON.parseObject(beanHealthPlanCommendContent.getHotPlanListJsonStr(), List.class);
-        for (String hotPlanItemString : listStr) {
-            Log.i("hotPlanItemString",hotPlanItemString);
-            BeanHotPlanItem hotPlanItem = JSON.parseObject(hotPlanItemString, BeanHotPlanItem.class);
-            mList.add(hotPlanItem);
-        }
+//        BeanHealthPlanCommendContent beanHealthPlanCommendContent = DataSupport.findLast(BeanHealthPlanCommendContent.class);
+//        mList = new ArrayList<BeanHotPlanItem>();
+//        List<String> listStr = JSON.parseObject(beanHealthPlanCommendContent.getHotPlanListJsonStr(), List.class);
+//        for (String hotPlanItemString : listStr) {
+//            Log.i("hotPlanItemString",hotPlanItemString);
+//            BeanHotPlanItem hotPlanItem = JSON.parseObject(hotPlanItemString, BeanHotPlanItem.class);
+//            mList.add(hotPlanItem);
+//        }
         lmg = new LinearLayoutManager(getActivity());
         recyclerview.setLayoutManager(lmg);
         HealthPlanHotAdapter adapter = new HealthPlanHotAdapter(getActivity(), mList);

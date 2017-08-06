@@ -13,10 +13,19 @@ import java.util.List;
  */
 
 public class BeanHealthPlanCommendContent extends DataSupport{
+    private int id;//数据库自动分配的id
     private String weekJsonStr ;//星期:   一、二、...
     private String dateJsonStr; //号数，如2,3...
     private String calendarDateJsonStr ;//字符串的日期2017年10月20日
-    private String hotPlanListJsonStr ;
+    private String myHealthyPlanItemJsonStr ;//计划的具体内容
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getWeekJsonStr() {
         return weekJsonStr;
@@ -42,11 +51,11 @@ public class BeanHealthPlanCommendContent extends DataSupport{
         this.calendarDateJsonStr = calendarDateJsonStr;
     }
 
-    public String getHotPlanListJsonStr() {
-        return hotPlanListJsonStr;
+    public String getMyHealthyPlanItemJsonStr() {
+        return myHealthyPlanItemJsonStr;
     }
 
-    public void setHotPlanListJsonStr(String hotPlanListJsonStr) {
-        this.hotPlanListJsonStr = hotPlanListJsonStr;
+    public void setMyHealthyPlanItemJsonStr(String myHealthyPlanItemJsonStr) {
+        this.myHealthyPlanItemJsonStr = myHealthyPlanItemJsonStr;
     }
 }

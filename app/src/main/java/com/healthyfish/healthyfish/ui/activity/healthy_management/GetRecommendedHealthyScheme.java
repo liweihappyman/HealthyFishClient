@@ -56,6 +56,7 @@ public class GetRecommendedHealthyScheme extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -65,18 +66,13 @@ public class GetRecommendedHealthyScheme extends AppCompatActivity {
         }
         return true;
     }
+
     @OnClick({R.id.btn_trad_chinese_scheme, R.id.btn_chronic_disease_scheme})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_trad_chinese_scheme:
-                if (DataSupport.findLast(BeanHealthPlanCommendContent.class) == null) {
-                    Intent intentTradChinese = new Intent(GetRecommendedHealthyScheme.this, PreviewMyHealthyScheme.class);
-                    startActivity(intentTradChinese);
-                } else {
-                    Intent intent = new Intent(GetRecommendedHealthyScheme.this, SelectHealthyScheme.class);
-                    startActivity(intent);
-                }
-
+                Intent intent = new Intent(GetRecommendedHealthyScheme.this, SelectHealthyScheme.class);
+                startActivity(intent);
                 break;
             case R.id.btn_chronic_disease_scheme:
                 break;

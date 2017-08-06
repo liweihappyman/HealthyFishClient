@@ -143,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private HealthWorkshopFragment healthWorkshopFragment;
     private PersonalCenterFragment personalCenterFragment;
 
+    static public boolean connFlag = false;
+
     BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
     private final List<BeanMyAppointmentItem> myAppointmentList = new ArrayList<>();
 
@@ -359,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化MQTT
      */
     private void initMQTT() {
+
         RetrofitManagerUtils.getInstance(MainActivity.this, HttpHealthyFishyUrl)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
                     @Override

@@ -10,6 +10,7 @@
     <include layout="@layout/toolbar" />
 
     <ScrollView
+        android:layout_marginBottom="20px"
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp">
@@ -19,6 +20,12 @@
             android:layout_height="wrap_content"
 
             android:orientation="vertical">
+            <com.healthyfish.healthyfish.ui.widget.AutoCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:cardCornerRadius="3px"
+                android:elevation="5dp">
 
             <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="match_parent"
@@ -97,6 +104,7 @@
                     style="@style/Divider"
                     android:layout_marginBottom="30px" />
             </com.zhy.autolayout.AutoLinearLayout>
+            </com.healthyfish.healthyfish.ui.widget.AutoCardView>
 
             <TextView
                 android:id="@+id/create_course"

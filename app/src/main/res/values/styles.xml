@@ -127,7 +127,7 @@
     <!--病历夹EditText_hint样式-->
     <style name="EditText_Hint">
         <item name="android:background">@null</item>
-        <item name="android:layout_marginTop">20px</item>
+        <item name="android:layout_marginTop">25px</item>
         <item name="android:layout_marginLeft">50px</item>
         <item name="android:layout_marginRight">50px</item>
         <item name="android:layout_width">match_parent</item>
@@ -137,7 +137,7 @@
     </style>
     <!--病历夹提示标签样式-->
     <style name="TextView_Lable">
-        <item name="android:layout_marginTop">10px</item>
+        <item name="android:layout_marginTop">25px</item>
         <item name="android:layout_marginLeft">50px</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
