@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="27px"
             android:layout_marginBottom="33px"
-            android:text="湿热质"
+            android:text=""
             android:textColor="@color/color_secondary"
             android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="35px"
             android:layout_marginTop="33px"
-            android:text="气虚质、阳虚质"
+            android:text=""
             android:textColor="@color/color_secondary" />
 
     </com.zhy.autolayout.AutoLinearLayout>
@@ -67,7 +67,7 @@
             android:layout_marginTop="36px"
             android:paddingLeft="55px"
             android:paddingRight="55px"
-            android:text="湿热质简介"
+            android:text="体质简介"
             android:textColor="@color/color_general_and_title" />
 
         <ImageView
