@@ -117,7 +117,7 @@ public class SetUp extends BaseActivity {
 //                    cookie.edit().clear().commit();//清除cookie
                     MyApplication.uid = "";
                     MyApplication.isFirstUpdateUsrPhy = true;
-                    MyApplication.isIsFirstUpdatePersonalInfo = true;
+                    //MyApplication.isIsFirstUpdatePersonalInfo = true;//登录成功后已经更新个人信息，MainActivity不需要再次更新个人信息
                     MyApplication.isFirstUpdateMyService = true;
                     MyApplication.isFirstUpdateMyConcern = true;
                     MyApplication.isFirstUpdateMyAppointment = true;

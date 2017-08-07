@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean isExit = false;
 
-    private Handler mHhandler = new Handler(){
+    private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -497,7 +497,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             isExit = true;
             MyToast.showToast(MyApplication.getContetxt(),"再按一次退出程序");
-            mHhandler.sendEmptyMessageDelayed(0, 2000);
+            mHandler.sendEmptyMessageDelayed(0, 2000);
         }
     }
 
