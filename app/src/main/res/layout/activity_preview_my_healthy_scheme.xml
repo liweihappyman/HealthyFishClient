@@ -36,7 +36,7 @@
 
 
                 <TextView
-                    android:layout_marginTop="400px"
+                    android:layout_marginTop="280px"
                     android:layout_marginLeft="55px"
                     android:id="@+id/title"
                     android:text="一周体质养生计划"
@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:id="@+id/tv_progress"
+                    android:id="@+id/tv_type"
                     android:layout_marginTop="30px"
                     android:layout_marginLeft="55px"
                     android:layout_width="wrap_content"

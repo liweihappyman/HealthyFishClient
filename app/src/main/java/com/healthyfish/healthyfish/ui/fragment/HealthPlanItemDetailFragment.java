@@ -35,9 +35,8 @@ import butterknife.Unbinder;
 public class HealthPlanItemDetailFragment extends Fragment {
     BeanHotPlanItem.TodoListBean todo;
     int position;//记录页面的位置
-    int itemPosition;//记录前面点击的item的position
+    int id;//该计划所在的数据表的位置
     BeanHealthPlanCommendContent beanHealthPlanCommendContent;
-    List<String> HotPlanListStr;
     BeanHotPlanItem beanHotPlanItem;
     List<String> calendarDate = new ArrayList<>();//字符串的日期2017年10月20日
     @BindView(R.id.type)
@@ -46,10 +45,10 @@ public class HealthPlanItemDetailFragment extends Fragment {
     Button btnGoToSingleScheme1;
     Unbinder unbinder;
 
-    public HealthPlanItemDetailFragment(BeanHotPlanItem.TodoListBean todo, int itemPosition, int position, List<String> calendarDate) {//todo没用到了
-        //this.todo = todo;
+    public HealthPlanItemDetailFragment(BeanHotPlanItem.TodoListBean todo, int id, int position, List<String> calendarDate) {//todo没用到了
+        this.todo = todo;
         this.position = position;
-        this.itemPosition = itemPosition;
+        this.id = id;
         this.calendarDate = calendarDate;
 
     }
@@ -66,9 +65,8 @@ public class HealthPlanItemDetailFragment extends Fragment {
 
     private void initUI() {
         //一层层解析出来，获取具体的数据
-        beanHealthPlanCommendContent = DataSupport.findLast(BeanHealthPlanCommendContent.class);
-        HotPlanListStr = JSON.parseObject(beanHealthPlanCommendContent.getHotPlanListJsonStr(), List.class);
-        beanHotPlanItem = JSON.parseObject(HotPlanListStr.get(itemPosition), BeanHotPlanItem.class);
+        beanHealthPlanCommendContent = DataSupport.find(BeanHealthPlanCommendContent.class,id);
+        beanHotPlanItem = JSON.parseObject(beanHealthPlanCommendContent.getMyHealthyPlanItemJsonStr(), BeanHotPlanItem.class);
         todo = beanHotPlanItem.getTodoList().get(position);
         if (!todo.getProgress().equals("nothing")) {
             type.setText(todo.getTodo());
@@ -106,15 +104,7 @@ public class HealthPlanItemDetailFragment extends Fragment {
                                     }
                                 }
                                 beanHotPlanItem.setTodoList(tempTodoList);
-                                List<String> tempHotPlanListStr = new ArrayList<String>();
-                                for (int k = 0; k < HotPlanListStr.size(); k++) {
-                                    if (k == itemPosition) {
-                                        tempHotPlanListStr.add(JSON.toJSONString(beanHotPlanItem));
-                                    } else {
-                                        tempHotPlanListStr.add(HotPlanListStr.get(k));
-                                    }
-                                }
-                                beanHealthPlanCommendContent.setHotPlanListJsonStr(JSON.toJSONString(tempHotPlanListStr));
+                                beanHealthPlanCommendContent.setMyHealthyPlanItemJsonStr(JSON.toJSONString(beanHotPlanItem));
                                 beanHealthPlanCommendContent.save();
                                 EventBus.getDefault().post(new NoticeMessage(1));//通知更新MyHealthyScheme的进度
                             }

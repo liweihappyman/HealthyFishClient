@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.healthyfish.healthyfish.POJO.BeanHotPlanItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MyHealthyScheme;
+import com.healthyfish.healthyfish.ui.activity.healthy_management.PreviewMyHealthyScheme;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.utils.AutoUtils;
 
@@ -53,9 +54,9 @@ public class HealthPlanHotAdapter extends RecyclerView.Adapter<HealthPlanHotAdap
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext,MyHealthyScheme.class);
-                //intent.putExtra("plan",beanHotPlanItem);
-                intent.putExtra("position",position);
+                Intent intent = new Intent(mContext,PreviewMyHealthyScheme.class);
+                intent.putExtra("plan",beanHotPlanItem);
+                //intent.putExtra("position",position);
                 activity.startActivity(intent);
             }
         });

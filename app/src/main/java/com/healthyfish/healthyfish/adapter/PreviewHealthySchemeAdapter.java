@@ -27,21 +27,20 @@ import butterknife.ButterKnife;
 
 public class PreviewHealthySchemeAdapter extends RecyclerView.Adapter<PreviewHealthySchemeAdapter.ViewHolder> {
     private Context mContext;
-    private List<BeanHotPlanItem> hotPlanItem;
+    private BeanHotPlanItem hotPlanItem;
     private List<String> week;
     private List<String> calendarDate;
-    List<BeanHotPlanItem.TodoListBean> list1 = new ArrayList<>();
-    List<BeanHotPlanItem.TodoListBean> list2 = new ArrayList<>();
+    List<BeanHotPlanItem.TodoListBean> todoList = new ArrayList<>();
 
 
-    public PreviewHealthySchemeAdapter(Context mContext, List<BeanHotPlanItem> hotPlanItem, List<String> week, List<String> calendarDate) {
+
+    public PreviewHealthySchemeAdapter(Context mContext, BeanHotPlanItem hotPlanItem, List<String> week, List<String> calendarDate) {
         this.mContext = mContext;
         this.hotPlanItem = hotPlanItem;
         this.week = week;
         this.calendarDate = calendarDate;
+        todoList = hotPlanItem.getTodoList();
         //因为实现知道这里只有两个计划
-        list1 = hotPlanItem.get(0).getTodoList();
-        list2 = hotPlanItem.get(1).getTodoList();
     }
 
     @Override
@@ -52,20 +51,11 @@ public class PreviewHealthySchemeAdapter extends RecyclerView.Adapter<PreviewHea
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.type1Layout.setVisibility(View.GONE);
-        holder.type2Layout.setVisibility(View.GONE);
         holder.date.setText(calendarDate.get(position) + "  " + "星期" + week.get(position));
-        if (!list1.get(position).getProgress().equals("nothing")) {
-            holder.type1Layout.setVisibility(View.VISIBLE);
-            holder.type1.setText(list1.get(position).getTodo());
+        if (!todoList.get(position).getProgress().equals("nothing")) {
+            holder.type1.setText(todoList.get(position).getTodo());
         } else {
-            //holder.type1.setText("休息");
-        }
-        if (!list2.get(position).getProgress().equals("nothing")) {
-            holder.type2Layout.setVisibility(View.VISIBLE);
-            holder.type2.setText(list2.get(position).getTodo());
-        } else {
-            //holder.type2.setText("休息");
+            holder.type1.setText("休息日");
         }
     }
 
@@ -83,10 +73,6 @@ public class PreviewHealthySchemeAdapter extends RecyclerView.Adapter<PreviewHea
         TextView time;
         @BindView(R.id.type1_layout)
         AutoLinearLayout type1Layout;
-        @BindView(R.id.type2)
-        TextView type2;
-        @BindView(R.id.type2_layout)
-        AutoLinearLayout type2Layout;
         public ViewHolder(View itemView) {
             super(itemView);
             AutoUtils.auto(itemView);

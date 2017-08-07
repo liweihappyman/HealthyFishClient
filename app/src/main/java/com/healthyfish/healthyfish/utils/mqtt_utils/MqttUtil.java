@@ -28,6 +28,7 @@ import org.json.JSONException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static com.healthyfish.healthyfish.MainActivity.connFlag;
 import static com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil.userName;
 
 
@@ -81,7 +82,7 @@ import static com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil.userName;
 public class MqttUtil {
     public static final int MSG_WHAT_MQTT_BASE = 0;
 
-    static boolean connFlag = false;
+
     public static final String HOST = "tcp://219.159.248.209:1883";
     private static String userType;
     private static String localUser;
@@ -432,7 +433,7 @@ class PushCallback implements MqttCallback {
 
     public void connectionLost(Throwable cause) {
         // 连接丢失后，一般在这里面进行重连
-        MqttUtil.connFlag = false;
+        connFlag = false;
         System.out.println("连接断开，可以做重连");
         MqttUtil.startAsync();
     }

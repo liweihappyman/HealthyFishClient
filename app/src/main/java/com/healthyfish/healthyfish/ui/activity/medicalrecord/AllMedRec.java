@@ -312,15 +312,14 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                 Intent selectDoctor = new Intent(this, SelectDoctor.class);
                 AllMedRec.this.startActivity(selectDoctor);
                 break;
-            case R.id.test:
-                break;
+
         }
         return true;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.med_rec, menu);
+        getMenuInflater().inflate(R.menu.med_rec2, menu);
         return true;
     }
 

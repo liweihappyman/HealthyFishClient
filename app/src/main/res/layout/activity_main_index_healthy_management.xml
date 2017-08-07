@@ -60,8 +60,14 @@
                         android:background="@color/color_white"
                         android:text="    整体计划"
                         android:textSize="14sp" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/whole_scheme_recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <include layout="@layout/master_plan"/>
+                    </android.support.v7.widget.RecyclerView>
+
+                  <!--  <include layout="@layout/master_plan"/>-->
                 </com.zhy.autolayout.AutoLinearLayout>
             </com.healthyfish.healthyfish.ui.widget.AutoCardView>
 

@@ -40,7 +40,7 @@ public class SelectHealthyScheme extends BaseActivity {
     private Context mContext = this;
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private final String[] mTitles = {
-            "我的推荐计划","热门", "气虚质", "阳虚质", "痰湿质", "阴虚质"
+            "热门", "气虚质", "阳虚质", "痰湿质", "阴虚质"
     };
 
     @Override
@@ -64,7 +64,6 @@ public class SelectHealthyScheme extends BaseActivity {
         bean.setHealthySchemeTitle("秋季养生计划");
         bean.setHealthySchemeContent("秋分 * 气虚质 * 养生");
         bean.setHealthySchemeParticipant("200");
-
         listHealthyScheme.add(bean);
         mFragments.add(new HealthyPlanHot());
         for (int i = 0; i < mTitles.length-1; i++) {
