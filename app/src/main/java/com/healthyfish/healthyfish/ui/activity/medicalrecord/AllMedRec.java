@@ -36,6 +36,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MedRecLvAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.ComparatorDate;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -64,7 +65,7 @@ import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.AL
  */
 
 
-public class AllMedRec extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class AllMedRec extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int TO_NEW_MED_REC = 38;//进入NewMedRec页面的请求标志
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

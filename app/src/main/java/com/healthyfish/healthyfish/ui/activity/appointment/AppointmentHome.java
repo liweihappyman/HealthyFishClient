@@ -30,6 +30,7 @@ import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrReptReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.AutoVerticalScrollTextView;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -55,8 +56,8 @@ import rx.Subscriber;
  */
 
 
-public class AppointmentHome extends AppCompatActivity {
-    private String[] strings={"我的剑，就是你的剑!","俺也是从石头里蹦出来得!","我用双手成就你的梦想!","人在塔在!","犯我德邦者，虽远必诛!","我会让你看看什么叫残忍!","我的大刀早已饥渴难耐了!"};
+public class AppointmentHome extends BaseActivity {
+    private String[] strings={"这里是您的就诊排号信息，请及时关注，以免错过就诊"};
 
     private int number =0;
     private boolean isRunning=true;

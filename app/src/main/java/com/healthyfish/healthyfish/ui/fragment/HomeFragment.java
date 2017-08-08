@@ -3,6 +3,9 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,6 +41,7 @@ import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.POJO.BeanListReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
+import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
@@ -63,6 +67,8 @@ import com.zhy.autolayout.AutoLinearLayout;
 import com.healthyfish.healthyfish.utils.Utils1;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -138,7 +144,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return rootView;
 
     }
-
 
 
     private void initAll() {
@@ -434,8 +439,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         listHealthWorkShop.add(commodity1);
         listHealthWorkShop.add(commodity2);
-        listHealthWorkShop.add(commodity1);
-        listHealthWorkShop.add(commodity2);
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
         workShopRecyclerview.setLayoutManager(layoutManager);
@@ -458,9 +461,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.fm_med_rec:
-                if (MySharedPrefUtil.getValue("user")==""){
-                    Toast.makeText(getActivity(),"您还没有登录哟",Toast.LENGTH_SHORT).show();
-                }else {
+                if (MySharedPrefUtil.getValue("user") == "") {
+                    Toast.makeText(getActivity(), "您还没有登录哟", Toast.LENGTH_SHORT).show();
+                } else {
                     Intent intent_med_rec = new Intent(mContext, AllMedRec.class);
                     startActivity(intent_med_rec);
                 }
@@ -476,6 +479,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.fm_fm_inspection_report:
                 Intent toInspectionReport = new Intent(getActivity(), InspectionReport.class);
                 startActivity(toInspectionReport);
+                break;
+
+            case R.id.fm_remote_monitoring:
+                List<String> topicList = new ArrayList<>(); // 获取购买过问诊服务的医生列表
+                //Cursor cursor = DataSupport.findBySQL("select topic from immsgbean where id in (select min(id) from immsgbean group by topic) ");
+                Cursor cursor = DataSupport.findBySQL("select distinct topic from immsgbean");
+                if (cursor.moveToFirst()) {
+                    do {
+                        String peerNumber = cursor.getString(cursor.getColumnIndex("topic")).substring(1);
+                        topicList.add(peerNumber);
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+
+                for (String b : topicList) {
+                    Log.e("topic", b);
+                }
                 break;
         }
     }

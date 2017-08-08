@@ -33,6 +33,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CourseOfDiseaseAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.service.UploadImages;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -59,7 +60,7 @@ import static com.healthyfish.healthyfish.ui.activity.medicalrecord.CreateCourse
  * 邮箱：
  * 编辑：WKJ
  */
-public class NewMedRec extends AppCompatActivity implements View.OnClickListener {
+public class NewMedRec extends BaseActivity implements View.OnClickListener {
     //标志病历夹是要更新还是直接保存（默认是更新状态）  save:表示新建的直接保存
     public String SAVE_OR_UPDATE = "update";
     //public boolean hasCourseList = false;

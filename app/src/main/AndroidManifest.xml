@@ -41,7 +41,8 @@
         </activity>
 
         <!-- 登录页面 -->
-        <activity android:name=".ui.activity.Login" />
+        <activity android:name=".ui.activity.Login" >
+        </activity>
         <!-- 注册页面 -->
         <activity android:name=".ui.activity.Register" />
 
@@ -179,9 +180,17 @@
             android:name=".service.UploadImages"
             android:exported="false"></service>
 
+        <!--聊天发送图片-->
         <service
             android:name=".service.WeChatUploadImage"
             android:exported="false"></service>
+        <!--判断网络广播-->
+        <receiver android:name=".broadcast.NetWorkChangeBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
         <!--个人中心>个人信息>修改个人信息-->
         <activity android:name=".ui.activity.personal_center.ChangePersonalInformation" />
         <!--问诊选择科室页面-->

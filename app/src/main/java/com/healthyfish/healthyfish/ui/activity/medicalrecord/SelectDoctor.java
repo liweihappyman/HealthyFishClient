@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SelectDoctorAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SelectDoctor extends AppCompatActivity {
+public class SelectDoctor extends BaseActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

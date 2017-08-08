@@ -229,7 +229,6 @@ public class Login extends AutoLayoutActivity implements ILoginView {
         startActivity(intent);
     }
 
-
     /**
      * 从网络获取个人信息
      */

@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.TagAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.FlowLayout;
 import com.healthyfish.healthyfish.ui.widget.TagFlowLayout;
 
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
  * 邮箱：
  * 编辑：WKJ
  */
-public class Lable extends AppCompatActivity implements View.OnClickListener {
+public class Lable extends BaseActivity implements View.OnClickListener {
     public static final int FOR_LABLE = 35;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

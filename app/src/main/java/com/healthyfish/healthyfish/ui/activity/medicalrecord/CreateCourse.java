@@ -39,6 +39,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.service.UploadImages;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.Utils1;
 import com.zhy.autolayout.AutoLinearLayout;
@@ -50,7 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class CreateCourse extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class CreateCourse extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int CREATE_COURSE_RESULT_UPDATE_OR_DEL = 30;//病程更新返回标志
     public static final int CREATE_COURSE_RESULT_SAVE = 31;//病程保存返回标志
     private CreateCourseGridAdapter gridAdapter;//适配器

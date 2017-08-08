@@ -11,11 +11,12 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ShareSuccess extends AppCompatActivity implements View.OnClickListener {
+public class ShareSuccess extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
