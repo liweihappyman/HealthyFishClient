@@ -138,6 +138,7 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
         sender = "u" + beanUserLoginReq.getMobileNo();
         //medRECKey = "dmr" + beanDoctorChatInfo.getPhone() + beanUserLoginReq.getMobileNo();
         doctorPortrait = beanDoctorChatInfo.getImgUrl();
+        Log.e("发送信息的头型", doctorPortrait);
         serviceType = beanDoctorChatInfo.getServiceType();
     }
 
@@ -315,7 +316,6 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
             ContentValues values = new ContentValues();
             values.put("isNewMsg", "false");
             values.put("portrait", doctorPortrait);
-            Log.e("p", doctorPortrait);
             b.updateAll(ImMsgBean.class, values, "time = ?", b.getTime() + "");
         }
         chattingListAdapter.addData(beanList);

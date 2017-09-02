@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.MainActivity;
@@ -56,6 +57,8 @@ import butterknife.Unbinder;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
+
 /**
  * 描述：问诊服务中当前服务选项页面
  * 作者：LYQ on 2017/7/5.
@@ -94,7 +97,6 @@ public class CurrentServiceFragment extends Fragment {
             //更新用户的个人信息
             upDatePersonalInformation();
         }
-
 
         return rootView;
     }
@@ -139,8 +141,6 @@ public class CurrentServiceFragment extends Fragment {
         // 获取购买过问诊服务的医生列表
         List<BeanPictureConsultServiceDoctorList> purchaseList = DataSupport.findAll(BeanPictureConsultServiceDoctorList.class);
 
-        Log.e("list size", purchaseList.size() + "");
-
         for (BeanPictureConsultServiceDoctorList bean : purchaseList) {
             map = new HashMap<String, Object>();
             String topic = "d" + bean.getDoctorNumber();
@@ -165,6 +165,7 @@ public class CurrentServiceFragment extends Fragment {
                 map.put("hospital", "柳州市中医院");
                 map.put("name", bean.getDoctorName());
                 map.put("portrait", bean.getDoctorPortrait());
+                Log.e("信息列表 ", bean.getDoctorPortrait());
                 map.put("peerNumber", bean.getDoctorNumber());
                 map.put("isNew", lastMsg.isNewMsg());
 //            Log.e("refreshDataList: ", lastMsg.isNewMsg() + "    " + lastMsg.getContent() + "     " + lastMsg.getTime());
@@ -202,6 +203,9 @@ public class CurrentServiceFragment extends Fragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdateSendingStatus(WeChatReceiveMsg msg) {
+
+        mList.clear();
+        initListView();
         // 刷新列表状态
 //        String time = msg.getTime() + "";
 //        ImMsgBean bean = DataSupport.where("time = ?", time).find(ImMsgBean.class).get(0);
@@ -251,6 +255,7 @@ public class CurrentServiceFragment extends Fragment {
         }
 
     }
+
     /**
      * 更新个人信息请求
      */

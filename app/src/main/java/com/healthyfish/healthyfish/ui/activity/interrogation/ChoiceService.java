@@ -524,6 +524,7 @@ public class ChoiceService extends BaseActivity {
         BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
         beanDoctorChatInfo.setName(beanDoctorInfo.getName());
         beanDoctorChatInfo.setPhone(doctorPhone);
+        // FIXME: 2017/9/2 头像链接问题
         beanDoctorChatInfo.setImgUrl(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
         beanDoctorChatInfo.setServiceType("pictureConsulting");
 
