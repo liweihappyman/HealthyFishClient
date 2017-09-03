@@ -136,7 +136,6 @@ public class CurrentServiceFragment extends Fragment {
      * @return
      */
     private void refreshDataList() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();  // 声明列表容器
         Map<String, Object> map;
         // 获取购买过问诊服务的医生列表
         List<BeanPictureConsultServiceDoctorList> purchaseList = DataSupport.findAll(BeanPictureConsultServiceDoctorList.class);
@@ -165,10 +164,8 @@ public class CurrentServiceFragment extends Fragment {
                 map.put("hospital", "柳州市中医院");
                 map.put("name", bean.getDoctorName());
                 map.put("portrait", bean.getDoctorPortrait());
-                Log.e("信息列表 ", bean.getDoctorPortrait());
                 map.put("peerNumber", bean.getDoctorNumber());
                 map.put("isNew", lastMsg.isNewMsg());
-//            Log.e("refreshDataList: ", lastMsg.isNewMsg() + "    " + lastMsg.getContent() + "     " + lastMsg.getTime());
                 map.put("isSender", lastMsg.isSender());
                 mList.add(map);
             }
@@ -218,8 +215,7 @@ public class CurrentServiceFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mList.clear();
-        refreshDataList();
-
+        initListView();
     }
 
     @Override

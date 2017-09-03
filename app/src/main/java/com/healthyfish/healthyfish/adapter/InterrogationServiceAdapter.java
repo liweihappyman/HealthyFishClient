@@ -124,13 +124,12 @@ public class InterrogationServiceAdapter extends BaseAdapter {
                     holderGraphicConsultation.tvHospitalGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[1]));
                     holderGraphicConsultation.tvMessageGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[2]));
                     holderGraphicConsultation.tvReceiveTimeGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[3]));
-                    /*if ("false" == list.get(position).get(flagPictureConsulting[5]).toString()){
+                    if ("false" == list.get(position).get(flagPictureConsulting[5]).toString()){
                         holderGraphicConsultation.ivNewMsgGraphicConsultation.setVisibility(View.GONE);
                     } else if ("true" == list.get(position).get(flagPictureConsulting[5]).toString()
                             && "false" == list.get(position).get(flagPictureConsulting[6]).toString()) {
-                        Log.e("getView new", "true");
                         holderGraphicConsultation.ivNewMsgGraphicConsultation.setVisibility(View.VISIBLE);
-                    }*/
+                    }
 
                     break;
                 case TYPE_PrivateDoctor:

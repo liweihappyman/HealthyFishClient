@@ -211,7 +211,6 @@ public class ChattingListAdapter extends BaseAdapter {
                 rightImageHolder.iv_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("preview: ", bean.getImage());
                         preview(bean.getImgUrl());
                     }
                 });
@@ -236,7 +235,6 @@ public class ChattingListAdapter extends BaseAdapter {
                 leftImageHolder.iv_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("preview: ", bean.getImage());
                         preview(bean.getImgUrl());
                     }
                 });
