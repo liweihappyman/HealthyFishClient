@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.POJO;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
@@ -21,26 +22,26 @@ public class ImMsgBean extends DataSupport implements Serializable{
         this.time = time;
     }
 
-    public ImMsgBean(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
     private int id;
+    // 服务类型
+    private String serviceType;
     // 界面UI的发送类型：图片，文字
     private int msgType;
-    // MQTT判断发送类型：t(text) i(image) v s(system)
+    // MQTT判断发送类型：t(text) i(image) v(video) s(system)
     private String type;
     // 发送时间
+    @Column(nullable = false)
     private long time;
     // 图片内容
     private String image;
-    // 姓名
+    // 发送姓名
     private String name;
     // 发送内容
     private String content;
     // 发送图片在服务器的地址
     private String imgUrl;
     // 发送主题
+    @Column(nullable = false)
     private String topic;
     // 发送者肖像
     private String portrait;
@@ -52,6 +53,8 @@ public class ImMsgBean extends DataSupport implements Serializable{
     private boolean isSuccess = false;
     // 是否在loading
     private boolean isLoading = false;
+    // 是否是新消息
+    private boolean isNewMsg = false;
 
     public int getId() {
         return id;
@@ -59,6 +62,14 @@ public class ImMsgBean extends DataSupport implements Serializable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 
     public int getMsgType() {
@@ -163,5 +174,13 @@ public class ImMsgBean extends DataSupport implements Serializable{
 
     public void setLoading(boolean loading) {
         isLoading = loading;
+    }
+
+    public boolean isNewMsg() {
+        return isNewMsg;
+    }
+
+    public void setNewMsg(boolean newMsg) {
+        isNewMsg = newMsg;
     }
 }

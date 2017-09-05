@@ -8,8 +8,5 @@
     <item android:id="@+id/del"
         android:title="删除"
         app:showAsAction="never"/>
-    <item android:id="@+id/test"
-        android:title="刷新"
-        app:showAsAction="never"/>
 
 </menu>

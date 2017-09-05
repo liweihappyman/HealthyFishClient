@@ -1,7 +1,7 @@
 package com.healthyfish.healthyfish.POJO;
 
 public class BeanListReq extends BeanBaseReq {
-	private String prefix;
+	private String prefix;//phc_健康计划
 	int	from;
 	int num;
 	int to;

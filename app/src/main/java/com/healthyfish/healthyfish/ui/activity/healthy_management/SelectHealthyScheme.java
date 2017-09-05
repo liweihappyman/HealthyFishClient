@@ -14,6 +14,7 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.healthyfish.healthyfish.POJO.BeanHealthyScheme;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.fragment.HealthyPlanHot;
 import com.healthyfish.healthyfish.ui.fragment.SingleHealthySchemeFragment;
 import com.healthyfish.healthyfish.utils.ViewFindUtils;
 
@@ -63,10 +64,9 @@ public class SelectHealthyScheme extends BaseActivity {
         bean.setHealthySchemeTitle("秋季养生计划");
         bean.setHealthySchemeContent("秋分 * 气虚质 * 养生");
         bean.setHealthySchemeParticipant("200");
-
         listHealthyScheme.add(bean);
-
-        for (int i = 0; i < mTitles.length; i++) {
+        mFragments.add(new HealthyPlanHot());
+        for (int i = 0; i < mTitles.length-1; i++) {
             mFragments.add(new SingleHealthySchemeFragment(mContext, listHealthyScheme));
         }
 

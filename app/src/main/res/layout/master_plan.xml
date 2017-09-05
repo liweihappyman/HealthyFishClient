@@ -2,39 +2,39 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="450px"
+    android:id="@+id/layout"
     android:background="@mipmap/master_plan_bg"
+    android:clickable="true"
+    android:orientation="vertical"
     android:paddingLeft="55px"
-    android:paddingRight="55px"
-    android:orientation="vertical">
+    android:paddingRight="55px">
 
     <TextView
         android:id="@+id/tv_title"
+        style="@style/textSize_54"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="70px"
-        android:textColor="@color/color_white"
-        style="@style/textSize_54"
-        android:text="两周中医体质养生计划"
-        />
+        android:text="一周体质养生计划"
+        android:textColor="@color/color_white" />
+
     <TextView
         android:id="@+id/tv_detail"
+        style="@style/textSize_42"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="45px"
-        android:textColor="@color/color_white"
-        style="@style/textSize_42"
-        android:text="第11/14天  全时段  针灸"
-        />
+        android:text="全时段  艾灸"
+        android:textColor="@color/color_white" />
+    <!--    android:text="第11/14天  全时段  针灸"-->
     <TextView
         android:id="@+id/tv_progress"
+        style="@style/textSize_42"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40px"
-        android:textColor="@color/color_white"
-        style="@style/textSize_42"
         android:text="已完成 82%"
-        />
-
+        android:textColor="@color/color_white" />
 
 
     <ProgressBar
@@ -48,3 +48,7 @@
         android:progressDrawable="@drawable/progrssbar" />
 
 </com.zhy.autolayout.AutoLinearLayout>
+
+
+
+

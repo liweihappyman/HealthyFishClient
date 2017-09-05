@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.healthyfish.healthyfish.ui.widget.AutoCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10px"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:elevation="8dp"
+    >
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/layout"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="280px"
+        android:orientation="vertical"
+        android:paddingLeft="55px"
+        android:paddingRight="55px"
+        android:background="@mipmap/health_plan_bg">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35px"
+            style="@style/textSize_60"
+            android:textStyle="bold"
+            android:textColor="@color/color_white"
+            android:text="艾灸养生计划"
+            />
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35px"
+            style="@style/textSize_42"
+            android:textColor="@color/color_white"
+            android:text="中医体质养生计划"
+            />
+        
+    </com.zhy.autolayout.AutoLinearLayout>
+</com.healthyfish.healthyfish.ui.widget.AutoCardView>

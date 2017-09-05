@@ -11,6 +11,7 @@
     <include layout="@layout/toolbar" />
 
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -52,14 +53,21 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/whole_scheme"
                         android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="80px"
                         android:background="@color/color_white"
                         android:text="    整体计划"
                         android:textSize="14sp" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/whole_scheme_recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <include layout="@layout/master_plan"/>
+                    </android.support.v7.widget.RecyclerView>
+
+                  <!--  <include layout="@layout/master_plan"/>-->
                 </com.zhy.autolayout.AutoLinearLayout>
             </com.healthyfish.healthyfish.ui.widget.AutoCardView>
 
@@ -117,13 +125,8 @@
 
                 <com.zhy.autolayout.AutoRelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="600px"
-                        android:background="@color/color_secondary_light" />
-
+                    android:layout_height="600px"
+                    android:background="@mipmap/master_plan_bg">
                     <Button
                         android:id="@+id/btn_total_healthy_scheme"
                         android:layout_width="540px"

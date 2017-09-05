@@ -34,7 +34,7 @@ import rx.Subscriber;
  * 编辑：LYQ
  */
 
-public class Register extends AppCompatActivity implements IRegisterView {
+public class Register extends BaseActivity implements IRegisterView {
 
     @BindView(R.id.et_input_phone_number)
     EditText etInputPhoneNumber;

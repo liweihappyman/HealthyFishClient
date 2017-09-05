@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +21,7 @@ import butterknife.OnClick;
  * 邮箱：liwei_happyman@qq.com
  * 编辑：
  */
-public class SelectPhyIdeHealthyScheme extends AppCompatActivity {
+public class SelectPhyIdeHealthyScheme extends BaseActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

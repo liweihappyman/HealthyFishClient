@@ -17,6 +17,18 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="ActivityTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#019b79</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!--toolbar使用的主题-->
     <style name="Toolbartheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -115,7 +127,7 @@
     <!--病历夹EditText_hint样式-->
     <style name="EditText_Hint">
         <item name="android:background">@null</item>
-        <item name="android:layout_marginTop">20px</item>
+        <item name="android:layout_marginTop">25px</item>
         <item name="android:layout_marginLeft">50px</item>
         <item name="android:layout_marginRight">50px</item>
         <item name="android:layout_width">match_parent</item>
@@ -125,7 +137,7 @@
     </style>
     <!--病历夹提示标签样式-->
     <style name="TextView_Lable">
-        <item name="android:layout_marginTop">10px</item>
+        <item name="android:layout_marginTop">25px</item>
         <item name="android:layout_marginLeft">50px</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

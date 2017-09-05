@@ -1,10 +1,12 @@
 package com.healthyfish.healthyfish.utils.mqtt_utils;
 
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
+import com.healthyfish.healthyfish.eventbus.WeChatReceiveMsg;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
@@ -80,7 +82,8 @@ import static com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil.userName;
 public class MqttUtil {
     public static final int MSG_WHAT_MQTT_BASE = 0;
 
-    static boolean connFlag = false;
+    // 初始化MQTT连接与否标志位
+    public static boolean connFlag = false;
     public static final String HOST = "tcp://219.159.248.209:1883";
     private static String userType;
     private static String localUser;
@@ -129,8 +132,6 @@ public class MqttUtil {
         localUser = userName;
         localTopic = userType + localUser;
         pingHandler.postDelayed(pingRunnable, keepAliveInterval * 1000);
-
-        Log.e("MQTT init", localUser + "    " + userPwd);
     }
 
     private static MqttAsyncClient mqttAsyncClient;
@@ -163,7 +164,6 @@ public class MqttUtil {
         connectingFlag = true;
         // sid_397C5B4390424970D2DEDD490DFC2181
         String passwd = MySharedPrefUtil.getValue("sid").substring(4);
-        Log.e("MQTT Connect sid", passwd);
         // String passwd = "E7FF9D647A8FB76D0E0F00A1F48F9132";
         try {
             String clientId = "" + userType + user;
@@ -275,7 +275,15 @@ public class MqttUtil {
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             bs.write((byte) localUser.length());
             bs.write(localUser.getBytes());
-            bs.write((bean.getType() + bean.getContent()).getBytes());
+            // 判断是否是文字还是图片
+            switch (bean.getType()) {
+                case "t":
+                    bs.write((bean.getType() + bean.getContent()).getBytes());
+                    break;
+                case "i":
+                    bs.write((bean.getType() + bean.getImgUrl()).getBytes());
+                    break;
+            }
             if (mqttAsyncClient == null) {
                 connect();
                 /*callHandler(obj.getString("method"), "failed: 请先登录");*/
@@ -328,11 +336,57 @@ public class MqttUtil {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        /*try {
+            String localUser = userType + userName;
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            bs.write((byte) localUser.length());
+            bs.write(localUser.getBytes());
+            bs.write((bean.getType() + bean.getContent()).getBytes());
+            if (mqttAsyncClient == null) {
+                connect();
+                return;
+            }
+
+            mqttAsyncClient.publish(bean.getTopic(), bs.toByteArray(), 1, false, null, new IMqttActionListener() {
+                public void onFailure(IMqttToken arg0, Throwable arg1) {
+                    if (!connFlag) {
+                        connectingFlag = false;
+                        connect();
+                    }
+                    Log.e("todo发布消息的方法和状态", "发布失败");
+
+                    bean.setToDefault("isLoading");
+                    bean.updateAll("time = ?", bean.getTime() + "");
+                    // 异步传送发送失败状态
+                    EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+                }
+
+                public void onSuccess(IMqttToken token) {
+                    Log.e("MQTT", "publish onSuccess---------" + token.getMessageId());
+                    Log.e("todo发布消息的方法和状态", "发布成功");
+
+                    bean.setSuccess(true);
+                    // 在使用updateAll()方法时，不能使用set方法来将字段设置为默认值
+                    bean.setToDefault("isLoading");
+                    bean.updateAll("time = ?", bean.getTime() + "");
+
+                    // 异步传送发送成功状态
+                    EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (MqttPersistenceException e) {
+            e.printStackTrace();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }*/
     }
 
     // 发送图片
     public static void sendImg(final ImMsgBean bean) {
 
+        // TODO: 2017/8/6 解决图片发送问题
         bean.save();
 
         try {
@@ -340,6 +394,52 @@ public class MqttUtil {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        /*try {
+            String localUser = userType + userName;
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            bs.write((byte) localUser.length());
+            bs.write(localUser.getBytes());
+            bs.write((bean.getType() + bean.getImgUrl()).getBytes());
+            if (mqttAsyncClient == null) {
+                connect();
+                return;
+            }
+
+            mqttAsyncClient.publish(bean.getTopic(), bs.toByteArray(), 1, false, null, new IMqttActionListener() {
+                public void onFailure(IMqttToken arg0, Throwable arg1) {
+                    if (!connFlag) {
+                        connectingFlag = false;
+                        connect();
+                    }
+                    Log.e("todo发布消息的方法和状态", "发布失败");
+
+                    bean.setToDefault("isLoading");
+                    bean.updateAll("time = ?", bean.getTime() + "");
+                    // 异步传送发送失败状态
+                    EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+                }
+
+                public void onSuccess(IMqttToken token) {
+                    Log.e("MQTT", "publish onSuccess---------" + token.getMessageId());
+                    Log.e("todo发布消息的方法和状态", "发布成功");
+
+                    bean.setSuccess(true);
+                    // 在使用updateAll()方法时，不能使用set方法来将字段设置为默认值
+                    bean.setToDefault("isLoading");
+                    bean.updateAll("time = ?", bean.getTime() + "");
+
+                    // 异步传送发送成功状态
+                    EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (MqttPersistenceException e) {
+            e.printStackTrace();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }*/
     }
 
     // 监听消息
@@ -426,7 +526,7 @@ class PushCallback implements MqttCallback {
                         break;
                     }
 
-                    case 't':{//文本信息
+                    case 't': {//文本信息
                         int msg_len = payload.length - uid_len - 2;
                         byte[] msg_array = new byte[msg_len];
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
@@ -446,14 +546,14 @@ class PushCallback implements MqttCallback {
                         break;
                     }
                     // TODO: 2017/7/25 发送收到图片处理
-                        case 'i': {//image
-                            int msg_len = payload.length - uid_len - 2;
-                            byte[] msg_array = new byte[msg_len];
-                            System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
-                            String url = new String(msg_array, "utf-8");
-                            MqttMsgImage.process(bean, peer, url, topic);
-                            break;
-                        }
+                    case 'i': {//image
+                        int msg_len = payload.length - uid_len - 2;
+                        byte[] msg_array = new byte[msg_len];
+                        System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
+                        String url = new String(msg_array, "utf-8");
+                        MqttMsgImage.process(bean, peer, url, topic);
+                        break;
+                    }
                     case 'v': //video
                         break;
                     case 'a': //audio
@@ -466,13 +566,13 @@ class PushCallback implements MqttCallback {
 }
 
 class MqttMsgText {
-    public static void process(String topic, String peer, String content, String type) {
+/*    public static void process(String topic, String peer, String content, String type) {
 //        long ts = MqttDao.saveMsg(topic, peer, content, "t");
         long ts = DateTimeUtil.getLongMs();
         Log.e("process: ", ts + "");
         BeanMqttMsgItem bean = new BeanMqttMsgItem(ts, topic, peer, content, type, false);
         //需要根据peer去找到主题，更新content
-    }
+    }*/
 
     // 发送文本
     public static void process(ImMsgBean bean, String peer, String content, String topic) {
@@ -484,36 +584,36 @@ class MqttMsgText {
         bean.setTime(DateTimeUtil.getLongMs());
         bean.setType("t");
         bean.setTopic(topic);
+        bean.setNewMsg(true);
         bean.save();
-        EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+
+        // 获取新的信息
+        EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
+
     }
 }
 
 //i|len|<src="...">|img_bytes
 class MqttMsgImage {
     public static void process(ImMsgBean bean, String peer, String url, String topic) {
-        bean.setContent(url);
+        if ("failure".equals(url)) {
+            bean.setContent("接收图片失败");
+            bean.setType("t");
+        } else {
+            bean.setContent("[img]");
+            bean.setType("i");
+        }
+        bean.setImgUrl(url);
         bean.setToDefault("isSender");
         bean.setName(peer);
-
         bean.setTime(DateTimeUtil.getLongMs());
-        bean.setType("t");
         bean.setTopic(topic);
+        bean.setNewMsg(true);
         bean.save();
-        EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+
+        // 获取新的信息
+        EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
     }
 }
 
-/*class MqttUserStatusChange {
-    public static void process(String topic, byte status) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("topic", topic);
-            obj.put("status", status);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        *//*MqttUtil.callHandler("nativeUserStatusChange", obj.toString());*//*
-    }
-}*/
 

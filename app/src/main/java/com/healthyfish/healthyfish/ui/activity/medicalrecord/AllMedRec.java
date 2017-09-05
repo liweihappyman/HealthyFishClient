@@ -36,6 +36,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MedRecLvAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.ComparatorDate;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -64,7 +65,7 @@ import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.AL
  */
 
 
-public class AllMedRec extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class AllMedRec extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int TO_NEW_MED_REC = 38;//进入NewMedRec页面的请求标志
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -81,13 +82,13 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
     private boolean hasNewData = false;
     private List<BeanMedRec> listMecRec = new ArrayList<>();
     private int size;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_med_rec_all);
         ButterKnife.bind(this);
         toolbar.setTitle("");
+        toolbarTitle.setText("全部病历");
         //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.three_points));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -97,7 +98,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         }
         newMedRec.setOnClickListener(this);
         medRecAll.setOnItemClickListener(this);
-        init();//先获取数据库的数据初始化列表
+        init(false);//先获取数据库的数据初始化列表
         initRefresh();
     }
 
@@ -114,15 +115,15 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
     /**
      * 思路:先加载本地数据库的内容，异步获取网络的数据，通过对比key，如果没有则添加到本地数据库，最后更新列表
+     * isGobackFromNewMedRec:   true是否在新建病历夹页面返回true
      */
-    private void init() {
+    private void init(boolean isGobackFromNewMedRec) {
         listMecRec.clear();
         listMecRec = DataSupport.findAll(BeanMedRec.class);
-        if (listMecRec.size() == 0) {
-            initNullLV();
+        if (listMecRec.size() == 0&&!isGobackFromNewMedRec) {
+            //initNullLV();
             reqForNetworkData(false);//如果本地数据为空，则从网上加载，否则要刷新数据，只有下拉刷新
-        }
-        if (listMecRec.size() > 0) {
+        } else {
             //将日期按时间先后排序
             ComparatorDate c = new ComparatorDate();
             Collections.sort(listMecRec, c);
@@ -153,11 +154,6 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         beanUserListReq.setFrom(0);
         beanUserListReq.setNum(-1);
         beanUserListReq.setTo(-1);
-//        BeanUserListValueReq userListValueReq = new BeanUserListValueReq();
-//        userListValueReq.setPrefix(prefix.toString());
-//        userListValueReq.setFrom(0);
-//        userListValueReq.setNum(-1);
-//        userListValueReq.setTo(-1);
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
@@ -165,6 +161,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
 
             @Override
             public void onError(Throwable e) {
+                swipeRefresh.setRefreshing(false);
                 Toast.makeText(AllMedRec.this, "出错啦，请检查网络环境", Toast.LENGTH_SHORT).show();
             }
 
@@ -194,6 +191,9 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                                 swipeRefresh.setRefreshing(false);
                                 Toast.makeText(AllMedRec.this, "已经是最新数据了", Toast.LENGTH_SHORT).show();
                             }
+                        }else {
+                            swipeRefresh.setRefreshing(false);
+                            Toast.makeText(AllMedRec.this, "没有可加载的数据哦", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (IOException e) {
@@ -209,18 +209,6 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
      * 删除网络数据空值key，造成空值key的原因还不清楚，出现过
      */
     private void networkReqDelMedRec(String key) {
-        //删除多个用
-//        String userStr = MySharedPrefUtil.getValue("user");
-//        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
-//
-//        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
-//        StringBuilder prefix = new StringBuilder("medRec_");
-//        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
-//        //Log.i("电子病历","prefix:"+prefix.toString());
-//        beanBaseKeysRemReq.setPrefix(prefix.toString());
-//        beanBaseKeysRemReq.getKeyList().add(medRec.getKey());
-//        Log.i("keyiiiii", "addkey" + beanBaseKeysRemReq.getKeyList().get(0));
-
         BeanBaseKeyRemReq baseKeyRemReq = new BeanBaseKeyRemReq();//删除单个
         baseKeyRemReq.setKey(key);
         RetrofitManagerUtils.getInstance(AllMedRec.this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(baseKeyRemReq), new Subscriber<ResponseBody>() {
@@ -310,6 +298,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         imageView.setImageResource(R.mipmap.personal_center);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -324,15 +313,14 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
                 Intent selectDoctor = new Intent(this, SelectDoctor.class);
                 AllMedRec.this.startActivity(selectDoctor);
                 break;
-            case R.id.test:
-                break;
+
         }
         return true;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.med_rec, menu);
+        getMenuInflater().inflate(R.menu.med_rec2, menu);
         return true;
     }
 
@@ -362,7 +350,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         switch (resultCode) {
             case ALL_MED_REC_RESULT:
                 listMecRec.clear();
-                init();
+                init(true);
                 break;
 
         }
@@ -372,7 +360,7 @@ public class AllMedRec extends AppCompatActivity implements View.OnClickListener
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0x11) {
-                init();//更新列表
+                init(false);//更新列表
                 hasNewData=false;
                 if (hasNullValueKey) {
                     for (String key : nullValueKey)

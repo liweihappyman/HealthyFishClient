@@ -5,11 +5,16 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+
+import org.litepal.crud.DataSupport;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +26,7 @@ import butterknife.OnClick;
  * 邮箱：liwei_happyman@qq.com
  * 编辑：
  */
-public class GetRecommendedHealthyScheme extends AppCompatActivity {
+public class GetRecommendedHealthyScheme extends BaseActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -53,12 +58,22 @@ public class GetRecommendedHealthyScheme extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
+
     @OnClick({R.id.btn_trad_chinese_scheme, R.id.btn_chronic_disease_scheme})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_trad_chinese_scheme:
-                Intent intentTradChinese = new Intent(GetRecommendedHealthyScheme.this, SelectHealthyScheme.class);
-                startActivity(intentTradChinese);
+                Intent intent = new Intent(GetRecommendedHealthyScheme.this, SelectHealthyScheme.class);
+                startActivity(intent);
                 break;
             case R.id.btn_chronic_disease_scheme:
                 break;

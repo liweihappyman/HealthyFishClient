@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <!-- 数据库名 -->
-    <dbname value="MedRec"></dbname>
+    <dbname value="HealthyFish"></dbname>
     <!-- 数据库版本 -->
-
     <version value="1"></version>
     <!-- 映射模型 -->
 
@@ -26,12 +25,17 @@
         <mapping class="com.healthyfish.healthyfish.POJO.ImMsgBean" />
         <!--用户已购买的服务列表-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanServiceList" />
+        <!--用户已购买服务的医生列表-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanPictureConsultServiceDoctorList" />
         <!--化验单-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanInspectionReport" />
+        <!--健康管理的推荐计划-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent" />
         <!--挂号信息-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem" />
         <!--用户体质-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanUserPhy" />
+
 
     </list>
 

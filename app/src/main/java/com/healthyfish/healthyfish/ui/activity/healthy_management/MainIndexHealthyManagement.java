@@ -10,27 +10,25 @@ package com.healthyfish.healthyfish.ui.activity.healthy_management;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent;
+import com.healthyfish.healthyfish.POJO.BeanHotPlanItem;
 import com.healthyfish.healthyfish.POJO.BeanSinglePlan;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserPhy;
@@ -38,27 +36,31 @@ import com.healthyfish.healthyfish.POJO.BeanUserPhyIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserPhysical;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SinglePlanAdapter;
+import com.healthyfish.healthyfish.adapter.WholeSchemeAdapter;
+import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
-import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
 public class MainIndexHealthyManagement extends BaseActivity {
-
-    SpannableString healthyIdentication;
-
+    @BindView(R.id.whole_scheme)
+    TextView wholeScheme;
+    @BindView(R.id.scrollview)
+    ScrollView scrollview;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -72,7 +74,9 @@ public class MainIndexHealthyManagement extends BaseActivity {
     Button btnTotalHealthyScheme;
     @BindView(R.id.rv_single_plan)
     RecyclerView rvSinglePlan;
-
+    SpannableString healthyIdentication;
+    @BindView(R.id.whole_scheme_recyclerview)
+    RecyclerView wholeSchemeRecyclerview;
     private boolean isTested = false;
     private String uid = "";
     private final String phyNames[] = {"气虚", "阳虚", "阴虚", "痰湿", "湿热", "血淤", "气郁", "特禀", "平和"};//0-8
@@ -82,13 +86,41 @@ public class MainIndexHealthyManagement extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_index_healthy_management);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         initToolBar(toolbar, toolbarTitle, "我的健康管理");
         uid = MyApplication.uid;
         initHealthIdentityView();
         intiTotalHealthyscheme();
         intiSingleHealthyPlan();
-
+        initWholeScheme();
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshUI(NoticeMessage noticeMessage) {
+        if (noticeMessage.getMsg() == 1) {
+            initWholeScheme();
+            scrollview.smoothScrollTo(0,0);
+
+        }
+    }
+    //初始化整体计划界面布局
+
+    private void initWholeScheme() {
+        List<BeanHealthPlanCommendContent> listHealthPlanCommendContent = new ArrayList<>();
+        listHealthPlanCommendContent = DataSupport.findAll(BeanHealthPlanCommendContent.class);
+        if (listHealthPlanCommendContent.size() > 0) {
+            wholeScheme.setVisibility(View.VISIBLE);
+            wholeSchemeRecyclerview.setVisibility(View.VISIBLE);
+            LinearLayoutManager lmg = new LinearLayoutManager(this);
+            wholeSchemeRecyclerview.setLayoutManager(lmg);
+            WholeSchemeAdapter wholeSchemeAdapter = new WholeSchemeAdapter(this, listHealthPlanCommendContent);
+            wholeSchemeRecyclerview.setAdapter(wholeSchemeAdapter);
+        }else {
+            wholeScheme.setVisibility(View.GONE);
+            wholeSchemeRecyclerview.setVisibility(View.GONE);
+        }
+    }
+
 
     // 初始化体质选项
     private void initHealthIdentityView() {
@@ -177,6 +209,12 @@ public class MainIndexHealthyManagement extends BaseActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     /**
      * 从服务器更新本地数据库的用户体质
      * @param uid
@@ -236,5 +274,6 @@ public class MainIndexHealthyManagement extends BaseActivity {
                 }
             }
         });
+
     }
 }

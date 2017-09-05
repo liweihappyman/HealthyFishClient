@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.healthyfish.healthyfish.ui.widget.AutoCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white"
+    android:layout_marginTop="5dp"
+    android:elevation="8dp">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="110px"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="7月11日 星期二"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=""
+                android:textSize="14sp" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <include layout="@layout/item_divider" />
+
+        <!--项目1-->
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/type1_layout"
+            android:layout_width="match_parent"
+            android:layout_height="130px"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/type1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="益阳罐"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=""
+                android:textSize="14sp" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <!--&lt;!&ndash;分割线&ndash;&gt;
+        <include layout="@layout/item_divider" />
+
+        &lt;!&ndash;项目2&ndash;&gt;
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/type2_layout"
+            android:layout_width="match_parent"
+            android:layout_height="130px"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/type2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="针灸"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=""
+                android:textSize="14sp" />
+        </com.zhy.autolayout.AutoLinearLayout>-->
+    </com.zhy.autolayout.AutoLinearLayout>
+</com.healthyfish.healthyfish.ui.widget.AutoCardView>

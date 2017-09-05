@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
+import com.healthyfish.healthyfish.POJO.BeanPictureConsultServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
@@ -28,6 +29,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
+
+import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：购买服务支付成功页面
@@ -56,6 +59,7 @@ public class PayServiceSuccess extends BaseActivity {
     private String serviceFinishTime;
 
     private BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
+    private BeanPictureConsultServiceDoctorList beanPictureConsultServiceDoctorList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class PayServiceSuccess extends BaseActivity {
         ButterKnife.bind(this);
         initToolBar(toolbar, tvTitle, "购买成功");
         initData();
+        // 添加用户已购买服务的医生列表
+        addPictureConsultServiceDoctorList();
     }
 
     /**
@@ -81,13 +87,29 @@ public class PayServiceSuccess extends BaseActivity {
         tvNameType.setText(doctorName + "医生" + "-" + shopType);
         if (shopType.equals("私人医生")) {
             tvServiceTime.setText(serviceFinishTime);
+            beanDoctorChatInfo.setServiceType("privateDoctor");
             //tvServiceTime.setVisibility(View.GONE);
         } else if (shopType.equals("图文咨询")) {
             tvServiceTime.setText(serviceFinishTime);
+            beanDoctorChatInfo.setServiceType("pictureConsulting");
             //tvServiceTime.setVisibility(View.GONE);//目前需求不需要展示服务到期时间
         } else {
             tvServiceTime.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 添加用户已购买服务的医生列表
+     */
+    private void addPictureConsultServiceDoctorList() {
+        beanPictureConsultServiceDoctorList = new BeanPictureConsultServiceDoctorList();
+        beanPictureConsultServiceDoctorList.setDoctorNumber(beanDoctorChatInfo.getPhone());
+        beanPictureConsultServiceDoctorList.setDoctorName(beanDoctorChatInfo.getName());
+        beanPictureConsultServiceDoctorList.setDoctorPortrait(HttpHealthyFishyUrl + beanDoctorChatInfo.getImgUrl());
+        // TODO: 2017/8/7 医院信息
+        beanPictureConsultServiceDoctorList.setDoctorHostipal("柳州市中医院");
+
+        beanPictureConsultServiceDoctorList.save();
     }
 
     @OnClick(R.id.btn_next)
@@ -96,7 +118,7 @@ public class PayServiceSuccess extends BaseActivity {
             jumpTo(PerfectArchives.class);
         } else if (shopType.equals("图文咨询")) {
 
-            Log.i("LYQ", beanDoctorChatInfo.getName() + beanDoctorChatInfo.getPhone() + beanDoctorChatInfo.getImgUrl());
+            Log.i("LYQ", beanDoctorChatInfo.getName() + beanDoctorChatInfo.getPhone() + beanDoctorChatInfo.getImgUrl() + beanDoctorChatInfo.getServiceType());
             Intent intent = new Intent(this, HealthyChat.class);
             intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
 

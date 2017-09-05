@@ -36,6 +36,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
 import com.healthyfish.healthyfish.eventbus.InitAllMessage;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.fragment.HealthWorkshopFragment;
 import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
@@ -102,7 +103,7 @@ import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl
  * 编辑：wkj
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.fg_viewpage)
     ViewPager fgViewpage;
     @BindView(R.id.iv_home)
@@ -142,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private HealthyCircleFragment healthyCircleFragment;
     private HealthWorkshopFragment healthWorkshopFragment;
     private PersonalCenterFragment personalCenterFragment;
+
+    static public boolean connFlag = false;
 
     BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
     private final List<BeanMyAppointmentItem> myAppointmentList = new ArrayList<>();
@@ -359,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化MQTT
      */
     private void initMQTT() {
+
         RetrofitManagerUtils.getInstance(MainActivity.this, HttpHealthyFishyUrl)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
                     @Override
@@ -379,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onNext(ResponseBody responseBody) {
                         try {
                             BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
-                            Log.e("MainActivity从服务器获取sid", obj.getSid());
+                            //Log.e("MainActivity从服务器获取sid", obj.getSid());
                             MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
                         } catch (IOException e) {
                             e.printStackTrace();

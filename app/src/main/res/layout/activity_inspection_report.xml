@@ -7,39 +7,40 @@
     android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport">
 
-    <com.zhy.autolayout.AutoFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--<com.zhy.autolayout.AutoFrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="135px"
-            android:background="@color/color_primary_dark"
-            android:focusableInTouchMode="true"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-            android:weightSum="1"
-            app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="135px"-->
+            <!--android:background="@color/color_primary_dark"-->
+            <!--android:focusableInTouchMode="true"-->
+            <!--android:theme="@style/Theme.AppCompat.Light.DarkActionBar"-->
+            <!--android:weightSum="1"-->
+            <!--app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">-->
 
-            <TextView
-                android:id="@+id/toolbar_title"
-                style="@style/big_content_title_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="检查报告"
-                android:textColor="@android:color/white" />
+            <!--<TextView-->
+                <!--android:id="@+id/toolbar_title"-->
+                <!--style="@style/big_content_title_text"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:text="检查报告"-->
+                <!--android:textColor="@android:color/white" />-->
 
-            <ImageView
-                android:id="@+id/search"
-                android:layout_width="60px"
-                android:layout_height="60px"
-                android:layout_gravity="right"
-                android:layout_marginRight="55px"
+            <!--<ImageView-->
+                <!--android:id="@+id/search"-->
+                <!--android:layout_width="60px"-->
+                <!--android:layout_height="60px"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:layout_marginRight="55px"-->
 
-                android:background="@mipmap/search_white" />
-        </android.support.v7.widget.Toolbar>
-    </com.zhy.autolayout.AutoFrameLayout>
+                <!--android:background="@mipmap/search_white" />-->
+        <!--</android.support.v7.widget.Toolbar>-->
+    <!--</com.zhy.autolayout.AutoFrameLayout>-->
+    <include layout="@layout/toolbar"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"

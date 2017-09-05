@@ -7,11 +7,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SinglePlanDetail extends AppCompatActivity {
+public class SinglePlanDetail extends BaseActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

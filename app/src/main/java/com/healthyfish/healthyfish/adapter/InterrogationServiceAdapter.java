@@ -1,10 +1,12 @@
 package com.healthyfish.healthyfish.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -82,13 +84,13 @@ public class InterrogationServiceAdapter extends BaseAdapter {
             if (convertView == null) {
                 switch (type) {
                     case TYPE_PictureConsulting:
-                        convertView = inflater.inflate(R.layout.item_graphic_consultation, parent,false);
+                        convertView = inflater.inflate(R.layout.item_graphic_consultation, parent, false);
                         holderGraphicConsultation = new ViewHolderGraphicConsultation(convertView);
                         convertView.setTag(holderGraphicConsultation);
                         AutoUtils.autoSize(convertView);
                         break;
                     case TYPE_PrivateDoctor:
-                        convertView = inflater.inflate(R.layout.item_private_doctor, parent,false);
+                        convertView = inflater.inflate(R.layout.item_private_doctor, parent, false);
                         holderPrivateDoctor = new ViewHolderPrivateDoctor(convertView);
                         convertView.setTag(holderPrivateDoctor);
                         AutoUtils.autoSize(convertView);
@@ -110,19 +112,33 @@ public class InterrogationServiceAdapter extends BaseAdapter {
             }
             switch (type) {
                 case TYPE_PictureConsulting:
-                    String flagPictureConsulting[] = new String[]{"title", "time", "department", "name", "reply"};
+                    /*String flagPictureConsulting[] = new String[]{"title", "time", "department", "name", "reply"};
                     holderGraphicConsultation.tvLastMessage.setText((String) list.get(position).get(flagPictureConsulting[0]));
-                    holderGraphicConsultation.tvDoctorDepartment.setText(list.get(position).get(flagPictureConsulting[1])+"  |  "+
-                            list.get(position).get(flagPictureConsulting[2])+"  |  "+list.get(position).get(flagPictureConsulting[3]));
-                    holderGraphicConsultation.tvReply.setText((String) list.get(position).get(flagPictureConsulting[4]));
+                    holderGraphicConsultation.tvDoctorDepartment.setText(list.get(position).get(flagPictureConsulting[1]) + "  |  " +
+                            list.get(position).get(flagPictureConsulting[2]) + "  |  " + list.get(position).get(flagPictureConsulting[3]));
+                    holderGraphicConsultation.tvReply.setText((String) list.get(position).get(flagPictureConsulting[4]));*/
+                    String flagPictureConsulting[] = new String[]{"name", "hospital", "message", "time", "portrait", "isNew", "isSender"};
+                    Glide.with(mContext).load((String) list.get(position).get(flagPictureConsulting[4])).into(holderGraphicConsultation.civDoctorGraphicConsultation);
+                    // holderGraphicConsultation.civDoctorGraphicConsultation.setImageResource(R.mipmap.logo_240);
+                    holderGraphicConsultation.tvDoctorNameGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[0]));
+                    holderGraphicConsultation.tvHospitalGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[1]));
+                    holderGraphicConsultation.tvMessageGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[2]));
+                    holderGraphicConsultation.tvReceiveTimeGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[3]));
+                    if ("false" == list.get(position).get(flagPictureConsulting[5]).toString()){
+                        holderGraphicConsultation.ivNewMsgGraphicConsultation.setVisibility(View.GONE);
+                    } else if ("true" == list.get(position).get(flagPictureConsulting[5]).toString()
+                            && "false" == list.get(position).get(flagPictureConsulting[6]).toString()) {
+                        holderGraphicConsultation.ivNewMsgGraphicConsultation.setVisibility(View.VISIBLE);
+                    }
+
                     break;
                 case TYPE_PrivateDoctor:
-                    String flagPrivateDoctor[] = new String[]{"image", "name","department", "duties", "hospital", "finishTime"};
-                    Glide.with(mContext).load(list.get(position).get(flagPrivateDoctor[0])).into(holderPrivateDoctor.civDoctor);
-                    holderPrivateDoctor.tvDoctorName.setText((String) list.get(position).get(flagPrivateDoctor[1]));
-                    holderPrivateDoctor.tvDoctorDepartment.setText(list.get(position).get(flagPrivateDoctor[2])+"  "+list.get(position).get(flagPrivateDoctor[3]));
-                    holderPrivateDoctor.tvHospital.setText((String) list.get(position).get(flagPrivateDoctor[4]));
-                    holderPrivateDoctor.tvServiceTime.setText((String) list.get(position).get(flagPrivateDoctor[5]));
+                    String flagPrivateDoctor[] = new String[]{"name", "hospital", "message", "time"};
+                    holderPrivateDoctor.civDoctorPrivateDoctor.setImageResource(R.mipmap.logo_240);
+                    holderPrivateDoctor.tvDoctorNamePrivateDoctor.setText((String) list.get(position).get(flagPrivateDoctor[0]));
+                    holderPrivateDoctor.tvHospitalPrivateDoctor.setText((String) list.get(position).get(flagPrivateDoctor[1]));
+                    holderPrivateDoctor.tvMessagePrivateDoctor.setText((String) list.get(position).get(flagPrivateDoctor[2]));
+                    holderPrivateDoctor.tvReceiveTime.setText((String) list.get(position).get(flagPrivateDoctor[3]));
                     break;
                 default:
                     break;
@@ -131,14 +147,20 @@ public class InterrogationServiceAdapter extends BaseAdapter {
         return convertView;
     }
 
-
     static class ViewHolderGraphicConsultation {
-        @BindView(R.id.tv_last_message)
-        TextView tvLastMessage;
-        @BindView(R.id.tv_doctorDepartment)
-        TextView tvDoctorDepartment;
-        @BindView(R.id.tv_reply)
-        TextView tvReply;
+        @BindView(R.id.civ_doctor_graphic_consultation)
+        CircleImageView civDoctorGraphicConsultation;
+        @BindView(R.id.tv_doctorName_graphic_consultation)
+        TextView tvDoctorNameGraphicConsultation;
+        @BindView(R.id.tv_hospital_graphic_consultation)
+        TextView tvHospitalGraphicConsultation;
+        @BindView(R.id.tv_message_graphic_consultation)
+        TextView tvMessageGraphicConsultation;
+        @BindView(R.id.tv_receive_time_graphic_consultation)
+        TextView tvReceiveTimeGraphicConsultation;
+        @BindView(R.id.iv_new_msg_graphic_consultation)
+        ImageView ivNewMsgGraphicConsultation;
+
 
         ViewHolderGraphicConsultation(View view) {
             ButterKnife.bind(this, view);
@@ -146,16 +168,16 @@ public class InterrogationServiceAdapter extends BaseAdapter {
     }
 
     static class ViewHolderPrivateDoctor {
-        @BindView(R.id.civ_doctor)
-        CircleImageView civDoctor;
-        @BindView(R.id.tv_doctorName)
-        TextView tvDoctorName;
-        @BindView(R.id.tv_doctorDepartment)
-        TextView tvDoctorDepartment;
-        @BindView(R.id.tv_hospital)
-        TextView tvHospital;
-        @BindView(R.id.tv_service_time)
-        TextView tvServiceTime;
+        @BindView(R.id.civ_doctor_private_doctor)
+        CircleImageView civDoctorPrivateDoctor;
+        @BindView(R.id.tv_doctorName_private_doctor)
+        TextView tvDoctorNamePrivateDoctor;
+        @BindView(R.id.tv_hospital_private_doctor)
+        TextView tvHospitalPrivateDoctor;
+        @BindView(R.id.tv_message_private_doctor)
+        TextView tvMessagePrivateDoctor;
+        @BindView(R.id.tv_receive_time)
+        TextView tvReceiveTime;
 
         ViewHolderPrivateDoctor(View view) {
             ButterKnife.bind(this, view);
