@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,22 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
-import com.healthyfish.healthyfish.POJO.BeanBaseResp;
-import com.healthyfish.healthyfish.POJO.BeanConcernList;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
-import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
-import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
-import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
-import com.healthyfish.healthyfish.POJO.BeanUserListReq;
-import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
 import com.healthyfish.healthyfish.eventbus.InitAllMessage;
@@ -44,11 +34,11 @@ import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.utils.AutoLogin;
+import com.healthyfish.healthyfish.utils.IntegralUtils;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
-import com.healthyfish.healthyfish.utils.Sha256;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -57,7 +47,6 @@ import com.zhy.autolayout.AutoLinearLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -171,6 +160,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         init();
         String user = MySharedPrefUtil.getValue("user");
         if (!TextUtils.isEmpty(user)) {
+
+            BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
+            final String uid = beanUserLoginReq.getMobileNo();
+            MyApplication.uid = uid;
+
             // 初始化MQTT连接，首先获取sid，然后开启MQTT连接
             initMQTT();
 
@@ -179,11 +173,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             //更新用户的个人信息
             upDatePersonalInformation();
+
+            //登录积分
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    IntegralUtils.addIntegral(MainActivity.this);
+                }
+            }).start();
+
+
         } else {
             MyToast.showToast(this, "您还没有登录呦");
             startActivity(new Intent(this, Login.class));
         }
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLoginState(InitAllMessage initAllMessage) {
@@ -196,6 +206,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initPermission();//初始化相机和内存卡读写权限
 
         upDatePersonalInformation();//更新用户的个人信息
+
+        //登录积分
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                IntegralUtils.addIntegral(MainActivity.this);
+            }
+        }).start();
 
     }
 
@@ -441,12 +464,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         if (beanBaseKeyGetResp.getCode() == 0) {
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                             if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                                BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                                boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                                if (!isSave) {
-                                    if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
-                                        MyToast.showToast(MainActivity.this, "更新个人信息失败");
+                                if (strJsonBeanPersonalInformation.substring(0, 1).equals("{")) {
+                                    BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                    boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                    if (!isSave) {
+                                        if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
+                                            MyToast.showToast(MainActivity.this, "更新个人信息失败");
+                                        }
                                     }
+                                } else {
+                                    Toast.makeText(MainActivity.this, "个人信息有误,请更新您的个人信息",Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 //MyToast.showToast(MainActivity.this, "您还没有填写个人信息，请填写您的个人信息");//首页不用提醒，在个人中心页面再提醒
@@ -492,6 +519,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * 退出程序
+     */
     private void exit() {
         if (isExit) {
             Intent intent = new Intent(Intent.ACTION_MAIN);

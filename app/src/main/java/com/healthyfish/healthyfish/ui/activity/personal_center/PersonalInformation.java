@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -145,9 +147,14 @@ public class PersonalInformation extends BaseActivity {
                     if (beanBaseKeyGetResp.getCode() == 0) {
                         String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                         if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                            beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                            initWidget();
-                            beanPersonalInformation.saveOrUpdate("key = ?", key);
+                            if (strJsonBeanPersonalInformation.substring(0, 1).equals("{")) {
+                                beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                initWidget();
+                                beanPersonalInformation.saveOrUpdate("key = ?", key);
+                            } else {
+                                Toast.makeText(PersonalInformation.this, "个人信息有误,请更新您的个人信息",Toast.LENGTH_SHORT).show();
+                            }
+
                         } else {
                             MyToast.showToast(PersonalInformation.this, "您还没有填写个人信息，请填写您的个人信息");
                         }

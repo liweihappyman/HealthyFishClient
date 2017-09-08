@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -119,7 +120,7 @@ public class PersonalCenterFragment extends Fragment {
         }
         String user = MySharedPrefUtil.getValue("user");
         String sid = MySharedPrefUtil.getValue("sid");
-        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+        if (!TextUtils.isEmpty(user)) {
             judgeLoginState(true);
         }
         return rootView;
@@ -376,10 +377,14 @@ public class PersonalCenterFragment extends Fragment {
                         if (beanBaseKeyGetResp.getCode() == 0) {
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                             if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                                beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                                boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                                if (!isSave) {
-                                    MyToast.showToast(getActivity(), "保存个人信息失败");
+                                if (strJsonBeanPersonalInformation.substring(0, 1).equals("{")) {
+                                    beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                    boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                    if (!isSave) {
+                                        MyToast.showToast(getActivity(), "保存个人信息失败");
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), "个人信息有误,请更新您的个人信息",Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 MyToast.showToast(getActivity(), "您还没有填写个人信息，请填写您的个人信息");
