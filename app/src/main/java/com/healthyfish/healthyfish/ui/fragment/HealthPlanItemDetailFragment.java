@@ -2,6 +2,7 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,10 +13,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent;
 import com.healthyfish.healthyfish.POJO.BeanHotPlanItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
+import com.healthyfish.healthyfish.ui.activity.healthy_management.SinglePlanDetail;
 import com.healthyfish.healthyfish.utils.Utils1;
 
 import org.greenrobot.eventbus.EventBus;
@@ -90,23 +93,9 @@ public class HealthPlanItemDetailFragment extends Fragment {
                         btnGoToSingleScheme1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                btnGoToSingleScheme1.setText("已完成");
-                                btnGoToSingleScheme1.setTextColor(0xffcfcfcf);
-                                btnGoToSingleScheme1.setBackgroundResource(R.drawable.gray_rounded_rectangle);
-                                //一层层包装回去，最后保存
-                                todo.setDone(true);
-                                List<BeanHotPlanItem.TodoListBean> tempTodoList = new ArrayList<BeanHotPlanItem.TodoListBean>();
-                                for (int i = 0; i < beanHotPlanItem.getTodoList().size(); i++) {
-                                    if (i == position) {
-                                        tempTodoList.add(todo);
-                                    } else {
-                                        tempTodoList.add(beanHotPlanItem.getTodoList().get(i));
-                                    }
-                                }
-                                beanHotPlanItem.setTodoList(tempTodoList);
-                                beanHealthPlanCommendContent.setMyHealthyPlanItemJsonStr(JSON.toJSONString(beanHotPlanItem));
-                                beanHealthPlanCommendContent.save();
-                                EventBus.getDefault().post(new NoticeMessage(1));//通知更新MyHealthyScheme的进度
+                                //refreshUiAndSave();
+                                Intent intent = new Intent(MyApplication.getContetxt(), SinglePlanDetail.class);
+                                startActivityForResult(intent,110);
                             }
                         });
                         break;
@@ -117,4 +106,34 @@ public class HealthPlanItemDetailFragment extends Fragment {
             btnGoToSingleScheme1.setVisibility(View.GONE);
         }
     }
+
+    private void refreshUiAndSave() {
+        btnGoToSingleScheme1.setText("已完成");
+        btnGoToSingleScheme1.setTextColor(0xffcfcfcf);
+        btnGoToSingleScheme1.setBackgroundResource(R.drawable.gray_rounded_rectangle);
+        //一层层包装回去，最后保存
+        todo.setDone(true);
+        List<BeanHotPlanItem.TodoListBean> tempTodoList = new ArrayList<BeanHotPlanItem.TodoListBean>();
+        for (int i = 0; i < beanHotPlanItem.getTodoList().size(); i++) {
+            if (i == position) {
+                tempTodoList.add(todo);
+            } else {
+                tempTodoList.add(beanHotPlanItem.getTodoList().get(i));
+            }
+        }
+        beanHotPlanItem.setTodoList(tempTodoList);
+        beanHealthPlanCommendContent.setMyHealthyPlanItemJsonStr(JSON.toJSONString(beanHotPlanItem));
+        beanHealthPlanCommendContent.save();
+        EventBus.getDefault().post(new NoticeMessage(1));//通知更新MyHealthyScheme的进度
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==110){
+            refreshUiAndSave();
+        }
+    }
+
 }
