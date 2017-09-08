@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
-import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
@@ -30,9 +29,6 @@ import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
-import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -128,6 +124,7 @@ public class RegisterPassword extends BaseActivity {
                                     //————————————————————————————————————————
 
                                     saveDataToNetwork(beanUserRegisterReq.getMobileNo());//保存个人信息到服务器及本地数据库
+
                                     getSidAndAutoLogin();//获取Sid后自动登录加载用户信息
 
                                     Intent intent = new Intent(RegisterPassword.this, RegisterSuccess.class);

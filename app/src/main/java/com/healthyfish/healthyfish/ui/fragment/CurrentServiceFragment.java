@@ -273,12 +273,16 @@ public class CurrentServiceFragment extends Fragment {
                         if (beanBaseKeyGetResp.getCode() == 0) {
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                             if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                                BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                                boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                                if (!isSave) {
-                                    if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
-                                        MyToast.showToast(getContext(), "更新个人信息失败");
+                                if (strJsonBeanPersonalInformation.substring(0, 1).equals("{")) {
+                                    BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                    boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                    if (!isSave) {
+                                        if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
+                                            MyToast.showToast(getContext(), "更新个人信息失败");
+                                        }
                                     }
+                                } else {
+                                    MyToast.showToast(getContext(), "个人信息有误,请更新您的个人信息");
                                 }
                             } else {
                                 //MyToast.showToast(MainActivity.this, "您还没有填写个人信息，请填写您的个人信息");//首页不用提醒，在个人中心页面再提醒
