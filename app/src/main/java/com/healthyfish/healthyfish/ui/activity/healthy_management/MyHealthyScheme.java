@@ -53,6 +53,8 @@ import butterknife.ButterKnife;
  * 最关键的地方是处理数据对应的关系
  */
 public class MyHealthyScheme extends AppCompatActivity {
+    public static int mCurrent;
+    public static  String mTitle;
     @BindView(R.id.iv_banner_my_healthy_scheme)
     AutoLinearLayout ivBannerMyHealthyScheme;
     CommonTabLayout tabDown;
@@ -100,6 +102,7 @@ public class MyHealthyScheme extends AppCompatActivity {
         beanHealthPlanCommendContent = DataSupport.find(BeanHealthPlanCommendContent.class, id);
         beanHotPlanItem = JSON.parseObject(beanHealthPlanCommendContent.getMyHealthyPlanItemJsonStr(),BeanHotPlanItem.class);
         title.setText("一周" + beanHotPlanItem.getTitle() + "计划");
+        mTitle = beanHotPlanItem.getTitle();
         refreshProgressUI(beanHotPlanItem);
         calendarDate = JSON.parseObject(beanHealthPlanCommendContent.getCalendarDateJsonStr(), List.class);
         week = JSON.parseObject(beanHealthPlanCommendContent.getWeekJsonStr(), List.class);
@@ -157,8 +160,6 @@ public class MyHealthyScheme extends AppCompatActivity {
                         dialog.dismiss();
                         DataSupport.delete(BeanHealthPlanCommendContent.class, id);
                         EventBus.getDefault().post(new NoticeMessage(1));
-                        Intent intent = new Intent(MyHealthyScheme.this, MainIndexHealthyManagement.class);
-                        startActivity(intent);
                         finish();
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -280,6 +281,7 @@ public class MyHealthyScheme extends AppCompatActivity {
         }
         progressbar.setMax(count);
         progressbar.setProgress(current);
+        mCurrent = current;
         tvProgress.setText("已完成" + current + "/" + count);
     }
 

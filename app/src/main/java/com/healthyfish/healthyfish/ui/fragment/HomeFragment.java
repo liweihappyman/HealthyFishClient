@@ -3,33 +3,28 @@ package com.healthyfish.healthyfish.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-
 import android.util.Log;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.healthyfish.healthyfish.MainActivity;
-import com.healthyfish.healthyfish.MyApplication;
-import com.healthyfish.healthyfish.POJO.BeanHealthPlanItemTest;
+import com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent;
 import com.healthyfish.healthyfish.POJO.BeanHealthWorkShop;
 import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideReq;
 import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideResp;
@@ -37,32 +32,33 @@ import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideRespItem;
 import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.POJO.BeanListReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
-import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
-import com.healthyfish.healthyfish.adapter.HomePageHealthPlanAdapter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
+import com.healthyfish.healthyfish.adapter.WholeSchemeAdapter;
+import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
 import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport;
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDepartment;
-import com.healthyfish.healthyfish.ui.activity.interrogation.HealthyChat;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
+import com.healthyfish.healthyfish.ui.widget.AutoCardView;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NetworkConnectUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
-
-import com.healthyfish.healthyfish.utils.Sha256;
-import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
-import com.zhy.autolayout.AutoLinearLayout;
 import com.healthyfish.healthyfish.utils.Utils1;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,6 +95,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     AutoLinearLayout llyMoreHealthNews;
     @BindView(R.id.date)
     TextView date;
+    @BindView(R.id.plan_list)
+    AutoCardView planList;
     private Context mContext;
     private View rootView;
     @BindView(R.id.topbar_scan)
@@ -134,11 +132,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mContext = getActivity();
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        EventBus.getDefault().register(this);
         initAll();
         return rootView;
 
     }
-
 
 
     private void initAll() {
@@ -165,7 +163,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         initHealthPlan();//初始化养生计划
         initHealthWorkShop();//初始化健康工坊
-
     }
 
     //网络访问获取轮播图内容
@@ -192,7 +189,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             BeanHomeImgSlideResp beanHomeImgSlideResp = JSON.parseObject(str, BeanHomeImgSlideResp.class);
                             for (BeanHomeImgSlideRespItem beanHomeImgSlideRespItem : beanHomeImgSlideResp.getImgList()) {
                                 imgs.add(HttpHealthyFishyUrl + beanHomeImgSlideRespItem.getImg());
-                                Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
+                                //Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
                                 desc.add(beanHomeImgSlideRespItem.getDesc());
                             }
                         } catch (IOException e) {
@@ -228,34 +225,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         bannerGuideContent.setData(imgs, desc);
     }
 
-    //测试养生计划
+    //养生计划(目前实际数据为健康管理首页的单项列表)
     private void initHealthPlan() {
-        date.setText(Utils1.getTime());//初始化时间
-        List<BeanHealthPlanItemTest> listHealthPlan = new ArrayList<>();
-        BeanHealthPlanItemTest healthPlan = new BeanHealthPlanItemTest();
-        healthPlan.setDone(false);
-        healthPlan.setProgress("5/10");
-        healthPlan.setTitle("中医体质养生计划#1");
-        healthPlan.setTodo("中医院外治" + "  " + "益阳罐");
-        BeanHealthPlanItemTest healthPlan2 = new BeanHealthPlanItemTest();
-        healthPlan2.setDone(false);
-        healthPlan2.setProgress("5/20");
-        healthPlan2.setTitle("中医体质养生计划#1");
-        healthPlan2.setTodo("中医院外治" + "  " + "益阳罐");
-        BeanHealthPlanItemTest healthPlan3 = new BeanHealthPlanItemTest();
-        healthPlan3.setDone(true);
-        healthPlan3.setProgress("6/10");
-        healthPlan3.setTitle("慢性疾病康复计划#1");
-        healthPlan3.setTodo("健身" + "  " + "跑步3KM");
-        listHealthPlan.add(healthPlan);
-        listHealthPlan.add(healthPlan2);
-        listHealthPlan.add(healthPlan3);
-        LinearLayoutManager lmg = new LinearLayoutManager(mContext);
-        healthPlanRecyclerview.setLayoutManager(lmg);
-        HomePageHealthPlanAdapter homePageHealthPlanAdapter = new HomePageHealthPlanAdapter(mContext, listHealthPlan);
-        healthPlanRecyclerview.setAdapter(homePageHealthPlanAdapter);
+        //设计图原来样式
+//        List<BeanHealthPlanItemTest> listHealthPlan = new ArrayList<>();
+//        BeanHealthPlanItemTest healthPlan = new BeanHealthPlanItemTest();
+//        healthPlan.setDone(false);
+//        healthPlan.setProgress("5/10");
+//        healthPlan.setTitle("中医体质养生计划#1");
+//        healthPlan.setTodo("中医院外治" + "  " + "益阳罐");
+//        BeanHealthPlanItemTest healthPlan2 = new BeanHealthPlanItemTest();
+//        healthPlan2.setDone(false);
+//        healthPlan2.setProgress("5/20");
+//        healthPlan2.setTitle("中医体质养生计划#1");
+//        healthPlan2.setTodo("中医院外治" + "  " + "益阳罐");
+//        BeanHealthPlanItemTest healthPlan3 = new BeanHealthPlanItemTest();
+//        healthPlan3.setDone(true);
+//        healthPlan3.setProgress("6/10");
+//        healthPlan3.setTitle("慢性疾病康复计划#1");
+//        healthPlan3.setTodo("健身" + "  " + "跑步3KM");
+//        listHealthPlan.add(healthPlan);
+//        listHealthPlan.add(healthPlan2);
+//        listHealthPlan.add(healthPlan3);
+//        LinearLayoutManager lmg = new LinearLayoutManager(mContext);
+//        healthPlanRecyclerview.setLayoutManager(lmg);
+//        HomePageHealthPlanAdapter homePageHealthPlanAdapter = new HomePageHealthPlanAdapter(mContext, listHealthPlan);
+//        healthPlanRecyclerview.setAdapter(homePageHealthPlanAdapter);
 
-    }
+        List<BeanHealthPlanCommendContent> listHealthPlanCommendContent = new ArrayList<>();
+        listHealthPlanCommendContent = DataSupport.findAll(BeanHealthPlanCommendContent.class);
+        if (listHealthPlanCommendContent.size() > 0) {//读取数据库的计划内容，如果日期是今天的则展示出来
+            planList.setVisibility(View.VISIBLE);
+            date.setText(Utils1.getTime());//初始化时间
+            LinearLayoutManager lmg = new LinearLayoutManager(mContext);
+            healthPlanRecyclerview.setLayoutManager(lmg);
+            WholeSchemeAdapter wholeSchemeAdapter = new WholeSchemeAdapter(getActivity(), listHealthPlanCommendContent);
+            healthPlanRecyclerview.setAdapter(wholeSchemeAdapter);
+        } else {
+            planList.setVisibility(View.GONE);
+        }
+
+}
 
     //测试消息提示
     private void initInfoPrmopt(String string) {
@@ -448,6 +458,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -458,9 +469,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.fm_med_rec:
-                if (MySharedPrefUtil.getValue("user")==""){
-                    Toast.makeText(getActivity(),"您还没有登录哟",Toast.LENGTH_SHORT).show();
-                }else {
+                if (MySharedPrefUtil.getValue("user") == "") {
+                    Toast.makeText(getActivity(), "您还没有登录哟", Toast.LENGTH_SHORT).show();
+                } else {
                     Intent intent_med_rec = new Intent(mContext, AllMedRec.class);
                     startActivity(intent_med_rec);
                 }
@@ -479,5 +490,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
+    /*
+    * 更新健康计划UI
+    * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshUI(NoticeMessage noticeMessage) {
+        if (noticeMessage.getMsg() == 1) {
+            initHealthPlan();
+        }
+    }
+
+
+
+
 }
 

@@ -29,7 +29,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent;
-import com.healthyfish.healthyfish.POJO.BeanHotPlanItem;
 import com.healthyfish.healthyfish.POJO.BeanSinglePlan;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserPhy;
@@ -40,6 +39,7 @@ import com.healthyfish.healthyfish.adapter.SinglePlanAdapter;
 import com.healthyfish.healthyfish.adapter.WholeSchemeAdapter;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.widget.AutoCardView;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -59,8 +59,6 @@ import okhttp3.ResponseBody;
 import rx.Subscriber;
 
 public class MainIndexHealthyManagement extends BaseActivity {
-    @BindView(R.id.whole_scheme)
-    TextView wholeScheme;
     @BindView(R.id.scrollview)
     ScrollView scrollview;
     @BindView(R.id.toolbar_title)
@@ -79,6 +77,8 @@ public class MainIndexHealthyManagement extends BaseActivity {
     SpannableString healthyIdentication;
     @BindView(R.id.whole_scheme_recyclerview)
     RecyclerView wholeSchemeRecyclerview;
+    @BindView(R.id.whole_scheme_cv)
+    AutoCardView wholeSchemeCv;
     private boolean isTested = false;
     private String uid = "";
     private final String phyNames[] = {"气虚", "阳虚", "阴虚", "痰湿", "湿热", "血淤", "气郁", "特禀", "平和"};//0-8
@@ -102,24 +102,23 @@ public class MainIndexHealthyManagement extends BaseActivity {
         if (noticeMessage.getMsg() == 1) {
             initWholeScheme();
             scrollview.smoothScrollTo(0, 0);
-
+        }
+        if (noticeMessage.getMsg() == 2 ){
+            initHealthIdentityView();
         }
     }
     //初始化整体计划界面布局
-
     private void initWholeScheme() {
         List<BeanHealthPlanCommendContent> listHealthPlanCommendContent = new ArrayList<>();
         listHealthPlanCommendContent = DataSupport.findAll(BeanHealthPlanCommendContent.class);
         if (listHealthPlanCommendContent.size() > 0) {
-            wholeScheme.setVisibility(View.VISIBLE);
-            wholeSchemeRecyclerview.setVisibility(View.VISIBLE);
+            wholeSchemeCv.setVisibility(View.VISIBLE);
             LinearLayoutManager lmg = new LinearLayoutManager(this);
             wholeSchemeRecyclerview.setLayoutManager(lmg);
             WholeSchemeAdapter wholeSchemeAdapter = new WholeSchemeAdapter(this, listHealthPlanCommendContent);
             wholeSchemeRecyclerview.setAdapter(wholeSchemeAdapter);
-        }else {
-            wholeScheme.setVisibility(View.GONE);
-            wholeSchemeRecyclerview.setVisibility(View.GONE);
+        } else {
+            wholeSchemeCv.setVisibility(View.GONE);
         }
     }
 
@@ -190,25 +189,25 @@ public class MainIndexHealthyManagement extends BaseActivity {
 
     // 初始化单项健康计划
     private void intiSingleHealthyPlan() {
-
-        List<BeanSinglePlan> list = new ArrayList<>();
-        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, true));
-        list.add(new BeanSinglePlan("艾灸", "中医体质单项养生计划", 8, true));
-        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, false));
-        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, true));
-        list.add(new BeanSinglePlan("艾灸", "中医体质单项养生计划", 8, true));
-        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, false));
-        SinglePlanAdapter adapter = new SinglePlanAdapter(this, list);
-        LinearLayoutManager lmg = new LinearLayoutManager(this);
-        rvSinglePlan.setLayoutManager(lmg);
-        rvSinglePlan.setAdapter(adapter);
-        // 添加更多单项计划
-        tvAddMoreSinglePlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainIndexHealthyManagement.this, "添加更多单项计划", Toast.LENGTH_SHORT).show();
-            }
-        });
+        rvSinglePlan.setVisibility(View.GONE);
+//        List<BeanSinglePlan> list = new ArrayList<>();
+//        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, true));
+//        list.add(new BeanSinglePlan("艾灸", "中医体质单项养生计划", 8, true));
+//        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, false));
+//        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, true));
+//        list.add(new BeanSinglePlan("艾灸", "中医体质单项养生计划", 8, true));
+//        list.add(new BeanSinglePlan("针灸", "中医体质单项养生计划", 10, false));
+//        SinglePlanAdapter adapter = new SinglePlanAdapter(this, list);
+//        LinearLayoutManager lmg = new LinearLayoutManager(this);
+//        rvSinglePlan.setLayoutManager(lmg);
+//        rvSinglePlan.setAdapter(adapter);
+//        // 添加更多单项计划
+//        tvAddMoreSinglePlan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(MainIndexHealthyManagement.this, "添加更多单项计划", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
 
