@@ -10,7 +10,7 @@ import org.litepal.crud.DataSupport;
  * 编辑：
  */
 
-public class BeanPictureConsultServiceDoctorList extends DataSupport{
+public class BeanInterrogationServiceDoctorList extends DataSupport{
     private int id;
     @Column(unique = true)
     private String DoctorNumber;

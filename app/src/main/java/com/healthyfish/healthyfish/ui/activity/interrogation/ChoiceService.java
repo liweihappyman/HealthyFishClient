@@ -26,7 +26,7 @@ import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
-import com.healthyfish.healthyfish.POJO.BeanPictureConsultServiceDoctorList;
+import com.healthyfish.healthyfish.POJO.BeanInterrogationServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
@@ -36,7 +36,6 @@ import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
 import com.healthyfish.healthyfish.ui.fragment.BuyServiceFragment;
 import com.healthyfish.healthyfish.utils.AutoLogin;
-import com.healthyfish.healthyfish.utils.DateUtils;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.NestingUtils;
@@ -126,7 +125,7 @@ public class ChoiceService extends BaseActivity {
 
     private Context mContext;//全局上下文
     private BeanDoctorInfo beanDoctorInfo = new BeanDoctorInfo();
-    private BeanPictureConsultServiceDoctorList beanPictureConsultServiceDoctorList;
+    private BeanInterrogationServiceDoctorList beanInterrogationServiceDoctorList;
 
     private String imgDoctorUrl;  //医生头像资源
     private String doctorName;  //医生名字
@@ -171,14 +170,14 @@ public class ChoiceService extends BaseActivity {
      * 添加用户已购买服务的医生列表
      */
     private void addPictureConsultServiceDoctorList() {
-        beanPictureConsultServiceDoctorList = new BeanPictureConsultServiceDoctorList();
-        beanPictureConsultServiceDoctorList.setDoctorNumber(doctorPhone);
-        beanPictureConsultServiceDoctorList.setDoctorName(beanDoctorInfo.getName());
-        beanPictureConsultServiceDoctorList.setDoctorPortrait(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
+        beanInterrogationServiceDoctorList = new BeanInterrogationServiceDoctorList();
+        beanInterrogationServiceDoctorList.setDoctorNumber(doctorPhone);
+        beanInterrogationServiceDoctorList.setDoctorName(beanDoctorInfo.getName());
+        beanInterrogationServiceDoctorList.setDoctorPortrait(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
         // TODO: 2017/8/7 医院信息
-        beanPictureConsultServiceDoctorList.setDoctorHostipal("柳州市中医院");
+        beanInterrogationServiceDoctorList.setDoctorHostipal("柳州市中医院");
 
-        beanPictureConsultServiceDoctorList.save();
+        beanInterrogationServiceDoctorList.save();
     }
 
     /**

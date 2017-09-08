@@ -138,7 +138,6 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
         sender = "u" + beanUserLoginReq.getMobileNo();
         //medRECKey = "dmr" + beanDoctorChatInfo.getPhone() + beanUserLoginReq.getMobileNo();
         doctorPortrait = beanDoctorChatInfo.getImgUrl();
-        Log.e("发送信息的头型", doctorPortrait);
         serviceType = beanDoctorChatInfo.getServiceType();
     }
 
