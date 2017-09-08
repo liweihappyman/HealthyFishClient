@@ -18,6 +18,7 @@ import android.widget.ToggleButton;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SelectMedRecAdapter;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -27,7 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SelectMedRec extends AppCompatActivity implements View.OnClickListener {
+public class SelectMedRec extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

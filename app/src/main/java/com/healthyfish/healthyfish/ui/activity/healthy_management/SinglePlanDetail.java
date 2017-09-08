@@ -8,16 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
-
 import org.greenrobot.eventbus.EventBus;
-
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SinglePlanDetail extends AppCompatActivity {
+public class SinglePlanDetail extends BaseActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

@@ -20,9 +20,14 @@ import com.healthyfish.healthyfish.POJO.BeanHotPlanItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PreviewHealthySchemeAdapter;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.crud.DataSupport;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -30,8 +35,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
-public class PreviewMyHealthyScheme extends AppCompatActivity {
+public class PreviewMyHealthyScheme extends BaseActivity {
     BeanHealthPlanCommendContent beanHealthPlanCommendContent;
     String[] str = {"", "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六",};
     List<String> week = new ArrayList<>();//星期:   一、二、...
@@ -64,7 +71,6 @@ public class PreviewMyHealthyScheme extends AppCompatActivity {
         setContentView(R.layout.activity_preview_my_healthy_scheme);
         ButterKnife.bind(this);
         intiToolbarView();
-
         init();
     }
 
@@ -88,7 +94,6 @@ public class PreviewMyHealthyScheme extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

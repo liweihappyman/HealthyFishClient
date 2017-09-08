@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.Utils1;
 
@@ -30,7 +31,7 @@ import butterknife.OnClick;
  * 邮箱：
  * 编辑：WKJ
  */
-public class PatientInfo extends AppCompatActivity implements View.OnClickListener {
+public class PatientInfo extends BaseActivity implements View.OnClickListener {
     public static final int INFO_RESULT = 34;
     @BindView(R.id.gender)
     TextView gender;

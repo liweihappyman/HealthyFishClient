@@ -40,6 +40,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
 import com.healthyfish.healthyfish.eventbus.InitAllMessage;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.fragment.HealthWorkshopFragment;
 import com.healthyfish.healthyfish.ui.fragment.HealthyCircleFragment;
@@ -106,7 +107,7 @@ import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl
  * 编辑：wkj
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.fg_viewpage)
     ViewPager fgViewpage;
     @BindView(R.id.iv_home)
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean isExit = false;
 
-    private Handler mHhandler = new Handler(){
+    private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -504,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             isExit = true;
             MyToast.showToast(MyApplication.getContetxt(),"再按一次退出程序");
-            mHhandler.sendEmptyMessageDelayed(0, 2000);
+            mHandler.sendEmptyMessageDelayed(0, 2000);
         }
     }
 

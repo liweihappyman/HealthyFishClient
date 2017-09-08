@@ -117,7 +117,7 @@ public class SetUp extends BaseActivity {
                     MySharedPrefUtil.remKey("user");     //清除用户登录信息
                     MyApplication.uid = "";
                     MyApplication.isFirstUpdateUsrPhy = true;
-                    MyApplication.isIsFirstUpdatePersonalInfo = true;
+                    //MyApplication.isIsFirstUpdatePersonalInfo = true;//登录成功后已经更新个人信息，MainActivity不需要再次更新个人信息
                     MyApplication.isFirstUpdateMyService = true;
                     MyApplication.isFirstUpdateMyConcern = true;
                     MyApplication.isFirstUpdateMyAppointment = true;

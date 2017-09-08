@@ -55,8 +55,8 @@ public class HealthyCircleFragment extends Fragment implements View.OnClickListe
     private View rootView;
     private int mPosition = 0;
     private Activity activity;
-    private String[] mTitles = {
-            "我关注的", "所有社区", "健康头条", "空白1","空白2","空白3","空白4"};
+    private String[] mTitles = {"我关注的", "所有社区", "今日头条"};
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,9 +74,9 @@ public class HealthyCircleFragment extends Fragment implements View.OnClickListe
         mFragments.add(new MyCommunityFragment());
         mFragments.add(new AllCommunityFragment());
         mFragments.add(new TestFragment());
-        for (int i = 0; i < mTitles.length-3; i++) {
-            mFragments.add(new HealthWorkshopFragment());
-        }
+        /*for (int i = 0; i < mTitles.length-3; i++) {
+            mFragments.add(new PersonalCenterFragment());
+        }*/
         vpHealthyCircle.setAdapter(new PagerAdapter(fragmentManager,mFragments));
         tabLayout.setupWithViewPager(vpHealthyCircle);
         vpHealthyCircle.setCurrentItem(mPosition);
@@ -111,17 +111,6 @@ public class HealthyCircleFragment extends Fragment implements View.OnClickListe
             return mListFragment.get(position);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
     @Override
     public void onDestroyView() {

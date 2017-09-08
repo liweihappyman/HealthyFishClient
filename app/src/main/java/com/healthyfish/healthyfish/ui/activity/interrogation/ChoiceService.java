@@ -26,6 +26,7 @@ import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
+import com.healthyfish.healthyfish.POJO.BeanPictureConsultServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
@@ -125,6 +126,7 @@ public class ChoiceService extends BaseActivity {
 
     private Context mContext;//全局上下文
     private BeanDoctorInfo beanDoctorInfo = new BeanDoctorInfo();
+    private BeanPictureConsultServiceDoctorList beanPictureConsultServiceDoctorList;
 
     private String imgDoctorUrl;  //医生头像资源
     private String doctorName;  //医生名字
@@ -158,7 +160,6 @@ public class ChoiceService extends BaseActivity {
 
         tvAttentionListener();
 
-
         if (!TextUtils.isEmpty(MySharedPrefUtil.getValue("sid"))) {
             AutoLogin.autoLogin();
             MqttUtil.startAsync();
@@ -166,6 +167,19 @@ public class ChoiceService extends BaseActivity {
 
     }
 
+    /**
+     * 添加用户已购买服务的医生列表
+     */
+    private void addPictureConsultServiceDoctorList() {
+        beanPictureConsultServiceDoctorList = new BeanPictureConsultServiceDoctorList();
+        beanPictureConsultServiceDoctorList.setDoctorNumber(doctorPhone);
+        beanPictureConsultServiceDoctorList.setDoctorName(beanDoctorInfo.getName());
+        beanPictureConsultServiceDoctorList.setDoctorPortrait(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
+        // TODO: 2017/8/7 医院信息
+        beanPictureConsultServiceDoctorList.setDoctorHostipal("柳州市中医院");
+
+        beanPictureConsultServiceDoctorList.save();
+    }
 
     /**
      * 从上一页面获取医生数据
@@ -222,6 +236,7 @@ public class ChoiceService extends BaseActivity {
 
     /**
      * 初始化我的关注
+     *
      * @param uid
      */
     private void initMyConcern(String uid) {
@@ -235,6 +250,7 @@ public class ChoiceService extends BaseActivity {
 
     /**
      * 从数据库获取我的关注列表
+     *
      * @param uid
      */
     private void getMyConcernFromDB(String uid) {
@@ -501,13 +517,16 @@ public class ChoiceService extends BaseActivity {
 
     /**
      * 从数据库检查我已购买的服务
+     *
      * @param uid
      */
     private void getMyServiceFromDB(String uid) {
         BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
         beanDoctorChatInfo.setName(beanDoctorInfo.getName());
         beanDoctorChatInfo.setPhone(doctorPhone);
-        beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
+        // FIXME: 2017/9/2 头像链接问题
+        beanDoctorChatInfo.setImgUrl(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
+        beanDoctorChatInfo.setServiceType("pictureConsulting");
 
         String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
         Log.i("LYQ", "serviceKey:" + serviceKey);
@@ -524,14 +543,16 @@ public class ChoiceService extends BaseActivity {
                 Intent intent = new Intent(this, HealthyChat.class);
                 intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
                 startActivity(intent);
+                // 添加用户已购买服务的医生列表
+                addPictureConsultServiceDoctorList();
             } else {//服务已过期
                 DataSupport.delete(BeanServiceList.class, beanServiceList.getId());//删除本地数据库该购买服务记录
                 deleteServiceReq(serviceKey);//删除服务器端该购买服务记录
 
-                goToBuyService(serviceKey,true,beanDoctorChatInfo);
+                goToBuyService(serviceKey, true, beanDoctorChatInfo);
             }
         } else {//空则没有购买过该医生的图文咨询服务或者已过期
-            goToBuyService(serviceKey,false,beanDoctorChatInfo);
+            goToBuyService(serviceKey, false, beanDoctorChatInfo);
         }
     }
 
@@ -541,7 +562,7 @@ public class ChoiceService extends BaseActivity {
      * @param serviceKey
      * @param beanDoctorChatInfo
      */
-    private void goToBuyService(String serviceKey,boolean isBuy, BeanDoctorChatInfo beanDoctorChatInfo) {
+    private void goToBuyService(String serviceKey, boolean isBuy, BeanDoctorChatInfo beanDoctorChatInfo) {
         BeanServiceList beanService = new BeanServiceList();
         beanService.setKey(serviceKey);
         beanService.setType("PTC");
@@ -750,10 +771,10 @@ public class ChoiceService extends BaseActivity {
                         }
                         getMyServiceFromDB(uid);
                     } else {
-                        MyToast.showToast(ChoiceService.this,"更新已购买服务出错啦");
+                        MyToast.showToast(ChoiceService.this, "更新已购买服务出错啦");
                     }
                 } else {
-                    MyToast.showToast(ChoiceService.this,"更新已购买服务出错");
+                    MyToast.showToast(ChoiceService.this, "更新已购买服务出错");
                 }
             }
 
@@ -774,7 +795,6 @@ public class ChoiceService extends BaseActivity {
         });
 
     }
-
 
 
 }

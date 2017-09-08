@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.healthyfish.healthyfish.POJO.BeanHealthPlanCommendContent;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -25,7 +26,7 @@ import butterknife.OnClick;
  * 邮箱：liwei_happyman@qq.com
  * 编辑：
  */
-public class GetRecommendedHealthyScheme extends AppCompatActivity {
+public class GetRecommendedHealthyScheme extends BaseActivity {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;

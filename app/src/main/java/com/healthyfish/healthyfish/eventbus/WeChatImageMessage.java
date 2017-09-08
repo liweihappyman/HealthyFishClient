@@ -1,7 +1,7 @@
 package com.healthyfish.healthyfish.eventbus;
 
 /**
- * 描述：
+ * 描述：EventBus异步提醒图片发送状态
  * 作者：Wayne on 2017/8/5 14:49
  * 邮箱：liwei_happyman@qq.com
  * 编辑：

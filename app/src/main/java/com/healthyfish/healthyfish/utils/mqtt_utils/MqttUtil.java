@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
+import com.healthyfish.healthyfish.eventbus.WeChatReceiveMsg;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
@@ -28,7 +29,6 @@ import org.json.JSONException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.healthyfish.healthyfish.MainActivity.connFlag;
 import static com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil.userName;
 
 
@@ -82,7 +82,8 @@ import static com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil.userName;
 public class MqttUtil {
     public static final int MSG_WHAT_MQTT_BASE = 0;
 
-
+    // 初始化MQTT连接与否标志位
+    public static boolean connFlag = false;
     public static final String HOST = "tcp://219.159.248.209:1883";
     private static String userType;
     private static String localUser;
@@ -274,7 +275,15 @@ public class MqttUtil {
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             bs.write((byte) localUser.length());
             bs.write(localUser.getBytes());
-            bs.write((bean.getType() + bean.getContent()).getBytes());
+            // 判断是否是文字还是图片
+            switch (bean.getType()) {
+                case "t":
+                    bs.write((bean.getType() + bean.getContent()).getBytes());
+                    break;
+                case "i":
+                    bs.write((bean.getType() + bean.getImgUrl()).getBytes());
+                    break;
+            }
             if (mqttAsyncClient == null) {
                 connect();
                 /*callHandler(obj.getString("method"), "failed: 请先登录");*/
@@ -323,6 +332,11 @@ public class MqttUtil {
         bean.save();
 
         try {
+            sendMsg(bean);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        /*try {
             String localUser = userType + userName;
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             bs.write((byte) localUser.length());
@@ -366,15 +380,22 @@ public class MqttUtil {
             e.printStackTrace();
         } catch (MqttException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     // 发送图片
     public static void sendImg(final ImMsgBean bean) {
 
-        // bean.save();
+        // TODO: 2017/8/6 解决图片发送问题
+        bean.save();
 
         try {
+            sendMsg(bean);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        /*try {
             String localUser = userType + userName;
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             bs.write((byte) localUser.length());
@@ -418,7 +439,7 @@ public class MqttUtil {
             e.printStackTrace();
         } catch (MqttException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     // 监听消息
@@ -433,7 +454,7 @@ class PushCallback implements MqttCallback {
 
     public void connectionLost(Throwable cause) {
         // 连接丢失后，一般在这里面进行重连
-        connFlag = false;
+        MqttUtil.connFlag = false;
         System.out.println("连接断开，可以做重连");
         MqttUtil.startAsync();
     }
@@ -545,13 +566,13 @@ class PushCallback implements MqttCallback {
 }
 
 class MqttMsgText {
-    public static void process(String topic, String peer, String content, String type) {
+/*    public static void process(String topic, String peer, String content, String type) {
 //        long ts = MqttDao.saveMsg(topic, peer, content, "t");
         long ts = DateTimeUtil.getLongMs();
         Log.e("process: ", ts + "");
         BeanMqttMsgItem bean = new BeanMqttMsgItem(ts, topic, peer, content, type, false);
         //需要根据peer去找到主题，更新content
-    }
+    }*/
 
     // 发送文本
     public static void process(ImMsgBean bean, String peer, String content, String topic) {
@@ -563,8 +584,12 @@ class MqttMsgText {
         bean.setTime(DateTimeUtil.getLongMs());
         bean.setType("t");
         bean.setTopic(topic);
+        bean.setNewMsg(true);
         bean.save();
-        EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+
+        // 获取新的信息
+        EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
+
     }
 }
 
@@ -583,8 +608,11 @@ class MqttMsgImage {
         bean.setName(peer);
         bean.setTime(DateTimeUtil.getLongMs());
         bean.setTopic(topic);
+        bean.setNewMsg(true);
         bean.save();
-        EventBus.getDefault().post(new ImMsgBean(bean.getTime()));
+
+        // 获取新的信息
+        EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
     }
 }
 

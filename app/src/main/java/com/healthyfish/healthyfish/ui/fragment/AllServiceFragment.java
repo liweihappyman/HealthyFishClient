@@ -45,7 +45,7 @@ public class AllServiceFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_all_service, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         List<Map<String, Object>> list = initData();
-        initListView(list);
+        // initListView(list);
         lvListener(list);
         return rootView;
     }

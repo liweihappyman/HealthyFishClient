@@ -31,7 +31,6 @@ import sj.keyboard.utils.imageloader.ImageBase;
 import static com.healthyfish.healthyfish.MyApplication.uid;
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
-
 // 聊天界面、对话框 -- 适配器
 public class ChattingListAdapter extends BaseAdapter {
 
@@ -212,7 +211,6 @@ public class ChattingListAdapter extends BaseAdapter {
                 rightImageHolder.iv_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("preview: ", bean.getImage());
                         preview(bean.getImgUrl());
                     }
                 });
@@ -237,28 +235,9 @@ public class ChattingListAdapter extends BaseAdapter {
                 leftImageHolder.iv_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("preview: ", bean.getImage());
                         preview(bean.getImgUrl());
                     }
                 });
-
-                /*final ImageViewAware thumbAwareLeft = new ImageViewAware(leftImageHolder.iv_image);
-                leftImageHolder.iv_image.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mActivity, PicViewActivity.class);
-                        intent.putExtra("image", new PinchImageSource(bean.getImage(), 800, 1200,
-                                bean.getImage(), 53, 80));
-                        ImageSize targetSize = new ImageSize(thumbAwareLeft.getWidth(), thumbAwareLeft.getHeight());
-                        String memoryCacheKey = MemoryCacheUtils.generateKey(bean.getImage(), targetSize);
-                        intent.putExtra("cache_key", memoryCacheKey);
-                        Rect rect = new Rect();
-                        leftImageHolder.iv_image.getGlobalVisibleRect(rect);
-                        intent.putExtra("rect", rect);
-                        intent.putExtra("scaleType", leftImageHolder.iv_image.getScaleType());
-                        mActivity.startActivity(intent);
-                    }
-                });*/
                 break;
 
             default:
@@ -271,11 +250,11 @@ public class ChattingListAdapter extends BaseAdapter {
     public void disPlayLeftTextView(int position, View view, ViewHolder holder, ImMsgBean bean) {
         setContent(holder.tv_content, bean.getContent());
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
-        Glide.with(holder.iv_portrait.getContext()).load(HttpHealthyFishyUrl + bean.getPortrait()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(bean.getPortrait()).into(holder.iv_portrait);
     }
 
     public void disPlayLeftImageView(int position, View view, ViewHolder holder, ImMsgBean bean) {
-        Glide.with(holder.iv_portrait.getContext()).load(HttpHealthyFishyUrl + bean.getPortrait()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(bean.getPortrait()).into(holder.iv_portrait);
         if (ImageBase.Scheme.FILE == ImageBase.Scheme.ofUri(bean.getImage())) {
             String filePath = ImageBase.Scheme.FILE.crop(bean.getImage());
             Glide.with(holder.iv_image.getContext())
@@ -293,7 +272,7 @@ public class ChattingListAdapter extends BaseAdapter {
         setContent(holder.tv_content, bean.getContent());
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
         Glide.with(holder.iv_portrait.getContext()).load(getLocalUserImg()).into(holder.iv_portrait);
-
+        // 动态修改发送状态（加载、失败、成功）
         statusOfLoadingOrFailureOrSuccess(holder, bean);
 
     }
@@ -310,6 +289,7 @@ public class ChattingListAdapter extends BaseAdapter {
                 ImageLoadUtils.getInstance(mActivity).displayImage(bean.getImage(), holder.iv_image);
             }
             holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
+            // 动态修改发送状态（加载、失败、成功）
             statusOfLoadingOrFailureOrSuccess(holder, bean);
         } catch (IOException e) {
             e.printStackTrace();
@@ -333,11 +313,15 @@ public class ChattingListAdapter extends BaseAdapter {
     public String getLocalUserImg() {
         String key = "info_" + uid;
         List<BeanPersonalInformation> personalInformationList = DataSupport.where("key = ?", key).find(BeanPersonalInformation.class);
-        return HttpHealthyFishyUrl + personalInformationList.get(0).getImgUrl();
+        if (personalInformationList != null) {
+            return HttpHealthyFishyUrl + personalInformationList.get(0).getImgUrl();
+        }
+        return String.valueOf(R.mipmap.logo_240);
     }
 
     /**
      * 动态修改发送状态（加载、失败、成功）
+     *
      * @param holder
      * @param bean
      */
@@ -369,6 +353,7 @@ public class ChattingListAdapter extends BaseAdapter {
     /**
      * 设置图片预览的路径，本地或者网络
      * 如果图片在本地不全有，则直接加载网络的图片预览
+     *
      * @param imagePath
      */
     private void preview(String imagePath) {

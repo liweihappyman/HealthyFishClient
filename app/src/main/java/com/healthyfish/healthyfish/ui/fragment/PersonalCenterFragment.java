@@ -208,6 +208,7 @@ public class PersonalCenterFragment extends Fragment {
     public void refreshLoginState(BeanPersonalInformation beanPersonalInformation) {
         this.beanPersonalInformation = beanPersonalInformation;
         Log.i("LYQ", "refreshLoginState");
+        isTestPhy = false;
         judgeLoginState(beanPersonalInformation.isLogin());
     }
 
@@ -438,6 +439,7 @@ public class PersonalCenterFragment extends Fragment {
                 if (!TextUtils.isEmpty(strResp)) {
                     if (strResp.toString().substring(0, 1).equals("[")) {
                         MyApplication.isFirstUpdateUsrPhy = false;
+                        //DataSupport.deleteAll(BeanUserPhy.class);
                         List<String> strList = JSONArray.parseObject(strResp, List.class);
                         if (!strList.isEmpty()) {
                             for (String str : strList) {

@@ -20,6 +20,7 @@ import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.adapter.DepartmentDoctorLvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -56,9 +57,10 @@ public class DepartmentDoctorList extends BaseActivity {
     private String departmentCode;//部门编号
 
     private Context mContext;
-    private DepartmentDoctorLvAdapter adapter;
 
-    private List<BeanDepartmentDoctor> mDoctorInfos = new ArrayList<>();
+    private ChoiceDoctorLvAdapter adapter;
+
+    private List<BeanDoctorInfo> mDoctorInfos = new ArrayList<>();
     private List<BeanHospDeptDoctListRespItem> DeptDoctList = new ArrayList<>();
 
     private BeanHospRegisterReq beanHospRegisterReq;
@@ -84,7 +86,7 @@ public class DepartmentDoctorList extends BaseActivity {
      * 初始化ListView
      */
     private void initListView() {
-        adapter = new DepartmentDoctorLvAdapter(mContext, mDoctorInfos);
+        adapter = new ChoiceDoctorLvAdapter(mContext, mDoctorInfos);
 
         lvDepartmentDoctorList.setAdapter(adapter);
         lvDepartmentDoctorList.setVerticalScrollBarEnabled(false);
@@ -112,8 +114,6 @@ public class DepartmentDoctorList extends BaseActivity {
                 beanDoctorInfo.setSchdList(DeptDoctList.get(position).getSchdList());
 
                 intent.putExtra("BeanDoctorInfo", beanDoctorInfo);
-//                intent.putExtra("BeanHospRegisterReq", beanHospRegisterReq);
-//                intent.putExtra("BeanHospDeptDoctListRespItem", DeptDoctList.get(position));
                 startActivity(intent);
             }
         });
@@ -165,14 +165,15 @@ public class DepartmentDoctorList extends BaseActivity {
                             String jsonString = object.toJSONString();
                             BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptDoctListRespItem.class);
                             DeptDoctList.add(beanHospDeptListRespItem);
-                            BeanDepartmentDoctor data = new BeanDepartmentDoctor();
+
+                            BeanDoctorInfo data = new BeanDoctorInfo();
                             data.setImgUrl(HttpHealthyFishyUrl+beanHospDeptListRespItem.getZHAOPIAN());
                             data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
                             data.setDepartment("诊室："+beanHospDeptListRespItem.getCLINIQUE_CODE());
                             data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
-                            data.setHospital(beanHospRegisterReq.getHospTxt());
+                            data.setHospital("柳州市中医院");
                             data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
-                            data.setAvailable(true);
+                            data.setPrice(beanHospDeptListRespItem.getPRICE()+"元起");
                             mDoctorInfos.add(data);
                         }
                         adapter.notifyDataSetChanged();

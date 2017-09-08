@@ -14,6 +14,8 @@ public class BeanDoctorChatInfo implements Serializable {
     private String name;
     private String phone;
     private String imgUrl;
+    // 所选服务类型
+    private String serviceType;
 
     public String getName() {
         return name;
@@ -37,5 +39,13 @@ public class BeanDoctorChatInfo implements Serializable {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 }

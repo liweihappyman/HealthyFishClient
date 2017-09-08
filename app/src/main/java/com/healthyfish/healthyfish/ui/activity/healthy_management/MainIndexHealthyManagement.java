@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.healthyfish.healthyfish.MyApplication;
@@ -52,7 +51,6 @@ import org.litepal.crud.DataSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
@@ -101,6 +99,7 @@ public class MainIndexHealthyManagement extends BaseActivity {
     public void refreshUI(NoticeMessage noticeMessage) {
         if (noticeMessage.getMsg() == 1) {
             initWholeScheme();
+
             scrollview.smoothScrollTo(0, 0);
         }
         if (noticeMessage.getMsg() == 2 ){
@@ -149,8 +148,7 @@ public class MainIndexHealthyManagement extends BaseActivity {
     }
 
     /**
-     * 从数据库查找用户体质报告
-     *
+     *从数据库查找用户体质报告
      * @param uid
      */
     private void getUserPhyFromDB(String uid) {
@@ -219,7 +217,6 @@ public class MainIndexHealthyManagement extends BaseActivity {
 
     /**
      * 从服务器更新本地数据库的用户体质
-     *
      * @param uid
      */
     private void upDateUserPhyFromNetwork(final String uid) {
@@ -257,7 +254,7 @@ public class MainIndexHealthyManagement extends BaseActivity {
                         getUserPhyFromDB(uid);
 
                     } else {
-                        MyToast.showToast(MainIndexHealthyManagement.this, "加载个人体质信息出错啦");
+                        MyToast.showToast(MainIndexHealthyManagement.this,"加载个人体质信息出错啦");
                     }
                 }
             }

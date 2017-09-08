@@ -29,6 +29,7 @@ import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.TabEntity;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec;
 import com.healthyfish.healthyfish.ui.fragment.HealthPlanItemDetailFragment;
@@ -52,6 +53,7 @@ import butterknife.ButterKnife;
 /**
  * 最关键的地方是处理数据对应的关系
  */
+
 public class MyHealthyScheme extends AppCompatActivity {
     public static int mCurrent;
     public static  String mTitle;
@@ -104,6 +106,7 @@ public class MyHealthyScheme extends AppCompatActivity {
         title.setText("一周" + beanHotPlanItem.getTitle() + "计划");
         mTitle = beanHotPlanItem.getTitle();
         refreshProgressUI(beanHotPlanItem);
+
         calendarDate = JSON.parseObject(beanHealthPlanCommendContent.getCalendarDateJsonStr(), List.class);
         week = JSON.parseObject(beanHealthPlanCommendContent.getWeekJsonStr(), List.class);
         date = JSON.parseObject(beanHealthPlanCommendContent.getDateJsonStr(), List.class);
@@ -169,6 +172,7 @@ public class MyHealthyScheme extends AppCompatActivity {
             }
         }).show();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my_healthy_scheme, menu);
