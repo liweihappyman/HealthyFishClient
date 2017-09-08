@@ -55,8 +55,8 @@ public class HealthyCircleFragment extends Fragment implements View.OnClickListe
     private View rootView;
     private int mPosition = 0;
     private Activity activity;
-    private String[] mTitles = {
-            "我关注的", "所有社区", "今日头条"};
+    private String[] mTitles = {"我关注的", "所有社区", "今日头条"};
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

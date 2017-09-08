@@ -1,36 +1,29 @@
 package com.healthyfish.healthyfish.ui.fragment;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
-import com.healthyfish.healthyfish.POJO.BeanPictureConsultServiceDoctorList;
+import com.healthyfish.healthyfish.POJO.BeanInterrogationServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InterrogationServiceAdapter;
-import com.healthyfish.healthyfish.adapter.healthy_chat.ChattingListAdapter;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveMsg;
-import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.activity.interrogation.HealthyChat;
-import com.healthyfish.healthyfish.utils.ComparatorDate;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
@@ -44,7 +37,6 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -56,8 +48,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
-
-import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：问诊服务中当前服务选项页面
@@ -72,10 +62,10 @@ public class CurrentServiceFragment extends Fragment {
     ListView lvCurrentService;
     Unbinder unbinder;
 
-    // TODO: 2017/8/8 获取sender// 获取全局登录信息
     private BeanUserLoginReq beanUserLoginReq = new BeanUserLoginReq();
-    // private String sender = "u" + beanUserLoginReq.getMobileNo();
-    private String sender = "u18077207818";
+    private String sender;
+
+    //private String sender = "u18077207818";
 
     private View rootView;
     private InterrogationServiceAdapter mAdapter;
@@ -87,8 +77,6 @@ public class CurrentServiceFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_current_service, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        mList.clear();
-        initListView();
         lvListener();
         EventBus.getDefault().register(this);
 
@@ -97,6 +85,12 @@ public class CurrentServiceFragment extends Fragment {
             //更新用户的个人信息
             upDatePersonalInformation();
         }
+        // 获取登录用户信息
+        beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
+        sender = "u" + beanUserLoginReq.getMobileNo();
+
+        mList.clear();
+        initListView();
 
         return rootView;
     }
@@ -138,9 +132,9 @@ public class CurrentServiceFragment extends Fragment {
     private void refreshDataList() {
         Map<String, Object> map;
         // 获取购买过问诊服务的医生列表
-        List<BeanPictureConsultServiceDoctorList> purchaseList = DataSupport.findAll(BeanPictureConsultServiceDoctorList.class);
+        List<BeanInterrogationServiceDoctorList> purchaseList = DataSupport.findAll(BeanInterrogationServiceDoctorList.class);
 
-        for (BeanPictureConsultServiceDoctorList bean : purchaseList) {
+        for (BeanInterrogationServiceDoctorList bean : purchaseList) {
             map = new HashMap<String, Object>();
             String topic = "d" + bean.getDoctorNumber();
             String msgType;

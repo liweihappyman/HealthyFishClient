@@ -112,14 +112,8 @@ public class InterrogationServiceAdapter extends BaseAdapter {
             }
             switch (type) {
                 case TYPE_PictureConsulting:
-                    /*String flagPictureConsulting[] = new String[]{"title", "time", "department", "name", "reply"};
-                    holderGraphicConsultation.tvLastMessage.setText((String) list.get(position).get(flagPictureConsulting[0]));
-                    holderGraphicConsultation.tvDoctorDepartment.setText(list.get(position).get(flagPictureConsulting[1]) + "  |  " +
-                            list.get(position).get(flagPictureConsulting[2]) + "  |  " + list.get(position).get(flagPictureConsulting[3]));
-                    holderGraphicConsultation.tvReply.setText((String) list.get(position).get(flagPictureConsulting[4]));*/
                     String flagPictureConsulting[] = new String[]{"name", "hospital", "message", "time", "portrait", "isNew", "isSender"};
                     Glide.with(mContext).load((String) list.get(position).get(flagPictureConsulting[4])).into(holderGraphicConsultation.civDoctorGraphicConsultation);
-                    // holderGraphicConsultation.civDoctorGraphicConsultation.setImageResource(R.mipmap.logo_240);
                     holderGraphicConsultation.tvDoctorNameGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[0]));
                     holderGraphicConsultation.tvHospitalGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[1]));
                     holderGraphicConsultation.tvMessageGraphicConsultation.setText((String) list.get(position).get(flagPictureConsulting[2]));
@@ -160,8 +154,6 @@ public class InterrogationServiceAdapter extends BaseAdapter {
         TextView tvReceiveTimeGraphicConsultation;
         @BindView(R.id.iv_new_msg_graphic_consultation)
         ImageView ivNewMsgGraphicConsultation;
-
-
         ViewHolderGraphicConsultation(View view) {
             ButterKnife.bind(this, view);
         }

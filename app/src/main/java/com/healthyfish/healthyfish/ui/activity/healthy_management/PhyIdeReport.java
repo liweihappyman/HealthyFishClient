@@ -22,12 +22,14 @@ import com.healthyfish.healthyfish.POJO.BeanUserPhyIdReq;
 import com.healthyfish.healthyfish.POJO.BeanUserPhyIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserPhysical;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
@@ -122,6 +124,9 @@ public class PhyIdeReport extends BaseActivity {
             if (isSave) {
                 MyToast.showToast(this, "保存成功");
                 btSave.setText("重新测试");//保存成功后的操作
+                Intent intent = new Intent(getApplicationContext(),MainIndexHealthyManagement.class);
+                startActivity(intent);
+                EventBus.getDefault().post(new NoticeMessage(2));
             } else {
                 MyToast.showToast(this, "保存失败，请重试");
             }
