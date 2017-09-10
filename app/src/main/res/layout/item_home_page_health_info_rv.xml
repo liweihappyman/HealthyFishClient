@@ -2,6 +2,8 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="243px"
+    android:id="@+id/healthy_news_layout"
+    android:clickable="true"
     android:background="@android:color/white"
     android:orientation="vertical">
 
