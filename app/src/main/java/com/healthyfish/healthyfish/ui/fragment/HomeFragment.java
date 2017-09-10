@@ -146,23 +146,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initBannerRequest();//网络访问获取轮播图内容
         initInfoPrmopt("9");//测试消息提示文本
         initFunctionMenu();//初始化菜单监听
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initHealthNews();//初始化健康资讯
-                    }
-                });
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        initHealthNews();//初始化健康资讯
+//                    }
+//                });
+//
+//            }
+//        }).start();
 
-            }
-        }).start();
+        initHealthNews();//初始化健康资讯
 
         initHealthPlan();//初始化养生计划
         initHealthWorkShop();//初始化健康工坊

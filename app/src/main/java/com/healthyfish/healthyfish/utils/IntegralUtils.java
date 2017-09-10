@@ -1,11 +1,22 @@
 package com.healthyfish.healthyfish.utils;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanPointIncReq;
 import com.healthyfish.healthyfish.POJO.BeanPointQueryReq;
+import com.healthyfish.healthyfish.R;
 
 import java.io.IOException;
 
@@ -33,7 +44,8 @@ public class IntegralUtils {
             public void onCompleted() {
                 int code = Integer.parseInt(resp);
                 if (code >= 0) {
-                    Toast.makeText(context, "成功获得积分，当前积分：" + code, Toast.LENGTH_SHORT).show();
+                    showMyToast(context);
+                    //Toast.makeText(context, "成功获得积分，当前积分：" + code, Toast.LENGTH_SHORT).show();
                 }
                 else if (code == -1) {
                     Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
@@ -42,7 +54,6 @@ public class IntegralUtils {
                 } else {
 
                 }
-
             }
 
             @Override
@@ -81,7 +92,6 @@ public class IntegralUtils {
                 } else {
 
                 }
-
             }
 
             @Override
@@ -100,4 +110,21 @@ public class IntegralUtils {
             }
         });
     }
+
+    public static void showMyToast(Context context) {
+        View v = LayoutInflater.from(context).inflate(R.layout.layout_toast,null );
+        TextView textView = (TextView) v.findViewById(R.id.tv_toast);
+        textView.setText("恭喜您获得鱼丸 +1");
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(outMetrics.widthPixels, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textView.setLayoutParams(lp);
+        Toast toast = new Toast(context);
+        toast.setGravity(Gravity.TOP, 0, 120);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(v);
+        toast.show();
+    }
+
 }
