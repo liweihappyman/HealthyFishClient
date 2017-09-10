@@ -1,7 +1,6 @@
 package com.healthyfish.healthyfish.ui.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,51 +12,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.google.gson.Gson;
 import com.healthyfish.healthyfish.MainActivity;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
-import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
-import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
-import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
-import com.healthyfish.healthyfish.POJO.BeanServiceList;
-import com.healthyfish.healthyfish.POJO.BeanUserListReq;
-import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
-import com.healthyfish.healthyfish.eventbus.EmptyMessage;
 import com.healthyfish.healthyfish.eventbus.InitAllMessage;
-import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformation;
-import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.ui.presenter.login.LoginPresenter;
 import com.healthyfish.healthyfish.ui.view.login.ILoginView;
-import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Sha256;
-import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.greenrobot.eventbus.EventBus;
-import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
-
-import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
  * 描述：登录Activity
@@ -250,13 +231,18 @@ public class Login extends AutoLayoutActivity implements ILoginView {
                             MyApplication.isIsFirstUpdatePersonalInfo = false;
                             String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
                             if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                                BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                                boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                                if (!isSave) {
-                                    if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
-                                        MyToast.showToast(Login.this, "保存个人信息失败");
+                                if (strJsonBeanPersonalInformation.substring(0, 1).equals("{")) {
+                                    BeanPersonalInformation beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                    boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                    if (!isSave) {
+                                        if (!beanPersonalInformation.saveOrUpdate("key = ?", key)) {
+                                            MyToast.showToast(Login.this, "保存个人信息失败");
+                                        }
                                     }
+                                } else {
+                                    Toast.makeText(Login.this, "个人信息有误,请更新您的个人信息",Toast.LENGTH_SHORT).show();
                                 }
+
                                 beanPersonalInformation.setLogin(true);
                                 EventBus.getDefault().post(beanPersonalInformation);//发送消息提醒刷新个人中心的个人信息
                             } else {

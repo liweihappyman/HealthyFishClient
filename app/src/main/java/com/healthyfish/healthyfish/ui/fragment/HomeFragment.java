@@ -217,7 +217,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
                 Glide.with(getActivity())
                         .load(model)
-                        .placeholder(R.mipmap.placeholder)
+                        //.placeholder(R.mipmap.placeholder)
                         .error(R.mipmap.error)
                         .centerCrop()
                         .dontAnimate()
