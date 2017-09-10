@@ -84,13 +84,19 @@ public class CurrentServiceFragment extends Fragment {
         if (!TextUtils.isEmpty(user)) {
             //更新用户的个人信息
             upDatePersonalInformation();
-        }
-        // 获取登录用户信息
-        beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
-        sender = "u" + beanUserLoginReq.getMobileNo();
+            // 获取登录用户信息
+            beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
+            sender = "u" + beanUserLoginReq.getMobileNo();
 
-        mList.clear();
-        initListView();
+            mList.clear();
+            initListView();
+        }
+//        // 获取登录用户信息
+//        beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
+//        sender = "u" + beanUserLoginReq.getMobileNo();
+//
+//        mList.clear();
+//        initListView();
 
         return rootView;
     }
