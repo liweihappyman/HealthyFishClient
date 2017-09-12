@@ -97,15 +97,27 @@ public class RetrofitManagerUtils {
                 .baseUrl(url)
                 .build();
         apiService = retrofit.create(IApiService.class);
-
     }
 
     /**
      * @description 使用new Subscribe<ResponseBody>实现回调方法
      * @author Wayne
      */
+    String sid = MySharedPrefUtil.getValue("sid");
     public void getHealthyInfoByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
-        apiService.getHealthyInfoByRetrofit(requestBody)
+        apiService.getHealthyInfoByRetrofit(requestBody, sid)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * @description 使用new Subscribe<ResponseBody>实现回调方法
+     * @author Wayne
+     */
+    public void getSidByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
+        apiService.getSidByRetrofit(requestBody)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -136,7 +148,7 @@ public class RetrofitManagerUtils {
      * @author Wkj
      */
     public void getMedRecByRetrofit(RequestBody requestBody, Subscriber<ResponseBody> subscriber) {
-        apiService.getHealthyInfoByRetrofit(requestBody)
+        apiService.getHealthyInfoByRetrofit(requestBody, sid)
 //                .subscribeOn(Schedulers.io())
 //                .unsubscribeOn(Schedulers.io())
 //                .observeOn(Schedulers.io())

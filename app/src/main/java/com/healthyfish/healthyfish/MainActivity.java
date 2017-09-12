@@ -2,7 +2,6 @@ package com.healthyfish.healthyfish;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,11 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +34,7 @@ import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.ui.fragment.InterrogationFragment;
 import com.healthyfish.healthyfish.ui.fragment.PersonalCenterFragment;
 import com.healthyfish.healthyfish.utils.AutoLogin;
-import com.healthyfish.healthyfish.utils.IntegralUtils;
+import com.healthyfish.healthyfish.utils.PersonalPointUtils;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -187,7 +183,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    IntegralUtils.addIntegral(MainActivity.this);
+                    PersonalPointUtils.addPoint(MainActivity.this);
                 }
             }).start();
 
@@ -220,7 +216,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                IntegralUtils.addIntegral(MainActivity.this);
+                PersonalPointUtils.addPoint(MainActivity.this);
             }
         }).start();
 
@@ -391,7 +387,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void initMQTT() {
 
         RetrofitManagerUtils.getInstance(MainActivity.this, HttpHealthyFishyUrl)
-                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
+                .getSidByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
                         String user = MySharedPrefUtil.getValue("user");
@@ -410,7 +406,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onNext(ResponseBody responseBody) {
                         try {
                             BeanSessionIdResp obj = new Gson().fromJson(responseBody.string(), BeanSessionIdResp.class);
-                            //Log.e("MainActivity从服务器获取sid", obj.getSid());
+                            Log.e("MainActivity从服务器获取sid", obj.getSid());
                             MySharedPrefUtil.saveKeyValue("sid", obj.getSid());
                         } catch (IOException e) {
                             e.printStackTrace();

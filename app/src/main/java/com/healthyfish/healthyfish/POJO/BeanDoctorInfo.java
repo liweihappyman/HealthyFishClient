@@ -1,5 +1,7 @@
 package com.healthyfish.healthyfish.POJO;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * 编辑：LYQ
  */
 
-public class BeanDoctorInfo implements Serializable{
+public class BeanDoctorInfo extends DataSupport implements Serializable{
 
     private String imgUrl;  //医生头像地址或者路径
     private String name;  //医生姓名

@@ -31,18 +31,21 @@ import com.healthyfish.healthyfish.POJO.BeanUserPhy;
 import com.healthyfish.healthyfish.POJO.BeanUserPhyIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserPhysical;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.PhyIdeReport;
 import com.healthyfish.healthyfish.ui.activity.personal_center.Feedback;
-import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyConcern;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyNews;
 import com.healthyfish.healthyfish.ui.activity.personal_center.PersonalInformation;
 import com.healthyfish.healthyfish.ui.activity.personal_center.SetUp;
-import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.PersonalPointUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
@@ -64,8 +67,8 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import rx.Subscriber;
 
-
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
+import static java.lang.Thread.sleep;
 
 
 /**
@@ -102,6 +105,10 @@ public class PersonalCenterFragment extends Fragment {
     AutoRelativeLayout rlyNotLogin;
     @BindView(R.id.rly_login)
     AutoRelativeLayout rlyLogin;
+    @BindView(R.id.tv_current_point)
+    TextView tvCurrentPoint;
+    @BindView(R.id.ly_current_point)
+    AutoLinearLayout lyCurrentPoint;
     Unbinder unbinder;
 
     private Context mContext;
@@ -257,6 +264,7 @@ public class PersonalCenterFragment extends Fragment {
      * 展示数据
      */
     private void initWidget() {
+
         if (beanPersonalInformation != null) {
             if (!TextUtils.isEmpty(beanPersonalInformation.getImgUrl())) {
                 Glide.with(getActivity()).load(HttpHealthyFishyUrl + beanPersonalInformation.getImgUrl()).error(R.mipmap.error).into(civHeadPortraitLogin);
@@ -272,6 +280,8 @@ public class PersonalCenterFragment extends Fragment {
             Glide.with(getActivity()).load(R.mipmap.ic_logo).into(civHeadPortraitLogin);
             setTextBold("您");
         }
+        tvCurrentPoint.setText(PersonalPointUtils.queryPoint(MyApplication.getContetxt()));
+        getPersonalPoint();
     }
 
     /**
@@ -297,6 +307,7 @@ public class PersonalCenterFragment extends Fragment {
         if (!personalInformationList.isEmpty()) {
             beanPersonalInformation = personalInformationList.get(0);
             initWidget();
+
         } else {
             upDatePersonalInformation(uid);
         }
@@ -318,6 +329,7 @@ public class PersonalCenterFragment extends Fragment {
 
     /**
      * 从数据库查找用户体质并初始化
+     *
      * @param uid
      */
     private void getUserPhyFromDB(String uid) {
@@ -384,7 +396,7 @@ public class PersonalCenterFragment extends Fragment {
                                         MyToast.showToast(getActivity(), "保存个人信息失败");
                                     }
                                 } else {
-                                    Toast.makeText(getActivity(), "个人信息有误,请更新您的个人信息",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "个人信息有误,请更新您的个人信息", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 MyToast.showToast(getActivity(), "您还没有填写个人信息，请填写您的个人信息");
@@ -487,6 +499,32 @@ public class PersonalCenterFragment extends Fragment {
         });
     }
 
+
+    // 获取用户积分
+    private void getPersonalPoint() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                    /*String user = MySharedPrefUtil.getValue("user");
+                    String sid = MySharedPrefUtil.getValue("sid");
+                    if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+                        AutoLogin.autoLogin();
+                    }*/
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvCurrentPoint.setText(PersonalPointUtils.queryPoint(MyApplication.getContetxt()));
+                    }
+                });
+            }
+        }).start();
+    }
 
     @Override
     public void onDestroyView() {

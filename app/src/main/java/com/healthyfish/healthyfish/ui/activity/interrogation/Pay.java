@@ -343,11 +343,13 @@ public class Pay extends BaseActivity {
 
         final BeanServiceList beanServiceList = (BeanServiceList) bundleShopType.getSerializable("BeanServiceList");
         beanServiceList.setStartTime(startTime);
+        //// TODO: 2017/9/12 测试过期时间
         beanServiceList.setEndTime(endTime);
         String serviceListJson = JSON.toJSONString(beanServiceList);
 
         Log.i("LYQ", "serviceListJson:" + serviceListJson);
         final String serviceKey = beanServiceList.getKey();
+        final String phoneNumber = beanServiceList.getPhoneNumber();
         BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
         beanBaseKeySetReq.setKey(serviceKey);
         beanBaseKeySetReq.setValue(serviceListJson);
@@ -360,7 +362,7 @@ public class Pay extends BaseActivity {
                 BeanBaseResp beanBaseResp = JSON.parseObject(strJson, BeanBaseResp.class);
                 if (beanBaseResp.getCode() == 0) {
                     MyToast.showToast(Pay.this, "购买服务成功");
-                    beanServiceList.saveOrUpdate("key = ?", serviceKey);//保存已购买的服务
+                    beanServiceList.saveOrUpdate("phoneNumber = ?", phoneNumber);//保存已购买的服务
                     jumpTo(PayServiceSuccess.class);
                 } else {
                     MyToast.showToast(Pay.this, "购买服务失败，请重试");
