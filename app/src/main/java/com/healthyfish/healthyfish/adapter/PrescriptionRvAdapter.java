@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONException;
 import com.healthyfish.healthyfish.POJO.BeanPrescription;
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanPresList;
@@ -37,6 +38,8 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
     private Context mContext;
     private List<BeanPrescriptiom> list;
     private Toolbar toolbar;
+    BeanPresList bean = new BeanPresList();
+
 
     public PrescriptionRvAdapter(Context mContext, List<BeanPrescriptiom> list, Toolbar toolbar) {
         this.mContext = mContext;
@@ -55,7 +58,6 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         BeanPrescriptiom item = list.get(position);
         holder.ipresDiagnosisName.setText(item.getDIAGNOSIS_NAME());
         String originalWriteTime = item.getWRITE_TIME();
@@ -69,17 +71,22 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
          * ITEM_CLASS   存放的是  List<BeanPrescriptiom.PresListBean> preslist的JsonString对象
          */
         if (item.getITEM_CLASS() != null) {
-            BeanPresList bean = new BeanPresList();
-            bean = JSON.parseObject(item.getITEM_CLASS(),BeanPresList.class);
+            try {
+                //BeanPresList bean = new BeanPresList();
+                bean = JSON.parseObject(item.getITEM_CLASS(),BeanPresList.class);
                 holder.ipresPhysicName.setText(bean.getPHYSIC_NAME());
                 holder.right.setVisibility(View.VISIBLE);
-            final BeanPresList finalBean = bean;
-            holder.drugNameLayout.setOnClickListener(new View.OnClickListener() {
+                final BeanPresList finalBean = bean;
+                holder.drugNameLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showOptions(finalBean);
                     }
                 });
+            }catch (JSONException e){
+
+            }
+
 
                 //break;
             //}
