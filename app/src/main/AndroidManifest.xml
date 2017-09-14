@@ -180,6 +180,11 @@
             android:name=".service.UploadImages"
             android:exported="false"></service>
 
+        <!--上传红外皮温图片-->
+        <service
+            android:name=".service.UploadPhyImages"
+            android:exported="false"></service>
+
         <!--聊天发送图片-->
         <service
             android:name=".service.WeChatUploadImage"
