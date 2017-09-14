@@ -32,6 +32,7 @@ import com.foamtrace.photopicker.PhotoPreviewActivity;
 import com.foamtrace.photopicker.SelectModel;
 import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 import com.healthyfish.healthyfish.MainActivity;
+import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.AppFuncBean;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
@@ -45,6 +46,7 @@ import com.healthyfish.healthyfish.eventbus.WeChatImageMessage;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveMsg;
 import com.healthyfish.healthyfish.service.WeChatUploadImage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.SelectMedRec;
 import com.healthyfish.healthyfish.ui.widget.SessionChatKeyboardBase;
 import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
@@ -355,7 +357,7 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
             bean.setSender(true);// 是否是发送者
             bean.setTime(DateTimeUtil.getLongMs());// 发送时间
             bean.setLoading(true);// loading状态
-            bean.setSuccess(true);// 开始去掉发送失败标识
+            bean.setSuccess(true);// 开始时暂时去掉发送失败标识
             bean.setServiceType(serviceType);
             bean.setNewMsg(true);
             bean.setContent(msg);
@@ -378,6 +380,7 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                     Intent startUploadImage = new Intent(this, WeChatUploadImage.class);
                     startUploadImage.putExtra("WeChatImage", bean);
                     startService(startUploadImage);
+                    // 通过MQTT发送图片的具体方法是onUploadImgUrl
                     break;
                 default:
                     break;
@@ -554,7 +557,10 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                             clickToTakePhoto();
                             break;
                         case 3:
-                            Toast.makeText(HealthyChat.this, "程序员正在加班实现", Toast.LENGTH_SHORT).show();
+                            // TODO: 2017/9/12 跳转到分享病历
+                            Intent intent = new Intent(MyApplication.getContetxt(), SelectMedRec.class);
+                            intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+                            startActivity(intent);
                         default:
                             break;
                     }
