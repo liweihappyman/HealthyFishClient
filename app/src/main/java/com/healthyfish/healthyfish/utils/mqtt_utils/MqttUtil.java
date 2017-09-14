@@ -283,6 +283,9 @@ public class MqttUtil {
                 case "i":
                     bs.write((bean.getType() + bean.getImgUrl()).getBytes());
                     break;
+                // TODO: 2017/9/13 发送病历
+                case "m":
+                    break;
             }
             if (mqttAsyncClient == null) {
                 connect();
@@ -542,7 +545,7 @@ class PushCallback implements MqttCallback {
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
                         String content = new String(msg_array, "utf-8");
                         // TODO: 2017/7/27 保存msg
-                        MqttMsgText.process(bean, peer, content, topic);
+                        MqttMsgMdr.process(bean, peer, content, topic);
                         break;
                     }
                     // TODO: 2017/7/25 发送收到图片处理
@@ -574,7 +577,7 @@ class MqttMsgText {
         //需要根据peer去找到主题，更新content
     }*/
 
-    // 发送文本
+    // 接收文本
     public static void process(ImMsgBean bean, String peer, String content, String topic) {
         // 要显示的内容
         bean.setContent(content);
@@ -593,8 +596,30 @@ class MqttMsgText {
     }
 }
 
+class MqttMsgMdr {
+
+    // 接收病历
+    public static void process(ImMsgBean bean, String peer, String content, String topic) {
+        // 要显示的内容
+        bean.setContent(content);
+        bean.setToDefault("isSender");
+        bean.setName(peer);
+
+        bean.setTime(DateTimeUtil.getLongMs());
+        bean.setType("m");
+        bean.setTopic(topic);
+        bean.setNewMsg(true);
+        bean.save();
+
+        // 获取新的信息
+        EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
+
+    }
+}
+
 //i|len|<src="...">|img_bytes
 class MqttMsgImage {
+    // 接收图片
     public static void process(ImMsgBean bean, String peer, String url, String topic) {
         if ("failure".equals(url)) {
             bean.setContent("接收图片失败");

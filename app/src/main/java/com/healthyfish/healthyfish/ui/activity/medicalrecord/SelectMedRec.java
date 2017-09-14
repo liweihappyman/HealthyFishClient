@@ -55,6 +55,7 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.share_tv)
     TextView shareTv;
     private List<BeanMedRec>  list = new ArrayList<>();
+    private List<String> mListKeys;
     private SelectMedRecAdapter adapter;
     boolean unselectAllFactor = false;//非全选因素标志，用来标志全选框非全选的时候的出发因素：1.全选后直接点全选控键取消全选   （false）；
     //2.全选后点击列表的某项改变成非全选的状态  （true）；
@@ -90,7 +91,7 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
                 }
 
                 //选中的病历的key
-                List<String> mListKeys = listKeys;
+                mListKeys = listKeys;
             }
         });
         selectMedRecLv.setAdapter(adapter);
@@ -147,9 +148,18 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.share_tv:
+                // 发送病历
+                sendMdrKey();
                 Intent share = new Intent(SelectMedRec.this,ShareSuccess.class);
                 startActivity(share);
                 break;
+        }
+    }
+
+    private void sendMdrKey() {
+
+        for (String key : mListKeys) {
+
         }
     }
 

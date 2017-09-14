@@ -370,4 +370,10 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         }
     };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listMecRec.clear();
+        init(true);
+    }
 }
