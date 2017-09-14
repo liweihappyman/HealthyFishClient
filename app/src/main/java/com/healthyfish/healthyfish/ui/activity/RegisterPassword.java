@@ -212,7 +212,7 @@ public class RegisterPassword extends BaseActivity {
      */
     private void getSidAndAutoLogin() {
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), HttpHealthyFishyUrl)
-                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanSessionIdReq()), new Subscriber<ResponseBody>() {
+                .getSidByRetrofit(OkHttpUtils.getRequestBody(new BeanSessionIdReq()), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
 //                        String user = MySharedPrefUtil.getValue("user");

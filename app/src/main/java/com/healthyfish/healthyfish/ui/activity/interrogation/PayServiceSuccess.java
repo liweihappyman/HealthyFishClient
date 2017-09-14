@@ -98,7 +98,7 @@ public class PayServiceSuccess extends BaseActivity {
         beanInterrogationServiceDoctorList = new BeanInterrogationServiceDoctorList();
         beanInterrogationServiceDoctorList.setDoctorNumber(beanDoctorChatInfo.getPhone());
         beanInterrogationServiceDoctorList.setDoctorName(beanDoctorChatInfo.getName());
-        beanInterrogationServiceDoctorList.setDoctorPortrait(HttpHealthyFishyUrl + beanDoctorChatInfo.getImgUrl());
+        beanInterrogationServiceDoctorList.setDoctorPortrait(beanDoctorChatInfo.getImgUrl());
         // TODO: 2017/8/7 医院信息
         beanInterrogationServiceDoctorList.setDoctorHostipal("柳州市中医院");
 

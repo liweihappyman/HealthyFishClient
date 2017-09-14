@@ -102,6 +102,7 @@ public class ChoiceDoctor extends BaseActivity {
                 beanDoctorInfo.setPrice(String.valueOf(DeptDoctList.get(position).getPRICE()));
                 beanDoctorInfo.setSchdList(DeptDoctList.get(position).getSchdList());
 
+                beanDoctorInfo.save();
                 intent.putExtra("BeanDoctorInfo", beanDoctorInfo);
                 startActivity(intent);
             }

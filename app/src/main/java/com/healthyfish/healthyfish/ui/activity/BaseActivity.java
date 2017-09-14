@@ -6,11 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.utils.AutoLogin;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 
 /**
  * 描述：Activity的基类，用来封装一些相同的方法
@@ -56,4 +60,14 @@ public class BaseActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String user = MySharedPrefUtil.getValue("user");
+        String sid = MySharedPrefUtil.getValue("sid");
+        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+            AutoLogin.autoLogin();
+            MqttUtil.startAsync();
+        }
+    }
 }

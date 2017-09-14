@@ -30,11 +30,11 @@ public class SelectMedRecAdapter extends BaseAdapter {
     private Context context;
     private List<BeanMedRec> list;
 
-    public SelectMedRecAdapter(Context context, List<BeanMedRec> list/*, SelMRBListener myListener*/) {
+    public SelectMedRecAdapter(Context context, List<BeanMedRec> list, SelMRBListener myListener) {
         this.context = context;
         this.list = list;
         mLayoutInflater = LayoutInflater.from(context);
-        //this.mylistener = myListener;
+        this.mylistener = myListener;
     }
 
 
@@ -42,7 +42,7 @@ public class SelectMedRecAdapter extends BaseAdapter {
         /**
          * 回调函数，用于在Dialog的监听事件触发后刷新Activity的UI显示
          */
-        public void getSelId(List<String> ListID);
+        public void getSelId(List<String> listKeys);
     }
 
     @Override
@@ -90,21 +90,22 @@ public class SelectMedRecAdapter extends BaseAdapter {
                 }else {
                     list.get(position).setSelect(true);
                 }
-
+                traverseData();
             }
         });
         return convertView;
     }
 
-    //遍历选出选中的数据的id，在接口的另一边通过实现接口的方法获得id，从数据库选出相应id的数据
-    private List<String> traverseData() {
+    //遍历选出选中的数据的key，在接口的另一边通过实现接口的方法获得key，从数据库选出相应key的数据
+    private void traverseData() {
         List<String> selectData = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isSelect()) {
                 //获取被选中的病历夹的唯一标识
+                selectData.add(list.get(i).getKey());
             }
         }
-        return selectData;
+        mylistener.getSelId(selectData);
     }
 
     class ViewHolder {

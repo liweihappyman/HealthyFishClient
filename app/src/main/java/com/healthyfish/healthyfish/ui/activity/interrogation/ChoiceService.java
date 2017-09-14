@@ -527,10 +527,10 @@ public class ChoiceService extends BaseActivity {
         beanDoctorChatInfo.setImgUrl(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
         beanDoctorChatInfo.setServiceType("pictureConsulting");
 
-        String serviceKey = "service_" + uid + "_" + "PTC_" + beanDoctorInfo.getHosp() + "_" + beanDoctorInfo.getDept() + "_" + beanDoctorInfo.getSTAFF_NO();
-        Log.i("LYQ", "serviceKey:" + serviceKey);
+        String serviceKey = "service_" + uid + "_" + "PTC_" + doctorPhone;
+//        Log.i("LYQ", "serviceKey:" + serviceKey);
 
-        List<BeanServiceList> serviceLists = DataSupport.where("key = ?", serviceKey).find(BeanServiceList.class);//查找数据库
+        List<BeanServiceList> serviceLists = DataSupport.where("phoneNumber = ?", doctorPhone).find(BeanServiceList.class);//查找数据库
         if (!serviceLists.isEmpty()) {//不为空则购买过该医生的图文咨询服务
             BeanServiceList beanServiceList = serviceLists.get(0);
 
@@ -564,6 +564,7 @@ public class ChoiceService extends BaseActivity {
     private void goToBuyService(String serviceKey, boolean isBuy, BeanDoctorChatInfo beanDoctorChatInfo) {
         BeanServiceList beanService = new BeanServiceList();
         beanService.setKey(serviceKey);
+        beanService.setPhoneNumber(doctorPhone);
         beanService.setType("PTC");
 
         if (isBuy) {//已购买但过期了

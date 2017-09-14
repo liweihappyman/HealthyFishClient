@@ -36,6 +36,9 @@
         <!--用户体质-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanUserPhy" />
 
+        <!--医生信息-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanDoctorInfo" />
+
 
     </list>
 

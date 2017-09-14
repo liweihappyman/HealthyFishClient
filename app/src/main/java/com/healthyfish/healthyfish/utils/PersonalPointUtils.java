@@ -30,12 +30,13 @@ import rx.Subscriber;
  * 编辑：LYQ
  */
 
-public class IntegralUtils {
+public class PersonalPointUtils {
 
+    private static String returnPoint = "";
     /**
      * 增加积分
      */
-    public static void addIntegral(final Context context) {
+    public static void addPoint(final Context context) {
 
         RetrofitManagerUtils.getInstance(context, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanPointIncReq()), new Subscriber<ResponseBody>() {
             String resp = null;
@@ -76,7 +77,7 @@ public class IntegralUtils {
     /**
      * 增加积分
      */
-    public static void queryIntegral(final Context context) {
+    public static String queryPoint(final Context context) {
 
         RetrofitManagerUtils.getInstance(context, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanPointQueryReq()), new Subscriber<ResponseBody>() {
             String resp = null;
@@ -85,7 +86,8 @@ public class IntegralUtils {
             public void onCompleted() {
                 int code = Integer.parseInt(resp);
                 if (code >= 0) {
-                    Toast.makeText(context, "当前积分：" + code, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "当前积分：" + code, Toast.LENGTH_SHORT).show();
+                    returnPoint = resp;
                 }
                 else if (code == -1) {
                     Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
@@ -109,6 +111,8 @@ public class IntegralUtils {
                 }
             }
         });
+
+        return returnPoint;
     }
 
     public static void showMyToast(Context context) {
