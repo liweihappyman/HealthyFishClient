@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanPhyQuestionnaireTest;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.POJO.BeanUserPhy;
@@ -23,6 +25,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserPhyIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserPhysical;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
+import com.healthyfish.healthyfish.eventbus.UploadPhyImgMsg;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MyToast;
@@ -30,6 +33,8 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
@@ -75,15 +80,22 @@ public class PhyIdeReport extends BaseActivity {
     Button btSave;
 
     private String uid;
+    private String userName;
     private final String phyNames[] = {"气虚质", "阳虚质", "阴虚质", "痰湿质", "湿热质", "血淤质", "气郁质", "特禀质", "平和质"};//0-8
     private List<BeanUserPhysical> physicals = new ArrayList<>();
     private String jsonStrPhysicalList = "";
+
+    private List<String> imagePathList;//原始图片路径
+    private List<String> imageUrls;//存放图片网络路径
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phy_report);
         ButterKnife.bind(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         initToolBar(toolbar,toolbarTitle,"体质报告");
         uid = MyApplication.uid;
         initData();
@@ -121,9 +133,16 @@ public class PhyIdeReport extends BaseActivity {
             beanUserPhy.setJsonStrPhysicalList(jsonStrPhysicalList);
 
             boolean isSave = beanUserPhy.saveOrUpdate("uid = ?",uid );
+
+            if (getIntent().getBooleanExtra("IS_INFRARED_TEST", false)) {
+                //若是红外皮温测试，则将结果保存到病历夹
+                queryPersonalInformationFormDB();
+                saveDataToMedRec();
+            }
+
             if (isSave) {
                 MyToast.showToast(this, "保存成功");
-                btSave.setText("重新测试");//保存成功后的操作
+                //btSave.setText("重新测试");//保存成功后的操作
                 Intent intent = new Intent(getApplicationContext(),MainIndexHealthyManagement.class);
                 startActivity(intent);
                 EventBus.getDefault().post(new NoticeMessage(2));
@@ -133,6 +152,19 @@ public class PhyIdeReport extends BaseActivity {
 
         }
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void uploadImgOver(UploadPhyImgMsg uploadPhyImgMsg) {
+        Toast.makeText(this, "成功上传红外热像仪热图报告单", Toast.LENGTH_SHORT).show();
+        imagePathList = uploadPhyImgMsg.getImgPaths();
+        imageUrls = uploadPhyImgMsg.getImgUrls();
+        EventBus.getDefault().unregister(this);
+        Log.i("LYQ", "imagePathList:"+imagePathList);
+        Log.i("LYQ", "imageUrls:"+imageUrls);
+    }
+
+
 
     /**
      * 获取体质报告
@@ -202,6 +234,24 @@ public class PhyIdeReport extends BaseActivity {
             tvBothPhyTitle.setVisibility(View.GONE);
             tvBothPhysique.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 从数据库查找个人信息，获取姓名
+     */
+    private void queryPersonalInformationFormDB() {
+        String key = "info_" + uid;
+        List<BeanPersonalInformation> personalInformationList = DataSupport.where("key = ?", key).find(BeanPersonalInformation.class);
+        if (!personalInformationList.isEmpty()) {
+            userName = personalInformationList.get(0).getName();
+        }
+    }
+
+    /**
+     * 将体质信息保存到病历夹
+     */
+    private void saveDataToMedRec() {
+
     }
 
 }
