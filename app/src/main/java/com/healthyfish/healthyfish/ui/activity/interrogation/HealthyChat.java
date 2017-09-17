@@ -76,11 +76,13 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
 
     private static final int REQUEST_CAMERA_CODE = 12;
     private static final int REQUEST_PREVIEW_CODE = 13;
+    // private static final int RESULT_FOR_MDR_KEY = 14;
     // 发送延时显示失败（秒数）
     private static final int AUTO_SET_FAILURE = 10;
 
     private static final String MQTT_SEND_IMG_TYPE = "i";
     public static final String MQTT_SEND_TXT_TYPE = "t";
+    public static final String MQTT_SEND_MDR_TYPE = "m";
 
     private Toolbar toolbar;
     private ListView lvChat;
@@ -110,6 +112,8 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
     // 服务类型
     private String serviceType;
     //private String imgUrl = null;
+    // 发送病历夹的key
+    private List<String> mListKeys = new ArrayList<>();
 
     // 网络状态广播
     private BroadcastReceiver netReceiver;
@@ -124,23 +128,12 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
         lvChat = (ListView) findViewById(R.id.lv_chat);
         sessionChat = (SessionChatKeyboardBase) findViewById(R.id.session_chat);
 
+        // 初始化聊天信息
         initChatInfo();
-
+        // 初始化视图
         initView();
         // 注册EventBus
         EventBus.getDefault().register(this);
-    }
-
-    // 初始化聊天信息
-    private void initChatInfo() {
-        beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
-        beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
-        topic = "d" + beanDoctorChatInfo.getPhone();
-        //topic = "d" + "13977211042";
-        sender = "u" + beanUserLoginReq.getMobileNo();
-        //medRECKey = "dmr" + beanDoctorChatInfo.getPhone() + beanUserLoginReq.getMobileNo();
-        doctorPortrait = beanDoctorChatInfo.getImgUrl();
-        serviceType = beanDoctorChatInfo.getServiceType();
     }
 
     private void initView() {
@@ -154,6 +147,9 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
         initSwipeToRefresh();
         // 初始化接收广播
         initReceiver();
+        // 如果接收到病历夹Key信息则选择发送
+        sendMdrKey();
+
     }
 
     private void initToolbar() {
@@ -203,6 +199,18 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
         };
         IntentFilter filter = new IntentFilter(NetWorkChangeBroadcastReceiver.NET_CHANGE);
         registerReceiver(netReceiver, filter);
+    }
+
+    // 初始化聊天信息
+    private void initChatInfo() {
+        beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
+        beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
+        topic = "d" + beanDoctorChatInfo.getPhone();
+        //topic = "d" + "13977211042";
+        sender = "u" + beanUserLoginReq.getMobileNo();
+        //medRECKey = "dmr" + beanDoctorChatInfo.getPhone() + beanUserLoginReq.getMobileNo();
+        doctorPortrait = beanDoctorChatInfo.getImgUrl();
+        serviceType = beanDoctorChatInfo.getServiceType();
     }
 
     /**
@@ -382,6 +390,14 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                     startService(startUploadImage);
                     // 通过MQTT发送图片的具体方法是onUploadImgUrl
                     break;
+
+                // TODO: 2017/9/15 完成发送病历
+                case MQTT_SEND_MDR_TYPE:
+                    bean.setType(mqttMsgType);
+                    // UI添加消息
+                    chattingListAdapter.addData(bean, true, false);
+                    MqttUtil.sendTxt(bean);
+                    break;
                 default:
                     break;
             }
@@ -557,7 +573,6 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                             clickToTakePhoto();
                             break;
                         case 3:
-                            // TODO: 2017/9/12 跳转到分享病历
                             Intent intent = new Intent(MyApplication.getContetxt(), SelectMedRec.class);
                             intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
                             startActivity(intent);
@@ -582,6 +597,20 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
             OnSendBtnClick(msg, MQTT_SEND_IMG_TYPE);
         }
         imagePaths.clear();
+    }
+
+    /**
+     * 发送病历夹Key信息
+     */
+    private void sendMdrKey() {
+        mListKeys = getIntent().getStringArrayListExtra("MdrKeyList");
+        if (mListKeys != null) {
+            for (String key : mListKeys) {
+                Log.e("病历夹", key);
+                String msg = "[mdr]" + key;
+                OnSendBtnClick(msg, MQTT_SEND_MDR_TYPE);
+            }
+        }
     }
 
     // 上传照片
