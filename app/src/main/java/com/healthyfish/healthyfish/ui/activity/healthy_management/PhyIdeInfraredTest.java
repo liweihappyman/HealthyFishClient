@@ -28,6 +28,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserPhyIdReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CreateCourseGridAdapter;
 import com.healthyfish.healthyfish.adapter.PhyGvAdapter;
+import com.healthyfish.healthyfish.service.UploadPhyImages;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.healthy_circle.HealthyCirclePosting;
 import com.healthyfish.healthyfish.utils.AutoLogin;
@@ -273,7 +274,11 @@ public class PhyIdeInfraredTest extends BaseActivity implements AdapterView.OnIt
                     if (beanBaseResp.getCode() == 0) {
                         MyToast.showToast(PhyIdeInfraredTest.this, "提交成功");
                         Intent intent = new Intent(PhyIdeInfraredTest.this, PhyIdeReport.class);
+                        intent.putExtra("IS_INFRARED_TEST", true);
                         startActivity(intent);
+                        if (!imagePaths.isEmpty()) {
+                            uploadPhyImages();//上传图片
+                        }
                     } else {
                         MyToast.showToast(PhyIdeInfraredTest.this, "提交失败，请重试");
                     }
@@ -297,5 +302,11 @@ public class PhyIdeInfraredTest extends BaseActivity implements AdapterView.OnIt
                 }
             }
         });
+    }
+
+    private void uploadPhyImages() {
+        Intent startUploadImages = new Intent(this, UploadPhyImages.class);
+        startUploadImages.putStringArrayListExtra("imagePaths", (ArrayList<String>) imagePaths);
+        startService(startUploadImages);
     }
 }

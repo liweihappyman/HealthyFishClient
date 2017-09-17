@@ -125,7 +125,7 @@ public class MainIndexHealthyManagement extends BaseActivity {
     // 初始化体质选项
     private void initHealthIdentityView() {
         healthyIdentication = new SpannableString("体质：气虚  阳虚  阴虚  痰湿  湿热  血淤  气郁  特禀  平和");
-
+        tvHealthyIdentification.setText(healthyIdentication);
         if (MyApplication.isFirstUpdateUsrPhy) {
             upDateUserPhyFromNetwork(uid);
         } else {
