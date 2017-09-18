@@ -18,7 +18,7 @@ public class Constants {
     // OkHttpClient设置写的超时时间
     public final static int WRITE_TIMEOUT = 5000;
 
-    public static int POSITION_MED_REC = -1;//病历夹是从item点击进入，还是点击新建病历夹进入
+    public static int POSITION_MED_REC = -1;//病历夹是从item点击进入，还是点击新建病历夹进入（-1表示新建，-2表示从聊天列表进入）
     public static int POSITION_COURSE = -1;//标志是否从病程的item进入，item进入可以更新，否则回到病历页面保存
 
     // 健康咨询chat界面

@@ -341,6 +341,7 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         Intent intent = new Intent(AllMedRec.this, NewMedRec.class);
         //将选中的病历的id穿到NewMedRec活动
         intent.putExtra("id", listMecRec.get(position).getId());
+        intent.putExtra("flag","fromAllMedRecList");
         startActivityForResult(intent, TO_NEW_MED_REC);
     }
 
@@ -370,10 +371,10 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         }
     };
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        listMecRec.clear();
-        init(true);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        listMecRec.clear();
+//        init(true);
+//    }
 }

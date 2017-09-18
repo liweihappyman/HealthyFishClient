@@ -64,15 +64,12 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     TextView shareTv;
     @BindView(R.id.doctor_portrait)
     CircleImageView doctorPortrait;
-    private List<BeanMedRec> list = new ArrayList<>();
     private BeanDoctorChatInfo beanDoctorChatInfo;//医生信息
     private List<BeanMedRec> list = new ArrayList<>();
     private List<String> mListKeys;
     private SelectMedRecAdapter adapter;
-
-    private BeanDoctorChatInfo beanDoctorChatInfo;
     // 医生头像
-    private String doctorPortrait;
+    private String mDoctorPortrait;
     // 医生姓名
     private String doctorName;
     boolean unselectAllFactor = false;//非全选因素标志，用来标志全选框非全选的时候的出发因素：1.全选后直接点全选控键取消全选   （false）；
@@ -164,7 +161,7 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     // 初始化聊天信息
     private void initChatInfo() {
         beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
-        doctorPortrait = beanDoctorChatInfo.getImgUrl();
+        mDoctorPortrait = beanDoctorChatInfo.getImgUrl();
         doctorName = beanDoctorChatInfo.getName();
     }
 

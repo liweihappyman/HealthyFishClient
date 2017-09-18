@@ -113,21 +113,33 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
         initListener();
-        //判断是点击item进来的还是点击新建病历夹进来的，并执行相应的初始化操作
+        judgeTypeAndInitDate();//根据进入该活动的方式加载数据
+        initList(listCourseOfDiseases, courseOfDiseaseRecyclerView); //初始化病程列表
+    }
+    //判断是点击item进来的还是点击新建病历夹进来的，并执行相应的初始化操作
+    // （从聊天界面进来的也是Constants.POSITION_MED_REC == -1)
+    private void judgeTypeAndInitDate() {
         if (Constants.POSITION_MED_REC == -1) {
             clinicalTime.setText(Utils1.getTime());
             SAVE_OR_UPDATE = "save";//标志位新建，直接保存
             medRec = new BeanMedRec();
 
+        } else if (Constants.POSITION_MED_REC == -2){
+            String key = getIntent().getStringExtra("MdrKey");
+            List<BeanMedRec> list = DataSupport.where("key = ?",key).find(BeanMedRec.class);
+            ID = list.get(0).getId();
+            medRec = DataSupport.find(BeanMedRec.class, ID, true);
+            //Log.i("YYYYY","来自聊天");
+            initdata();
         } else {
+            ID = getIntent().getIntExtra("id", 0);
+            medRec = DataSupport.find(BeanMedRec.class, ID, true);
+            //Log.i("YYYYY","来自列表");
             initdata();
         }
-        initList(listCourseOfDiseases, courseOfDiseaseRecyclerView);
     }
 
     private void initdata() {
-        ID = getIntent().getIntExtra("id", 0);
-        medRec = DataSupport.find(BeanMedRec.class, ID, true);
         //Log.i("电子病历", "电子病历更新的时间" + medRec.getTimestamp());
         //Log.i("电子病历", "电子病历的key" + medRec.getKey());
         listCourseOfDiseases = medRec.getListCourseOfDisease();
@@ -556,14 +568,11 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
 
     //设置name（姓名） 、patientInfo（患者信息点击时间的控件，这里用来显示性别）控件的值
     private void setInfo() {
-        if (medRec.getName() != null&& !medRec.getName().equals("null")) {
+        if (medRec.getName() != null&& !medRec.getName().trim().equals("null")&& !medRec.getName().equals("")) {
             name.setText("姓名： " + medRec.getName());
         }
-        if (medRec.getGender() != null && !medRec.getGender().equals("null")) {
+        if (medRec.getGender() != null && !medRec.getGender().trim().equals("null")&& !medRec.getGender().equals("")) {
             patientInfo.setText(medRec.getGender());
         }
-
     }
-
-
 }
