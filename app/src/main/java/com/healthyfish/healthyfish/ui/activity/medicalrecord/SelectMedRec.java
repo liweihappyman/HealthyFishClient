@@ -13,16 +13,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.bumptech.glide.Glide;
+import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SelectMedRecAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.interrogation.HealthyChat;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +35,9 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SelectMedRec extends BaseActivity implements View.OnClickListener {
+
     private String phone;//手机号码
+    private static final int RESULT_FOR_MDR_KEY = 14;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -60,8 +66,15 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     CircleImageView doctorPortrait;
     private List<BeanMedRec> list = new ArrayList<>();
     private BeanDoctorChatInfo beanDoctorChatInfo;//医生信息
+    private List<BeanMedRec> list = new ArrayList<>();
     private List<String> mListKeys;
     private SelectMedRecAdapter adapter;
+
+    private BeanDoctorChatInfo beanDoctorChatInfo;
+    // 医生头像
+    private String doctorPortrait;
+    // 医生姓名
+    private String doctorName;
     boolean unselectAllFactor = false;//非全选因素标志，用来标志全选框非全选的时候的出发因素：1.全选后直接点全选控键取消全选   （false）；
 
     //2.全选后点击列表的某项改变成非全选的状态  （true）；
@@ -80,6 +93,8 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
         }
         initData();
         initListener();
+        //初始化医生信息
+        initChatInfo();
     }
 
     private void initData() {
@@ -146,6 +161,12 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
         });
     }
 
+    // 初始化聊天信息
+    private void initChatInfo() {
+        beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
+        doctorPortrait = beanDoctorChatInfo.getImgUrl();
+        doctorName = beanDoctorChatInfo.getName();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -162,17 +183,11 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.share_tv:
                 // 发送病历
-                sendMdrKey();
-                Intent share = new Intent(SelectMedRec.this, ShareSuccess.class);
+                Intent share = new Intent(SelectMedRec.this, HealthyChat.class);
+                share.putStringArrayListExtra ("MdrKeyList", (ArrayList<String>) mListKeys);
+                share.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
                 startActivity(share);
                 break;
-        }
-    }
-
-    private void sendMdrKey() {
-
-        for (String key : mListKeys) {
-
         }
     }
 

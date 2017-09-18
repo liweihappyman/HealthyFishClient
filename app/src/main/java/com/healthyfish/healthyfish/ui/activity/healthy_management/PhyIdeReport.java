@@ -99,6 +99,7 @@ public class PhyIdeReport extends BaseActivity {
     private List<String> imageUrls = new ArrayList<>();//存放图片网络路径
     private String gender;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -261,12 +262,14 @@ public class PhyIdeReport extends BaseActivity {
             }else {
                 birthDate = Utils1.getTime();
             }
+
         }
     }
 
     /**
      * 将体质信息保存到病历夹
      */
+
     private BeanMedRec beanMedRec = new BeanMedRec();
     private void saveDataToMedRec() {
         beanMedRec.setName(userName);
