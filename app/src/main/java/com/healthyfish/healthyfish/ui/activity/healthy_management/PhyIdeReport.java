@@ -15,10 +15,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyAddReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyAddResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
+import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.BeanPhyQuestionnaireTest;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserPhy;
 import com.healthyfish.healthyfish.POJO.BeanUserPhyIdReq;
 import com.healthyfish.healthyfish.POJO.BeanUserPhyIdResp;
@@ -27,10 +32,13 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.eventbus.UploadPhyImgMsg;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec;
 import com.healthyfish.healthyfish.utils.AutoLogin;
+import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.Utils1;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +47,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -81,12 +90,14 @@ public class PhyIdeReport extends BaseActivity {
 
     private String uid;
     private String userName;
+    private String birthDate;
     private final String phyNames[] = {"气虚质", "阳虚质", "阴虚质", "痰湿质", "湿热质", "血淤质", "气郁质", "特禀质", "平和质"};//0-8
     private List<BeanUserPhysical> physicals = new ArrayList<>();
     private String jsonStrPhysicalList = "";
 
-    private List<String> imagePathList;//原始图片路径
-    private List<String> imageUrls;//存放图片网络路径
+    private List<String> imagePathList = new ArrayList<>();//原始图片路径
+    private List<String> imageUrls = new ArrayList<>();//存放图片网络路径
+    private String gender;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -244,14 +255,82 @@ public class PhyIdeReport extends BaseActivity {
         List<BeanPersonalInformation> personalInformationList = DataSupport.where("key = ?", key).find(BeanPersonalInformation.class);
         if (!personalInformationList.isEmpty()) {
             userName = personalInformationList.get(0).getName();
+            gender = personalInformationList.get(0).getGender();
+            if (!TextUtils.isEmpty(personalInformationList.get(0).getBirthDate())){
+                birthDate = personalInformationList.get(0).getBirthDate();
+            }else {
+                birthDate = Utils1.getTime();
+            }
         }
     }
 
     /**
      * 将体质信息保存到病历夹
      */
+    private BeanMedRec beanMedRec = new BeanMedRec();
     private void saveDataToMedRec() {
+        beanMedRec.setName(userName);
+        beanMedRec.setGender(gender);
+        beanMedRec.setDiagnosis("红外皮温");
+        beanMedRec.setDiseaseInfo(physicals.get(0).getTitle()+"质");
+        beanMedRec.setClinicalTime(Utils1.getTime());
+        beanMedRec.setBirthday(birthDate);
+        beanMedRec.setBirthday(Utils1.getTime());
+        beanMedRec.save();
+        if (imagePathList.size()>0){
+            BeanCourseOfDisease beanCourseOfDisease = new BeanCourseOfDisease();
+            beanCourseOfDisease.setType("红外皮温");
+            beanCourseOfDisease.setRecPatientInfo(physicals.get(0).getTitle()+"质");
+            beanCourseOfDisease.setImgPaths(imagePathList);
+            beanCourseOfDisease.setImgUrls(imageUrls);
+            beanCourseOfDisease.setBeanMedRec(beanMedRec);
+            beanCourseOfDisease.save();
+            beanMedRec.getListCourseOfDisease().add(beanCourseOfDisease);
+        }
+        addMedRec();
 
+    }
+
+    /**
+     * 添加病历
+     */
+    private void addMedRec() {
+        String userStr = MySharedPrefUtil.getValue("user");
+        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
+        final BeanBaseKeyAddReq beanBaseKeyAddReq = new BeanBaseKeyAddReq();
+        StringBuilder prefix = new StringBuilder("medRec_");
+        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
+        //Log.i("电子病历", "prefix:" + prefix.toString());
+        beanBaseKeyAddReq.setPrefix(prefix.toString());//前缀
+        beanBaseKeyAddReq.setJsonString(JSON.toJSONString(beanMedRec));//数据string
+        RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyAddReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+                Toast.makeText(PhyIdeReport.this, "成功同步到服务器", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(PhyIdeReport.this, "出错啦,数据还没有同步到服务器哟", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                String str = null;
+                try {
+                    str = responseBody.string();
+                    //Log.i("电子病历", "add的响应数据:" + str);
+                    if (str != null) {
+                        BeanBaseKeyAddResp beanBaseKeyAddResp = JSON.parseObject(str, BeanBaseKeyAddResp.class);
+                        beanMedRec.setTimestamp(beanBaseKeyAddResp.getTimestamp());
+                        beanMedRec.setKey(beanBaseKeyAddResp.getBeanKey());
+                        beanMedRec.save();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

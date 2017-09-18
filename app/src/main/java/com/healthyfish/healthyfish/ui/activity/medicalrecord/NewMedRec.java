@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -249,7 +250,12 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
                 startActivityForResult(toCreateCourse, COURSE_OF_DISEASE);
                 break;
             case R.id.save:
-                saveOrUpdate();
+                if (!TextUtils.isEmpty(medRec.getName()) && !diagnosis.getText().toString().trim().equals("") && !diseaseInfo.getText().toString().trim().equals("")){
+                    saveOrUpdate();
+                }
+                else {
+                    Toast.makeText(NewMedRec.this,"请完善信息",Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -550,12 +556,13 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
 
     //设置name（姓名） 、patientInfo（患者信息点击时间的控件，这里用来显示性别）控件的值
     private void setInfo() {
-        if (medRec.getName() != null) {
+        if (medRec.getName() != null&& !medRec.getName().equals("null")) {
             name.setText("姓名： " + medRec.getName());
         }
-        if (medRec.getGender() != null) {
-            patientInfo.setText("性别： " + medRec.getGender());
+        if (medRec.getGender() != null && !medRec.getGender().equals("null")) {
+            patientInfo.setText(medRec.getGender());
         }
+
     }
 
 

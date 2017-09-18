@@ -108,9 +108,7 @@ public class CurrentServiceFragment extends Fragment {
             mList.clear();
             initListView();
         }
-
         uid = MyApplication.uid;
-
         return rootView;
     }
 

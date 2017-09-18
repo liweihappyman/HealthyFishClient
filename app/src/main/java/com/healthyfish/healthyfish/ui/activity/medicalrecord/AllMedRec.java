@@ -305,24 +305,24 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.share:
-                Intent share = new Intent(this, SelectMedRec.class);
-                AllMedRec.this.startActivity(share);
-                break;
-            case R.id.del:
-                Intent selectDoctor = new Intent(this, SelectDoctor.class);
-                AllMedRec.this.startActivity(selectDoctor);
-                break;
+//            case R.id.share:
+//                Intent share = new Intent(this, SelectMedRec.class);
+//                AllMedRec.this.startActivity(share);
+//                break;
+//            case R.id.del:
+//                Intent selectDoctor = new Intent(this, SelectDoctor.class);
+//                AllMedRec.this.startActivity(selectDoctor);
+//                break;
 
         }
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.med_rec2, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.med_rec2, menu);
+//        return true;
+//    }
 
     @Override
     public void onClick(View v) {

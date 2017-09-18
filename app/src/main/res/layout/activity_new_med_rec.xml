@@ -52,7 +52,7 @@
                 <TextView
                     android:id="@+id/name"
                     style="@style/EditText_Hint"
-                    android:text="姓名" />
+                    android:text="姓名（*必填）" />
 
                 <TextView
                     android:id="@+id/patient_info"
@@ -67,7 +67,8 @@
 
                 <EditText
                     android:id="@+id/diagnosis"
-                    style="@style/EditText_Hint" />
+                    style="@style/EditText_Hint"
+                    android:hint="（*必填）"/>
 
                 <ImageView style="@style/Divider" />
 
@@ -77,13 +78,15 @@
 
                 <EditText
                     android:id="@+id/disease_info"
-                    style="@style/EditText_Hint" />
+                    style="@style/EditText_Hint"
+                    android:hint="（*必填）"/>
 
                 <ImageView style="@style/Divider" />
 
                 <TextView
                     style="@style/TextView_Lable"
-                    android:text="就诊科室" />
+                    android:text="就诊科室"
+                    />
 
                 <EditText
                     android:id="@+id/clinical_department"

@@ -3,7 +3,6 @@ package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.bumptech.glide.Glide;
+import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.SelectMedRecAdapter;
@@ -27,9 +28,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SelectMedRec extends BaseActivity implements View.OnClickListener {
-
+    private String phone;//手机号码
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -54,10 +56,14 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     ListView selectMedRecLv;
     @BindView(R.id.share_tv)
     TextView shareTv;
-    private List<BeanMedRec>  list = new ArrayList<>();
+    @BindView(R.id.doctor_portrait)
+    CircleImageView doctorPortrait;
+    private List<BeanMedRec> list = new ArrayList<>();
+    private BeanDoctorChatInfo beanDoctorChatInfo;//医生信息
     private List<String> mListKeys;
     private SelectMedRecAdapter adapter;
     boolean unselectAllFactor = false;//非全选因素标志，用来标志全选框非全选的时候的出发因素：1.全选后直接点全选控键取消全选   （false）；
+
     //2.全选后点击列表的某项改变成非全选的状态  （true）；
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,15 +83,22 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     }
 
     private void initData() {
+        //医生信息
+        beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
+        Glide.with(SelectMedRec.this).load(beanDoctorChatInfo.getImgUrl()).centerCrop().into(doctorPortrait);
+        nameDoctor.setText(beanDoctorChatInfo.getName());
+        phone=beanDoctorChatInfo.getPhone();
+
+        //病历夹列表
         list = DataSupport.findAll(BeanMedRec.class);
         //通过接口获取选中的病历的key
         adapter = new SelectMedRecAdapter(this, list, new SelectMedRecAdapter.SelMRBListener() {
             @Override
             public void getSelId(List<String> listKeys) {
                 //判断选中的病历的数量是否和总数一样，然后改变全选的状态
-                if (list.size()==listKeys.size()){
+                if (list.size() == listKeys.size()) {
                     allSelectCb.setChecked(true);
-                }else {
+                } else {
                     unselectAllFactor = true;
                     allSelectCb.setChecked(false);
                 }
@@ -104,10 +117,10 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
         hideInfo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    Toast.makeText(SelectMedRec.this,"选中",Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(SelectMedRec.this,"未选中",Toast.LENGTH_SHORT).show();
+                if (isChecked) {
+                    Toast.makeText(SelectMedRec.this, "选中", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SelectMedRec.this, "未选中", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -115,12 +128,12 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
         allSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
-                if (isCheck){
-                    for (int i=0;i<list.size();i++){
+                if (isCheck) {
+                    for (int i = 0; i < list.size(); i++) {
                         list.get(i).setSelect(true);
                     }
 
-                }else {
+                } else {
                     if (!unselectAllFactor) {
                         for (int i = 0; i < list.size(); i++) {
                             list.get(i).setSelect(false);
@@ -146,11 +159,11 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.share_tv:
                 // 发送病历
                 sendMdrKey();
-                Intent share = new Intent(SelectMedRec.this,ShareSuccess.class);
+                Intent share = new Intent(SelectMedRec.this, ShareSuccess.class);
                 startActivity(share);
                 break;
         }
