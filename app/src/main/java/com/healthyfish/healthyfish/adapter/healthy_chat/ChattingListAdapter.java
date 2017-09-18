@@ -19,6 +19,7 @@ import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.chat_utils.ImageLoadUtils;
@@ -283,7 +284,8 @@ public class ChattingListAdapter extends BaseAdapter {
                 rightMdrHolder.tv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        goToMedRec(bean.getMdrKey().substring(5));
+                        //这里的key不用截取
+                        goToMedRec(bean.getMdrKey());
                     }
                 });
                 break;
@@ -309,7 +311,8 @@ public class ChattingListAdapter extends BaseAdapter {
                 leftMdrHolder.tv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        goToMedRec(bean.getMdrKey().substring(5));
+                        //这里的key不用截取
+                        goToMedRec(bean.getMdrKey());
                     }
                 });
                 break;
@@ -422,9 +425,9 @@ public class ChattingListAdapter extends BaseAdapter {
 
     // 点击病历内容跳转到病历
     private void goToMedRec(String mdrKey) {
-        Intent intent = new Intent(MyApplication.getContetxt(), NewMedRec.class);
+        Constants.POSITION_MED_REC = -2;//-2表示从非病历夹列表进入病历
+        Intent intent = new Intent(mActivity, NewMedRec.class);
         intent.putExtra("MdrKey", mdrKey);
-        intent.putExtra("Lable", "HealthyChat");
         this.mActivity.startActivity(intent);
     }
 

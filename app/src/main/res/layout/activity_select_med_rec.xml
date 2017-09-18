@@ -18,6 +18,7 @@
         android:background="@color/color_white"
         android:orientation="horizontal">
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/doctor_portrait"
             android:layout_width="120px"
             android:layout_height="120px"
             android:src="@color/colorPrimaryDark"
