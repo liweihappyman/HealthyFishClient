@@ -163,48 +163,54 @@ public class CurrentServiceFragment extends Fragment {
             map = new HashMap<String, Object>();
             String topic = "d" + bean.getDoctorNumber();
             String msgType;
-            ImMsgBean lastMsg = DataSupport.where("topic = ? and name = ? or topic = ? and name = ?", topic, sender, sender, topic).findLast(ImMsgBean.class);
-            if (lastMsg != null) {
-                switch (lastMsg.getType()) {
-                    case "t":
-                        msgType = "「文本消息」";
-                        break;
-                    case "i":
-                        msgType = "「图片消息」";
-                        break;
-                    case "m":
-                        msgType = "「病历消息」";
-                        break;
-                    default:
-                        msgType = "「消息」";
-                        break;
+            try {
+                ImMsgBean lastMsg = DataSupport.where("topic = ? and name = ? or topic = ? and name = ?", topic, sender, sender, topic).findLast(ImMsgBean.class);
+
+                if (lastMsg != null) {
+                    switch (lastMsg.getType()) {
+                        case "t":
+                            msgType = "「文本消息」";
+                            break;
+                        case "i":
+                            msgType = "「图片消息」";
+                            break;
+                        case "m":
+                            msgType = "「病历消息」";
+                            break;
+                        default:
+                            msgType = "「消息」";
+                            break;
+                    }
+                    map.put("type", "pictureConsulting");
+                    map.put("message", msgType);
+                    map.put("time", DateTimeUtil.getTime(lastMsg.getTime()));
+                    map.put("time1", lastMsg.getTime());// 用于排序的比较器
+                    map.put("hospital", "柳州市中医院");
+                    map.put("name", bean.getDoctorName());
+                    map.put("portrait", bean.getDoctorPortrait());
+                    map.put("peerNumber", bean.getDoctorNumber());
+                    map.put("isNew", lastMsg.isNewMsg());
+                    map.put("isSender", lastMsg.isSender());
+                    mList.add(map);
+
                 }
-                map.put("type", "pictureConsulting");
-                map.put("message", msgType);
-                map.put("time", DateTimeUtil.getTime(lastMsg.getTime()));
-                map.put("time1", lastMsg.getTime());// 用于排序的比较器
-                map.put("hospital", "柳州市中医院");
-                map.put("name", bean.getDoctorName());
-                map.put("portrait", bean.getDoctorPortrait());
-                map.put("peerNumber", bean.getDoctorNumber());
-                map.put("isNew", lastMsg.isNewMsg());
-                map.put("isSender", lastMsg.isSender());
-                mList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            // 按发送时间给列表排序time1
+            Collections.sort(mList, new Comparator<Map<String, Object>>() {
+                @Override
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    if (((long) o1.get("time1")) > (long) o2.get("time1")) {
+                        return -1;
+                    }
+                    if (((long) o1.get("time1")) > (long) o2.get("time1")) {
+                        return 0;
+                    }
+                    return 1;
+                }
+            });
         }
-        // 按发送时间给列表排序time1
-        Collections.sort(mList, new Comparator<Map<String, Object>>() {
-            @Override
-            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                if (((long) o1.get("time1")) > (long) o2.get("time1")) {
-                    return -1;
-                }
-                if (((long) o1.get("time1")) > (long) o2.get("time1")) {
-                    return 0;
-                }
-                return 1;
-            }
-        });
     }
 
     /**
@@ -244,6 +250,7 @@ public class CurrentServiceFragment extends Fragment {
     /**
      * 更新用户的个人信息
      */
+
     private void upDatePersonalInformation() {
         String user = MySharedPrefUtil.getValue("user");
         if (!TextUtils.isEmpty(user)) {

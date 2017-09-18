@@ -1,6 +1,7 @@
 package com.healthyfish.healthyfish.adapter.healthy_chat;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
+import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.chat_utils.ImageLoadUtils;
 import com.healthyfish.healthyfish.utils.chat_utils.SimpleCommonUtils;
@@ -275,9 +279,34 @@ public class ChattingListAdapter extends BaseAdapter {
                     rightMdrHolder = (ViewHolder) convertView.getTag();
                 }
                 disPlayRightMdrView(position, convertView, rightMdrHolder, bean);
+
+                // 点击病历内容跳转到病历
+                rightMdrHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToMedRec(bean.getMdrKey().substring(5));
+                    }
+                });
+
                 break;
 
             case VIEW_TYPE_LEFT_MDR:
+                final ViewHolder leftMdrHolder;
+                if (convertView == null) {
+                    leftMdrHolder = new ViewHolder();
+                    holderView = mInflater.inflate(R.layout.listitem_chat_right_text, null);
+                    holderView.setFocusable(true);
+                    leftMdrHolder.iv_portrait = (ImageView) holderView.findViewById(R.id.iv_portrait);
+                    leftMdrHolder.tv_content = (TextView) holderView.findViewById(R.id.tv_content);
+                    leftMdrHolder.sendtime = (TextView) holderView.findViewById(R.id.sendtime);
+                    leftMdrHolder.iv_loading = (ImageView) holderView.findViewById(R.id.iv_loading);
+                    leftMdrHolder.iv_failure_send = (ImageView) holderView.findViewById(R.id.iv_failure_send);
+                    holderView.setTag(leftMdrHolder);
+                    convertView = holderView;
+                }else {
+                    leftMdrHolder = (ViewHolder) convertView.getTag();
+                }
+                disPlayLeftMdrView(position, convertView, leftMdrHolder, bean);
                 break;
             default:
                 convertView = new View(mActivity);
@@ -336,7 +365,19 @@ public class ChattingListAdapter extends BaseAdapter {
     }
 
     private void disPlayRightMdrView(int position, View convertView, ViewHolder holder, ImMsgBean bean) {
-        setContent(holder.tv_content, "病历发送成功\n" + "病历详情: " + bean.getContent());
+        // 查看病历详情
+        String mdrDetail = getMDRKey(bean.getContent().substring(5));
+        setContent(holder.tv_content, "病历接收成功\n" + "病历详情: " + mdrDetail);
+        holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
+        Glide.with(holder.iv_portrait.getContext()).load(getLocalUserImg()).into(holder.iv_portrait);
+        // 动态修改发送状态（加载、失败、成功）
+        statusOfLoadingOrFailureOrSuccess(holder, bean);
+    }
+
+    private void disPlayLeftMdrView(int position, View convertView, ViewHolder holder, ImMsgBean bean) {
+        // 查看病历详情
+        String mdrDetail = getMDRKey(bean.getContent().substring(5));
+        setContent(holder.tv_content, "病历接收成功\n" + "病历详情: " + mdrDetail);
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
         Glide.with(holder.iv_portrait.getContext()).load(getLocalUserImg()).into(holder.iv_portrait);
         // 动态修改发送状态（加载、失败、成功）
@@ -364,6 +405,22 @@ public class ChattingListAdapter extends BaseAdapter {
             return HttpHealthyFishyUrl + personalInformationList.get(0).getImgUrl();
         }
         return String.valueOf(R.mipmap.logo_240);
+    }
+
+    // 根据病历的key获取病历详情
+    private String getMDRKey(String mdrKey) {
+        List<BeanMedRec> mdeRecList = DataSupport.where("key = ?", mdrKey).find(BeanMedRec.class);
+        //Log.e("返回病历信息 ", mdeRecList.get(0).getDiseaseInfo());
+        return mdeRecList.get(0).getDiseaseInfo();
+        //return null;
+    }
+
+    // 点击病历内容跳转到病历
+    private void goToMedRec(String mdrKey) {
+        Intent intent = new Intent(MyApplication.getContetxt(), NewMedRec.class);
+        intent.putExtra("MdrKey", mdrKey);
+        intent.putExtra("Lable", "HealthyChat");
+        this.mActivity.startActivity(intent);
     }
 
     /**
