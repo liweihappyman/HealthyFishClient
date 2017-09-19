@@ -390,13 +390,13 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                     startService(startUploadImage);
                     // 通过MQTT发送图片的具体方法是onUploadImgUrl
                     break;
-
                 // TODO: 2017/9/15 完成发送病历
                 case MQTT_SEND_MDR_TYPE:
                     bean.setType(mqttMsgType);
                     // UI添加消息
                     chattingListAdapter.addData(bean, true, false);
                     MqttUtil.sendTxt(bean);
+
                     break;
                 default:
                     break;
@@ -573,6 +573,7 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                             clickToTakePhoto();
                             break;
                         case 3:
+                            // TODO: 2017/9/12 跳转到分享病历
                             Intent intent = new Intent(MyApplication.getContetxt(), SelectMedRec.class);
                             intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
                             startActivity(intent);
