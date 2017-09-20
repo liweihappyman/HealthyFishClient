@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
 import com.bumptech.glide.Glide;
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
@@ -88,18 +90,19 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
+        //初始化医生信息
+        //initChatInfo();
         initData();
         initListener();
-        //初始化医生信息
-        initChatInfo();
+
     }
 
     private void initData() {
         //医生信息
-        beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
-        Glide.with(SelectMedRec.this).load(beanDoctorChatInfo.getImgUrl()).centerCrop().into(doctorPortrait);
-        nameDoctor.setText(beanDoctorChatInfo.getName());
-        phone=beanDoctorChatInfo.getPhone();
+        //beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
+//        Glide.with(SelectMedRec.this).load(mDoctorPortrait).centerCrop().into(doctorPortrait);
+//        nameDoctor.setText(doctorName);
+//        phone = beanDoctorChatInfo.getPhone();
 
         //病历夹列表
         list = DataSupport.findAll(BeanMedRec.class);
@@ -181,7 +184,7 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
             case R.id.share_tv:
                 // 发送病历
                 Intent share = new Intent(SelectMedRec.this, HealthyChat.class);
-                share.putStringArrayListExtra ("MdrKeyList", (ArrayList<String>) mListKeys);
+                share.putStringArrayListExtra("MdrKeyList", (ArrayList<String>) mListKeys);
                 share.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
                 startActivity(share);
                 break;

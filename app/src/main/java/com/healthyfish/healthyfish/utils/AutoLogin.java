@@ -50,7 +50,7 @@ public class AutoLogin {
 
                         @Override
                         public void onError(Throwable e) {
-                            Toast.makeText(MyApplication.getContetxt(), "自动登录失败", Toast.LENGTH_LONG).show();
+                            Log.e("自动登录", "失败");
                         }
 
                         @Override

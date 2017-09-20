@@ -499,9 +499,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
                 cursor.close();
 
-                for (String b : topicList) {
+                /*for (String b : topicList) {
                     Log.e("topic", b);
-                }
+                }*/
                 break;
         }
     }
