@@ -465,7 +465,7 @@ public class ChangePersonalInformation extends BaseActivity {
             final DecimalFormat df = new DecimalFormat("00.0000");
             try {
                 String size = df.format(((double) (new FileInputStream(file).available())) / 1024 / 1024);
-                if (Float.valueOf(size) < 0.6) {//如果文件小于600k，就不用压缩了
+                if (Float.valueOf(size) < 0.1) {//如果文件小于600k，就不用压缩了
                     compressFiles.add(file);
                 } else {
                     compressFiles.add(Luban.with(MyApplication.getContetxt()).load(file).get());

@@ -91,7 +91,7 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
             actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
         }
         //初始化医生信息
-        //initChatInfo();
+        initChatInfo();
         initData();
         initListener();
 

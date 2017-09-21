@@ -122,14 +122,15 @@ public class CurrentServiceFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // 获取医生peer信息，
-                BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
-                beanDoctorChatInfo.setPhone((String) mList.get(position).get("peerNumber"));
-                beanDoctorChatInfo.setName((String) mList.get(position).get("name"));
-                beanDoctorChatInfo.setImgUrl((String) mList.get(position).get("portrait"));
-                beanDoctorChatInfo.setServiceType((String) mList.get(position).get("type"));
+//                BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
+//                beanDoctorChatInfo.setPhone((String) mList.get(position).get("peerNumber"));
+//                beanDoctorChatInfo.setName((String) mList.get(position).get("name"));
+//                beanDoctorChatInfo.setImgUrl((String) mList.get(position).get("portrait"));
+//                beanDoctorChatInfo.setServiceType((String) mList.get(position).get("type"));
                 // 根据手机号查询购买服务与否时用到的手机号
                 doctorPhone = (String) mList.get(position).get("peerNumber");
-
+                beanDoctorInfo.setImgUrl((String) mList.get(position).get("portrait"));
+                beanDoctorInfo.setName((String) mList.get(position).get("name"));
                 if (!TextUtils.isEmpty(uid)) {
                     buyPictureConsultingService();
                 } else {
@@ -359,7 +360,7 @@ public class CurrentServiceFragment extends Fragment {
         BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
         beanDoctorChatInfo.setName(beanDoctorInfo.getName());
         beanDoctorChatInfo.setPhone(doctorPhone);
-        beanDoctorChatInfo.setImgUrl(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
+        beanDoctorChatInfo.setImgUrl(beanDoctorInfo.getImgUrl());
         beanDoctorChatInfo.setServiceType("pictureConsulting");
 
         String serviceKey = "service_" + uid + "_" + "PTC_" + doctorPhone;
