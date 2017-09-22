@@ -33,6 +33,7 @@ import com.healthyfish.healthyfish.POJO.MessageToServise;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.CourseOfDiseaseAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
+import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.service.UploadImages;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
@@ -41,6 +42,7 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
@@ -66,7 +68,6 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
     public String SAVE_OR_UPDATE = "update";
     //public boolean hasCourseList = false;
     public static int ID = 0;//记录本次所编辑的病历夹的id
-    public static final int ALL_MED_REC_RESULT = 38;//给AllMedRec页面返回结果的标志
     public static final int COURSE_OF_DISEASE = 33;//跳转进入病程页面的标志
     public static final int INFO = 34;
     public static final int LABLE = 35;
@@ -104,6 +105,7 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_med_rec);
         ButterKnife.bind(this);
+
         toolbarTitle.setText("新建病历");
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -116,6 +118,7 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
         judgeTypeAndInitDate();//根据进入该活动的方式加载数据
         initList(listCourseOfDiseases, courseOfDiseaseRecyclerView); //初始化病程列表
     }
+
     //判断是点击item进来的还是点击新建病历夹进来的，并执行相应的初始化操作
     // （从聊天界面进来的也是Constants.POSITION_MED_REC == -1)
     private void judgeTypeAndInitDate() {
@@ -124,9 +127,9 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             SAVE_OR_UPDATE = "save";//标志位新建，直接保存
             medRec = new BeanMedRec();
 
-        } else if (Constants.POSITION_MED_REC == -2){
+        } else if (Constants.POSITION_MED_REC == -2) {
             String key = getIntent().getStringExtra("MdrKey");
-            List<BeanMedRec> list = DataSupport.where("key = ?",key).find(BeanMedRec.class);
+            List<BeanMedRec> list = DataSupport.where("key = ?", key).find(BeanMedRec.class);
             ID = list.get(0).getId();
             medRec = DataSupport.find(BeanMedRec.class, ID, true);
             //Log.i("YYYYY","来自聊天");
@@ -223,8 +226,7 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
                         if (medRec.getKey() == null) {
                             medRec.delete();
                             Toast.makeText(NewMedRec.this, "删除成功", Toast.LENGTH_SHORT);
-                            Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
-                            setResult(ALL_MED_REC_RESULT, intent);
+                            EventBus.getDefault().post(new NoticeMessage(11));
                             finish();
 
                         } else {
@@ -262,11 +264,10 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
                 startActivityForResult(toCreateCourse, COURSE_OF_DISEASE);
                 break;
             case R.id.save:
-                if (!TextUtils.isEmpty(medRec.getName()) && !diagnosis.getText().toString().trim().equals("") && !diseaseInfo.getText().toString().trim().equals("")){
+                if (!TextUtils.isEmpty(medRec.getName()) && !diagnosis.getText().toString().trim().equals("") && !diseaseInfo.getText().toString().trim().equals("")) {
                     saveOrUpdate();
-                }
-                else {
-                    Toast.makeText(NewMedRec.this,"请完善信息",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(NewMedRec.this, "请完善信息", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -280,7 +281,7 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
         medRec.setClinicalTime(clinicalTime.getText().toString());
         medRec.save();
         //获取列表的最新数据同步到服务器,因为在此期间，开启服务器上传的图片会保存到数据库里面，必须重新读取
-        if (listCourseOfDiseases.size()>0) {
+        if (listCourseOfDiseases.size() > 0) {
             medRec = DataSupport.find(BeanMedRec.class, ID, true);
             listCourseOfDiseases = medRec.getListCourseOfDisease();
             medRec.setListCourseOfDisease(listCourseOfDiseases);
@@ -290,9 +291,8 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
 //        }
         //请求服务器，添加数据或者更新数据
         requestForAddOrUpdate();
-        Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
-        NewMedRec.this.setResult(ALL_MED_REC_RESULT, intent);
-        NewMedRec.this.finish();
+        EventBus.getDefault().post(new NoticeMessage(11));
+        finish();
     }
 
     /**
@@ -335,15 +335,13 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
         RetrofitManagerUtils.getInstance(NewMedRec.this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(baseKeyRemReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-                Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
-                setResult(ALL_MED_REC_RESULT, intent);
+                EventBus.getDefault().post(new NoticeMessage(11));
                 finish();
             }
 
             @Override
             public void onError(Throwable e) {
-                Intent intent = new Intent(NewMedRec.this, AllMedRec.class);
-                setResult(ALL_MED_REC_RESULT, intent);
+                EventBus.getDefault().post(new NoticeMessage(11));
                 finish();
                 Toast.makeText(NewMedRec.this, "删除失败，请检查网络环境", Toast.LENGTH_SHORT).show();
             }
@@ -466,7 +464,10 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             }
         });
     }
-/** ---------------------------------------------------------------------------------------------------------------------*/
+
+    /**
+     * ---------------------------------------------------------------------------------------------------------------------
+     */
 
     //时间选择对话框
     private void selectTime() {
@@ -568,11 +569,13 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
 
     //设置name（姓名） 、patientInfo（患者信息点击时间的控件，这里用来显示性别）控件的值
     private void setInfo() {
-        if (medRec.getName() != null&& !medRec.getName().trim().equals("null")&& !medRec.getName().equals("")) {
+        if (medRec.getName() != null && !medRec.getName().trim().equals("null") && !medRec.getName().equals("")) {
             name.setText("姓名： " + medRec.getName());
         }
-        if (medRec.getGender() != null && !medRec.getGender().trim().equals("null")&& !medRec.getGender().equals("")) {
+        if (medRec.getGender() != null && !medRec.getGender().trim().equals("null") && !medRec.getGender().equals("")) {
             patientInfo.setText(medRec.getGender());
         }
     }
+
+
 }
