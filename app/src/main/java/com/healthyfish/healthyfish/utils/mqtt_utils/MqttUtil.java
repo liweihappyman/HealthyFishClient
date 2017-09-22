@@ -285,11 +285,11 @@ public class MqttUtil {
                     break;
                 // TODO: 2017/9/13 发送病历
                 case "m":
+                    bs.write((bean.getType() + bean.getContent()).getBytes());
                     break;
             }
             if (mqttAsyncClient == null) {
                 connect();
-                /*callHandler(obj.getString("method"), "failed: 请先登录");*/
                 return;
             }
 
@@ -389,7 +389,6 @@ public class MqttUtil {
     // 发送图片
     public static void sendImg(final ImMsgBean bean) {
 
-        // TODO: 2017/8/6 解决图片发送问题
         bean.save();
 
         try {
@@ -479,7 +478,6 @@ class PushCallback implements MqttCallback {
             //news
             String dest = topic.substring(1);
             if (dest.equalsIgnoreCase("news")) {
-                // TODO: 2017/7/25 保存msg
                     /*MqttDao.saveMsg(topic, "sys", message.getPayload().toString(), "s");*/
             }
         } else {
@@ -544,11 +542,10 @@ class PushCallback implements MqttCallback {
                         byte[] msg_array = new byte[msg_len];
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
                         String content = new String(msg_array, "utf-8");
-                        // TODO: 2017/7/27 保存msg
                         MqttMsgMdr.process(bean, peer, content, topic);
                         break;
                     }
-                    // TODO: 2017/7/25 发送收到图片处理
+                    // 发送收到图片处理
                     case 'i': {//image
                         int msg_len = payload.length - uid_len - 2;
                         byte[] msg_array = new byte[msg_len];

@@ -21,7 +21,7 @@
         android:id="@+id/name"
         style="@style/EditText_Hint"
         android:layout_marginTop="70px"
-        android:hint="姓名" />
+        android:hint="姓名 (*必填)" />
 
     <ImageView style="@style/Divider" />
 
@@ -30,7 +30,7 @@
         style="@style/EditText_Hint"
         android:clickable="true"
         android:layout_marginTop="50px"
-        android:hint="性别" />
+        android:hint="性别 (*必填)" />
 
     <ImageView style="@style/Divider" />
 

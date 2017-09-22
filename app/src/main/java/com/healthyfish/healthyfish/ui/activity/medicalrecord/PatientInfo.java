@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
@@ -80,10 +82,10 @@ public class PatientInfo extends BaseActivity implements View.OnClickListener {
     //初始化页面的显示
     private void initData() {
         medRec = (BeanMedRec) getIntent().getSerializableExtra("info");
-        if (medRec.getName() != null) {
+        if (medRec.getName() != null&& !medRec.getName().equals("null")) {
             name.setText(medRec.getName());
         }
-        if (medRec.getGender() != null) {
+        if (medRec.getGender() != null && !medRec.getGender().equals("null")) {
             gender.setText(medRec.getGender());
         }
         if (medRec.getBirthday() != null) {
@@ -144,11 +146,16 @@ public class PatientInfo extends BaseActivity implements View.OnClickListener {
                 selectBirthday();
                 break;
             case R.id.save:
-                getInfo();
-                Intent intent = new Intent(PatientInfo.this, NewMedRec.class);
-                intent.putExtra("forInfo", medRec);
-                setResult(INFO_RESULT, intent);
-                finish();
+                if (!TextUtils.isEmpty(name.getText().toString().trim()) && !TextUtils.isEmpty(gender.getText().toString())) {
+                    getInfo();
+                    Intent intent = new Intent(PatientInfo.this, NewMedRec.class);
+                    intent.putExtra("forInfo", medRec);
+                    setResult(INFO_RESULT, intent);
+                    finish();
+                } else {
+                    Toast.makeText(PatientInfo.this,"请完善信息",Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
     }
