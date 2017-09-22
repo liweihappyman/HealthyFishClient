@@ -387,7 +387,7 @@ public class ChattingListAdapter extends BaseAdapter {
         String mdrDetail = getMDRKey(bean.getContent().substring(5));
         setContent(holder.tv_content, "病历接收成功\n" + "病历详情: " + mdrDetail);
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
-        Glide.with(holder.iv_portrait.getContext()).load(getLocalUserImg()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(bean.getPortrait()).into(holder.iv_portrait);
         // 动态修改发送状态（加载、失败、成功）
         statusOfLoadingOrFailureOrSuccess(holder, bean);
     }
