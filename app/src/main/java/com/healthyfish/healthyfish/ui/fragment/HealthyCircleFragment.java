@@ -55,7 +55,7 @@ public class HealthyCircleFragment extends Fragment implements View.OnClickListe
     private View rootView;
     private int mPosition = 0;
     private Activity activity;
-    private String[] mTitles = {"我关注的", "所有社区", "今日头条"};
+    private String[] mTitles = {"今日头条"};
 
 
     @Override
@@ -71,8 +71,8 @@ public class HealthyCircleFragment extends Fragment implements View.OnClickListe
 
     private void initTabLayout() {
         ArrayList<Fragment> mFragments = new ArrayList<>();
-        mFragments.add(new MyCommunityFragment());
-        mFragments.add(new AllCommunityFragment());
+        //mFragments.add(new MyCommunityFragment());
+        //mFragments.add(new AllCommunityFragment());
         mFragments.add(new TestFragment());
         /*for (int i = 0; i < mTitles.length-3; i++) {
             mFragments.add(new PersonalCenterFragment());

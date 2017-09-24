@@ -7,9 +7,9 @@
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="160px"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TableRow
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35px"
@@ -24,7 +24,6 @@
                 style="@style/content_title_text"
                 android:textSize="36px"
                 android:layout_marginLeft="55px"
-
                 />
 
             <TextView
@@ -34,17 +33,18 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="40px"
                 android:text="2017年6月30日" />
-        </TableRow>
+        </com.zhy.autolayout.AutoLinearLayout>
         <TextView
             android:id="@+id/description"
             android:layout_width="867px"
             android:layout_height="wrap_content"
-            android:paddingLeft="55px"
+            android:layout_marginLeft="55px"
             android:layout_marginTop="20px"
+            android:layout_marginBottom="20px"
             android:ellipsize="end"
             style="@style/genera_title_text"
             android:maxLines="1"
-            android:text="水电开发军嫂放松；啊fdgd机家覅哦健身房；爱上发生纠纷"/>
+            android:text="病历详情"/>
     </com.zhy.autolayout.AutoLinearLayout>
 
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanHospitalListRespItem;
@@ -41,7 +42,7 @@ public class ChooseHospitalAdapter extends RecyclerView.Adapter<ChooseHospitalAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String url = HttpHealthyFishyUrl + imgUrls.get(position).getImg();
-        Glide.with(mContext).load(url).error(R.mipmap.error).centerCrop().into(holder.hospital);
+        Glide.with(mContext).load(url).error(R.mipmap.error).centerCrop().into(holder.hospital_pic);
     }
 
     @Override
@@ -50,12 +51,16 @@ public class ChooseHospitalAdapter extends RecyclerView.Adapter<ChooseHospitalAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView hospital;
+        private ImageView hospital_pic;
+        private TextView hospital_name;
+        private TextView hospital_address;
 
         public ViewHolder(View itemView) {
             super(itemView);
             AutoUtils.auto(itemView);
-            hospital = (ImageView) itemView.findViewById(R.id.hospital);
+            hospital_pic = (ImageView) itemView.findViewById(R.id.iv_hospital_img);
+            hospital_name = (TextView) itemView.findViewById(R.id.tv_hospital_name);
+            hospital_address = (TextView) itemView.findViewById(R.id.tv_hospital_address);
         }
     }
 }

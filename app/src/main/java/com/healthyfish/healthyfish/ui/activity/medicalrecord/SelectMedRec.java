@@ -46,12 +46,12 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     Toolbar toolbar;
     @BindView(R.id.name_doctor)
     TextView nameDoctor;
-    @BindView(R.id.type)
+    /*@BindView(R.id.type)
     TextView type;
     @BindView(R.id.name_hospital)
     TextView nameHospital;
     @BindView(R.id.skill)
-    TextView skill;
+    TextView skill;*/
     @BindView(R.id.hide_icon)
     ImageView hideIcon;
     @BindView(R.id.hide_info)
@@ -100,9 +100,9 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     private void initData() {
         //医生信息
         //beanDoctorChatInfo = (BeanDoctorChatInfo) getIntent().getSerializableExtra("BeanDoctorChatInfo");
-//        Glide.with(SelectMedRec.this).load(mDoctorPortrait).centerCrop().into(doctorPortrait);
-//        nameDoctor.setText(doctorName);
-//        phone = beanDoctorChatInfo.getPhone();
+        Glide.with(SelectMedRec.this).load(mDoctorPortrait).centerCrop().into(doctorPortrait);
+        nameDoctor.setText(doctorName);
+        phone = beanDoctorChatInfo.getPhone();
 
         //病历夹列表
         list = DataSupport.findAll(BeanMedRec.class);
