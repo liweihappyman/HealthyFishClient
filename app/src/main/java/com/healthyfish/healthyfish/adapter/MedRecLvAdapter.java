@@ -40,6 +40,11 @@ public class MedRecLvAdapter extends BaseAdapter {
         this.listDate = listDate;
     }
 
+    public MedRecLvAdapter(Context mContext, List<BeanMedRec> listMedRec) {
+        this.mContext = mContext;
+        this.listMedRec = listMedRec;
+    }
+
     @Override
     public int getCount() {
         return listMedRec.size();
@@ -75,32 +80,35 @@ public class MedRecLvAdapter extends BaseAdapter {
             viewHolderHasHead = (ViewHolderHasHead) convertView.getTag();
         }
         viewHolderHasHead.headLayout.setVisibility(View.GONE);
-        String date = listMedRec.get(position).getClinicalTime();
-        dateCompare = date.substring(0, date.indexOf("月") + 1);
-        int count = Collections.frequency(listDate, dateCompare);
         //如果size = 1 的话，说明只有一个元素，直接与现有的date比较，如果size大于1，
         // 判断当前位置是0不是，如果不是0的话，说明有前一项，这样可以跟前项比较
-        if (listDate.size() == 1) {
-            date = "date";
-        } else {
-            date = "date";
-            if (position > 0) {
-                date = listDate.get(position - 1);
+        try {
+            String date = listMedRec.get(position).getClinicalTime();
+            dateCompare = date.substring(0, date.indexOf("月") + 1);
+            int count = Collections.frequency(listDate, dateCompare);
+            if (listDate.size() == 1) {
+                date = "date";
+            } else {
+                date = "date";
+                if (position > 0) {
+                    date = listDate.get(position - 1);
+                }
             }
-        }
 
-        if (!date.equals(listDate.get(position))) {
-            viewHolderHasHead.headLayout.setVisibility(View.VISIBLE);
-            viewHolderHasHead.headDate.setText(dateCompare);
-            viewHolderHasHead.headCount.setText(String.valueOf(count));
+            if (!date.equals(listDate.get(position))) {
+                viewHolderHasHead.headLayout.setVisibility(View.VISIBLE);
+                viewHolderHasHead.headDate.setText(dateCompare);
+                viewHolderHasHead.headCount.setText(String.valueOf(count));
+            }
+        } catch (Exception e) {
+
         }
 
         String birth = beanMedRec.getBirthday();
-
-        if (birth!=null) {
+        if (birth != null && !birth.equals("")) {
             int age = 2017 - Integer.valueOf(birth.substring(0, 4));
-            viewHolderHasHead.nameGender.setText(beanMedRec.getName() + "  " + beanMedRec.getGender()+"  "+age+"岁");
-        }else {
+            viewHolderHasHead.nameGender.setText(beanMedRec.getName() + "  " + beanMedRec.getGender() + "  " + age + "岁");
+        } else {
             viewHolderHasHead.nameGender.setText(beanMedRec.getName() + "  " + beanMedRec.getGender());
         }
         viewHolderHasHead.info.setText(beanMedRec.getDiseaseInfo());

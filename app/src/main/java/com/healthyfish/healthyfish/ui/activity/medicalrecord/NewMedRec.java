@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -41,19 +39,15 @@ import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
-
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
-
 import static com.healthyfish.healthyfish.ui.activity.medicalrecord.CreateCourse.CREATE_COURSE_RESULT_SAVE;
 import static com.healthyfish.healthyfish.ui.activity.medicalrecord.CreateCourse.CREATE_COURSE_RESULT_UPDATE_OR_DEL;
 
@@ -132,12 +126,10 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             List<BeanMedRec> list = DataSupport.where("key = ?", key).find(BeanMedRec.class);
             ID = list.get(0).getId();
             medRec = DataSupport.find(BeanMedRec.class, ID, true);
-            //Log.i("YYYYY","来自聊天");
             initdata();
         } else {
             ID = getIntent().getIntExtra("id", 0);
             medRec = DataSupport.find(BeanMedRec.class, ID, true);
-            //Log.i("YYYYY","来自列表");
             initdata();
         }
     }
@@ -286,9 +278,6 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             listCourseOfDiseases = medRec.getListCourseOfDisease();
             medRec.setListCourseOfDisease(listCourseOfDiseases);
         }
-//        for (int i = 0 ;i<listCourseOfDiseases.size();i++) {
-//            Log.i("查看病程信息", "查看信息" + medRec.getListCourseOfDisease().get(i).getImgUrls().toString());
-//        }
         //请求服务器，添加数据或者更新数据
         requestForAddOrUpdate();
         EventBus.getDefault().post(new NoticeMessage(11));
@@ -361,7 +350,7 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
                             Toast.makeText(NewMedRec.this, "删除失败", Toast.LENGTH_SHORT).show();
                         }
                     }
-//删除多个用
+        //删除多个用
 //                    if (str != null) {
 //                        BeanBaseKeysRemResp beanBaseKeysRemResp = JSON.parseObject(str, BeanBaseKeysRemResp.class);
 //                        if (beanBaseKeysRemResp.getCode() == 0) {

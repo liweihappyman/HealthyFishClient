@@ -128,18 +128,25 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
             //initNullLV();
             reqForNetworkData(false);//如果本地数据为空，则从网上加载，否则要刷新数据，只有下拉刷新
         } else {
-            //将日期按时间先后排序
-            ComparatorDate c = new ComparatorDate();
-            Collections.sort(listMecRec, c);
-            //遍历出日期，格式为：       2017年10月
-            List<String> listDate = new ArrayList<>();
-            for (int i = 0; i < listMecRec.size(); i++) {
-                String date = listMecRec.get(i).getClinicalTime();
-                date = date.substring(0, date.indexOf("月") + 1);
-                listDate.add(date);
+            try {
+                //将日期按时间先后排序
+                ComparatorDate c = new ComparatorDate();
+                Collections.sort(listMecRec, c);
+                //遍历出日期，格式为：       2017年10月
+                List<String> listDate = new ArrayList<>();
+                for (int i = 0; i < listMecRec.size(); i++) {
+                    String date = listMecRec.get(i).getClinicalTime();
+                    date = date.substring(0, date.indexOf("月") + 1);
+                    listDate.add(date);
+                }
+                MedRecLvAdapter medRecLvAdapter = new MedRecLvAdapter(this, listMecRec, listDate);
+                medRecAll.setAdapter(medRecLvAdapter);
+            } catch (Exception e) {
+                //异常的情况是就诊日期格式不对，或者说日期为空，这里防止程序duang掉，应该说几乎不会出现异常
+                MedRecLvAdapter medRecLvAdapter = new MedRecLvAdapter(this, listMecRec);
+                medRecAll.setAdapter(medRecLvAdapter);
             }
-            MedRecLvAdapter medRecLvAdapter = new MedRecLvAdapter(this, listMecRec, listDate);
-            medRecAll.setAdapter(medRecLvAdapter);
+
         }
     }
 
