@@ -25,9 +25,14 @@ import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
+import org.litepal.crud.DataSupport;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 import static com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil.userName;
 
@@ -287,6 +292,9 @@ public class MqttUtil {
                 case "m":
                     bs.write((bean.getType() + bean.getContent()).getBytes());
                     break;
+                case "$":
+                    bs.write((bean.getType() + bean.getContent()).getBytes());
+                    break;
             }
             if (mqttAsyncClient == null) {
                 connect();
@@ -502,12 +510,15 @@ class PushCallback implements MqttCallback {
                     }*/
                 switch (type) {
                     case '$': {//用户级系统消息，建立会话，下线
-                        byte sysMsg = payload[2 + uid_len];
-                        int msg_len = payload.length - uid_len - 3;
+                        // byte sysMsg = payload[2 + uid_len];
+                        int msg_len = payload.length - uid_len - 2;
                         byte[] msg_array = new byte[msg_len];
-                        System.arraycopy(payload, 3 + uid_len, msg_array, 0, msg_len);
+                        System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
+                        String content = new String(msg_array, "utf-8");
 
-                        byte msgCmd = (byte) (sysMsg & MqttUtil.MASK_MSG);
+                        MqttMsgSystemInfo.process(bean, peer, content, topic);
+
+                        /*byte msgCmd = (byte) (sysMsg & MqttUtil.MASK_MSG);
 //                        byte msgType =(byte) (sysMsg & MqttUtil.MASK_ACK);
                         switch (msgCmd) {
                             case MqttUtil.MSG_SYS_CreateChannel:
@@ -523,7 +534,7 @@ class PushCallback implements MqttCallback {
                                 // 状态改变
                                 // MqttUserStatusChange.process(peer, msgCmd);
                                 break;
-                        }
+                        }*/
                         break;
                     }
 
@@ -563,6 +574,24 @@ class PushCallback implements MqttCallback {
         }
 
     }
+}
+
+class MqttMsgSystemInfo {
+    public static void process(ImMsgBean bean, String peer, String content, String topic) {
+        // 要显示的内容
+        bean.setContent(content);
+        bean.setToDefault("isSender");
+        bean.setName(peer);
+
+        bean.setTime(DateTimeUtil.getLongMs());
+        bean.setType("t");
+        bean.setTopic(topic);
+        bean.setNewMsg(true);
+        bean.save();
+
+    }
+
+
 }
 
 class MqttMsgText {

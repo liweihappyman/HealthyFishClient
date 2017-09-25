@@ -47,7 +47,8 @@
         <activity android:name=".ui.activity.Register" />
 
         <!--健康咨询（chat）-->
-        <activity android:name=".ui.activity.interrogation.HealthyChat"></activity>
+        <activity android:name=".ui.activity.interrogation.HealthyChat"
+            android:launchMode="singleTop"></activity>
 
         <!-- 病历夹页面 -->
         <activity android:name=".ui.activity.medicalrecord.AllMedRec"

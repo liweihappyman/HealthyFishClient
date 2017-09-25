@@ -419,8 +419,11 @@ public class ChattingListAdapter extends BaseAdapter {
     private String getMDRKey(String mdrKey) {
         List<BeanMedRec> mdeRecList = DataSupport.where("key = ?", mdrKey).find(BeanMedRec.class);
         //Log.e("返回病历信息 ", mdeRecList.get(0).getDiseaseInfo());
-        return mdeRecList.get(0).getDiseaseInfo();
-        //return null;
+        // FIXME: 2017/9/25 偶尔出现空指针错误
+        if (!mdeRecList.isEmpty()) {
+            return mdeRecList.get(0).getDiseaseInfo();
+        }
+        return null;
     }
 
     // 点击病历内容跳转到病历
