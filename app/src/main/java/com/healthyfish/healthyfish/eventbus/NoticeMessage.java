@@ -8,7 +8,7 @@ package com.healthyfish.healthyfish.eventbus;
  */
 
 public class NoticeMessage {
-    int msg;
+    int msg;//11表示刷新病历夹列表
 
     public NoticeMessage(int msg) {
         this.msg = msg;

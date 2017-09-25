@@ -50,7 +50,8 @@
         <activity android:name=".ui.activity.interrogation.HealthyChat"></activity>
 
         <!-- 病历夹页面 -->
-        <activity android:name=".ui.activity.medicalrecord.AllMedRec" />
+        <activity android:name=".ui.activity.medicalrecord.AllMedRec"
+            android:launchMode="singleTask"/>
 
         <!-- 问诊选择医生页面 -->
         <activity android:name=".ui.activity.interrogation.ChoiceDoctor" />

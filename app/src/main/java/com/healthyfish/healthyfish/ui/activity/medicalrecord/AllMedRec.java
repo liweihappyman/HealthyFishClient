@@ -36,6 +36,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MedRecLvAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
+import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.ComparatorDate;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
@@ -43,6 +44,9 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.zhy.autolayout.AutoLinearLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
@@ -55,7 +59,6 @@ import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
-import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.ALL_MED_REC_RESULT;
 
 /**
  * 描述：电子病历
@@ -66,7 +69,6 @@ import static com.healthyfish.healthyfish.ui.activity.medicalrecord.NewMedRec.AL
 
 
 public class AllMedRec extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    public static final int TO_NEW_MED_REC = 38;//进入NewMedRec页面的请求标志
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.swipe_refresh)
@@ -82,11 +84,13 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
     private boolean hasNewData = false;
     private List<BeanMedRec> listMecRec = new ArrayList<>();
     private int size;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_med_rec_all);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         toolbar.setTitle("");
         toolbarTitle.setText("全部病历");
         //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.three_points));
@@ -115,27 +119,34 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
 
     /**
      * 思路:先加载本地数据库的内容，异步获取网络的数据，通过对比key，如果没有则添加到本地数据库，最后更新列表
-     * isGobackFromNewMedRec:   true是否在新建病历夹页面返回true
+     * isGobackFromNewMedRec:   true是表示在新建病历夹页面返回
      */
     private void init(boolean isGobackFromNewMedRec) {
         listMecRec.clear();
         listMecRec = DataSupport.findAll(BeanMedRec.class);
-        if (listMecRec.size() == 0&&!isGobackFromNewMedRec) {
+        if (listMecRec.size() == 0 && !isGobackFromNewMedRec) {
             //initNullLV();
             reqForNetworkData(false);//如果本地数据为空，则从网上加载，否则要刷新数据，只有下拉刷新
         } else {
-            //将日期按时间先后排序
-            ComparatorDate c = new ComparatorDate();
-            Collections.sort(listMecRec, c);
-            //遍历出日期，格式为：       2017年10月
-            List<String> listDate = new ArrayList<>();
-            for (int i = 0; i < listMecRec.size(); i++) {
-                String date = listMecRec.get(i).getClinicalTime();
-                date = date.substring(0, date.indexOf("月") + 1);
-                listDate.add(date);
+            try {
+                //将日期按时间先后排序
+                ComparatorDate c = new ComparatorDate();
+                Collections.sort(listMecRec, c);
+                //遍历出日期，格式为：       2017年10月
+                List<String> listDate = new ArrayList<>();
+                for (int i = 0; i < listMecRec.size(); i++) {
+                    String date = listMecRec.get(i).getClinicalTime();
+                    date = date.substring(0, date.indexOf("月") + 1);
+                    listDate.add(date);
+                }
+                MedRecLvAdapter medRecLvAdapter = new MedRecLvAdapter(this, listMecRec, listDate);
+                medRecAll.setAdapter(medRecLvAdapter);
+            } catch (Exception e) {
+                //异常的情况是就诊日期格式不对，或者说日期为空，这里防止程序duang掉，应该说几乎不会出现异常
+                MedRecLvAdapter medRecLvAdapter = new MedRecLvAdapter(this, listMecRec);
+                medRecAll.setAdapter(medRecLvAdapter);
             }
-            MedRecLvAdapter medRecLvAdapter = new MedRecLvAdapter(this, listMecRec, listDate);
-            medRecAll.setAdapter(medRecLvAdapter);
+
         }
     }
 
@@ -184,14 +195,14 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
                                 new Thread() {
                                     @Override
                                     public void run() {
-                                        keyGet(keysOutDB,refresh);
+                                        keyGet(keysOutDB, refresh);
                                     }
                                 }.start();
                             } else {
                                 swipeRefresh.setRefreshing(false);
                                 Toast.makeText(AllMedRec.this, "已经是最新数据了", Toast.LENGTH_SHORT).show();
                             }
-                        }else {
+                        } else {
                             swipeRefresh.setRefreshing(false);
                             Toast.makeText(AllMedRec.this, "没有可加载的数据哦", Toast.LENGTH_SHORT).show();
                         }
@@ -305,14 +316,6 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
             case android.R.id.home:
                 finish();
                 break;
-//            case R.id.share:
-//                Intent share = new Intent(this, SelectMedRec.class);
-//                AllMedRec.this.startActivity(share);
-//                break;
-//            case R.id.del:
-//                Intent selectDoctor = new Intent(this, SelectDoctor.class);
-//                AllMedRec.this.startActivity(selectDoctor);
-//                break;
 
         }
         return true;
@@ -330,7 +333,6 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
             case R.id.new_med_rec://新建病历
                 Constants.POSITION_MED_REC = -1;
                 Intent intent = new Intent(this, NewMedRec.class);
-                startActivityForResult(intent, TO_NEW_MED_REC);
                 startActivity(intent);
         }
     }
@@ -341,20 +343,8 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         Intent intent = new Intent(AllMedRec.this, NewMedRec.class);
         //将选中的病历的id穿到NewMedRec活动
         intent.putExtra("id", listMecRec.get(position).getId());
-        intent.putExtra("flag","fromAllMedRecList");
-        startActivityForResult(intent, TO_NEW_MED_REC);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            case ALL_MED_REC_RESULT:
-                listMecRec.clear();
-                init(true);
-                break;
-
-        }
+        intent.putExtra("flag", "fromAllMedRecList");
+        startActivity(intent);
     }
 
     private Handler handler = new Handler() {
@@ -362,7 +352,7 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         public void handleMessage(Message msg) {
             if (msg.what == 0x11) {
                 init(false);//更新列表
-                hasNewData=false;
+                hasNewData = false;
                 if (hasNullValueKey) {
                     for (String key : nullValueKey)
                         networkReqDelMedRec(key);//删除空值key
@@ -371,10 +361,22 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         }
     };
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        listMecRec.clear();
-//        init(true);
-//    }
+
+    /*
+    * 更新列表
+    * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshUI(NoticeMessage noticeMessage) {
+        if (noticeMessage.getMsg() == 11) {
+            listMecRec.clear();
+            init(true);
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
