@@ -11,11 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanInterrogationServiceDoctorList;
+import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
+import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.service.WeChatUploadImage;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.AutoLogin;
+import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
 
@@ -50,6 +55,9 @@ public class PayServiceSuccess extends BaseActivity {
     private String strPayPrice;
     private String doctorName;
     private String serviceFinishTime;
+    private String topic;
+    private String sender;
+    private BeanUserLoginReq beanUserLoginReq;
 
     private BeanDoctorChatInfo beanDoctorChatInfo = new BeanDoctorChatInfo();
     private BeanInterrogationServiceDoctorList beanInterrogationServiceDoctorList;
@@ -89,6 +97,10 @@ public class PayServiceSuccess extends BaseActivity {
         } else {
             tvServiceTime.setVisibility(View.GONE);
         }
+        beanUserLoginReq = JSON.parseObject(MySharedPrefUtil.getValue("user"), BeanUserLoginReq.class);
+        topic = "d" + beanDoctorChatInfo.getPhone();
+        //topic = "d" + "13977211042";
+        sender = "u" + beanUserLoginReq.getMobileNo();
     }
 
     /**
@@ -118,9 +130,28 @@ public class PayServiceSuccess extends BaseActivity {
                 AutoLogin.autoLogin();
                 MqttUtil.startAsync();
             }
+
+            // 发送系统消息，建立与医生的会话
+            sendSystemInfoToConnectWithDoctor();
             startActivity(intent);
 
         }
+
+    }
+
+    private void sendSystemInfoToConnectWithDoctor() {
+
+            ImMsgBean bean = new ImMsgBean();
+            bean.setName(sender);
+            bean.setSender(true);// 是否是发送者
+            bean.setTime(DateTimeUtil.getLongMs());// 发送时间
+            bean.setContent("");
+            bean.setTopic(topic);
+
+            bean.setType("$");// 类型：文字
+
+            // MQTT发送数据
+            MqttUtil.sendTxt(bean);
 
     }
 
