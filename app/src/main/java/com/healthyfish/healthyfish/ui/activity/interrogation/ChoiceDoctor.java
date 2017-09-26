@@ -126,6 +126,10 @@ public class ChoiceDoctor extends BaseActivity {
         if (bundle != null){
             departmentName = bundle.get("DepartmentName").toString();
             departmentCode = bundle.get("DepartmentCode").toString();
+            if (departmentName.substring(0, 2).equals("东院")) {
+                //hosp = "lzzyy1";
+                hospTxt = "柳州市中医院-东院";
+            }
         }
     }
 
@@ -134,7 +138,7 @@ public class ChoiceDoctor extends BaseActivity {
      */
     private void initData() {
         BeanHospDeptDoctListReq beanHospDeptDoctListReq = new BeanHospDeptDoctListReq();
-        beanHospDeptDoctListReq.setHosp("lzzyy");
+        beanHospDeptDoctListReq.setHosp(hosp);
         beanHospDeptDoctListReq.setDept(departmentCode);
 
         RetrofitManagerUtils.getInstance(this, null)
@@ -168,7 +172,7 @@ public class ChoiceDoctor extends BaseActivity {
                             data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
                             data.setDepartment(departmentName);
                             data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
-                            data.setHospital("柳州市中医院");
+                            data.setHospital(hospTxt);
                             data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
                             data.setPrice(beanHospDeptListRespItem.getPRICE()+"元起");
                             mDoctorInfos.add(data);

@@ -63,7 +63,7 @@ public class SearchResult extends BaseActivity {
      */
     private void initSearchResult(String searchKey) {
         BeanSearchReq beanSearchReq = new BeanSearchReq();
-        //beanSearchReq.setType("hosp");
+        beanSearchReq.setType("doct");
         beanSearchReq.setKeyword(searchKey);
 
         RetrofitManagerUtils.getInstance(this, null)
@@ -86,7 +86,7 @@ public class SearchResult extends BaseActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        //Log.e("LYQ", jsonStr);
+                        Log.e("LYQ", "搜索医生结果："+jsonStr);
                         BeanSearchResp searchResp = JSON.parseObject(jsonStr, BeanSearchResp.class);
                         for (BeanSearchRespItem searchRespItem : searchResp.getResultList()) {
                             Map<String, String> map = new HashMap<String, String>();

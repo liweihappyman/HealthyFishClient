@@ -43,6 +43,8 @@ public class ChooseHospitalAdapter extends RecyclerView.Adapter<ChooseHospitalAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         String url = HttpHealthyFishyUrl + imgUrls.get(position).getImg();
         Glide.with(mContext).load(url).error(R.mipmap.error).centerCrop().into(holder.hospital_pic);
+        holder.hospital_name.setText(imgUrls.get(position).getName());
+        holder.hospital_address.setText(imgUrls.get(position).getAddress());
     }
 
     @Override
