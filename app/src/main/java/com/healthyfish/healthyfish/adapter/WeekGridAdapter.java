@@ -161,11 +161,18 @@ public class WeekGridAdapter extends BaseAdapter {
     }
 
 
+    /**
+     * 获取该时间段的具体预约时间点
+     *
+     * @param beanWeekAndDate 用于传递参数的封装类
+     * @param Type            1：上午   2：下午
+     * @param AmOrPm          用于显示时间为上午或下午
+     */
     private void initData(final BeanWeekAndDate beanWeekAndDate, String Type, final String AmOrPm) {
 
         BeanHospRegNumListReq beanHospRegNumListReq = new BeanHospRegNumListReq();
-        beanHospRegNumListReq.setHosp("lzzyy");
-
+        //beanHospRegNumListReq.setHosp("lzzyy");
+        beanHospRegNumListReq.setHosp(beanWeekAndDate.getBeanDoctorInfo().getHosp());
         beanHospRegNumListReq.setDept(beanWeekAndDate.getBeanDoctorInfo().getDept());
         beanHospRegNumListReq.setDoct(beanWeekAndDate.getBeanDoctorInfo().getDOCTOR());
         beanHospRegNumListReq.setDate(beanWeekAndDate.getDate());
@@ -180,7 +187,7 @@ public class WeekGridAdapter extends BaseAdapter {
             @Override
             public void onError(Throwable e) {
                 loadingDialog.dismiss();
-                MyToast.showToast(mContext,"请求预约时间失败，请检查您的网络状态");
+                MyToast.showToast(mContext, "请求预约时间失败，请检查您的网络状态");
                 Log.e("LYQ", e.toString());
             }
 
@@ -214,6 +221,11 @@ public class WeekGridAdapter extends BaseAdapter {
 
     }
 
+    /**
+     * 显示具体的可预约时间点
+     *
+     * @param beanWeekAndDate
+     */
     private void showOptions(final BeanWeekAndDate beanWeekAndDate) {
         if (mPopWindow == null) {
             rootView = LayoutInflater.from(mContext).inflate(R.layout.popupwind_choice_appointment_time, null);

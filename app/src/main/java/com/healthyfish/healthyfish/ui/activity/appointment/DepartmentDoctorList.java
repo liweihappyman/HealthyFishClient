@@ -66,20 +66,20 @@ public class DepartmentDoctorList extends BaseActivity {
     private BeanHospRegisterReq beanHospRegisterReq;
     private BeanDoctorInfo beanDoctorInfo;
 
-    private String hosp = "lzzyy";
-    private String hospTxt = "柳州市中医院";
+    private String hosp = "lzzyy";//默认
+    private String hospTxt = "柳州市中医院";//默认
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_doctor_list);
-        mContext = this;
         ButterKnife.bind(this);
-        getDepartmentName();
         initToolBar(toolbar,toolbarTitle,departmentName);
-        initData();
-        initListView();
+        mContext = this;
+        getDepartmentName(); //从上一页面获取传递过来的参数
+        initData(); //获取该科室的医生信息
+        initListView(); //初始化医生列表并设置点击监听
     }
 
     /**
@@ -94,8 +94,6 @@ public class DepartmentDoctorList extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入到医生详情页面，进行预约时间的选择
-                Intent intent = new Intent(DepartmentDoctorList.this,DoctorDetail.class);
-
                 beanDoctorInfo = new BeanDoctorInfo();
                 beanDoctorInfo.setHosp(hosp);
                 beanDoctorInfo.setHospital(hospTxt);
@@ -113,7 +111,8 @@ public class DepartmentDoctorList extends BaseActivity {
                 beanDoctorInfo.setPrice(String.valueOf(DeptDoctList.get(position).getPRICE()));
                 beanDoctorInfo.setSchdList(DeptDoctList.get(position).getSchdList());
 
-                intent.putExtra("BeanDoctorInfo", beanDoctorInfo);
+                Intent intent = new Intent(DepartmentDoctorList.this,DoctorDetail.class);
+                intent.putExtra("BeanDoctorInfo", beanDoctorInfo); //将医生信息传递到下一页面
                 startActivity(intent);
             }
         });
@@ -127,6 +126,8 @@ public class DepartmentDoctorList extends BaseActivity {
         if (beanHospRegisterReq!= null){
             departmentName = beanHospRegisterReq.getDeptTxt();
             departmentCode = beanHospRegisterReq.getDept();
+            hosp = beanHospRegisterReq.getHosp();
+            hospTxt = beanHospRegisterReq.getHospTxt();
         }
     }
 
@@ -136,14 +137,14 @@ public class DepartmentDoctorList extends BaseActivity {
     private void initData() {
 
         final BeanHospDeptDoctListReq beanHospDeptDoctListReq = new BeanHospDeptDoctListReq();
-        beanHospDeptDoctListReq.setHosp("lzzyy");
-        beanHospDeptDoctListReq.setDept(departmentCode);
+        beanHospDeptDoctListReq.setHosp(hosp); //医院编号id
+        beanHospDeptDoctListReq.setDept(departmentCode); //部门编号
 
         RetrofitManagerUtils.getInstance(this, null)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctListReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -164,19 +165,18 @@ public class DepartmentDoctorList extends BaseActivity {
                         for (JSONObject  object :doctorList){
                             String jsonString = object.toJSONString();
                             BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptDoctListRespItem.class);
-                            DeptDoctList.add(beanHospDeptListRespItem);
+                            DeptDoctList.add(beanHospDeptListRespItem); //用于传递数据到下一页面用的list
 
                             BeanDoctorInfo data = new BeanDoctorInfo();
                             data.setImgUrl(HttpHealthyFishyUrl+beanHospDeptListRespItem.getZHAOPIAN());
                             data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
                             data.setDepartment("诊室："+beanHospDeptListRespItem.getCLINIQUE_CODE());
                             data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
-                            data.setHospital("柳州市中医院");
+                            data.setHospital(hospTxt);
                             data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
                             data.setPrice(beanHospDeptListRespItem.getPRICE()+"元起");
-                            mDoctorInfos.add(data);
+                            mDoctorInfos.add(data);///用于展示医生信息用的list
                         }
-                        adapter.notifyDataSetChanged();
                     }
                 });
 

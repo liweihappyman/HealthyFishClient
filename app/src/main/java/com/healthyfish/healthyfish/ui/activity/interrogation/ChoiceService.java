@@ -175,7 +175,7 @@ public class ChoiceService extends BaseActivity {
         beanInterrogationServiceDoctorList.setDoctorName(beanDoctorInfo.getName());
         beanInterrogationServiceDoctorList.setDoctorPortrait(HttpHealthyFishyUrl + beanDoctorInfo.getImgUrl());
         // TODO: 2017/8/7 医院信息
-        beanInterrogationServiceDoctorList.setDoctorHostipal("柳州市中医院");
+        beanInterrogationServiceDoctorList.setDoctorHostipal(beanDoctorInfo.getHospital());
 
         beanInterrogationServiceDoctorList.save();
     }
