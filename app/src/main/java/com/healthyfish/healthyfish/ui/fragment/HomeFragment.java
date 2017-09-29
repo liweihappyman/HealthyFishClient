@@ -37,7 +37,9 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.HomePageHealthInfoAadpter;
 import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
 import com.healthyfish.healthyfish.adapter.WholeSchemeAdapter;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
+import com.healthyfish.healthyfish.eventbus.WeChatReceiveSysMdrMsg;
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
 import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport;
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
@@ -45,6 +47,7 @@ import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDepartment;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
+import com.healthyfish.healthyfish.ui.activity.personal_center.MyNews;
 import com.healthyfish.healthyfish.ui.widget.AutoCardView;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
@@ -138,14 +141,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void initAll() {
         initBannerRequest();//网络访问获取轮播图内容
-        initInfoPrmopt("9");//测试消息提示文本
+        if (Constants.NUMBER_SYS_INFO > 0) {
+            initInfoPrmopt(String.valueOf(Constants.NUMBER_SYS_INFO));
+        }
         initFunctionMenu();//初始化菜单监听
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -427,6 +432,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fmMedRec.setOnClickListener(this);
         fmHealthManagement.setOnClickListener(this);
         fmRemoteMonitoring.setOnClickListener(this);
+        // 信息提示监听
+        topbarInfo.setOnClickListener(this);
     }
 
     // 初始化健康工坊
@@ -462,6 +469,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.topbar_info:
+                Constants.NUMBER_SYS_INFO = 0;
+                initInfoPrmopt("0");
+                startActivity(new Intent(mContext, MyNews.class));
+                break;
             case R.id.fm_interrogation2:
                 startActivity(new Intent(mContext, ChoiceDepartment.class));
                 break;
@@ -516,5 +528,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /*
+    * 更新病历夹系统消息
+    * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void upDateMdrSystemInfo(final WeChatReceiveSysMdrMsg msg) {
+        Constants.NUMBER_SYS_INFO ++;
+        initInfoPrmopt(String.valueOf(Constants.NUMBER_SYS_INFO));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // EventBus.getDefault().unregister(this);
+    }
 }
 

@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanInterrogationServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
@@ -22,11 +24,19 @@ import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.mqtt_utils.MqttUtil;
+
+import org.litepal.crud.DataSupport;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
 
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
@@ -113,7 +123,9 @@ public class PayServiceSuccess extends BaseActivity {
         beanInterrogationServiceDoctorList.setDoctorPortrait(beanDoctorChatInfo.getImgUrl());
         // TODO: 2017/8/7 医院信息
         beanInterrogationServiceDoctorList.setDoctorHostipal("柳州市中医院");
-        beanInterrogationServiceDoctorList.save();
+        if (DataSupport.where("DoctorNumber = ?", beanDoctorChatInfo.getPhone()).find(BeanInterrogationServiceDoctorList.class).isEmpty()) {
+            beanInterrogationServiceDoctorList.save();
+        }
     }
 
     @OnClick(R.id.btn_next)
@@ -139,20 +151,52 @@ public class PayServiceSuccess extends BaseActivity {
 
     }
 
+    // 发送系统消息，建立与医生的会话
     private void sendSystemInfoToConnectWithDoctor() {
 
-            ImMsgBean bean = new ImMsgBean();
-            bean.setName(sender);
-            bean.setSender(true);// 是否是发送者
-            bean.setTime(DateTimeUtil.getLongMs());// 发送时间
-            bean.setContent("");
-            bean.setTopic(topic);
+        ImMsgBean bean = new ImMsgBean();
+        bean.setName(sender);
+        bean.setSender(true);// 是否是发送者
+        bean.setTime(DateTimeUtil.getLongMs());// 发送时间
+        bean.setContent("[sys]");
+        bean.setTopic(topic);
 
-            bean.setType("$");// 类型：文字
+        bean.setType("$");// 类型：文字
 
-            // MQTT发送数据
-            MqttUtil.sendTxt(bean);
+        // MQTT发送数据
+        MqttUtil.sendTxt(bean);
 
+        // 保存与医生建立的会话关系
+        saveChatInfoWithDoctor();
+
+    }
+
+    // 保存与医生建立的会话关系
+    private void saveChatInfoWithDoctor() {
+        BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
+        beanBaseKeySetReq.setKey("chan_" + sender + topic);
+
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    Log.e("返回数据", responseBody.string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**

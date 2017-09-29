@@ -3,15 +3,23 @@ package com.healthyfish.healthyfish.utils.mqtt_utils;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
+import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
+import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveMsg;
+import com.healthyfish.healthyfish.eventbus.WeChatReceiveSysMdrMsg;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -584,13 +592,65 @@ class MqttMsgSystemInfo {
         bean.setName(peer);
 
         bean.setTime(DateTimeUtil.getLongMs());
-        bean.setType("t");
+        bean.setType("$");
         bean.setTopic(topic);
-        bean.setNewMsg(true);
         bean.save();
 
-    }
+        // EventBus异步提醒接收到医生端发送过来更新病历夹的系统消息
+        EventBus.getDefault().post(new WeChatReceiveSysMdrMsg(bean.getTime()));
 
+        // 通过key获取病历
+        keyGet(bean);
+    }
+    // 通过key获取病历
+    private static void keyGet(final ImMsgBean bean) {
+        final BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+        // [mdr]medRec_1807720781820170925_4f08f124-5769-4236-a503-e76d6800d5ca
+        final String key = bean.getContent().substring(5);
+
+        beanBaseKeyGetReq.setKey(key);
+
+        // 通过接收到的key获取病历
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getMedRecByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+            String rspv = null;
+            @Override
+            public void onCompleted() {
+
+                if (!TextUtils.isEmpty(rspv)) {
+                    BeanBaseKeyGetResp object = JSON.parseObject(rspv, BeanBaseKeyGetResp.class);
+                    if (object.getValue() != null) {
+                        BeanMedRec beanMedRec = JSON.parseObject(object.getValue(), BeanMedRec.class);
+                        beanMedRec.setKey(key);
+                        if (!DataSupport.where("key = ?", key).find(BeanMedRec.class).isEmpty()) {
+                            beanMedRec.updateAll("key = ?", key);
+                        }
+                        List<BeanCourseOfDisease> courseOfDiseaseList = beanMedRec.getListCourseOfDisease();
+                        for (BeanCourseOfDisease courseOfDisease : courseOfDiseaseList) {
+                            courseOfDisease.setBeanMedRec(beanMedRec);
+                            courseOfDisease.save();
+                        }
+                    } else {
+                            /*nullValueKey.add(key);
+                            hasNullValueKey = true;*/
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(MyApplication.getContetxt(), "出错啦", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    rspv = responseBody.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 }
 
