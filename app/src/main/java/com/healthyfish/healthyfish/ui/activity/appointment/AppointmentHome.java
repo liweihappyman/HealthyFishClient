@@ -144,7 +144,7 @@ public class AppointmentHome extends BaseActivity {
                 startActivity(toChooseHospital);
                 break;
             case R.id.choose_department://点击选择科室按钮
-                Intent test = new Intent(this, SelectDepartments.class);
+                Intent test = new Intent(this, SearchDoctor.class);
                 startActivity(test);
                 break;
         }

@@ -84,7 +84,7 @@
             android:id="@+id/choose_department"
             android:layout_width="880px"
             android:layout_height="120px"
-            android:text="选择科室"
+            android:text="选择医生"
             android:textColor="@color/color_white"
             style="@style/textSize_60"
             android:layout_gravity="center_horizontal"
