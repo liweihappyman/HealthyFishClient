@@ -174,7 +174,7 @@ public class PayServiceSuccess extends BaseActivity {
     // 保存与医生建立的会话关系
     private void saveChatInfoWithDoctor() {
         BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
-        beanBaseKeySetReq.setKey("chan_" + sender + topic);
+        beanBaseKeySetReq.setKey("chan_" + topic.substring(1) + "_" + sender);
 
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
 
