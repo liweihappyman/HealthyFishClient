@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.ui.activity.appointment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,11 +8,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
@@ -67,17 +70,24 @@ public class SearchDoctor extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_doctor);
         ButterKnife.bind(this);
-        initToolBar(toolbar,toolbarTitle,"搜索医生");
+        initToolBar(toolbar, toolbarTitle, "搜索医生");
+        initListView();//初始化搜索结果列表
+        //键盘的搜索按钮监听
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                   initSearchResult(etSearch.getText().toString().trim());
+                    searchRespItemList.clear();//清除上次的搜索结果
+                    doctorList.clear();
+                    mDoctorInfo.clear();
+                    initSearchResult(etSearch.getText().toString().trim());//搜索
+                    etSearch.clearFocus();//取消输入框焦点
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);//关闭键盘
                 }
                 return true;
             }
         });
-        initListView();
     }
 
     /**
@@ -87,8 +97,7 @@ public class SearchDoctor extends BaseActivity {
         BeanSearchReq beanSearchReq = new BeanSearchReq();
         beanSearchReq.setType("hosp");
         beanSearchReq.setKeyword(searchKey);
-        String jsonStr = JSON.toJSONString(beanSearchReq);
-        Log.i("LYQ", "搜索请求体：" + jsonStr);
+
         RetrofitManagerUtils.getInstance(this, null)
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSearchReq), new Subscriber<ResponseBody>() {
                     @Override
@@ -131,9 +140,6 @@ public class SearchDoctor extends BaseActivity {
             beanHospDeptDoctInfoReq.setDept(searchRespItemList.get(0).getKey().split("_")[2]);
             beanHospDeptDoctInfoReq.setStaffNo(searchRespItemList.get(0).getKey().split("_")[3]);
 
-            String jsonStr = JSON.toJSONString(beanHospDeptDoctInfoReq);
-            Log.i("LYQ", "获取医生信息请求体：" + jsonStr);
-
             RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctInfoReq), new Subscriber<ResponseBody>() {
                 String doctorInfoResp = null;
 
@@ -148,17 +154,20 @@ public class SearchDoctor extends BaseActivity {
                     data.setDepartment(searchRespItemList.get(0).getTitle().split("-")[1]);
                     data.setImgUrl(HttpHealthyFishyUrl + beanHospDeptListRespItem.getZHAOPIAN());
                     data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
-                    data.setDuties(beanHospDeptListRespItem.getREISTER_NAME().substring(0, beanHospDeptListRespItem.getREISTER_NAME().length() - 1));
+                    data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
                     data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
                     data.setPrice(beanHospDeptListRespItem.getPRICE() + "元起");
                     mDoctorInfo.add(data);///用于展示医生信息用的list
-                    searchRespItemList.remove(0);
-                    getDoctorInfo();
+                    searchRespItemList.remove(0);//移除搜索结果中当前已经获取过具体医生信息的搜索结果
+                    getDoctorInfo();//递归调用获取医生具体信息的方法
                     adapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onError(Throwable e) {
+                    //防止获取某个医生信息出错后不能继续
+                    searchRespItemList.remove(0);//移除搜索结果中当前已经获取过具体医生信息的搜索结果
+                    getDoctorInfo();//递归调用获取医生具体信息的方法
                     Log.e("LYQ", "搜索医生信息错误：" + e.toString());
                 }
 
@@ -172,6 +181,12 @@ public class SearchDoctor extends BaseActivity {
                     }
                 }
             });
+        } else {
+            if (doctorList.isEmpty()) {
+                Toast.makeText(this, "搜索结果为空", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "搜索完毕", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -185,6 +200,7 @@ public class SearchDoctor extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入到医生详情页面，进行预约时间的选择
+                beanDoctorInfo = null;
                 beanDoctorInfo = new BeanDoctorInfo();
                 beanDoctorInfo.setHosp(mDoctorInfo.get(position).getHosp());
                 beanDoctorInfo.setHospital(mDoctorInfo.get(position).getHospital());

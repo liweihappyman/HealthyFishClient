@@ -130,7 +130,7 @@ public class DoctorDetail extends BaseActivity {
         uid = MyApplication.uid;
         fm = this.getSupportFragmentManager();
         ft = fm.beginTransaction();
-        hospDoctMoreSchdReq();//正在测试的接口，用来获取该医生在其他医院的出诊时间
+        //hospDoctMoreSchdReq();//正在测试的接口，用来获取该医生在其他医院的出诊时间
         tvAttentionListener();//关注操作
         initData();//展示医生信息
         try {
