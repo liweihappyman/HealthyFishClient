@@ -1,11 +1,15 @@
-package com.healthyfish.healthyfish.ui.activity;
+package com.healthyfish.healthyfish.ui.activity.appointment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,7 +22,7 @@ import com.healthyfish.healthyfish.POJO.BeanSearchResp;
 import com.healthyfish.healthyfish.POJO.BeanSearchRespItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
-import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
+import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -34,39 +38,45 @@ import rx.Subscriber;
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 /**
- * 描述：显示搜索结果页面
- * 作者：LYQ on 2017/7/19.
+ * 描述：挂号搜索医生页面
+ * 作者：LYQ on 2017/10/9.
  * 邮箱：feifanman@qq.com
  * 编辑：LYQ
  */
 
-public class SearchResult extends BaseActivity {
-
+public class SearchDoctor extends BaseActivity {
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.lv_search_result)
-    ListView lvSearchResult;
+    @BindView(R.id.iv_search)
+    ImageView ivSearch;
+    @BindView(R.id.et_search)
+    EditText etSearch;
+    @BindView(R.id.lv_search_doctor)
+    ListView lvSearchDoctor;
 
-    private List<BeanDoctorInfo> mDoctorInfo = new ArrayList<>();
-    private BeanDoctorInfo beanDoctorInfo;
     private ChoiceDoctorLvAdapter adapter;
-    private String searchKey = null;
+    private BeanDoctorInfo beanDoctorInfo;
+    private List<BeanDoctorInfo> mDoctorInfo = new ArrayList<>();
     private List<BeanSearchRespItem> searchRespItemList = new ArrayList<>();
     private List<BeanHospDeptDoctListRespItem> doctorList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_result);
+        setContentView(R.layout.activity_search_doctor);
         ButterKnife.bind(this);
-        initToolBar(toolbar, toolbarTitle, "搜索结果");
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            searchKey = bundle.get("SEARCH_KEY").toString();
-        }
-        initSearchResult(searchKey);
+        initToolBar(toolbar,toolbarTitle,"搜索医生");
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                   initSearchResult(etSearch.getText().toString().trim());
+                }
+                return true;
+            }
+        });
         initListView();
     }
 
@@ -170,8 +180,8 @@ public class SearchResult extends BaseActivity {
      */
     private void initListView() {
         adapter = new ChoiceDoctorLvAdapter(this, mDoctorInfo);
-        lvSearchResult.setAdapter(adapter);
-        lvSearchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvSearchDoctor.setAdapter(adapter);
+        lvSearchDoctor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入到医生详情页面，进行预约时间的选择
@@ -192,7 +202,7 @@ public class SearchResult extends BaseActivity {
                 beanDoctorInfo.setPrice(String.valueOf(doctorList.get(position).getPRICE()));
                 beanDoctorInfo.setSchdList(doctorList.get(position).getSchdList());
 
-                Intent intent = new Intent(SearchResult.this, DoctorDetail.class);
+                Intent intent = new Intent(SearchDoctor.this, DoctorDetail.class);
                 intent.putExtra("BeanDoctorInfo", beanDoctorInfo); //将医生信息传递到下一页面
                 startActivity(intent);
             }
@@ -200,4 +210,3 @@ public class SearchResult extends BaseActivity {
     }
 
 }
-

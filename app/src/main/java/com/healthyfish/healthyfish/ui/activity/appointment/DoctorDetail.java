@@ -123,13 +123,13 @@ public class DoctorDetail extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_detail);
         ButterKnife.bind(this);
+        if (getIntent().getSerializableExtra("BeanDoctorInfo") != null) {
+            beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
+        }
         initToolBar(toolbar, toolbarTitle, beanDoctorInfo.getName() + "医生");
         uid = MyApplication.uid;
         fm = this.getSupportFragmentManager();
         ft = fm.beginTransaction();
-        if (getIntent().getSerializableExtra("BeanDoctorInfo") != null) {
-            beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
-        }
         hospDoctMoreSchdReq();//正在测试的接口，用来获取该医生在其他医院的出诊时间
         tvAttentionListener();//关注操作
         initData();//展示医生信息
