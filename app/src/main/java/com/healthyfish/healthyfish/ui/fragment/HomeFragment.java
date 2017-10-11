@@ -178,7 +178,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHomeImgSlideReq()), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-                        setbanner(imgs, desc);//给轮播图设置图片
                     }
 
                     @Override
@@ -197,6 +196,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 //Log.i("imgstr", beanHomeImgSlideRespItem.getImg());
                                 desc.add(beanHomeImgSlideRespItem.getDesc());
                             }
+                            setbanner(imgs, desc);//给轮播图设置图片
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

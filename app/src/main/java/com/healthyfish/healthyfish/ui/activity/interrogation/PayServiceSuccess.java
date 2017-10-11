@@ -175,7 +175,7 @@ public class PayServiceSuccess extends BaseActivity {
     private void saveChatInfoWithDoctor() {
         BeanBaseKeySetReq beanBaseKeySetReq = new BeanBaseKeySetReq();
         beanBaseKeySetReq.setKey("chan_" + topic.substring(1) + "_" + sender);
-
+        beanBaseKeySetReq.setValue(sender);
         RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeySetReq), new Subscriber<ResponseBody>() {
 
             @Override

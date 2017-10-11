@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -58,6 +59,8 @@ public class SearchDoctor extends BaseActivity {
     EditText etSearch;
     @BindView(R.id.lv_search_doctor)
     ListView lvSearchDoctor;
+    @BindView(R.id.btn_search)
+    Button btnSearch;
 
     private ChoiceDoctorLvAdapter adapter;
     private BeanDoctorInfo beanDoctorInfo;
@@ -88,6 +91,17 @@ public class SearchDoctor extends BaseActivity {
                 return true;
             }
         });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchRespItemList.clear();//清除上次的搜索结果
+                doctorList.clear();
+                mDoctorInfo.clear();
+                initSearchResult(etSearch.getText().toString().trim());
+            }
+        });
+        initListView();
     }
 
     /**

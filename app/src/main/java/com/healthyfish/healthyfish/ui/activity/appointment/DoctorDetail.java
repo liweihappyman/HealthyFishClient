@@ -584,7 +584,7 @@ public class DoctorDetail extends BaseActivity {
      * 加关注操作
      */
     private void addConcern() {
-        Log.i("LYQ", key);
+        //Log.i("LYQ", key);
 
         final String strJson = JSON.toJSONString(beanDoctorInfo);
         Log.i("LYQ", "strJsonBeanDoctorInfo:" + strJson);

@@ -179,11 +179,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    PersonalPointUtils.addPoint(MainActivity.this);
+                    //PersonalPointUtils.addPoint(MainActivity.this);
                 }
             }).start();
 
@@ -212,11 +212,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                PersonalPointUtils.addPoint(MainActivity.this);
+                //PersonalPointUtils.addPoint(MainActivity.this);
             }
         }).start();
 
