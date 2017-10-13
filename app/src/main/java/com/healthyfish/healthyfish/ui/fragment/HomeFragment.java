@@ -393,7 +393,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                             @Override
                             public void onError(Throwable e) {
-                                MyToast.showToast(getActivity(), "加载健康咨询出错啦！");
+                                //MyToast.showToast(getActivity(), "加载健康咨询出错");
                             }
 
                             @Override
@@ -413,10 +413,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                                 newsList.add(bean);
                                             }
                                         } else {
-                                            MyToast.showToast(getActivity(), "加载健康咨询出错啦");
+                                            //MyToast.showToast(getActivity(), "加载健康咨询出错");
                                         }
                                     } else {
-                                        MyToast.showToast(getActivity(), "加载健康咨询出错");
+                                        //MyToast.showToast(getActivity(), "加载健康咨询出错");
                                     }
                                 }
                             }

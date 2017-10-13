@@ -21,14 +21,13 @@ import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
  * 编辑：
  */
 
-public class sendNotificationsUtils {
+public class SendNotificationsUtils {
     /**
      * @param ContentTitle 通知标题
      * @param ContentText 通知具体内容
-     * @param number 通知的数量
      * @param activity  页面活动
      */
-    public static void sendNotifications(String ContentTitle, String ContentText, int number, Class<MainActivity> activity) {
+    public static void sendNotifications(String ContentTitle, String ContentText, Class<MainActivity> activity) {
         //手机震动权限  <uses-permission android:name="android.permission.VIBRATE" />
         //获取系统的通知管理
         NotificationManager notificationManager = (NotificationManager) MyApplication.getContetxt().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -39,16 +38,16 @@ public class sendNotificationsUtils {
         //构造通知消息
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApplication.getContetxt());
         //在状态栏消息提示文字
-        builder.setTicker("健鱼状态栏消息提示");
+        builder.setTicker("健鱼消息提示");
         //状态栏显示的图标
-        builder.setSmallIcon(R.mipmap.logo_healthyfish);
+        builder.setSmallIcon(R.mipmap.logo_healthyfish_24);
         //以下设置通知消息的显示标题、内容
         builder.setContentTitle(ContentTitle);
         builder.setContentText(ContentText);
         //设置下拉后通知显示的大图标
-        builder.setLargeIcon(BitmapFactory.decodeResource(MyApplication.getContetxt().getResources(), R.mipmap.logo_240));
+        builder.setLargeIcon(BitmapFactory.decodeResource(MyApplication.getContetxt().getResources(), R.mipmap.logo_healthyfish_48));
         //设置消息的数量
-        builder.setNumber(number);
+        //builder.setNumber(number);
         builder.setWhen(System.currentTimeMillis());
         //设置消息点击的跳转事件
         builder.setContentIntent(pt);

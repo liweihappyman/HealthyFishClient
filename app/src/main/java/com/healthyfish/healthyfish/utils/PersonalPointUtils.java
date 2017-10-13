@@ -49,9 +49,9 @@ public class PersonalPointUtils {
                     //Toast.makeText(context, "成功获得积分，当前积分：" + code, Toast.LENGTH_SHORT).show();
                 }
                 else if (code == -1) {
-                    Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
                 } else if (code == -2) {
-                    Toast.makeText(context, "会话id错误", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "会话id错误", Toast.LENGTH_SHORT).show();
                 } else {
 
                 }
@@ -90,7 +90,7 @@ public class PersonalPointUtils {
                     returnPoint = resp;
                 }
                 else if (code == -1) {
-                    Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
                 } else {
 
                 }

@@ -1,14 +1,6 @@
 package com.healthyfish.healthyfish.utils.mqtt_utils;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,8 +14,6 @@ import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveMsg;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveSysMdrMsg;
-import com.healthyfish.healthyfish.ui.activity.interrogation.HealthyChat;
-import com.healthyfish.healthyfish.ui.fragment.HomeFragment;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
@@ -31,7 +21,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
-import com.healthyfish.healthyfish.utils.sendNotificationsUtils;
+import com.healthyfish.healthyfish.utils.SendNotificationsUtils;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -688,8 +678,8 @@ class MqttMsgText {
         bean.setNewMsg(true);
         bean.save();
 
-
-        sendNotificationsUtils.sendNotifications(peer, bean.getContent(), 1, MainActivity.class);
+        // 系统通知
+        SendNotificationsUtils.sendNotifications("健鱼", "收到一条文本信息", MainActivity.class);
         // 获取新的信息
         EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
 
@@ -711,6 +701,8 @@ class MqttMsgMdr {
         bean.setNewMsg(true);
         bean.save();
 
+        // 系统通知
+        SendNotificationsUtils.sendNotifications("健鱼", "收到一条病历信息", MainActivity.class);
         // 获取新的信息
         EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
 
@@ -736,6 +728,8 @@ class MqttMsgImage {
         bean.setNewMsg(true);
         bean.save();
 
+        // 系统通知
+        SendNotificationsUtils.sendNotifications("健鱼", "收到一条图片信息", MainActivity.class);
         // 获取新的信息
         EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
     }
