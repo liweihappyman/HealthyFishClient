@@ -23,11 +23,13 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.adapter.DepartmentDoctorLvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.DoctorPostComparator;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -162,11 +164,13 @@ public class DepartmentDoctorList extends BaseActivity {
                         }
                         Log.e("LYQ", jsonStr);
                         List<JSONObject> doctorList = JSONArray.parseObject(jsonStr,List.class);
-                        for (JSONObject  object :doctorList){
+                        for (JSONObject  object :doctorList) {
                             String jsonString = object.toJSONString();
-                            BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptDoctListRespItem.class);
+                            BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptDoctListRespItem.class);
                             DeptDoctList.add(beanHospDeptListRespItem); //用于传递数据到下一页面用的list
-
+                        }
+                        Collections.sort(DeptDoctList,new DoctorPostComparator());//按职称排序
+                        for (BeanHospDeptDoctListRespItem beanHospDeptListRespItem : DeptDoctList){
                             BeanDoctorInfo data = new BeanDoctorInfo();
                             data.setImgUrl(HttpHealthyFishyUrl+beanHospDeptListRespItem.getZHAOPIAN());
                             data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
