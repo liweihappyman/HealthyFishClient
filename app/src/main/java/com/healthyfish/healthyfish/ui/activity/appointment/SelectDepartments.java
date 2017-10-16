@@ -57,6 +57,7 @@ public class SelectDepartments extends BaseActivity {
     private BeanHospitalListRespItem beanHospitalListRespItem;
     private String hospID = "lzzyy";//默认
     private String hospName = "柳州市中医院";//默认
+    private final int[] icons = new int[]{R.mipmap.ic_chinese_medicine};//填充科室图标
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,6 +132,7 @@ public class SelectDepartments extends BaseActivity {
                         if (beanHospitalListRespItem == null) { //如果为空则表明不是通过点击选择医院进来的，所以展示所有的科室信息
                             for (BeanHospDeptListRespItem beanHospDeptListRespItem : HospDeptList) {
                                 map = new HashMap<String, Object>();
+                                map.put("image", icons[0]);
                                 map.put("dept", beanHospDeptListRespItem.getDEPT_CODE());
                                 map.put("dept_name", beanHospDeptListRespItem.getDEPT_NAME());
                                 data_list.add(map);
@@ -142,6 +144,7 @@ public class SelectDepartments extends BaseActivity {
                                 for (BeanHospDeptListRespItem beanHospDeptListRespItem : HospDeptList) {
                                     map = new HashMap<String, Object>();
                                     if (!beanHospDeptListRespItem.getDEPT_NAME().substring(0, 2).equals("东院")) {
+                                        map.put("image", icons[0]);
                                         map.put("dept", beanHospDeptListRespItem.getDEPT_CODE());
                                         map.put("dept_name", beanHospDeptListRespItem.getDEPT_NAME());
                                         data_list.add(map);
@@ -151,6 +154,7 @@ public class SelectDepartments extends BaseActivity {
                                 for (BeanHospDeptListRespItem beanHospDeptListRespItem : HospDeptList) {
                                     map = new HashMap<String, Object>();
                                     if (beanHospDeptListRespItem.getDEPT_NAME().substring(0, 2).equals("东院")) {
+                                        map.put("image", icons[0]);
                                         map.put("dept", beanHospDeptListRespItem.getDEPT_CODE());
                                         map.put("dept_name", beanHospDeptListRespItem.getDEPT_NAME());
                                         data_list.add(map);

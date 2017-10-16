@@ -85,6 +85,7 @@ public class ChooseHospital extends BaseActivity {
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(new BeanHospitalListReq()), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
+                testHospital();//测试数据，作填充列表用
                 adapter.notifyDataSetChanged();//加载医院列表信息完成后通知适配器刷新数据
             }
 
@@ -114,6 +115,14 @@ public class ChooseHospital extends BaseActivity {
         chooseHospitalRecyclerview.setLayoutManager(lmg); //设置RecyclerView为线性布局
         adapter = new ChooseHospitalAdapter(list, this);
         chooseHospitalRecyclerview.setAdapter(adapter); //给RecyclerView设置适配器
+    }
+
+    private void testHospital() {
+        BeanHospitalListRespItem beanHospitalListRespItem = new BeanHospitalListRespItem();
+        beanHospitalListRespItem.setName("");
+        beanHospitalListRespItem.setAddress("");
+        beanHospitalListRespItem.setImg("");
+        list.add(beanHospitalListRespItem);
     }
 
 }

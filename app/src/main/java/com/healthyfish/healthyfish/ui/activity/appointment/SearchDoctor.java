@@ -92,6 +92,7 @@ public class SearchDoctor extends BaseActivity {
             }
         });
 
+        //搜索按钮监听
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +100,9 @@ public class SearchDoctor extends BaseActivity {
                 doctorList.clear();
                 mDoctorInfo.clear();
                 initSearchResult(etSearch.getText().toString().trim());
+                etSearch.clearFocus();//取消输入框焦点
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);//关闭键盘
             }
         });
         initListView();
@@ -170,7 +174,7 @@ public class SearchDoctor extends BaseActivity {
                     data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
                     data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
                     data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
-                    data.setPrice(beanHospDeptListRespItem.getPRICE() + "元起");
+                    data.setPrice(beanHospDeptListRespItem.getPRICE() + "元");
                     mDoctorInfo.add(data);///用于展示医生信息用的list
                     searchRespItemList.remove(0);//移除搜索结果中当前已经获取过具体医生信息的搜索结果
                     getDoctorInfo();//递归调用获取医生具体信息的方法
