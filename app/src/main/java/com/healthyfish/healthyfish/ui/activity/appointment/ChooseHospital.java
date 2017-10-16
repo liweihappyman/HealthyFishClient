@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanHospitalListReq;
@@ -64,9 +65,14 @@ public class ChooseHospital extends BaseActivity {
         chooseHospitalRecyclerview.addOnItemTouchListener(new MyRecyclerViewOnItemListener(this, chooseHospitalRecyclerview, new MyRecyclerViewOnItemListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) { //点击监听
-                Intent intent = new Intent(ChooseHospital.this, SelectDepartments.class);
-                intent.putExtra("BeanHospitalListRespItem", list.get(position)); //传递医院信息到下一个页面（选择科室页面）
-                startActivity(intent);
+                if (position < 2) {
+                    Intent intent = new Intent(ChooseHospital.this, SelectDepartments.class);
+                    intent.putExtra("BeanHospitalListRespItem", list.get(position)); //传递医院信息到下一个页面（选择科室页面）
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(ChooseHospital.this, "非常抱歉！该医院暂时没有科室开通网上挂号", Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
@@ -118,10 +124,23 @@ public class ChooseHospital extends BaseActivity {
     }
 
     private void testHospital() {
+
+        BeanHospitalListRespItem beanHospitalListRespItem1 = new BeanHospitalListRespItem();
+        beanHospitalListRespItem1.setName("鹿寨县中医院");
+        beanHospitalListRespItem1.setAddress("柳州市鹿寨镇建中北路17号");
+        beanHospitalListRespItem1.setImg("/demo/downloadFile/upload/20171016/99711508161604765.png");
+        list.add(beanHospitalListRespItem1);
+
+        BeanHospitalListRespItem beanHospitalListRespItem2 = new BeanHospitalListRespItem();
+        beanHospitalListRespItem2.setName("三江县中医院 ");
+        beanHospitalListRespItem2.setAddress("柳州市三江侗族自治县古宜镇侗乡大道65号");
+        beanHospitalListRespItem2.setImg("/demo/downloadFile/upload/20171016/63431508161970414.png");
+        list.add(beanHospitalListRespItem2);
+
         BeanHospitalListRespItem beanHospitalListRespItem = new BeanHospitalListRespItem();
-        beanHospitalListRespItem.setName("");
-        beanHospitalListRespItem.setAddress("");
-        beanHospitalListRespItem.setImg("");
+        beanHospitalListRespItem.setName("柳城县中医院");
+        beanHospitalListRespItem.setAddress("柳州市柳城县大埔镇胜利东路20号");
+        beanHospitalListRespItem.setImg("/demo/downloadFile/upload/20171016/11611508161519518.png");
         list.add(beanHospitalListRespItem);
     }
 

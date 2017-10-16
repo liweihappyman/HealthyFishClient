@@ -715,12 +715,6 @@ public class DoctorDetail extends BaseActivity {
 
             @Override
             public void onCompleted() {
-                List<BeanKeyValue> beanKeyValueList = JSONArray.parseArray(strJson,BeanKeyValue.class);
-                for (BeanKeyValue beanKeyValue : beanKeyValueList) {
-                    String key = beanKeyValue.getKey();
-                    String value = beanKeyValue.getValue();
-                    Log.i("LYQ", "排班时间：" + key + "  :  " + value);
-                }
 
             }
 
@@ -735,6 +729,12 @@ public class DoctorDetail extends BaseActivity {
                     strJson = responseBody.string();
                     //[{"key":"hosp_lzzyy_ds_186_27000","value":"[\\\"2017-09-29_1\\\"]"}]
                     Log.i("LYQ", "hospDoctMoreSchdReq()响应：" + strJson);
+                    List<BeanKeyValue> beanKeyValueList = JSONArray.parseArray(strJson,BeanKeyValue.class);
+                    for (BeanKeyValue beanKeyValue : beanKeyValueList) {
+                        String key = beanKeyValue.getKey();
+                        String value = beanKeyValue.getValue();
+                        Log.i("LYQ", "排班时间：" + key + "  :  " + value);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
