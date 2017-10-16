@@ -541,7 +541,10 @@ public class ChoiceService extends BaseActivity {
             if (currentDate.getTime() <= endDate.getTime()) {//服务未过期
                 Intent intent = new Intent(this, HealthyChat.class);
                 intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+                // 跳转到聊天界面
                 startActivity(intent);
+                // 测试跳转到购买服务
+                //goToBuyService(serviceKey, true, beanDoctorChatInfo);
                 // 添加用户已购买服务的医生列表
                 addPictureConsultServiceDoctorList();
             } else {//服务已过期

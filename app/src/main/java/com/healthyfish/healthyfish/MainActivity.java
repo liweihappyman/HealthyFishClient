@@ -62,6 +62,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static android.app.PendingIntent.getActivity;
 import static com.healthyfish.healthyfish.constant.Constants.HttpHealthyFishyUrl;
 
 
@@ -159,8 +160,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //初始化界面
         init();
         String user = MySharedPrefUtil.getValue("user");
-        if (!TextUtils.isEmpty(user)) {
-
+        String sid = MySharedPrefUtil.getValue("sid");
+        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+            AutoLogin.autoLogin();
             BeanUserLoginReq beanUserLoginReq = JSON.parseObject(user, BeanUserLoginReq.class);
             final String uid = beanUserLoginReq.getMobileNo();
             MyApplication.uid = uid;
@@ -175,25 +177,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             upDatePersonalInformation();
 
             //登录积分
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    PersonalPointUtils.addPoint(MainActivity.this);
-                }
-            }).start();
-
+            getLoginPoint();
 
         } else {
             MyToast.showToast(this, "您还没有登录呦");
             startActivity(new Intent(this, Login.class));
         }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLoginState(InitAllMessage initAllMessage) {
@@ -208,18 +198,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         upDatePersonalInformation();//更新用户的个人信息
 
         //登录积分
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                PersonalPointUtils.addPoint(MainActivity.this);
-            }
-        }).start();
-
+        getLoginPoint();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -390,12 +369,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .getSidByRetrofit(OkHttpUtils.getRequestBody(beanSessionIdReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-                        String user = MySharedPrefUtil.getValue("user");
+                        /*String user = MySharedPrefUtil.getValue("user");
                         String sid = MySharedPrefUtil.getValue("sid");
                         if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
-                            AutoLogin.autoLogin();
+                            //AutoLogin.autoLogin();
                             MqttUtil.startAsync();
-                        }
+                        }*/
+                        MqttUtil.startAsync();
                     }
 
                     @Override
@@ -508,6 +488,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
+    //登录积分
+    private void getLoginPoint() {
+        /*String user = MySharedPrefUtil.getValue("user");
+        String sid = MySharedPrefUtil.getValue("sid");
+        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+            AutoLogin.autoLogin();
+            //PersonalPointUtils.addPoint(MainActivity.this);
+        }*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PersonalPointUtils.addPoint(MainActivity.this);
+                    }
+                });
+            }
+        }).start();
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

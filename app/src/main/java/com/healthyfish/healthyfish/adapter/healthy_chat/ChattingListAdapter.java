@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
 import com.healthyfish.healthyfish.MyApplication;
+import com.healthyfish.healthyfish.POJO.BeanInterrogationServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanPersonalInformation;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
@@ -46,6 +47,8 @@ public class ChattingListAdapter extends BaseAdapter {
     private final int VIEW_TYPE_RIGHT_IMAGE = 3;
     private final int VIEW_TYPE_LEFT_MDR = 4;
     private final int VIEW_TYPE_RIGHT_MDR = 5;
+    private final int VIEW_TYPE_LEFT_SYS = 6;
+    private final int VIEW_TYPE_RIGHT_SYS = 7;
 
     private Activity mActivity;
     private LayoutInflater mInflater;
@@ -91,6 +94,11 @@ public class ChattingListAdapter extends BaseAdapter {
                     else if (content.indexOf("[mdr]") >= 0) {
                         bean.setMdrKey(content.replace("[mdr]", ""));
                         bean.setMsgType(ImMsgBean.CHAT_MSGTYPE_MDR_SENDER);
+                    }
+                    // 系统消息
+                    else if (content.indexOf("[sys]") >= 0) {
+                        bean.setMdrKey(content.replace("[sys]", ""));
+                        bean.setMsgType(ImMsgBean.CHAT_MSGTYPE_SYS_SENDER);
                     } else {
                         bean.setMsgType(ImMsgBean.CHAT_MSGTYPE_TEXT_SENDER);
                     }
@@ -104,6 +112,11 @@ public class ChattingListAdapter extends BaseAdapter {
                     else if (content.indexOf("[mdr]") >= 0) {
                         bean.setMdrKey(content.replace("[mdr]", ""));
                         bean.setMsgType(ImMsgBean.CHAT_MSGTYPE_MDR_RECEIVER);
+                    }
+                    // 系统消息
+                    else if (content.indexOf("[sys]") >= 0) {
+                        bean.setMdrKey(content.replace("[sys]", ""));
+                        bean.setMsgType(ImMsgBean.CHAT_MSGTYPE_SYS_RECEIVER);
                     } else {
                         bean.setMsgType(ImMsgBean.CHAT_MSGTYPE_TEXT_RECEIVER);
                     }
@@ -326,11 +339,11 @@ public class ChattingListAdapter extends BaseAdapter {
     public void disPlayLeftTextView(int position, View view, ViewHolder holder, ImMsgBean bean) {
         setContent(holder.tv_content, bean.getContent());
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
-        Glide.with(holder.iv_portrait.getContext()).load(bean.getPortrait()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(getPeerUserImg(bean)).into(holder.iv_portrait);
     }
 
     public void disPlayLeftImageView(int position, View view, ViewHolder holder, ImMsgBean bean) {
-        Glide.with(holder.iv_portrait.getContext()).load(bean.getPortrait()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(getPeerUserImg(bean)).into(holder.iv_portrait);
         if (ImageBase.Scheme.FILE == ImageBase.Scheme.ofUri(bean.getImage())) {
             String filePath = ImageBase.Scheme.FILE.crop(bean.getImage());
             Glide.with(holder.iv_image.getContext())
@@ -387,7 +400,7 @@ public class ChattingListAdapter extends BaseAdapter {
         String mdrDetail = getMDRKey(bean.getContent().substring(5));
         setContent(holder.tv_content, "病历接收成功\n" + "病历详情: " + mdrDetail);
         holder.sendtime.setText(DateTimeUtil.getTime(bean.getTime()));
-        Glide.with(holder.iv_portrait.getContext()).load(bean.getPortrait()).into(holder.iv_portrait);
+        Glide.with(holder.iv_portrait.getContext()).load(getPeerUserImg(bean)).into(holder.iv_portrait);
         // 动态修改发送状态（加载、失败、成功）
         statusOfLoadingOrFailureOrSuccess(holder, bean);
     }
@@ -415,12 +428,26 @@ public class ChattingListAdapter extends BaseAdapter {
         return String.valueOf(R.mipmap.logo_240);
     }
 
+    // 获取对方用户头像
+    public String getPeerUserImg(ImMsgBean bean) {
+        List<BeanInterrogationServiceDoctorList> peerUserList = DataSupport.where("DoctorNumber = ?", bean.getName().substring(1)).find(BeanInterrogationServiceDoctorList.class);
+        //Log.e("peerPortrait", peerUserList.get(0).getPeerPortrait());
+        if (!peerUserList.isEmpty()) {
+            return peerUserList.get(0).getDoctorPortrait();
+        } else {
+            return null;
+        }
+    }
+
     // 根据病历的key获取病历详情
     private String getMDRKey(String mdrKey) {
         List<BeanMedRec> mdeRecList = DataSupport.where("key = ?", mdrKey).find(BeanMedRec.class);
         //Log.e("返回病历信息 ", mdeRecList.get(0).getDiseaseInfo());
-        return mdeRecList.get(0).getDiseaseInfo();
-        //return null;
+        // FIXME: 2017/9/25 偶尔出现空指针错误
+        if (!mdeRecList.isEmpty()) {
+            return mdeRecList.get(0).getDiseaseInfo();
+        }
+        return null;
     }
 
     // 点击病历内容跳转到病历

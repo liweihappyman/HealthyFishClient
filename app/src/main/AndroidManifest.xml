@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MyApplication"
@@ -47,10 +48,12 @@
         <activity android:name=".ui.activity.Register" />
 
         <!--健康咨询（chat）-->
-        <activity android:name=".ui.activity.interrogation.HealthyChat"></activity>
+        <activity android:name=".ui.activity.interrogation.HealthyChat"
+            android:launchMode="singleTop"></activity>
 
         <!-- 病历夹页面 -->
-        <activity android:name=".ui.activity.medicalrecord.AllMedRec" />
+        <activity android:name=".ui.activity.medicalrecord.AllMedRec"
+            android:launchMode="singleTask"/>
 
         <!-- 问诊选择医生页面 -->
         <activity android:name=".ui.activity.interrogation.ChoiceDoctor" />

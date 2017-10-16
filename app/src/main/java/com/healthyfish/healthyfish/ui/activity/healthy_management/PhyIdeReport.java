@@ -148,7 +148,7 @@ public class PhyIdeReport extends BaseActivity {
 
             if (getIntent().getBooleanExtra("IS_INFRARED_TEST", false)) {
                 //若是红外皮温测试，则将结果保存到病历夹
-                queryPersonalInformationFormDB();
+                //queryPersonalInformationFormDB();
                 saveDataToMedRec();
             }
 
@@ -252,18 +252,18 @@ public class PhyIdeReport extends BaseActivity {
      * 从数据库查找个人信息，获取姓名
      */
     private void queryPersonalInformationFormDB() {
-        String key = "info_" + uid;
-        List<BeanPersonalInformation> personalInformationList = DataSupport.where("key = ?", key).find(BeanPersonalInformation.class);
-        if (!personalInformationList.isEmpty()) {
-            userName = personalInformationList.get(0).getName();
-            gender = personalInformationList.get(0).getGender();
-            if (!TextUtils.isEmpty(personalInformationList.get(0).getBirthDate())){
-                birthDate = personalInformationList.get(0).getBirthDate();
-            }else {
-                birthDate = Utils1.getTime();
-            }
+//        String key = "info_" + uid;
+//        List<BeanPersonalInformation> personalInformationList = DataSupport.where("key = ?", key).find(BeanPersonalInformation.class);
+//        if (!personalInformationList.isEmpty()) {
+//            userName = personalInformationList.get(0).getName();
+//            gender = personalInformationList.get(0).getGender();
+//            if (!TextUtils.isEmpty(personalInformationList.get(0).getBirthDate())){
+//                birthDate = personalInformationList.get(0).getBirthDate();
+//            }else {
+//                birthDate = Utils1.getTime();
+//            }
+//        }
 
-        }
     }
 
     /**
@@ -272,13 +272,21 @@ public class PhyIdeReport extends BaseActivity {
 
     private BeanMedRec beanMedRec = new BeanMedRec();
     private void saveDataToMedRec() {
+        /*获取病历夹PatientInfo页面保存的用户信息*/
+        userName = MySharedPrefUtil.getValue("patientName");
+        gender = MySharedPrefUtil.getValue("patientGender");
+        String patientBirthday = MySharedPrefUtil.getValue("patientBirthday");
+        if (!patientBirthday.equals("")){
+            birthDate = patientBirthday;
+        }else {
+            birthDate = Utils1.getTime();
+        }
         beanMedRec.setName(userName);
         beanMedRec.setGender(gender);
         beanMedRec.setDiagnosis("红外皮温");
         beanMedRec.setDiseaseInfo(physicals.get(0).getTitle()+"质");
         beanMedRec.setClinicalTime(Utils1.getTime());
         beanMedRec.setBirthday(birthDate);
-        beanMedRec.setBirthday(Utils1.getTime());
         beanMedRec.save();
         if (imagePathList.size()>0){
             BeanCourseOfDisease beanCourseOfDisease = new BeanCourseOfDisease();

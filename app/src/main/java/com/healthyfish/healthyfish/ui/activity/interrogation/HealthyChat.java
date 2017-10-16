@@ -426,6 +426,12 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
         String time = msg.getTime() + "";
         ImMsgBean newMsg = DataSupport.where("time = ?", time).find(ImMsgBean.class).get(0);
         newMsg.setPortrait(doctorPortrait);
+
+        // 把最后一条信息设置为旧消息
+        ContentValues values = new ContentValues();
+        values.put("isNewMsg", "false");
+        newMsg.updateAll(ImMsgBean.class, values, "time = ?", newMsg.getTime() + "");
+
         // 刷新列表状态
         chattingListAdapter.addData(newMsg, true, false);
         chattingListAdapter.notifyDataSetChanged();

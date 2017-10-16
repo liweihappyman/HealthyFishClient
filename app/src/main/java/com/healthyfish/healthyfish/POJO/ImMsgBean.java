@@ -16,6 +16,8 @@ public class ImMsgBean extends DataSupport implements Serializable{
     public final static int CHAT_MSGTYPE_IMG_SENDER = 13;
     public final static int CHAT_MSGTYPE_MDR_SENDER = 14;
     public final static int CHAT_MSGTYPE_MDR_RECEIVER = 15;
+    public final static int CHAT_MSGTYPE_SYS_SENDER = 16;
+    public final static int CHAT_MSGTYPE_SYS_RECEIVER = 17;
 
 
     public ImMsgBean() {
@@ -37,7 +39,7 @@ public class ImMsgBean extends DataSupport implements Serializable{
     private long time;
     // 图片内容
     private String image;
-    // 发送姓名
+    // 发送姓名(手机号码)
     private String name;
     // 发送内容
     private String content;

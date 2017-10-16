@@ -13,7 +13,7 @@
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="100px"
-            android:background="@color/color_titlebar_bg"
+            android:background="@color/color_secondary"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

@@ -14,7 +14,9 @@ import java.util.List;
 public class BeanMedRec extends DataSupport implements Serializable{
     private String key;//服务器返回的key
     private String timestamp;//服务器返回的执行操作的时间
+
     //------------------------------------------------------------
+    private BeanMedRecUser beanMedRecUser;
     private int id;//数据库自动分配的id，用来查询关联表的数据
     private boolean select = false;//在选择病历页面记录选中状态，
     private List<String> lables = new ArrayList<String>();//标签
@@ -155,5 +157,13 @@ public class BeanMedRec extends DataSupport implements Serializable{
     }
     public void setClinicalTime(String clinicalTime) {
         this.clinicalTime = clinicalTime;
+    }
+
+    public BeanMedRecUser getBeanMedRecUser() {
+        return beanMedRecUser;
+    }
+
+    public void setBeanMedRecUser(BeanMedRecUser beanMedRecUser) {
+        this.beanMedRecUser = beanMedRecUser;
     }
 }

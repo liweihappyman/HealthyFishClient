@@ -25,6 +25,9 @@ public class Constants {
     public static int EMOTICON_CLICK_TEXT = 1;
     public static int EMOTICON_CLICK_BIGIMAGE = 2;
 
+    // 系统消息
+    public static int NUMBER_SYS_INFO = 0;
+
     // 网络访问服务器主机地址
     public final static String HttpHealthyFishyUrl = "http://www.kangfish.cn";
     public final static String HttpsHealthyFishyUrl = "https://www.kangfish.cn";
