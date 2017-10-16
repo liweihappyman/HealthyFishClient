@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MyApplication"
@@ -202,6 +203,8 @@
         <activity android:name=".ui.activity.personal_center.ChangePersonalInformation" />
         <!--问诊选择科室页面-->
         <activity android:name=".ui.activity.interrogation.ChoiceDepartment" />
+        <!--挂号搜索医生页面-->
+        <activity android:name=".ui.activity.appointment.SearchDoctor" />
     </application>
 
 </manifest>

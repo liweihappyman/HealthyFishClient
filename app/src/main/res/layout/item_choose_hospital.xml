@@ -28,7 +28,7 @@
             android:paddingTop="60px"
             android:paddingLeft="48px"
             android:text="柳州市中医院"
-            android:textSize="24sp"/>
+            android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/tv_hospital_address"
@@ -37,7 +37,7 @@
                 android:paddingTop="60px"
                 android:paddingLeft="48px"
                 android:text="地址："
-                android:textSize="16sp"/>
+                android:textSize="12sp"/>
 
         </com.zhy.autolayout.AutoLinearLayout>
 

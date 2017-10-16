@@ -3,15 +3,25 @@ package com.healthyfish.healthyfish.utils.mqtt_utils;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.healthyfish.healthyfish.MainActivity;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
+import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
+import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveMsg;
+import com.healthyfish.healthyfish.eventbus.WeChatReceiveSysMdrMsg;
 import com.healthyfish.healthyfish.utils.DateTimeUtil;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
+import com.healthyfish.healthyfish.utils.OkHttpUtils;
+import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.SendNotificationsUtils;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -515,9 +525,15 @@ class PushCallback implements MqttCallback {
                         byte[] msg_array = new byte[msg_len];
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
                         String content = new String(msg_array, "utf-8");
+<<<<<<< HEAD
 
                         MqttMsgSystemInfo.process(bean, peer, content, topic);
 
+=======
+
+                        MqttMsgSystemInfo.process(bean, peer, content, topic);
+
+>>>>>>> pr/36
                         /*byte msgCmd = (byte) (sysMsg & MqttUtil.MASK_MSG);
 //                        byte msgType =(byte) (sysMsg & MqttUtil.MASK_ACK);
                         switch (msgCmd) {
@@ -584,6 +600,7 @@ class MqttMsgSystemInfo {
         bean.setName(peer);
 
         bean.setTime(DateTimeUtil.getLongMs());
+<<<<<<< HEAD
         bean.setType("t");
         bean.setTopic(topic);
         bean.setNewMsg(true);
@@ -591,6 +608,67 @@ class MqttMsgSystemInfo {
 
     }
 
+=======
+        bean.setType("$");
+        bean.setTopic(topic);
+        bean.save();
+
+        // EventBus异步提醒接收到医生端发送过来更新病历夹的系统消息
+        EventBus.getDefault().post(new WeChatReceiveSysMdrMsg(bean.getTime()));
+
+        // 通过key获取病历
+        keyGet(bean);
+    }
+    // 通过key获取病历
+    private static void keyGet(final ImMsgBean bean) {
+        final BeanBaseKeyGetReq beanBaseKeyGetReq = new BeanBaseKeyGetReq();
+        // [mdr]medRec_1807720781820170925_4f08f124-5769-4236-a503-e76d6800d5ca
+        final String key = bean.getContent().substring(5);
+
+        beanBaseKeyGetReq.setKey(key);
+
+        // 通过接收到的key获取病历
+        RetrofitManagerUtils.getInstance(MyApplication.getContetxt(), null).getMedRecByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeyGetReq), new Subscriber<ResponseBody>() {
+            String rspv = null;
+            @Override
+            public void onCompleted() {
+
+                if (!TextUtils.isEmpty(rspv)) {
+                    BeanBaseKeyGetResp object = JSON.parseObject(rspv, BeanBaseKeyGetResp.class);
+                    if (object.getValue() != null) {
+                        BeanMedRec beanMedRec = JSON.parseObject(object.getValue(), BeanMedRec.class);
+                        beanMedRec.setKey(key);
+                        if (!DataSupport.where("key = ?", key).find(BeanMedRec.class).isEmpty()) {
+                            beanMedRec.updateAll("key = ?", key);
+                        }
+                        List<BeanCourseOfDisease> courseOfDiseaseList = beanMedRec.getListCourseOfDisease();
+                        for (BeanCourseOfDisease courseOfDisease : courseOfDiseaseList) {
+                            courseOfDisease.setBeanMedRec(beanMedRec);
+                            courseOfDisease.save();
+                        }
+                    } else {
+                            /*nullValueKey.add(key);
+                            hasNullValueKey = true;*/
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(MyApplication.getContetxt(), "出错啦", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    rspv = responseBody.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+>>>>>>> pr/36
 
 }
 
@@ -616,6 +694,8 @@ class MqttMsgText {
         bean.setNewMsg(true);
         bean.save();
 
+        // 系统通知
+        SendNotificationsUtils.sendNotifications("健鱼", "收到一条文本信息", MainActivity.class);
         // 获取新的信息
         EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
 
@@ -637,6 +717,8 @@ class MqttMsgMdr {
         bean.setNewMsg(true);
         bean.save();
 
+        // 系统通知
+        SendNotificationsUtils.sendNotifications("健鱼", "收到一条病历信息", MainActivity.class);
         // 获取新的信息
         EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
 
@@ -662,9 +744,14 @@ class MqttMsgImage {
         bean.setNewMsg(true);
         bean.save();
 
+        // 系统通知
+        SendNotificationsUtils.sendNotifications("健鱼", "收到一条图片信息", MainActivity.class);
         // 获取新的信息
         EventBus.getDefault().post(new WeChatReceiveMsg(bean.getTime()));
     }
 }
+
+
+
 
 

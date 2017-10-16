@@ -19,11 +19,13 @@ import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.utils.DoctorPostComparator;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -126,6 +128,10 @@ public class ChoiceDoctor extends BaseActivity {
         if (bundle != null){
             departmentName = bundle.get("DepartmentName").toString();
             departmentCode = bundle.get("DepartmentCode").toString();
+            if (departmentName.substring(0, 2).equals("东院")) {
+                //hosp = "lzzyy1";
+                hospTxt = "柳州市中医院-东院";
+            }
         }
     }
 
@@ -134,7 +140,7 @@ public class ChoiceDoctor extends BaseActivity {
      */
     private void initData() {
         BeanHospDeptDoctListReq beanHospDeptDoctListReq = new BeanHospDeptDoctListReq();
-        beanHospDeptDoctListReq.setHosp("lzzyy");
+        beanHospDeptDoctListReq.setHosp(hosp);
         beanHospDeptDoctListReq.setDept(departmentCode);
 
         RetrofitManagerUtils.getInstance(this, null)
@@ -159,18 +165,21 @@ public class ChoiceDoctor extends BaseActivity {
                         }
                         Log.i("LYQ", "ChoiceDoctor:" + jsonStr);
                         List<JSONObject> doctorList = JSONArray.parseObject(jsonStr,List.class);
-                        for (JSONObject  object :doctorList){
+                        for (JSONObject  object :doctorList) {
                             String jsonString = object.toJSONString();
-                            BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString,BeanHospDeptDoctListRespItem.class);
-                            DeptDoctList.add(beanHospDeptListRespItem);
+                            BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(jsonString, BeanHospDeptDoctListRespItem.class);
+                            DeptDoctList.add(beanHospDeptDoctListRespItem);
+                        }
+                        Collections.sort(DeptDoctList,new DoctorPostComparator());//按职称排序
+                        for (BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem : DeptDoctList){
                             BeanDoctorInfo data = new BeanDoctorInfo();
-                            data.setImgUrl(HttpHealthyFishyUrl+beanHospDeptListRespItem.getZHAOPIAN());
-                            data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
+                            data.setImgUrl(HttpHealthyFishyUrl+beanHospDeptDoctListRespItem.getZHAOPIAN());
+                            data.setName(beanHospDeptDoctListRespItem.getDOCTOR_NAME());
                             data.setDepartment(departmentName);
-                            data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
-                            data.setHospital("柳州市中医院");
-                            data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
-                            data.setPrice(beanHospDeptListRespItem.getPRICE()+"元起");
+                            data.setDuties(beanHospDeptDoctListRespItem.getREISTER_NAME());
+                            data.setHospital(hospTxt);
+                            data.setIntroduce(beanHospDeptDoctListRespItem.getWEB_INTRODUCE());
+                            data.setPrice(beanHospDeptDoctListRespItem.getPRICE()+"元起");
                             mDoctorInfos.add(data);
                         }
                         mChoiceDoctorLvAdapter.notifyDataSetChanged();

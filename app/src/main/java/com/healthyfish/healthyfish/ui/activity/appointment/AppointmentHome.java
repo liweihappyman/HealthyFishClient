@@ -57,40 +57,41 @@ import rx.Subscriber;
 
 
 public class AppointmentHome extends BaseActivity {
-    private String[] strings={"这里是您的就诊排号信息，请及时关注，以免错过就诊"};
 
-    private int number =0;
-    private boolean isRunning=true;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.choose_hospital)
-    Button chooseHospital;    @BindView(R.id.choose_department)
+    Button chooseHospital;
+    @BindView(R.id.choose_department)
     Button chooseDepartment;
     @BindView(R.id.scroll_message)
     AutoVerticalScrollTextView scrollMessage;
+
+    private int number = 0;
+    private boolean isRunning = true;
+
+    private String[] strings = {"这里是您的就诊排号信息，请及时关注，以免错过就诊"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_home);
         ButterKnife.bind(this);
-        toolbar.setTitle("");        toolbarTitle.setText("挂号");
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.back_icon);
-        }
+        initToolBar(toolbar, toolbarTitle, "挂号");
         initSrollText();
     }
 
-    private void initSrollText() {        scrollMessage.setText(strings[0]);
-        new Thread(){
+    /**
+     * 初始化顶部滚动字幕
+     */
+    private void initSrollText() {
+        scrollMessage.setText(strings[0]);
+        new Thread() {
             @Override
             public void run() {
-                while (isRunning){
+                while (isRunning) {
                     SystemClock.sleep(3000);
                     handler.sendEmptyMessage(199);
                 }
@@ -98,6 +99,9 @@ public class AppointmentHome extends BaseActivity {
         }.start();
     }
 
+    /**
+     * 用于通知滚动字幕的滚动
+     */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -105,40 +109,54 @@ public class AppointmentHome extends BaseActivity {
             if (msg.what == 199) {
                 scrollMessage.next();
                 number++;
-                scrollMessage.setText(strings[number%strings.length]);
+                scrollMessage.setText(strings[number % strings.length]);
             }
-
         }
     };
+
+    /**
+     * 顶部返回按钮的监听
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                isRunning=false;
+                isRunning = false;
                 finish();
                 break;
         }
         return true;
     }
 
+    /**
+     * 按钮点击监听
+     *
+     * @param view
+     */
     @OnClick({R.id.choose_hospital, R.id.choose_department})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.choose_hospital:
+            case R.id.choose_hospital://点击选择医院按钮
                 Intent toChooseHospital = new Intent(this, ChooseHospital.class);
                 startActivity(toChooseHospital);
                 break;
-            case R.id.choose_department:
-                Intent test = new Intent(this, SelectDepartments.class);
+            case R.id.choose_department://点击选择科室按钮
+                Intent test = new Intent(this, SearchDoctor.class);
                 startActivity(test);
                 break;
         }
     }
 
+    /**
+     * 重写页面销毁时的方法
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isRunning=false;
+        isRunning = false;
     }
 }
 
