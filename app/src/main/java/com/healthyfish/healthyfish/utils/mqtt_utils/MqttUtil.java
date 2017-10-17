@@ -525,15 +525,9 @@ class PushCallback implements MqttCallback {
                         byte[] msg_array = new byte[msg_len];
                         System.arraycopy(payload, 2 + uid_len, msg_array, 0, msg_len);
                         String content = new String(msg_array, "utf-8");
-<<<<<<< HEAD
 
                         MqttMsgSystemInfo.process(bean, peer, content, topic);
 
-=======
-
-                        MqttMsgSystemInfo.process(bean, peer, content, topic);
-
->>>>>>> pr/36
                         /*byte msgCmd = (byte) (sysMsg & MqttUtil.MASK_MSG);
 //                        byte msgType =(byte) (sysMsg & MqttUtil.MASK_ACK);
                         switch (msgCmd) {
@@ -600,15 +594,6 @@ class MqttMsgSystemInfo {
         bean.setName(peer);
 
         bean.setTime(DateTimeUtil.getLongMs());
-<<<<<<< HEAD
-        bean.setType("t");
-        bean.setTopic(topic);
-        bean.setNewMsg(true);
-        bean.save();
-
-    }
-
-=======
         bean.setType("$");
         bean.setTopic(topic);
         bean.save();
@@ -639,7 +624,13 @@ class MqttMsgSystemInfo {
                         BeanMedRec beanMedRec = JSON.parseObject(object.getValue(), BeanMedRec.class);
                         beanMedRec.setKey(key);
                         if (!DataSupport.where("key = ?", key).find(BeanMedRec.class).isEmpty()) {
-                            beanMedRec.updateAll("key = ?", key);
+                            List<BeanMedRec> listBeanMedRec = DataSupport.where("key = ?", key).find(BeanMedRec.class);
+                            listBeanMedRec.get(0).delete();
+                            beanMedRec.save();
+                            //beanMedRec.updateAll("key = ?", key);
+                        }
+                        else {
+                            beanMedRec.save();
                         }
                         List<BeanCourseOfDisease> courseOfDiseaseList = beanMedRec.getListCourseOfDisease();
                         for (BeanCourseOfDisease courseOfDisease : courseOfDiseaseList) {
@@ -668,7 +659,7 @@ class MqttMsgSystemInfo {
             }
         });
     }
->>>>>>> pr/36
+
 
 }
 

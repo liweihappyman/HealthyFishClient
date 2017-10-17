@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -42,18 +42,19 @@
         </activity>
 
         <!-- 登录页面 -->
-        <activity android:name=".ui.activity.Login" >
-        </activity>
+        <activity android:name=".ui.activity.Login" />
         <!-- 注册页面 -->
         <activity android:name=".ui.activity.Register" />
 
-        <!--健康咨询（chat）-->
-        <activity android:name=".ui.activity.interrogation.HealthyChat"
-            android:launchMode="singleTop"></activity>
+        <!-- 健康咨询（chat） -->
+        <activity
+            android:name=".ui.activity.interrogation.HealthyChat"
+            android:launchMode="singleTask" />
 
         <!-- 病历夹页面 -->
-        <activity android:name=".ui.activity.medicalrecord.AllMedRec"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".ui.activity.medicalrecord.AllMedRec"
+            android:launchMode="singleTask" />
 
         <!-- 问诊选择医生页面 -->
         <activity android:name=".ui.activity.interrogation.ChoiceDoctor" />
@@ -122,7 +123,6 @@
             android:name=".ui.activity.medicalrecord.CreateCourse"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity" />
-
         <activity android:name=".ui.activity.medicalrecord.SelectMedRec" />
         <activity android:name=".ui.activity.medicalrecord.SelectDoctor" />
         <activity android:name=".ui.activity.medicalrecord.ShareSuccess" />
@@ -147,21 +147,25 @@
         <activity android:name=".ui.activity.appointment.DepartmentDoctorList" />
 
         <!-- 健康管理 -->
-        <activity android:name=".ui.activity.healthy_management.MainIndexHealthyManagement"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".ui.activity.healthy_management.MainIndexHealthyManagement"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.activity.healthy_management.IndexPhysicalIdentification" />
         <activity android:name=".ui.activity.healthy_management.PhyIdeQuestionnaireTest" />
         <activity android:name=".ui.activity.healthy_management.PhyIdeInfraredTest" />
-        <activity android:name=".ui.activity.healthy_management.MakeWholeHealthyScheme"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".ui.activity.healthy_management.MakeWholeHealthyScheme"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.activity.healthy_management.GetRecommendedHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.GetUserCustomScheme" />
         <activity android:name=".ui.activity.healthy_management.SelectPhyIdeHealthyScheme" />
         <activity android:name=".ui.activity.healthy_management.StartingSchemeDate" />
-        <activity android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme"
-            android:theme="@style/ActivityTheme"/>
-        <activity android:name=".ui.activity.healthy_management.MyHealthyScheme"
-            android:theme="@style/ActivityTheme"/>
+        <activity
+            android:name=".ui.activity.healthy_management.PreviewMyHealthyScheme"
+            android:theme="@style/ActivityTheme" />
+        <activity
+            android:name=".ui.activity.healthy_management.MyHealthyScheme"
+            android:theme="@style/ActivityTheme" />
         <activity android:name=".ui.activity.healthy_management.SinglePlanDetail" />
         <!-- 健康管理体质报告页面 -->
         <activity android:name=".ui.activity.healthy_management.PhyIdeReport" />
@@ -181,30 +185,32 @@
 
         <service
             android:name=".service.UploadImages"
-            android:exported="false"></service>
+            android:exported="false" />
 
-        <!--上传红外皮温图片-->
+        <!-- 上传红外皮温图片 -->
         <service
             android:name=".service.UploadPhyImages"
-            android:exported="false"></service>
+            android:exported="false" />
 
-        <!--聊天发送图片-->
+        <!-- 聊天发送图片 -->
         <service
             android:name=".service.WeChatUploadImage"
-            android:exported="false"></service>
-        <!--判断网络广播-->
+            android:exported="false" />
+        <!-- 判断网络广播 -->
         <receiver android:name=".broadcast.NetWorkChangeBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
-        <!--个人中心>个人信息>修改个人信息-->
+        <!-- 个人中心>个人信息>修改个人信息 -->
         <activity android:name=".ui.activity.personal_center.ChangePersonalInformation" />
-        <!--问诊选择科室页面-->
+        <!-- 问诊选择科室页面 -->
         <activity android:name=".ui.activity.interrogation.ChoiceDepartment" />
-        <!--挂号搜索医生页面-->
+        <!-- 挂号搜索医生页面 -->
         <activity android:name=".ui.activity.appointment.SearchDoctor" />
+        <activity android:name=".ui.activity.interrogation.ShareReport" />
+        <activity android:name=".ui.activity.interrogation.SharePrescription"></activity>
     </application>
 
 </manifest>

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.DatePickerDialog;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
@@ -86,52 +87,63 @@ public class PatientInfo extends BaseActivity implements View.OnClickListener {
         if (medRec.getName() != null && !medRec.getName().equals("null") && !medRec.getName().equals("")) {
             name.setText(medRec.getName());
         } else {
-            String patientName = MySharedPrefUtil.getValue("patientName");
-            if (!patientName.equals("")) {
-                name.setText(patientName);
-                medRec.setName(patientName);
+            //只有在新建病历的时候才需要读取保存的用户信息，其他情况都是在bean类获取
+            if (Constants.POSITION_MED_REC == -1) {
+                String patientName = MySharedPrefUtil.getValue("patientName");
+                if (!patientName.equals("")) {
+                    name.setText(patientName);
+                    medRec.setName(patientName);
+                }
             }
         }
 
         if (medRec.getGender() != null && !medRec.getGender().equals("null") && !medRec.getGender().equals("")) {
             gender.setText(medRec.getGender());
         } else {
-            String patientGender = MySharedPrefUtil.getValue("patientGender");
-            if (!patientGender.equals("")) {
-                gender.setText(patientGender);
-                medRec.setGender(patientGender);
+            if (Constants.POSITION_MED_REC == -1) {
+                String patientGender = MySharedPrefUtil.getValue("patientGender");
+                if (!patientGender.equals("")) {
+                    gender.setText(patientGender);
+                    medRec.setGender(patientGender);
+                }
             }
         }
 
         if (medRec.getBirthday() != null && !medRec.getBirthday().equals("")) {
             birthday.setText(medRec.getBirthday());
         } else {
-            String patientBirthday = MySharedPrefUtil.getValue("patientBirthday");
-            if (!patientBirthday.equals("")) {
-                birthday.setText(patientBirthday);
-                medRec.setBirthday(patientBirthday);
-            } else {
-                birthday.setText(Utils1.getTime());
+            if (Constants.POSITION_MED_REC == -1) {
+                String patientBirthday = MySharedPrefUtil.getValue("patientBirthday");
+                if (!patientBirthday.equals("")) {
+                    birthday.setText(patientBirthday);
+                    medRec.setBirthday(patientBirthday);
+                } else {
+                    birthday.setText(Utils1.getTime());
+                }
             }
         }
 
         if (medRec.getIDno() != null && !medRec.getIDno().equals("")) {
             idNumber.setText(medRec.getIDno());
         } else {
-            String patientIdNumber = MySharedPrefUtil.getValue("patientIdNumber");
-            if (!patientIdNumber.equals("")) {
-                idNumber.setText(patientIdNumber);
-                medRec.setIDno(patientIdNumber);
+            if (Constants.POSITION_MED_REC == -1) {
+                String patientIdNumber = MySharedPrefUtil.getValue("patientIdNumber");
+                if (!patientIdNumber.equals("")) {
+                    idNumber.setText(patientIdNumber);
+                    medRec.setIDno(patientIdNumber);
+                }
             }
         }
 
         if (medRec.getOccupation() != null && !medRec.getOccupation().equals("")) {
             occupation.setText(medRec.getOccupation());
         } else {
-            String patientOccupation = MySharedPrefUtil.getValue("patientOccupation");
-            if (!patientOccupation.equals("")) {
-                occupation.setText(patientOccupation);
-                medRec.setOccupation(patientOccupation);
+            if (Constants.POSITION_MED_REC == -1) {
+                String patientOccupation = MySharedPrefUtil.getValue("patientOccupation");
+                if (!patientOccupation.equals("")) {
+                    occupation.setText(patientOccupation);
+                    medRec.setOccupation(patientOccupation);
+                }
             }
         }
 
@@ -142,12 +154,14 @@ public class PatientInfo extends BaseActivity implements View.OnClickListener {
                 married.setChecked(true);
             }
         } else {
-            String patientMaritalStatus = MySharedPrefUtil.getValue("patientMaritalStatus");
-            if (!patientMaritalStatus.equals("")) {
-                if (patientMaritalStatus.equals("未婚")) {
-                    unmarried.setChecked(true);
-                } else {
-                    married.setChecked(true);
+            if (Constants.POSITION_MED_REC == -1) {
+                String patientMaritalStatus = MySharedPrefUtil.getValue("patientMaritalStatus");
+                if (!patientMaritalStatus.equals("")) {
+                    if (patientMaritalStatus.equals("未婚")) {
+                        unmarried.setChecked(true);
+                    } else {
+                        married.setChecked(true);
+                    }
                 }
             }
         }
@@ -195,7 +209,7 @@ public class PatientInfo extends BaseActivity implements View.OnClickListener {
                     getInfo();
                     saveAndGoback();
                 } else {
-                    Toast.makeText(PatientInfo.this,"请完善信息",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PatientInfo.this, "请完善信息", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -206,12 +220,12 @@ public class PatientInfo extends BaseActivity implements View.OnClickListener {
      * 保存并且返回到上一页面
      */
     private void saveAndGoback() {
-        MySharedPrefUtil.saveKeyValue("patientName",medRec.getName());
-        MySharedPrefUtil.saveKeyValue("patientGender",medRec.getGender());
-        MySharedPrefUtil.saveKeyValue("patientBirthday",medRec.getBirthday());
-        MySharedPrefUtil.saveKeyValue("patientIdNumber",medRec.getIDno());
-        MySharedPrefUtil.saveKeyValue("patientOccupation",medRec.getOccupation());
-        MySharedPrefUtil.saveKeyValue("patientMaritalStatus",medRec.getMarital_status());
+        MySharedPrefUtil.saveKeyValue("patientName", medRec.getName());
+        MySharedPrefUtil.saveKeyValue("patientGender", medRec.getGender());
+        MySharedPrefUtil.saveKeyValue("patientBirthday", medRec.getBirthday());
+        MySharedPrefUtil.saveKeyValue("patientIdNumber", medRec.getIDno());
+        MySharedPrefUtil.saveKeyValue("patientOccupation", medRec.getOccupation());
+        MySharedPrefUtil.saveKeyValue("patientMaritalStatus", medRec.getMarital_status());
         Intent intent = new Intent(PatientInfo.this, NewMedRec.class);
         intent.putExtra("forInfo", medRec);
         setResult(INFO_RESULT, intent);
@@ -237,8 +251,9 @@ public class PatientInfo extends BaseActivity implements View.OnClickListener {
                 .setNegativeButton("取消", null)
                 .show();
     }
+
     /**
-     *     出生日期选择对话框
+     * 出生日期选择对话框
      */
     private void selectBirthday() {
         DatePickerDialog datePicker_dialog = new DatePickerDialog(this, new

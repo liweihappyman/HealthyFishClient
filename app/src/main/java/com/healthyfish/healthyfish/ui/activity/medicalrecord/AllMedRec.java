@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.ui.activity.medicalrecord;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Color;
@@ -9,11 +10,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.text.TextUtils;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +32,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyGetResp;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyRemReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeysRemReq;
+import com.healthyfish.healthyfish.POJO.BeanBaseKeysRemResp;
+import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanCourseOfDisease;
 import com.healthyfish.healthyfish.POJO.BeanMedRec;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
@@ -93,7 +99,6 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         EventBus.getDefault().register(this);
         toolbar.setTitle("");
         toolbarTitle.setText("全部病历");
-        //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.three_points));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -111,21 +116,21 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reqForNetworkData(true);//然后加载网络数据更新列表
+                reqForNetworkData(true);//下拉加载网络数据更新列表
             }
         });
     }
 
 
     /**
-     * 思路:先加载本地数据库的内容，异步获取网络的数据，通过对比key，如果没有则添加到本地数据库，最后更新列表
+     * 思路:先加载本地数据库的内容，如果本地数据库为空，则直接加载网络数据，如果不为空，
+     * 可以通过下拉刷新异步获取网络的数据，对比本地数据库的key，如果没有则添加该key相应的数据到本地数据库，最后更新列表
      * isGobackFromNewMedRec:   true是表示在新建病历夹页面返回
      */
     private void init(boolean isGobackFromNewMedRec) {
         listMecRec.clear();
         listMecRec = DataSupport.findAll(BeanMedRec.class);
         if (listMecRec.size() == 0 && !isGobackFromNewMedRec) {
-            //initNullLV();
             reqForNetworkData(false);//如果本地数据为空，则从网上加载，否则要刷新数据，只有下拉刷新
         } else {
             try {
@@ -214,7 +219,6 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         });
     }
 
-
     /**
      * ----------------------------------------------------------------------------------------------------------------------
      * 删除网络数据空值key，造成空值key的原因还不清楚，出现过
@@ -295,43 +299,29 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         }
     }
 
-    /**
-     * 初始化空的ListView,提示列表为空
-     */
-
-    private void initNullLV() {
-        ImageView imageView = new ImageView(this);
-        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        imageView.setVisibility(View.GONE);
-        ((ViewGroup) medRecAll.getParent()).addView(imageView);
-        medRecAll.setEmptyView(imageView);
-        imageView.setImageResource(R.mipmap.personal_center);
-    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
-
+//            case R.id.delAll:
+//                showDelDialog();
+//                break;
         }
         return true;
     }
 
-//    @Override
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.med_rec2, menu);
 //        return true;
 //    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.new_med_rec://新建病历
-                Constants.POSITION_MED_REC = -1;
+            case R.id.new_med_rec:
+                Constants.POSITION_MED_REC = -1;//标志新建病历
                 Intent intent = new Intent(this, NewMedRec.class);
                 startActivity(intent);
         }
@@ -343,7 +333,6 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         Intent intent = new Intent(AllMedRec.this, NewMedRec.class);
         //将选中的病历的id穿到NewMedRec活动
         intent.putExtra("id", listMecRec.get(position).getId());
-        intent.putExtra("flag", "fromAllMedRecList");
         startActivity(intent);
     }
 
@@ -373,10 +362,95 @@ public class AllMedRec extends BaseActivity implements View.OnClickListener, Ada
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+
+    /**
+     * ----------------------------------------------------------------------------------------------------------------------
+     * 删除提示对话框
+     */
+    private void showDelDialog() {
+        new AlertDialog.Builder(AllMedRec.this).setMessage("是否要删除全部病历")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<String> keys = new ArrayList<>();
+                        //key为空，说明还没有同步到服务器，可以直接删除
+                        for (int i = 0; i < listMecRec.size(); i++) {
+                            if (listMecRec.get(i).getKey() != null) {
+                                keys.add(listMecRec.get(i).getKey());
+                                Log.i("keys", "onClick: " + listMecRec.get(i).getKey());
+                            }
+                        }
+                        networkReqDelMedRec(keys);
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+    /**
+     * 删除网络数据(该方法无效，待修复)
+     */
+    private void networkReqDelMedRec(List<String> keys) {
+        //删除多个用
+        String userStr = MySharedPrefUtil.getValue("user");
+        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
+        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
+        StringBuilder prefix = new StringBuilder("medRec_");
+        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
+        //Log.i("电子病历","prefix:"+prefix.toString());
+        beanBaseKeysRemReq.setPrefix(prefix.toString());
+        beanBaseKeysRemReq.setKeyList(keys);
+
+        RetrofitManagerUtils.getInstance(AllMedRec.this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanBaseKeysRemReq), new Subscriber<ResponseBody>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(AllMedRec.this, "删除失败，请检查网络环境", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                String str = null;
+                try {
+                    str = responseBody.string();
+                    Log.i("电子病历", "删除操作的响应数据:" + str);
+
+                    //删除多个用
+                    if (str != null) {
+                        BeanBaseKeysRemResp beanBaseKeysRemResp = JSON.parseObject(str, BeanBaseKeysRemResp.class);
+                        if (beanBaseKeysRemResp.getCode() == 0) {
+                            if (beanBaseKeysRemResp.getFailedList().size() > 0) {
+                                Toast.makeText(AllMedRec.this, "删除失败", Toast.LENGTH_SHORT).show();
+                                Log.i("电子病历", "删除失败的key" + beanBaseKeysRemResp.getFailedList().toString());
+                            } else {
+                                Toast.makeText(AllMedRec.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                DataSupport.deleteAll(BeanMedRec.class);
+                                //init(false);
+                            }
+                        } else {
+                            Toast.makeText(AllMedRec.this, "删除失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+    /** ----------------------------------------------------------------------------------------------------------------------*/
+
 }

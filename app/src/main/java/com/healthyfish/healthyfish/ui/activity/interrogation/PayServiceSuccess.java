@@ -10,13 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.alibaba.fastjson.JSON;
-<<<<<<< HEAD
-=======
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
->>>>>>> pr/36
 import com.healthyfish.healthyfish.POJO.BeanDoctorChatInfo;
 import com.healthyfish.healthyfish.POJO.BeanInterrogationServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
@@ -154,22 +150,6 @@ public class PayServiceSuccess extends BaseActivity {
 
     }
 
-<<<<<<< HEAD
-    private void sendSystemInfoToConnectWithDoctor() {
-
-            ImMsgBean bean = new ImMsgBean();
-            bean.setName(sender);
-            bean.setSender(true);// 是否是发送者
-            bean.setTime(DateTimeUtil.getLongMs());// 发送时间
-            bean.setContent("");
-            bean.setTopic(topic);
-
-            bean.setType("$");// 类型：文字
-
-            // MQTT发送数据
-            MqttUtil.sendTxt(bean);
-
-=======
     // 发送系统消息，建立与医生的会话
     private void sendSystemInfoToConnectWithDoctor() {
 
@@ -216,7 +196,6 @@ public class PayServiceSuccess extends BaseActivity {
                 }
             }
         });
->>>>>>> pr/36
     }
 
     /**

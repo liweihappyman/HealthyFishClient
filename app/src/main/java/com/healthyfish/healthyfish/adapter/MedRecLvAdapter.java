@@ -81,17 +81,18 @@ public class MedRecLvAdapter extends BaseAdapter {
         }
         viewHolderHasHead.headLayout.setVisibility(View.GONE);
         //如果size = 1 的话，说明只有一个元素，直接与现有的date比较，如果size大于1，
-        // 判断当前位置是0不是，如果不是0的话，说明有前一项，这样可以跟前项比较
+        // 判断当前位置是0不是，如果不是0的话，说明有前一项，这样可以跟前项比较，如果不相同则显示头部信息
         try {
             String date = listMedRec.get(position).getClinicalTime();
-            dateCompare = date.substring(0, date.indexOf("月") + 1);
+            dateCompare = date.substring(0, date.indexOf("月") + 1);//2014年10月
+            //遍历出listDate中日期与dateCompare相同的个数
             int count = Collections.frequency(listDate, dateCompare);
             if (listDate.size() == 1) {
                 date = "date";
             } else {
                 date = "date";
                 if (position > 0) {
-                    date = listDate.get(position - 1);
+                    date = listDate.get(position - 1);//保证该date是前一项的日期
                 }
             }
 
