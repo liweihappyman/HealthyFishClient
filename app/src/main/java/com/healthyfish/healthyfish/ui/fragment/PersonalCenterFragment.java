@@ -31,6 +31,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserPhy;
 import com.healthyfish.healthyfish.POJO.BeanUserPhyIdResp;
 import com.healthyfish.healthyfish.POJO.BeanUserPhysical;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.eventbus.RefreshPointMsg;
 import com.healthyfish.healthyfish.ui.activity.Login;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.PhyIdeReport;
@@ -220,6 +221,12 @@ public class PersonalCenterFragment extends Fragment {
         judgeLoginState(beanPersonalInformation.isLogin());
     }
 
+    //查询个人积分后通知刷新积分界面
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshPoint(RefreshPointMsg refreshPointMsg) {
+        tvCurrentPoint.setText(refreshPointMsg.getPoint());
+    }
+
 
     //登录状态判断初始化相应的控件
     private void judgeLoginState(boolean isLogin) {
@@ -264,7 +271,6 @@ public class PersonalCenterFragment extends Fragment {
      * 展示数据
      */
     private void initWidget() {
-
         if (beanPersonalInformation != null) {
             if (!TextUtils.isEmpty(beanPersonalInformation.getImgUrl())) {
                 Glide.with(getActivity()).load(HttpHealthyFishyUrl + beanPersonalInformation.getImgUrl()).error(R.mipmap.error).into(civHeadPortraitLogin);
@@ -280,7 +286,6 @@ public class PersonalCenterFragment extends Fragment {
             Glide.with(getActivity()).load(R.mipmap.ic_logo).into(civHeadPortraitLogin);
             setTextBold("您");
         }
-        tvCurrentPoint.setText(PersonalPointUtils.queryPoint(MyApplication.getContetxt()));
         getPersonalPoint();
     }
 
@@ -507,21 +512,10 @@ public class PersonalCenterFragment extends Fragment {
             public void run() {
                 try {
                     Thread.sleep(500);
-                    /*String user = MySharedPrefUtil.getValue("user");
-                    String sid = MySharedPrefUtil.getValue("sid");
-                    if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
-                        AutoLogin.autoLogin();
-                    }*/
+                    PersonalPointUtils.queryPoint(MyApplication.getContetxt());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvCurrentPoint.setText(PersonalPointUtils.queryPoint(MyApplication.getContetxt()));
-                    }
-                });
             }
         }).start();
     }

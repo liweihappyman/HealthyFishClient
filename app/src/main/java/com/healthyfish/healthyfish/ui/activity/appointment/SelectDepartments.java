@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.healthyfish.healthyfish.POJO.BeanDepartmentInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
@@ -23,6 +24,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -176,14 +178,20 @@ public class SelectDepartments extends BaseActivity {
                         String jsonStr = null;
                         try {
                             jsonStr = responseBody.string();
+                            List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr, List.class);
+                            for (JSONObject object : beanHospDeptListResp) {
+                                String jsonString = object.toJSONString();
+                                BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
+                                HospDeptList.add(beanHospDeptListRespItem);
+                                //将医院科室信息保存到本地数据库
+                                BeanDepartmentInfo beanDepartmentInfo = new BeanDepartmentInfo();
+                                beanDepartmentInfo.setKey(hospID + "_" + beanHospDeptListRespItem.getDEPT_NAME());
+                                beanDepartmentInfo.setHospital(hospName);
+                                beanDepartmentInfo.setDepartmentName(beanHospDeptListRespItem.getDEPT_NAME());
+                                UpdateDepartmentInfoUtils.saveDepartmentInfo(beanDepartmentInfo);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
-                        List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr, List.class);
-                        for (JSONObject object : beanHospDeptListResp) {
-                            String jsonString = object.toJSONString();
-                            BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
-                            HospDeptList.add(beanHospDeptListRespItem);
                         }
                     }
                 });

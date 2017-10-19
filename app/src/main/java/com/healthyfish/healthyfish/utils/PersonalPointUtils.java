@@ -17,6 +17,9 @@ import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanPointIncReq;
 import com.healthyfish.healthyfish.POJO.BeanPointQueryReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.eventbus.RefreshPointMsg;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -85,7 +88,7 @@ public class PersonalPointUtils {
 
             @Override
             public void onCompleted() {
-
+                EventBus.getDefault().post(new RefreshPointMsg(returnPoint));
             }
 
             @Override

@@ -21,6 +21,7 @@ import com.healthyfish.healthyfish.adapter.MyConcernLvAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ public class MyConcern extends BaseActivity {
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserListValueReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
+                UpdateDepartmentInfoUtils.updateDepartmentInfoReq(getApplicationContext());//更新医院科室信息，下几个页面用到
                 initRecyclerView();
                 adapter.notifyDataSetChanged();
             }

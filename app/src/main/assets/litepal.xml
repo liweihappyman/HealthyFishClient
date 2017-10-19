@@ -39,6 +39,9 @@
         <!--医生信息-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanDoctorInfo" />
 
+        <!--医院科室信息-->
+        <mapping class="com.healthyfish.healthyfish.POJO.BeanDepartmentInfo" />
+
 
     </list>
 
