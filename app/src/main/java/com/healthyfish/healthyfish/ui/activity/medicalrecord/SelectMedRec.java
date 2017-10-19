@@ -184,9 +184,11 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
             case R.id.share_tv:
                 // 发送病历
                 Intent share = new Intent(SelectMedRec.this, HealthyChat.class);
-                share.putStringArrayListExtra("MdrKeyList", (ArrayList<String>) mListKeys);
+                //Log.e("病历夹", ""+mListKeys.size());
                 share.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-                startActivity(share);
+                share.putStringArrayListExtra("MdrKeyList", (ArrayList<String>) mListKeys);
+                setResult(RESULT_OK,share);//通知发送病历夹后更聊天界面的UI
+                finish();
                 break;
         }
     }

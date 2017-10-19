@@ -25,8 +25,8 @@ import java.util.List;
 public class CourseGridAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<String> listPaths;
-    private List<String> listUrls;
+    private List<String> listPaths;//本地路径
+    private List<String> listUrls;//网络路径
 
     public CourseGridAdapter(List<String> listPaths, Context mContext,List<String> listUrls) {
         this.listPaths = listPaths;
@@ -53,7 +53,7 @@ public class CourseGridAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_image, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_image, parent,false);
             imageView = (ImageView) convertView.findViewById(R.id.image);
             convertView.setTag(imageView);
             AutoUtils.auto(convertView);
@@ -63,23 +63,26 @@ public class CourseGridAdapter extends BaseAdapter {
         }
         //如果本地存在图片文件，直接加载本地的，否则加载网上的
 
+        try {
+            if (new File(getItem(position)).exists()) {
+                Glide.with(mContext)
+                        .load(new File(getItem(position)))
+                        .placeholder(R.mipmap.default_error)
+                        .error(R.mipmap.default_error)
+                        .centerCrop()
+                        .crossFade()
+                        .into(imageView);
+            } else {
+                Glide.with(mContext)
+                        .load(listUrls.get(position))
+                        .placeholder(R.mipmap.default_error)
+                        .error(R.mipmap.default_error)
+                        .centerCrop()
+                        .crossFade()
+                        .into(imageView);
+            }
+        }catch (Exception e){
 
-        if (new File(getItem(position)).exists()) {
-            Glide.with(mContext)
-                    .load(new File(getItem(position)))
-                    .placeholder(R.mipmap.default_error)
-                    .error(R.mipmap.default_error)
-                    .centerCrop()
-                    .crossFade()
-                    .into(imageView);
-        }else {
-            Glide.with(mContext)
-                    .load(listUrls.get(listUrls.size()-1-position))
-                    .placeholder(R.mipmap.default_error)
-                    .error(R.mipmap.default_error)
-                    .centerCrop()
-                    .crossFade()
-                    .into(imageView);
         }
         return convertView;
     }

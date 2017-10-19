@@ -49,6 +49,7 @@ import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDepartment;
 import com.healthyfish.healthyfish.ui.activity.medicalrecord.AllMedRec;
 import com.healthyfish.healthyfish.ui.activity.personal_center.MyNews;
 import com.healthyfish.healthyfish.ui.widget.AutoCardView;
+import com.healthyfish.healthyfish.utils.AutoLogin;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.MyToast;
@@ -58,13 +59,16 @@ import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -134,7 +138,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         EventBus.getDefault().register(this);
-        initAll();
+        String user = MySharedPrefUtil.getValue("user");
+        String sid = MySharedPrefUtil.getValue("sid");
+        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+            AutoLogin.autoLogin();
+            initAll();
+        }
         return rootView;
 
     }
@@ -270,7 +279,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             planList.setVisibility(View.GONE);
         }
 
-}
+    }
 
     //测试消息提示
     private void initInfoPrmopt(String string) {
@@ -533,7 +542,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void upDateMdrSystemInfo(final WeChatReceiveSysMdrMsg msg) {
-        Constants.NUMBER_SYS_INFO ++;
+        Constants.NUMBER_SYS_INFO++;
         initInfoPrmopt(String.valueOf(Constants.NUMBER_SYS_INFO));
     }
 

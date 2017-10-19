@@ -48,7 +48,6 @@ public class PersonalPointUtils {
             public void onCompleted() {
 
             }
-
             @Override
             public void onError(Throwable e) {
                 MyToast.showToast(context, "增加积分失败");
@@ -60,8 +59,7 @@ public class PersonalPointUtils {
                     resp = responseBody.string();
                     Log.i("LYQ", "增加积分请求返回：" + resp);
                     int code = Integer.parseInt(resp);
-                    if (code >= 0) {
-                        showMyToast(context);
+                    if (code >= 0) {                        showMyToast(context);
                         //Toast.makeText(context, "成功获得积分，当前积分：" + code, Toast.LENGTH_SHORT).show();
                     }
                     else if (code == -1) {
@@ -88,7 +86,9 @@ public class PersonalPointUtils {
 
             @Override
             public void onCompleted() {
+
                 EventBus.getDefault().post(new RefreshPointMsg(returnPoint));
+
             }
 
             @Override

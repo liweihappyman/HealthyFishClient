@@ -89,7 +89,6 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
     EditText diseaseInfo;
     @BindView(R.id.clinical_department)
     EditText clinicalDepartment;
-    private CourseOfDiseaseAdapter courseOfDiseaseAdapter;
     private BeanMedRec medRec = new BeanMedRec();
     private List<String> imagePaths = new ArrayList<>();
     private List<BeanCourseOfDisease> listCourseOfDiseases = new ArrayList<BeanCourseOfDisease>();
@@ -114,20 +113,20 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
     }
 
     //判断是点击item进来的还是点击新建病历夹进来的，并执行相应的初始化操作
-    // （从聊天界面进来的也是Constants.POSITION_MED_REC == -1)
+    // （从聊天界面进来的是Constants.POSITION_MED_REC == -2)
     private void judgeTypeAndInitDate() {
         if (Constants.POSITION_MED_REC == -1) {
             clinicalTime.setText(Utils1.getTime());
             SAVE_OR_UPDATE = "save";//标志位新建，直接保存
             medRec = new BeanMedRec();
 
-        } else if (Constants.POSITION_MED_REC == -2) {
+        } else if (Constants.POSITION_MED_REC == -2) {//从聊天界面点击病历进来的
             String key = getIntent().getStringExtra("MdrKey");
             List<BeanMedRec> list = DataSupport.where("key = ?", key).find(BeanMedRec.class);
             ID = list.get(0).getId();
             medRec = DataSupport.find(BeanMedRec.class, ID, true);
             initdata();
-        } else {
+        } else {//点击病历列表进来的
             ID = getIntent().getIntExtra("id", 0);
             medRec = DataSupport.find(BeanMedRec.class, ID, true);
             initdata();
@@ -233,6 +232,9 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             }
         }).show();
     }
+    /**
+     * 点击事件
+     */
 
     @Override
     public void onClick(View v) {
@@ -307,18 +309,6 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
      * 删除网络数据
      */
     private void networkReqDelMedRec() {
-        //删除多个用
-//        String userStr = MySharedPrefUtil.getValue("user");
-//        BeanUserLoginReq beanUserLogin = JSON.parseObject(userStr, BeanUserLoginReq.class);
-//
-//        final BeanBaseKeysRemReq beanBaseKeysRemReq = new BeanBaseKeysRemReq();
-//        StringBuilder prefix = new StringBuilder("medRec_");
-//        prefix.append(beanUserLogin.getMobileNo());//获取当前用户的手机号
-//        //Log.i("电子病历","prefix:"+prefix.toString());
-//        beanBaseKeysRemReq.setPrefix(prefix.toString());
-//        beanBaseKeysRemReq.getKeyList().add(medRec.getKey());
-//        Log.i("keyiiiii", "addkey" + beanBaseKeysRemReq.getKeyList().get(0));
-
         BeanBaseKeyRemReq baseKeyRemReq = new BeanBaseKeyRemReq();//删除单个
         baseKeyRemReq.setKey(medRec.getKey());
         RetrofitManagerUtils.getInstance(NewMedRec.this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(baseKeyRemReq), new Subscriber<ResponseBody>() {
@@ -350,21 +340,6 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
                             Toast.makeText(NewMedRec.this, "删除失败", Toast.LENGTH_SHORT).show();
                         }
                     }
-        //删除多个用
-//                    if (str != null) {
-//                        BeanBaseKeysRemResp beanBaseKeysRemResp = JSON.parseObject(str, BeanBaseKeysRemResp.class);
-//                        if (beanBaseKeysRemResp.getCode() == 0) {
-//                            if (beanBaseKeysRemResp.getFailedList().size() > 0) {
-//                                Toast.makeText(NewMedRec.this, "删除失败", Toast.LENGTH_SHORT).show();
-//                                Log.i("电子病历", "删除失败的key" + beanBaseKeysRemResp.getFailedList().toString());
-//                            } else {
-//                                Toast.makeText(NewMedRec.this, "删除成功", Toast.LENGTH_SHORT).show();
-//                                medRec.delete();
-//                            }
-//                        } else {
-//                            Toast.makeText(NewMedRec.this, "删除失败", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -562,7 +537,7 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             name.setText("姓名： " + medRec.getName());
         }
         if (medRec.getGender() != null && !medRec.getGender().trim().equals("null") && !medRec.getGender().equals("")) {
-            patientInfo.setText(medRec.getGender());
+                patientInfo.setText(medRec.getGender());
         }
     }
 

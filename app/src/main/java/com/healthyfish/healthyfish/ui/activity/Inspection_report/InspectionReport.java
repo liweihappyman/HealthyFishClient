@@ -27,6 +27,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,10 +61,13 @@ public class InspectionReport extends BaseActivity {
     private void initFromDB() {
         mList.clear();
         mList = DataSupport.findAll(BeanInspectionReport.class);
-        LinearLayoutManager lmg = new LinearLayoutManager(this);
-        recyclerview.setLayoutManager(lmg);
-        adapter = new InspectionReportAdapter(this, mList);
-        recyclerview.setAdapter(adapter);
+        if (mList.size()>0) {
+            Collections.reverse(mList);//倒序
+            LinearLayoutManager lmg = new LinearLayoutManager(this);
+            recyclerview.setLayoutManager(lmg);
+            adapter = new InspectionReportAdapter(this, mList);
+            recyclerview.setAdapter(adapter);
+        }
     }
 
     private void RequestForNetWorkData() {

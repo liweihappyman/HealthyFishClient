@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 描述：检查报告
+ * 描述：检查报告（化验单）
  * 作者：WKJ on 2017/8/1.
  * 邮箱：
  * 编辑：WKJ

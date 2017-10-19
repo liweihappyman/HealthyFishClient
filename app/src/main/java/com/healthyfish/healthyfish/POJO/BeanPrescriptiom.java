@@ -5,7 +5,7 @@ import org.litepal.crud.DataSupport;
 import java.util.List;
 
 /**
- * 描述：
+ * 描述：电子处方bean
  * 作者：WKJ on 2017/7/21.
  * 邮箱：
  * 编辑：WKJ
