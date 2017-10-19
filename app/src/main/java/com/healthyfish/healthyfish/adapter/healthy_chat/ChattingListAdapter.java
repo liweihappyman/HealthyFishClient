@@ -422,7 +422,7 @@ public class ChattingListAdapter extends BaseAdapter {
     public String getLocalUserImg() {
         String key = "info_" + uid;
         List<BeanPersonalInformation> personalInformationList = DataSupport.where("key = ?", key).find(BeanPersonalInformation.class);
-        if (personalInformationList != null) {
+        if (personalInformationList.size()>0) {
             return HttpHealthyFishyUrl + personalInformationList.get(0).getImgUrl();
         }
         return String.valueOf(R.mipmap.logo_240);

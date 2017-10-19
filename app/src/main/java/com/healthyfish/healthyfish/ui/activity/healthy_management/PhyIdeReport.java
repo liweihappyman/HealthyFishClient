@@ -287,6 +287,9 @@ public class PhyIdeReport extends BaseActivity {
         beanMedRec.setDiseaseInfo(physicals.get(0).getTitle()+"质");
         beanMedRec.setClinicalTime(Utils1.getTime());
         beanMedRec.setBirthday(birthDate);
+        beanMedRec.setOccupation(MySharedPrefUtil.getValue("patientOccupation"));
+        beanMedRec.setIDno(MySharedPrefUtil.getValue("patientIdNumber"));
+        beanMedRec.setMarital_status(MySharedPrefUtil.getValue("patientMaritalStatus"));
         beanMedRec.save();
         if (imagePathList.size()>0){
             BeanCourseOfDisease beanCourseOfDisease = new BeanCourseOfDisease();

@@ -84,16 +84,7 @@ public class PersonalPointUtils {
 
             @Override
             public void onCompleted() {
-                int code = Integer.parseInt(resp);
-                if (code >= 0) {
-                    //Toast.makeText(context, "当前积分：" + code, Toast.LENGTH_SHORT).show();
-                    returnPoint = resp;
-                }
-                else if (code == -1) {
-                    //Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
-                } else {
 
-                }
             }
 
             @Override
@@ -106,6 +97,16 @@ public class PersonalPointUtils {
                 try {
                     resp = responseBody.string();
                     Log.i("LYQ", "查询积分请求返回：" + resp);
+                    int code = Integer.parseInt(resp);
+                    if (code >= 0) {
+                        //Toast.makeText(context, "当前积分：" + code, Toast.LENGTH_SHORT).show();
+                        returnPoint = resp;
+                    }
+                    else if (code == -1) {
+                        //Toast.makeText(context,"用户未登录，获取积分失败",Toast.LENGTH_SHORT).show();
+                    } else {
+
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

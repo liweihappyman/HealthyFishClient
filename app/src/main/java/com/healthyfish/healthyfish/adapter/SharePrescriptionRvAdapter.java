@@ -7,21 +7,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONException;
-import com.healthyfish.healthyfish.POJO.BeanPrescription;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.healthyfish.healthyfish.POJO.BeanPresList;
 import com.healthyfish.healthyfish.POJO.BeanPrescriptiom;
-
 import com.healthyfish.healthyfish.R;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.utils.AutoUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,17 +35,29 @@ import butterknife.ButterKnife;
  * 编辑：WKJ
  */
 
-public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAdapter.ViewHolder> {
+public class SharePrescriptionRvAdapter extends RecyclerView.Adapter<SharePrescriptionRvAdapter.ViewHolder> {
     private Context mContext;
     private List<BeanPrescriptiom> list;
     private Toolbar toolbar;
     BeanPresList bean = new BeanPresList();
+    private SelPrescriptionListener myListener;
+    private List<Map<String,Boolean>> listIsSelect;
 
 
-    public PrescriptionRvAdapter(Context mContext, List<BeanPrescriptiom> list, Toolbar toolbar) {
+    public SharePrescriptionRvAdapter(Context mContext, List<BeanPrescriptiom> list, List<Map<String,Boolean>> listIsSelect,
+                                      Toolbar toolbar,SelPrescriptionListener myListener) {
         this.mContext = mContext;
         this.list = list;
         this.toolbar = toolbar;
+        this.listIsSelect = listIsSelect;
+        this.myListener = myListener;
+    }
+
+    public interface SelPrescriptionListener {
+        /**
+         * 回调函数，用于在Dialog的监听事件触发后刷新Activity的UI显示
+         */
+        public void getSelKeys(List<String> listKeys);
     }
 
     @Override
@@ -52,12 +65,12 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
         if (mContext == null) {
             mContext = parent.getContext();
         }
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_prescription, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_share_prescription, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         BeanPrescriptiom item = list.get(position);
         holder.ipresDiagnosisName.setText(item.getDIAGNOSIS_NAME());
         String originalWriteTime = item.getWRITE_TIME();
@@ -67,6 +80,21 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
         holder.ipresAge.setText(item.getAGE());
         holder.ipresDeptOperator.setText(item.getDEPT_NAME() + "  "+item.getPRESCRIBE_OPERATOR());
         holder.ipresPerscribeStatus.setText(item.getRESCRIBE_STATUS());
+        holder.selectedCheckBox.setChecked(listIsSelect.get(position).get("isSelect"));
+
+        holder.selectedCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listIsSelect.get(position).get("isSelect")) {
+                    listIsSelect.get(position).put("isSelect",false);
+                } else {
+                    listIsSelect.get(position).put("isSelect",true);
+                }
+                traverseData();
+            }
+        });
+
+
         /**
          * ITEM_CLASS   存放的是  List<BeanPrescriptiom.PresListBean> preslist的JsonString对象
          */
@@ -98,6 +126,18 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
 
     }
 
+    //遍历选出选中的数据的key，在接口的另一边通过实现接口的方法获得key，从数据库选出相应key的数据
+    private void traverseData() {
+        List<String> selectData = new ArrayList<>();
+        for (int i = 0; i < listIsSelect.size(); i++) {
+            if (listIsSelect.get(i).get("isSelect")) {
+                //获取被选中的病历夹的唯一标识
+                selectData.add(list.get(i).getKey());
+            }
+        }
+        myListener.getSelKeys(selectData);
+    }
+
     @Override
     public int getItemCount() {
         return list.size();
@@ -124,6 +164,8 @@ public class PrescriptionRvAdapter extends RecyclerView.Adapter<PrescriptionRvAd
         ImageView right;
         @BindView(R.id.drug_name_layout)
         AutoLinearLayout drugNameLayout;
+        @BindView(R.id.selected)
+        CheckBox selectedCheckBox;
 
         public ViewHolder(View itemView) {
             super(itemView);

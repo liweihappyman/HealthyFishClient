@@ -218,12 +218,6 @@ public class CreateCourse extends BaseActivity implements View.OnClickListener, 
         if (Constants.POSITION_COURSE != -1) {//每次更新必须重新关联
             courseOfDisease.setBeanMedRec(medRec);//关联，medRec必须是数据库已经存在的数据对象
             courseOfDisease.setImgPaths(imagePaths);
-            String g = courseOfDisease.getImgPaths().toString();
-            //Log.i("保存前路径","路径"+g);
-            //更新操作
-            //经测试，当图片路径从有到无的时候，更新失败，这里直接用保存了，
-            // 因为courseOfDisease对象是从数据库读取的，所以执行save就是在原来的基础上更新
-            //courseOfDisease.update(courseOfDisease.getId());
             courseOfDisease.save();
             //如果有图片则开启服务上传图片
             if (imagePaths.size() > 0) {
@@ -231,12 +225,6 @@ public class CreateCourse extends BaseActivity implements View.OnClickListener, 
                 startUploadImages.putExtra("messageToService", new MessageToServise(medRec.getId(), courseOfDisease.getId(), imagePaths));
                 startService(startUploadImages);
             }
-            //测试查看保存后的路径
-//            BeanMedRec beanMedRec= DataSupport.find(BeanMedRec.class, NewMedRec.ID, true);
-//            BeanCourseOfDisease courseOfDisease = beanMedRec.getListCourseOfDisease().get(Constants.POSITION_COURSE);
-//            String string = courseOfDisease.getImgPaths().toString();
-//            String s= courseOfDisease.getImgUrls().toString();
-//            Log.i("保存后路径","路径"+string+"wang"+s);
             //设置intent数据，并跳转
             Intent intent = new Intent(CreateCourse.this, NewMedRec.class);
             intent.putExtra("updateCourse", courseOfDisease);
@@ -400,7 +388,8 @@ public class CreateCourse extends BaseActivity implements View.OnClickListener, 
      * 将预览时删除的图片的路径从courseOfDisease.getImgUrls()中去掉
      * （即从存放网络路径的list中去掉，这一步很关键，前面这个路径要用到，所以必须同步）
      *
-     * @param data 预览结束回传的数据
+     * @param data 预览结束回传的数据，该方法有待完善
+     *
      */
     private void removeUrls(Intent data) {
         imagePaths.clear();
@@ -413,6 +402,7 @@ public class CreateCourse extends BaseActivity implements View.OnClickListener, 
                 }
             }
         }
+
         courseOfDisease.getImgUrls().clear();
         courseOfDisease.setImgUrls(temp);
     }

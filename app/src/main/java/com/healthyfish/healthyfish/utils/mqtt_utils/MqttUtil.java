@@ -624,7 +624,13 @@ class MqttMsgSystemInfo {
                         BeanMedRec beanMedRec = JSON.parseObject(object.getValue(), BeanMedRec.class);
                         beanMedRec.setKey(key);
                         if (!DataSupport.where("key = ?", key).find(BeanMedRec.class).isEmpty()) {
-                            beanMedRec.updateAll("key = ?", key);
+                            List<BeanMedRec> listBeanMedRec = DataSupport.where("key = ?", key).find(BeanMedRec.class);
+                            listBeanMedRec.get(0).delete();
+                            beanMedRec.save();
+                            //beanMedRec.updateAll("key = ?", key);
+                        }
+                        else {
+                            beanMedRec.save();
                         }
                         List<BeanCourseOfDisease> courseOfDiseaseList = beanMedRec.getListCourseOfDisease();
                         for (BeanCourseOfDisease courseOfDisease : courseOfDiseaseList) {
@@ -653,6 +659,7 @@ class MqttMsgSystemInfo {
             }
         });
     }
+
 
 }
 

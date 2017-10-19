@@ -30,6 +30,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -154,11 +155,12 @@ public class MyPrescription extends BaseActivity {
      * 从数据库加载
      */
     private void initDataFromDB() {
-        list = DataSupport.findAll(BeanPrescriptiom.class);
-        LinearLayoutManager lmg = new LinearLayoutManager(this);
-        rvPrescription.setLayoutManager(lmg);
-        adapter = new PrescriptionRvAdapter(this, list, toolbar);
-        rvPrescription.setAdapter(adapter);
+            list = DataSupport.findAll(BeanPrescriptiom.class);
+            Collections.reverse(list);
+            LinearLayoutManager lmg = new LinearLayoutManager(this);
+            rvPrescription.setLayoutManager(lmg);
+            adapter = new PrescriptionRvAdapter(this, list, toolbar);
+            rvPrescription.setAdapter(adapter);
     }
 
     /**

@@ -16,7 +16,7 @@
         <mapping class="com.healthyfish.healthyfish.POJO.BeanVisitingPerson"/>
         <!--用户已关注医生列表-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanConcernList"/>
-        <!--检查报告-->
+        <!--电子处方-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanPrescriptiom"/>
         <!--个人信息表-->
         <mapping class="com.healthyfish.healthyfish.POJO.BeanPersonalInformation"/>
