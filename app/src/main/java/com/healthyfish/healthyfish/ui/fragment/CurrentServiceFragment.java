@@ -177,6 +177,12 @@ public class CurrentServiceFragment extends Fragment {
                         case "m":
                             msgType = "「病历消息」";
                             break;
+                        case "r":
+                            msgType = "「化验单消息」";
+                            break;
+                        case "p":
+                            msgType = "「处方消息」";
+                            break;
                         default:
                             msgType = "「消息」";
                             break;

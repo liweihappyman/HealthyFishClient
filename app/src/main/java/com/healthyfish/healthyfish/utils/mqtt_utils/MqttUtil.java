@@ -298,8 +298,13 @@ public class MqttUtil {
                 case "i":
                     bs.write((bean.getType() + bean.getImgUrl()).getBytes());
                     break;
-                // TODO: 2017/9/13 发送病历
                 case "m":
+                    bs.write((bean.getType() + bean.getContent()).getBytes());
+                    break;
+                case "r":
+                    bs.write((bean.getType() + bean.getContent()).getBytes());
+                    break;
+                case "p":
                     bs.write((bean.getType() + bean.getContent()).getBytes());
                     break;
                 case "$":

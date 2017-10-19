@@ -86,6 +86,9 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
     private static final String MQTT_SEND_IMG_TYPE = "i";
     public static final String MQTT_SEND_TXT_TYPE = "t";
     public static final String MQTT_SEND_MDR_TYPE = "m";
+    public static final String MQTT_SEND_REPT_TYPE = "r";
+    public static final String MQTT_SEND_PRES_TYPE = "p";
+
 
     private Toolbar toolbar;
     private ListView lvChat;
@@ -393,13 +396,26 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                     startService(startUploadImage);
                     // 通过MQTT发送图片的具体方法是onUploadImgUrl
                     break;
-                // TODO: 2017/9/15 完成发送病历
+                //  完成发送病历
                 case MQTT_SEND_MDR_TYPE:
                     bean.setType(mqttMsgType);
                     // UI添加消息
                     chattingListAdapter.addData(bean, true, false);
                     MqttUtil.sendTxt(bean);
-
+                    break;
+                //  完成发送化验单
+                case MQTT_SEND_REPT_TYPE:
+                    bean.setType(mqttMsgType);
+                    // UI添加消息
+                    chattingListAdapter.addData(bean, true, false);
+                    MqttUtil.sendTxt(bean);
+                    break;
+                //  完成发送处方
+                case MQTT_SEND_PRES_TYPE:
+                    bean.setType(mqttMsgType);
+                    // UI添加消息
+                    chattingListAdapter.addData(bean, true, false);
+                    MqttUtil.sendTxt(bean);
                     break;
                 default:
                     break;
@@ -536,7 +552,7 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                         refreshAdpater(imagePaths);
                     }
                     break;
-                case  REQUEST_SEND_MED_RED_CODE:
+                case REQUEST_SEND_MED_RED_CODE:
                     sendMdrKey(data);
                     break;
                 case REQUEST_SEND_REPORT_CODE:
@@ -550,28 +566,6 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
 
                 default:
                     break;
-            }
-        }
-    }
-
-    private void sendPrescriptionAndRefreshUI(Intent data) {
-        mListKeys = data.getStringArrayListExtra("prescriptionKeyList");
-        if (mListKeys != null) {
-            for (String key : mListKeys) {
-                Log.e("电子处方", ""+key);
-                //String msg = "[mdr]" + key;
-                //OnSendBtnClick(msg, MQTT_SEND_MDR_TYPE);
-            }
-        }
-    }
-
-    private void sendReportAndRefreshUI(Intent data) {
-        mListKeys = data.getStringArrayListExtra("reportKeyList");
-        if (mListKeys != null) {
-            for (String key : mListKeys) {
-                Log.e("化验单", ""+key);
-                //String msg = "[mdr]" + key;
-                //OnSendBtnClick(msg, MQTT_SEND_MDR_TYPE);
             }
         }
     }
@@ -619,19 +613,19 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                             // TODO: 2017/9/12 跳转到分享病历
                             Intent intent = new Intent(MyApplication.getContetxt(), SelectMedRec.class);
                             intent.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-                            startActivityForResult(intent,REQUEST_SEND_MED_RED_CODE);
+                            startActivityForResult(intent, REQUEST_SEND_MED_RED_CODE);
                             break;
                         case 4:
                             // TODO: 2017/9/12 跳转到分享化验单
-                            Intent sendReport= new Intent(MyApplication.getContetxt(), ShareReport.class);
+                            Intent sendReport = new Intent(MyApplication.getContetxt(), ShareReport.class);
                             sendReport.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-                            startActivityForResult(sendReport,REQUEST_SEND_REPORT_CODE);
+                            startActivityForResult(sendReport, REQUEST_SEND_REPORT_CODE);
                             break;
                         case 5:
                             // TODO: 2017/9/12 跳转到分享电子处方
-                            Intent sendPrescription= new Intent(MyApplication.getContetxt(), SharePrescription.class);
+                            Intent sendPrescription = new Intent(MyApplication.getContetxt(), SharePrescription.class);
                             sendPrescription.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-                            startActivityForResult(sendPrescription,REQUEST_SEND_PRESCRIPTION_CODE);
+                            startActivityForResult(sendPrescription, REQUEST_SEND_PRESCRIPTION_CODE);
                             break;
 
                         default:
@@ -667,6 +661,34 @@ public class HealthyChat extends BaseActivity implements FuncLayout.OnFuncKeyBoa
                 //Log.e("病历夹", ""+key);
                 String msg = "[mdr]" + key;
                 OnSendBtnClick(msg, MQTT_SEND_MDR_TYPE);
+            }
+        }
+    }
+
+    /**
+     * 发送处方Key信息
+     */
+    private void sendPrescriptionAndRefreshUI(Intent data) {
+        mListKeys = data.getStringArrayListExtra("prescriptionKeyList");
+        if (mListKeys != null) {
+            for (String key : mListKeys) {
+                Log.e("电子处方", "" + key);
+                String msg = "[pre]" + key;
+                OnSendBtnClick(msg, MQTT_SEND_PRES_TYPE);
+            }
+        }
+    }
+
+    /**
+     * 发送化验单Key信息
+     */
+    private void sendReportAndRefreshUI(Intent data) {
+        mListKeys = data.getStringArrayListExtra("reportKeyList");
+        if (mListKeys != null) {
+            for (String key : mListKeys) {
+                Log.e("化验单", "" + key);
+                String msg = "[rep]" + key;
+                OnSendBtnClick(msg, MQTT_SEND_REPT_TYPE);
             }
         }
     }
