@@ -178,10 +178,20 @@ public class WeekGridAdapter extends BaseAdapter {
         beanHospRegNumListReq.setDate(beanWeekAndDate.getDate());
         beanHospRegNumListReq.setType(Type);
 
+        String jsonStr = JSON.toJSONString(beanHospRegNumListReq);
+        Log.e("LYQ", "initData()jsonStr:" + jsonStr);
+
         RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospRegNumListReq), new Subscriber<ResponseBody>() {
             @Override
             public void onCompleted() {
-
+                if (timeList.isEmpty()) {
+                    loadingDialog.dismiss();
+                    MyToast.showToast(mContext, "该时间段已经没有号源啦！");
+                } else {
+                    loadingDialog.dismiss();
+                    showOptions(beanWeekAndDate);
+                    isShow = true;
+                }
             }
 
             @Override
@@ -206,15 +216,6 @@ public class WeekGridAdapter extends BaseAdapter {
                     timeList.add(AmOrPm + "：" + beanHospRegNumListRespItem.getHZS().substring(11, 16));
                     HospRegNumList.add(beanHospRegNumListRespItem);
                 }
-                if (timeList.isEmpty()) {
-                    loadingDialog.dismiss();
-                    MyToast.showToast(mContext, "该时间段已经没有号源啦！");
-                } else {
-                    loadingDialog.dismiss();
-                    showOptions(beanWeekAndDate);
-                    isShow = true;
-                }
-
                 Log.e("LYQ", str + "  ");
             }
         });
@@ -297,6 +298,7 @@ public class WeekGridAdapter extends BaseAdapter {
                 lp.alpha = 1f;
                 activity.getWindow().setAttributes(lp);
                 timeList.clear();
+                HospRegNumList.clear();
                 isShow = false;
             }
         });

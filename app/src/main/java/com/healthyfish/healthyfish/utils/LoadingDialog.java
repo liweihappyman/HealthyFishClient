@@ -27,11 +27,11 @@ public class LoadingDialog extends Dialog {
         show();//显示对话框
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode,KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            return true;
+//        }
+//        return false;
+//    }
 }

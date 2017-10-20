@@ -178,7 +178,7 @@ public class DepartmentDoctorList extends BaseActivity {
                             data.setDuties(beanHospDeptListRespItem.getREISTER_NAME());
                             data.setHospital(hospTxt);
                             data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
-                            data.setPrice(beanHospDeptListRespItem.getPRICE()+"元起");
+                            data.setPrice(beanHospDeptListRespItem.getPRICE()+"元");
                             mDoctorInfos.add(data);///用于展示医生信息用的list
                         }
                     }

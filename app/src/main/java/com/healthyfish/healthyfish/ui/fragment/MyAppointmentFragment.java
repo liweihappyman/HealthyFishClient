@@ -242,25 +242,7 @@ public class MyAppointmentFragment extends Fragment {
 
             @Override
             public void onCompleted() {
-                if (!TextUtils.isEmpty(appointmentResp)) {
-                    if (appointmentResp.substring(0, 1).equals("{")) {
-                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(appointmentResp, BeanBaseKeyGetResp.class);
-                        if (beanBaseKeyGetResp.getCode() == 0) {
-                            BeanHospRegisterReq beanHospRegisterReq = JSON.parseObject(beanBaseKeyGetResp.getValue(), BeanHospRegisterReq.class);
-                            beanMyAppointmentItem.setDoctorName(beanHospRegisterReq.getDoctTxt());
-                            beanMyAppointmentItem.setHospital(beanHospRegisterReq.getHospTxt());
-                            beanMyAppointmentItem.setVisitingPerson(beanHospRegisterReq.getName());
-                            beanMyAppointmentItem.setAppointmentTime(beanHospRegisterReq.getDateTxt());
-                            doctorInfoReq(beanMyAppointmentItem, beanHospRegisterReq.getHosp(), beanHospRegisterReq.getDept(), beanHospRegisterReq.getStaffNo());
-                        } else {
-                            MyToast.showToast(getActivity(), "获取挂号信息失败");
-                        }
-                    } else {
-                        MyToast.showToast(getActivity(), "获取挂号信息出错啦");
-                    }
-                } else {
-                    MyToast.showToast(getActivity(), "获取挂号信息出错");
-                }
+
 
 
             }
@@ -275,6 +257,25 @@ public class MyAppointmentFragment extends Fragment {
                 try {
                     appointmentResp = responseBody.string();
                     Log.i("LYQ", "appointmentResp:" + appointmentResp);
+                    if (!TextUtils.isEmpty(appointmentResp)) {
+                        if (appointmentResp.substring(0, 1).equals("{")) {
+                            BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(appointmentResp, BeanBaseKeyGetResp.class);
+                            if (beanBaseKeyGetResp.getCode() == 0) {
+                                BeanHospRegisterReq beanHospRegisterReq = JSON.parseObject(beanBaseKeyGetResp.getValue(), BeanHospRegisterReq.class);
+                                beanMyAppointmentItem.setDoctorName(beanHospRegisterReq.getDoctTxt());
+                                beanMyAppointmentItem.setHospital(beanHospRegisterReq.getHospTxt());
+                                beanMyAppointmentItem.setVisitingPerson(beanHospRegisterReq.getName());
+                                beanMyAppointmentItem.setAppointmentTime(beanHospRegisterReq.getDateTxt());
+                                doctorInfoReq(beanMyAppointmentItem, beanHospRegisterReq.getHosp(), beanHospRegisterReq.getDept(), beanHospRegisterReq.getStaffNo());
+                            } else {
+                                MyToast.showToast(getActivity(), "获取挂号信息失败");
+                            }
+                        } else {
+                            MyToast.showToast(getActivity(), "获取挂号信息出错啦");
+                        }
+                    } else {
+                        MyToast.showToast(getActivity(), "获取挂号信息出错");
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

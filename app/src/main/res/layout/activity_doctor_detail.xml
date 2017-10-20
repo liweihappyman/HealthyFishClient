@@ -6,76 +6,113 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail">
-    <include layout="@layout/toolbar"/>
-    <include layout="@layout/doctor_detail"/>
+
+    <include layout="@layout/toolbar" />
+
+    <include layout="@layout/doctor_detail" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="3px"
-        android:background="@color/color_divider"/>
+        android:background="@color/color_divider" />
+
     <TextView
-        android:gravity="center_vertical"
-        android:paddingLeft="50px"
-        android:text="选择预约时间"
         style="@style/content_title_text"
         android:layout_width="match_parent"
-        android:layout_height="100px" />
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="3px"
-        android:background="@color/color_divider"/>
-    <include layout="@layout/appointment_timepicker"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="3px"
-        android:background="@color/color_divider"/>
-    <com.zhy.autolayout.AutoLinearLayout
-        android:background="@color/color_white"
-        android:layout_marginTop="35px"
-        android:id="@+id/line_moreDoctorInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100px"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:paddingLeft="50px"
+        android:text="选择预约时间" />
 
-        <TextView
-            android:id="@+id/textView3"
-            style="@style/textSize_42"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/color_divider" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--<include layout="@layout/appointment_timepicker" />-->
+
+        <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13px"
-            android:layout_marginLeft="58px"
-            android:layout_marginTop="14px"
-            android:layout_weight="1"
-            android:text="医生详情"
-            android:textColor="@color/color_small_content" />
+            android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/cb_moreDoctorInfo"
-            android:layout_width="29px"
-            android:layout_height="29px"
-            android:layout_marginRight="50px"
-            android:focusable="false"
-            android:enabled="false"
-            android:background="@drawable/selector_more"
-            android:button="@null"
-            android:padding="50px" />
+            <include layout="@layout/appointment_timepicker" />
 
-    </com.zhy.autolayout.AutoLinearLayout>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="3px"
-        android:background="@color/color_divider"/>
-    <TextView
-        android:id="@+id/doctorInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_white"
-        android:paddingTop="20px"
-        android:paddingLeft="50px"
-        android:paddingRight="50px"
-        android:paddingBottom="20px"
-        android:maxLines="5"
-        android:ellipsize="end"
-        android:text="擅长：哈手机上爱到花开是骄傲的 啊说的话KJDIASDKHA 卜u 哦都急死啊地方爱哦费将爱哦放假哦啊法迪欧啊"/>
+            <ListView
+                android:id="@+id/lv_more_scheduling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30px"
+                android:divider="#00000000"
+                android:dividerHeight="20px" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="3px"
+                android:background="@color/color_divider" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/line_moreDoctorInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35px"
+                android:background="@color/color_white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    style="@style/textSize_42"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="13px"
+                    android:layout_marginLeft="58px"
+                    android:layout_marginTop="14px"
+                    android:layout_weight="1"
+                    android:text="医生详情"
+                    android:textColor="@color/color_small_content" />
+
+                <CheckBox
+                    android:id="@+id/cb_moreDoctorInfo"
+                    android:layout_width="29px"
+                    android:layout_height="29px"
+                    android:layout_marginRight="50px"
+                    android:background="@drawable/selector_more"
+                    android:button="@null"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:padding="50px" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="3px"
+                android:background="@color/color_divider" />
+
+            <TextView
+                android:id="@+id/doctorInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_white"
+                android:ellipsize="end"
+                android:maxLines="5"
+                android:paddingBottom="20px"
+                android:paddingLeft="50px"
+                android:paddingRight="50px"
+                android:paddingTop="20px"
+                android:text="擅长：" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </ScrollView>
 
 </com.zhy.autolayout.AutoLinearLayout>

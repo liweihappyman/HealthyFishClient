@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.healthyfish.healthyfish.POJO.BeanDepartmentInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
 import com.healthyfish.healthyfish.R;
@@ -26,6 +28,7 @@ import com.healthyfish.healthyfish.utils.DividerGridItemDecoration;
 import com.healthyfish.healthyfish.utils.MyRecyclerViewOnItemListener;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +69,7 @@ public class ChoiceDepartment extends BaseActivity {
         setContentView(R.layout.activity_choice_department);
         ButterKnife.bind(this);
         mContext = this;
-        initToolBar(toolbar,toolbarTitle,"选择科室");
+        initToolBar(toolbar, toolbarTitle, "选择科室");
         initRecycleView();
         rvListener();
         searchListener();
@@ -150,18 +153,23 @@ public class ChoiceDepartment extends BaseActivity {
                         String jsonStr = null;
                         try {
                             jsonStr = responseBody.string();
+                            Log.e("LYQ", "所有科室信息：" + jsonStr);
+                            List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr, List.class);
+                            for (JSONObject object : beanHospDeptListResp) {
+                                String jsonString = object.toJSONString();
+                                BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
+                                DeptList.add(beanHospDeptListRespItem);
+                                mDepartments.add(beanHospDeptListRespItem.getDEPT_NAME());
+                                mDepartmentIcons.add(icons[0]);
+                                //将科室信息保存到本地数据库
+                                BeanDepartmentInfo beanDepartmentInfo = new BeanDepartmentInfo();
+                                beanDepartmentInfo.setKey("lzzyy_" + beanHospDeptListRespItem.getDEPT_CODE());
+                                beanDepartmentInfo.setDepartmentName(beanHospDeptListRespItem.getDEPT_NAME());
+                                UpdateDepartmentInfoUtils.saveDepartmentInfo(beanDepartmentInfo);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr, List.class);
-                        for (JSONObject object : beanHospDeptListResp) {
-                            String jsonString = object.toJSONString();
-                            BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
-                            DeptList.add(beanHospDeptListRespItem);
-                            mDepartments.add(beanHospDeptListRespItem.getDEPT_NAME());
-                            mDepartmentIcons.add(icons[0]);
-                        }
-                        mRvAdapter.notifyDataSetChanged();
                     }
                 });
 

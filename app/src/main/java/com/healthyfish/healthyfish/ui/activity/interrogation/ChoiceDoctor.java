@@ -179,7 +179,7 @@ public class ChoiceDoctor extends BaseActivity {
                             data.setDuties(beanHospDeptDoctListRespItem.getREISTER_NAME());
                             data.setHospital(hospTxt);
                             data.setIntroduce(beanHospDeptDoctListRespItem.getWEB_INTRODUCE());
-                            data.setPrice(beanHospDeptDoctListRespItem.getPRICE()+"元起");
+                            data.setPrice(beanHospDeptDoctListRespItem.getPRICE()+"元");
                             mDoctorInfos.add(data);
                         }
                         mChoiceDoctorLvAdapter.notifyDataSetChanged();
