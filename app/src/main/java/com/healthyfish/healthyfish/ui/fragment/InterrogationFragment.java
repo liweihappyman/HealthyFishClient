@@ -20,6 +20,7 @@ import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InterrogationRvAdapter;
+import com.healthyfish.healthyfish.eventbus.RefreshMyAppointmentMsg;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -78,9 +79,13 @@ public class InterrogationFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void toMyAppointmentFragment(BeanMyAppointmentItem beanMyAppointmentItem) {
-        Log.i("LYQ", "MainActivity_setTab");
         vpInterrogationService.setCurrentItem(1);//挂号成功后通知跳转到我的挂号页面MyAppointmentFragment
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void toMyAppointmentFragment(RefreshMyAppointmentMsg refreshMyAppointmentMsg) {
+        vpInterrogationService.setCurrentItem(1);//从我的关注页面进去挂号成功后通知跳转到我的挂号页面MyAppointmentFragment
     }
 
     private void initTabLayout() {
