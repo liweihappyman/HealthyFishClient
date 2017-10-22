@@ -39,6 +39,7 @@ import com.healthyfish.healthyfish.adapter.HomePageHealthWorkShopAdapter;
 import com.healthyfish.healthyfish.adapter.WholeSchemeAdapter;
 import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.eventbus.NoticeMessage;
+import com.healthyfish.healthyfish.eventbus.RefresHomeMsg;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveSysMdrMsg;
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
 import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport;
@@ -130,6 +131,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private String url2 = "http://219.159.248.209/demo/TestServlet";
     final BeanSessionIdReq beanSessionIdReq = new BeanSessionIdReq();
     private HomePageHealthInfoAadpter healthInfoAdapter;
+    private boolean isRefresh = false;//是否已经加载过首页
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,11 +143,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         String user = MySharedPrefUtil.getValue("user");
         String sid = MySharedPrefUtil.getValue("sid");
         if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(sid)) {
+            isRefresh = true;
             AutoLogin.autoLogin();
             initAll();
         }
         return rootView;
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshHomeFragment(RefresHomeMsg refresHomeMsg) {
+        if (!isRefresh) {
+            initAll();
+        }
     }
 
     private void initAll() {

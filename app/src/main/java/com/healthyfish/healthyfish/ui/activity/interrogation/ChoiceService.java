@@ -353,12 +353,13 @@ public class ChoiceService extends BaseActivity {
             case R.id.btn_sendTheMind:
                 //跳转到送心意页面，需要传递医生标识
                 if (!TextUtils.isEmpty(uid)) {
-                    Intent intent = new Intent(this, SendMind.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name", doctorName);
-                    bundle.putString("imgUrl", imgDoctorUrl);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+//                    Intent intent = new Intent(this, SendMind.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("name", doctorName);
+//                    bundle.putString("imgUrl", imgDoctorUrl);
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
+                    MyToast.showToast(ChoiceService.this, "非常抱歉！暂未开通此功能");
                 } else {
                     MyToast.showToast(ChoiceService.this, "您还没有登录呦！请先登录");
                 }

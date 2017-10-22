@@ -17,6 +17,9 @@ import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanBaseKeyRemReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
+import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanMyConcernItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceService;
@@ -110,9 +113,7 @@ public class MyConcernLvAdapter extends BaseSwipeAdapter {
         holderDoctor.rlyDoctorInfoVisible.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ChoiceService.class);
-                intent.putExtra("BeanDoctorInfo", mList.get(position).getBeanDoctorInfo());
-                mContext.startActivity(intent);
+                updateDoctorInfo(mList.get(position).getBeanDoctorInfo());
 
             }
         });
@@ -132,6 +133,7 @@ public class MyConcernLvAdapter extends BaseSwipeAdapter {
             }
         });
     }
+
 
 
     public class HolderDoctor {
@@ -160,6 +162,11 @@ public class MyConcernLvAdapter extends BaseSwipeAdapter {
         }
     }
 
+    /**
+     * 取消关注操作
+     * @param holderDoctor
+     * @param position
+     */
     private void cancelConcern(final HolderDoctor holderDoctor, final int position) {
         String hosp = mList.get(position).getBeanDoctorInfo().getHosp();
         String dept = mList.get(position).getBeanDoctorInfo().getDept();
@@ -206,6 +213,54 @@ public class MyConcernLvAdapter extends BaseSwipeAdapter {
             }
         });
 
+    }
+
+    /**
+     * 更新该医生的信息以便跳转到选择服务页面（主要更新排班时间，之前保存的排班时间是过时的）
+     * @param beanDoctorInfo
+     */
+    private void updateDoctorInfo(final BeanDoctorInfo beanDoctorInfo) {
+        BeanHospDeptDoctInfoReq beanHospDeptDoctInfoReq = new BeanHospDeptDoctInfoReq();
+        beanHospDeptDoctInfoReq.setHosp(beanDoctorInfo.getHosp());
+        beanHospDeptDoctInfoReq.setDept(beanDoctorInfo.getDept());
+        beanHospDeptDoctInfoReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
+        Log.e("LYQ", "getDoctorTitle()请求体：" + JSON.toJSONString(beanHospDeptDoctInfoReq));
+        RetrofitManagerUtils.getInstance(mContext, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctInfoReq), new Subscriber<ResponseBody>() {
+            String strJson = "";
+            BeanDoctorInfo DoctorInfo = beanDoctorInfo;
+            @Override
+            public void onCompleted() {
+                Intent intent = new Intent(mContext, ChoiceService.class);
+                intent.putExtra("BeanDoctorInfo", beanDoctorInfo);
+                mContext.startActivity(intent);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("LYQ", "getDoctorTitle()响应出错：" + e.toString());
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                try {
+                    strJson = responseBody.string();
+                    Log.e("LYQ", "getDoctorTitle()响应：" + strJson);
+                    BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(strJson, BeanHospDeptDoctListRespItem.class);
+                    DoctorInfo.setDuties(beanHospDeptDoctListRespItem.getREISTER_NAME());
+                    DoctorInfo.setDOCTOR(beanHospDeptDoctListRespItem.getDOCTOR());
+                    DoctorInfo.setCLINIQUE_CODE(beanHospDeptDoctListRespItem.getCLINIQUE_CODE());
+                    DoctorInfo.setPrice(String.valueOf(beanHospDeptDoctListRespItem.getPRICE()));
+                    DoctorInfo.setName(beanHospDeptDoctListRespItem.getDOCTOR_NAME());
+                    DoctorInfo.setWORK_TYPE(beanHospDeptDoctListRespItem.getWORK_TYPE());
+                    DoctorInfo.setIntroduce(beanHospDeptDoctListRespItem.getWEB_INTRODUCE());
+                    DoctorInfo.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
+                    DoctorInfo.setPRE_ALLOW(beanHospDeptDoctListRespItem.getPRE_ALLOW());
+                    DoctorInfo.setSchdList(beanHospDeptDoctListRespItem.getSchdList());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

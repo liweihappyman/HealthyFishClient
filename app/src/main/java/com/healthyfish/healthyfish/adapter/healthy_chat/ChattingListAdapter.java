@@ -395,6 +395,60 @@ public class ChattingListAdapter extends BaseAdapter {
                 });
                 break;
 
+            case VIEW_TYPE_RIGHT_REPT:
+                final ViewHolder rightReptHolder;
+                if (convertView == null) {
+                    rightReptHolder = new ViewHolder();
+                    holderView = mInflater.inflate(R.layout.listitem_chat_right_text, null);
+                    holderView.setFocusable(true);
+                    rightReptHolder.iv_portrait = (ImageView) holderView.findViewById(R.id.iv_portrait);
+                    rightReptHolder.tv_content = (TextView) holderView.findViewById(R.id.tv_content);
+                    rightReptHolder.sendtime = (TextView) holderView.findViewById(R.id.sendtime);
+                    rightReptHolder.iv_loading = (ImageView) holderView.findViewById(R.id.iv_loading);
+                    rightReptHolder.iv_failure_send = (ImageView) holderView.findViewById(R.id.iv_failure_send);
+                    holderView.setTag(rightReptHolder);
+                    convertView = holderView;
+                }else {
+                    rightReptHolder = (ViewHolder) convertView.getTag();
+                }
+                disPlayRightReptView(position, convertView, rightReptHolder, bean);
+                // 点击病历内容跳转到化验单
+                rightReptHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //这里的key不用截取
+                        //跳转方法写在这
+                    }
+                });
+                break;
+
+            case VIEW_TYPE_RIGHT_PRES:
+                final ViewHolder rightPresHolder;
+                if (convertView == null) {
+                    rightPresHolder = new ViewHolder();
+                    holderView = mInflater.inflate(R.layout.listitem_chat_right_text, null);
+                    holderView.setFocusable(true);
+                    rightPresHolder.iv_portrait = (ImageView) holderView.findViewById(R.id.iv_portrait);
+                    rightPresHolder.tv_content = (TextView) holderView.findViewById(R.id.tv_content);
+                    rightPresHolder.sendtime = (TextView) holderView.findViewById(R.id.sendtime);
+                    rightPresHolder.iv_loading = (ImageView) holderView.findViewById(R.id.iv_loading);
+                    rightPresHolder.iv_failure_send = (ImageView) holderView.findViewById(R.id.iv_failure_send);
+                    holderView.setTag(rightPresHolder);
+                    convertView = holderView;
+                }else {
+                    rightPresHolder = (ViewHolder) convertView.getTag();
+                }
+                disPlayRightPresView(position, convertView, rightPresHolder, bean);
+                // 点击病历内容跳转到处方
+                rightPresHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //这里的key不用截取
+                        //跳转方法写在这
+                    }
+                });
+                break;
+
             case VIEW_TYPE_LEFT_MDR:
                 final ViewHolder leftMdrHolder;
                 if (convertView == null) {

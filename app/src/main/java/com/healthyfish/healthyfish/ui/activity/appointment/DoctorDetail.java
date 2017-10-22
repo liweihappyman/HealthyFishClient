@@ -12,11 +12,11 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanAppointmentDates;
@@ -24,24 +24,26 @@ import com.healthyfish.healthyfish.POJO.BeanBaseKeySetReq;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
 import com.healthyfish.healthyfish.POJO.BeanConcernList;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
+import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospDoctMoreSchdReq;
 import com.healthyfish.healthyfish.POJO.BeanKeyValue;
-import com.healthyfish.healthyfish.POJO.BeanListKeyValueResp;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
-import com.healthyfish.healthyfish.POJO.Test;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
+import com.healthyfish.healthyfish.adapter.MoreSchedulingAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime2;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime3;
 import com.healthyfish.healthyfish.utils.FixedSpeedScroller;
 import com.healthyfish.healthyfish.utils.MyToast;
+import com.healthyfish.healthyfish.utils.NestingUtils;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
-import com.nostra13.universalimageloader.utils.L;
 
 import org.litepal.crud.DataSupport;
 
@@ -104,6 +106,8 @@ public class DoctorDetail extends BaseActivity {
     ImageView third;
     @BindView(R.id.doctorInfo)
     TextView doctorInfo;
+    @BindView(R.id.lv_more_scheduling)
+    ListView lvMoreScheduling;
 
     private int mPosition = 0;//记录选择预约时间页面的位置
     private FixedSpeedScroller mScroller;
@@ -112,6 +116,7 @@ public class DoctorDetail extends BaseActivity {
     private FragmentTransaction ft;
 
     private BeanDoctorInfo beanDoctorInfo = new BeanDoctorInfo();
+    private List<BeanDoctorInfo> beanDoctorInfoList = new ArrayList<>();
 
     private boolean isAttention = false;//是否已经关注该医生
     private String uid;
@@ -130,7 +135,7 @@ public class DoctorDetail extends BaseActivity {
         uid = MyApplication.uid;
         fm = this.getSupportFragmentManager();
         ft = fm.beginTransaction();
-        //hospDoctMoreSchdReq();//正在测试的接口，用来获取该医生在其他医院的出诊时间
+        hospDoctMoreSchdReq();//获取该医生在其他医院的出诊时间
         tvAttentionListener();//关注操作
         initData();//展示医生信息
         try {
@@ -188,7 +193,7 @@ public class DoctorDetail extends BaseActivity {
                         if (strDate1.equals(strDate2)) {
                             mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "下午"));
                             i++;
-                        //如果不是同一天则判断当前时间段是上午还是下午，并将对应的时间段显示为可以预约
+                            //如果不是同一天则判断当前时间段是上午还是下午，并将对应的时间段显示为可以预约
                         } else {
                             if (schdList.get(i).split("_")[1].equals("1")) {
                                 mList.add(new BeanWeekAndDate(beanDoctorInfo, strDate1, "上午", "1"));
@@ -198,7 +203,7 @@ public class DoctorDetail extends BaseActivity {
                         }
                         calendar.add(Calendar.DAY_OF_YEAR, 1);
                         Today = calendar.getTime();
-                    //如果当前时间段的日期不属于当天，则将当前时间段的日期前的部分全部显示为不可预约
+                        //如果当前时间段的日期不属于当天，则将当前时间段的日期前的部分全部显示为不可预约
                     } else {
                         mList.add(new BeanWeekAndDate(beanDoctorInfo, strToday, "1", "1"));
                         calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -227,7 +232,7 @@ public class DoctorDetail extends BaseActivity {
                             }
                         }
                     }
-                //如果当前时间段是排班时间的最后一个
+                    //如果当前时间段是排班时间的最后一个
                 } else {
                     String strDate = schdList.get(i).split("_")[0];
                     String strToday = dateFormat.format(Today);
@@ -265,8 +270,13 @@ public class DoctorDetail extends BaseActivity {
                 }
             }
         }
+        String today = "";
+        if (!mList.isEmpty()) {
+            today = Utils1.getWeekFromStr(mList.get(0).getDate());
+        } else {
+            today = Utils1.getWeekFromStr(dateFormat.format(calendar.getTime()));//当没有排班时间的时候从当天开始全部显示不可预约
+        }
 
-        String today = Utils1.getWeekFromStr(mList.get(0).getDate());
         //判断第一个数据是一周的哪一天，在前面补相应的空位
         //确定是具体的星期几之后：
         // 1.先补相应的空位；
@@ -279,7 +289,7 @@ public class DoctorDetail extends BaseActivity {
                 firstSize = 7;
                 int num1 = 21 - mList.size();
                 mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
-                for (int i = 0; i < num1-1; i++) {
+                for (int i = 0; i < num1 - 1; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
                 }
@@ -291,7 +301,7 @@ public class DoctorDetail extends BaseActivity {
                 list1.add(new BeanWeekAndDate("星期一", null, "1", "1", true));//设置占位用的
                 int num2 = 20 - mList.size();
                 mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
-                for (int i = 0; i < num2-1; i++) {
+                for (int i = 0; i < num2 - 1; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
                 }
@@ -305,7 +315,7 @@ public class DoctorDetail extends BaseActivity {
                 list1.add(new BeanWeekAndDate("星期二", null, "1", "1", true));
                 int num3 = 19 - mList.size();
                 mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
-                for (int i = 0; i < num3-1; i++) {
+                for (int i = 0; i < num3 - 1; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
                 }
@@ -319,7 +329,7 @@ public class DoctorDetail extends BaseActivity {
                 list1.add(new BeanWeekAndDate("星期三", null, "1", "1", true));
                 int num4 = 18 - mList.size();
                 mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
-                for (int i = 0; i < num4-1; i++) {
+                for (int i = 0; i < num4 - 1; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
                 }
@@ -334,7 +344,7 @@ public class DoctorDetail extends BaseActivity {
                 list1.add(new BeanWeekAndDate("星期四", null, "1", "1", true));
                 int num5 = 17 - mList.size();
                 mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
-                for (int i = 0; i < num5-1; i++) {
+                for (int i = 0; i < num5 - 1; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
                 }
@@ -350,7 +360,7 @@ public class DoctorDetail extends BaseActivity {
                 list1.add(new BeanWeekAndDate("星期五", null, "1", "1", true));
                 int num6 = 16 - mList.size();
                 mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
-                for (int i = 0; i < num6-1; i++) {
+                for (int i = 0; i < num6 - 1; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
                 }
@@ -367,7 +377,7 @@ public class DoctorDetail extends BaseActivity {
                 list1.add(new BeanWeekAndDate("星期六", null, "1", "1", true));
                 int num7 = 15 - mList.size();
                 mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
-                for (int i = 0; i < num7-1; i++) {
+                for (int i = 0; i < num7 - 1; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     mList.add(new BeanWeekAndDate(dateFormat.format(calendar.getTime()), "1", "1"));
                 }
@@ -531,7 +541,7 @@ public class DoctorDetail extends BaseActivity {
     private void tvAttentionListener() {
         if (!TextUtils.isEmpty(uid)) {
             if (MyApplication.isFirstUpdateMyConcern) {
-                upDateMyConcern(uid);
+                //upDateMyConcern(uid);//此网络请求放在加载完医生他院出诊时间后执行，避免同时发起网络请求导致响应出错
             } else {
                 getMyConcernFromDB(uid);
             }
@@ -554,6 +564,7 @@ public class DoctorDetail extends BaseActivity {
 
     /**
      * 查找数据库用户是否关注该医生
+     *
      * @param uid
      */
     private void getMyConcernFromDB(String uid) {
@@ -656,38 +667,37 @@ public class DoctorDetail extends BaseActivity {
 
                     @Override
                     public void onCompleted() {
-                        if (jsonStr.substring(0, 1).equals("[")) {
-                            MyApplication.isFirstUpdateMyConcern = false;
-                            DataSupport.deleteAll(BeanConcernList.class);
-                            List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
-                            if (!concerns.isEmpty()) {
-                                for (String str : concerns) {
-                                    BeanConcernList beanConcernList = new BeanConcernList();
-                                    beanConcernList.setKey(str);
-                                    boolean isSave = beanConcernList.save();
-                                    if (!isSave) {
-                                        beanConcernList.save();
-                                    }
-                                }
-                            }
-                            getMyConcernFromDB(uid);
-
-                        } else {
-                            MyToast.showToast(DoctorDetail.this, "更新关注信息出错啦");
-                        }
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.i("LYQ", "挂号upDateMyConcern_onError:" + e.toString());
+
                     }
 
                     @Override
                     public void onNext(ResponseBody responseBody) {
                         try {
                             jsonStr = responseBody.string();
-                            Log.i("LYQ", "挂号关注列表响应：" + jsonStr);
+                            if (jsonStr.substring(0, 1).equals("[")) {
+                                MyApplication.isFirstUpdateMyConcern = false;
+                                DataSupport.deleteAll(BeanConcernList.class);
+                                List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
+                                if (!concerns.isEmpty()) {
+                                    for (String str : concerns) {
+                                        BeanConcernList beanConcernList = new BeanConcernList();
+                                        beanConcernList.setKey(str);
+                                        boolean isSave = beanConcernList.save();
+                                        if (!isSave) {
+                                            beanConcernList.save();
+                                        }
+                                    }
+                                }
+                                getMyConcernFromDB(uid);
+
+                            } else {
+                                MyToast.showToast(DoctorDetail.this, "更新关注信息出错啦");
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -702,46 +712,105 @@ public class DoctorDetail extends BaseActivity {
      */
     private void hospDoctMoreSchdReq() {
         final BeanHospDoctMoreSchdReq beanHospDoctMoreSchdReq = new BeanHospDoctMoreSchdReq();
-        //beanHospDoctMoreSchdReq.setHosp("lzzyy1");
-        //beanHospDoctMoreSchdReq.setDept("");
         beanHospDoctMoreSchdReq.setHosp(beanDoctorInfo.getHosp());
         beanHospDoctMoreSchdReq.setDept(beanDoctorInfo.getDept());
-
         beanHospDoctMoreSchdReq.setStaffNo(String.valueOf(beanDoctorInfo.getSTAFF_NO()));
-        String strJson = JSON.toJSONString(beanHospDoctMoreSchdReq);
-        Log.i("LYQ", "BeanHospDoctMoreSchdReq请求：" + strJson);
 
         RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDoctMoreSchdReq), new Subscriber<ResponseBody>() {
             String strJson = "";
 
             @Override
             public void onCompleted() {
-                List<JSONObject> keyValueObjList = JSONArray.parseObject(strJson, List.class);
-                for (JSONObject jsonObject : keyValueObjList) {
-                    BeanKeyValue beanKeyValue = JSON.parseObject(JSON.toJSONString(jsonObject), BeanKeyValue.class);
-                    String key = beanKeyValue.getKey();
-                    String value = beanKeyValue.getValue();
-                    Log.i("LYQ", "排班时间：" + key +"  :  "+value);
-                }
 
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.i("LYQ", "DoctorDetail-hospDoctMoreSchdReq()-onError:" + e.toString());
+
             }
 
             @Override
             public void onNext(ResponseBody responseBody) {
                 try {
                     strJson = responseBody.string();
-                    //[{"key":"hosp_lzzyy_ds_186_27000","value":"[\\\"2017-09-29_1\\\"]"}]
-                    Log.i("LYQ", "hospDoctMoreSchdReq()响应："+strJson);
+                    Log.e("LYQ", "hospDoctMoreSchdReq()响应：" + strJson);
+                    List<BeanKeyValue> beanKeyValueList = JSONArray.parseArray(strJson, BeanKeyValue.class);
+                    getDoctorTitle(beanKeyValueList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-
     }
+
+    /**
+     * 获取该医生在其他医院的出诊时间
+     */
+    private void getDoctorTitle(final List<BeanKeyValue> doctDeptList) {
+        if (!doctDeptList.isEmpty()) {
+            BeanHospDeptDoctInfoReq beanHospDeptDoctInfoReq = new BeanHospDeptDoctInfoReq();
+            beanHospDeptDoctInfoReq.setHosp(doctDeptList.get(0).getKey().split("_")[1]);
+            beanHospDeptDoctInfoReq.setDept(doctDeptList.get(0).getKey().split("_")[4]);
+            beanHospDeptDoctInfoReq.setStaffNo(doctDeptList.get(0).getKey().split("_")[3]);
+
+            RetrofitManagerUtils.getInstance(this, null).getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanHospDeptDoctInfoReq), new Subscriber<ResponseBody>() {
+                String strJson = "";
+
+                @Override
+                public void onCompleted() {
+                    doctDeptList.remove(0);
+                    getDoctorTitle(doctDeptList);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    doctDeptList.remove(0);
+                    getDoctorTitle(doctDeptList);
+                }
+
+                @Override
+                public void onNext(ResponseBody responseBody) {
+                    try {
+                        strJson = responseBody.string();
+                        Log.e("LYQ", "getDoctorTitle()响应：" + strJson);
+                        BeanHospDeptDoctListRespItem beanHospDeptDoctListRespItem = JSON.parseObject(strJson, BeanHospDeptDoctListRespItem.class);
+                        BeanDoctorInfo doctInfo = new BeanDoctorInfo();
+                        //从数据库查找科室信息
+                        String hospDept = UpdateDepartmentInfoUtils.findDepartmentInfo(doctDeptList.get(0).getKey().split("_")[1], doctDeptList.get(0).getKey().split("_")[4]);
+
+                        doctInfo.setHosp(doctDeptList.get(0).getKey().split("_")[1]);
+                        doctInfo.setHospital(hospDept.split("_")[0]);
+                        doctInfo.setDept(doctDeptList.get(0).getKey().split("_")[4]);
+                        doctInfo.setDepartment(hospDept.split("_")[1]);
+
+                        doctInfo.setSTAFF_NO(Integer.parseInt(doctDeptList.get(0).getKey().split("_")[3]));
+                        doctInfo.setName(beanHospDeptDoctListRespItem.getDOCTOR_NAME());
+                        doctInfo.setDOCTOR(beanHospDeptDoctListRespItem.getDOCTOR());
+                        doctInfo.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
+                        doctInfo.setDuties(beanHospDeptDoctListRespItem.getREISTER_NAME());
+                        doctInfo.setCLINIQUE_CODE(beanHospDeptDoctListRespItem.getCLINIQUE_CODE());
+                        doctInfo.setPrice(String.valueOf(beanHospDeptDoctListRespItem.getPRICE()));
+                        doctInfo.setIntroduce(beanHospDeptDoctListRespItem.getWEB_INTRODUCE());
+                        doctInfo.setWORK_TYPE(beanHospDeptDoctListRespItem.getWORK_TYPE());
+                        doctInfo.setPRE_ALLOW(beanHospDeptDoctListRespItem.getPRE_ALLOW());
+                        doctInfo.setSchdList(beanHospDeptDoctListRespItem.getSchdList());
+                        beanDoctorInfoList.add(doctInfo);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            if (MyApplication.isFirstUpdateMyConcern) {
+                upDateMyConcern(uid);//加载完他院出诊时间再更新关注列表，避免响应出错
+            }
+            if (!beanDoctorInfoList.isEmpty()) {
+                lvMoreScheduling.setAdapter(new MoreSchedulingAdapter(DoctorDetail.this, beanDoctorInfoList));
+                NestingUtils.setListViewHeightBasedOnChildren(lvMoreScheduling);
+                lvMoreScheduling.setVerticalScrollBarEnabled(true);
+            }
+        }
+    }
+
+
 }

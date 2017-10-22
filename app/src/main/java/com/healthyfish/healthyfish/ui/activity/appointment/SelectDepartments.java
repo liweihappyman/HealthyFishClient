@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.healthyfish.healthyfish.POJO.BeanDepartmentInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospRegisterReq;
@@ -23,6 +24,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ public class SelectDepartments extends BaseActivity {
     private BeanHospitalListRespItem beanHospitalListRespItem;
     private String hospID = "lzzyy";//默认
     private String hospName = "柳州市中医院";//默认
+    private final int[] icons = new int[]{R.mipmap.ic_chinese_medicine};//填充科室图标
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,6 +134,7 @@ public class SelectDepartments extends BaseActivity {
                         if (beanHospitalListRespItem == null) { //如果为空则表明不是通过点击选择医院进来的，所以展示所有的科室信息
                             for (BeanHospDeptListRespItem beanHospDeptListRespItem : HospDeptList) {
                                 map = new HashMap<String, Object>();
+                                map.put("image", icons[0]);
                                 map.put("dept", beanHospDeptListRespItem.getDEPT_CODE());
                                 map.put("dept_name", beanHospDeptListRespItem.getDEPT_NAME());
                                 data_list.add(map);
@@ -142,6 +146,7 @@ public class SelectDepartments extends BaseActivity {
                                 for (BeanHospDeptListRespItem beanHospDeptListRespItem : HospDeptList) {
                                     map = new HashMap<String, Object>();
                                     if (!beanHospDeptListRespItem.getDEPT_NAME().substring(0, 2).equals("东院")) {
+                                        map.put("image", icons[0]);
                                         map.put("dept", beanHospDeptListRespItem.getDEPT_CODE());
                                         map.put("dept_name", beanHospDeptListRespItem.getDEPT_NAME());
                                         data_list.add(map);
@@ -151,6 +156,7 @@ public class SelectDepartments extends BaseActivity {
                                 for (BeanHospDeptListRespItem beanHospDeptListRespItem : HospDeptList) {
                                     map = new HashMap<String, Object>();
                                     if (beanHospDeptListRespItem.getDEPT_NAME().substring(0, 2).equals("东院")) {
+                                        map.put("image", icons[0]);
                                         map.put("dept", beanHospDeptListRespItem.getDEPT_CODE());
                                         map.put("dept_name", beanHospDeptListRespItem.getDEPT_NAME());
                                         data_list.add(map);
@@ -172,14 +178,20 @@ public class SelectDepartments extends BaseActivity {
                         String jsonStr = null;
                         try {
                             jsonStr = responseBody.string();
+                            List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr, List.class);
+                            for (JSONObject object : beanHospDeptListResp) {
+                                String jsonString = object.toJSONString();
+                                BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
+                                HospDeptList.add(beanHospDeptListRespItem);
+                                //将医院科室信息保存到本地数据库
+                                BeanDepartmentInfo beanDepartmentInfo = new BeanDepartmentInfo();
+                                beanDepartmentInfo.setKey(hospID + "_" + beanHospDeptListRespItem.getDEPT_NAME());
+                                beanDepartmentInfo.setHospital(hospName);
+                                beanDepartmentInfo.setDepartmentName(beanHospDeptListRespItem.getDEPT_NAME());
+                                UpdateDepartmentInfoUtils.saveDepartmentInfo(beanDepartmentInfo);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
-                        List<JSONObject> beanHospDeptListResp = JSONArray.parseObject(jsonStr, List.class);
-                        for (JSONObject object : beanHospDeptListResp) {
-                            String jsonString = object.toJSONString();
-                            BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
-                            HospDeptList.add(beanHospDeptListRespItem);
                         }
                     }
                 });
