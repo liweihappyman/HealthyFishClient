@@ -121,11 +121,15 @@ public class NewMedRec extends BaseActivity implements View.OnClickListener {
             medRec = new BeanMedRec();
 
         } else if (Constants.POSITION_MED_REC == -2) {//从聊天界面点击病历进来的
-            String key = getIntent().getStringExtra("MdrKey");
-            List<BeanMedRec> list = DataSupport.where("key = ?", key).find(BeanMedRec.class);
-            ID = list.get(0).getId();
-            medRec = DataSupport.find(BeanMedRec.class, ID, true);
-            initdata();
+            try {
+                String key = getIntent().getStringExtra("MdrKey");
+                List<BeanMedRec> list = DataSupport.where("key = ?", key).find(BeanMedRec.class);
+                ID = list.get(0).getId();
+                medRec = DataSupport.find(BeanMedRec.class, ID, true);
+                initdata();
+            }catch (Exception e){
+
+            }
         } else {//点击病历列表进来的
             ID = getIntent().getIntExtra("id", 0);
             medRec = DataSupport.find(BeanMedRec.class, ID, true);

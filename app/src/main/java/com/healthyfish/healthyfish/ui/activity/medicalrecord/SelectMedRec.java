@@ -52,12 +52,12 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     TextView nameHospital;
     @BindView(R.id.skill)
     TextView skill;*/
-    @BindView(R.id.hide_icon)
-    ImageView hideIcon;
-    @BindView(R.id.hide_info)
-    ToggleButton hideInfo;
-    @BindView(R.id.allow)
-    ToggleButton allow;
+//    @BindView(R.id.hide_icon)
+//    ImageView hideIcon;
+//    @BindView(R.id.hide_info)
+//    ToggleButton hideInfo;
+//    @BindView(R.id.allow)
+//    ToggleButton allow;
     @BindView(R.id.all_select_cb)
     CheckBox allSelectCb;
     @BindView(R.id.select_med_rec_lv)
@@ -68,7 +68,7 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
     CircleImageView doctorPortrait;
     private BeanDoctorChatInfo beanDoctorChatInfo;//医生信息
     private List<BeanMedRec> list = new ArrayList<>();
-    private List<String> mListKeys;
+    private List<String> mListKeys = new ArrayList<>();
     private SelectMedRecAdapter adapter;
     // 医生头像
     private String mDoctorPortrait;
@@ -128,17 +128,17 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
 
     private void initListener() {
         shareTv.setOnClickListener(this);
-        hideIcon.setOnClickListener(this);
-        hideInfo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Toast.makeText(SelectMedRec.this, "选中", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(SelectMedRec.this, "未选中", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        hideIcon.setOnClickListener(this);
+//        hideInfo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//                    Toast.makeText(SelectMedRec.this, "选中", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(SelectMedRec.this, "未选中", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         allSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -146,12 +146,14 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
                 if (isCheck) {
                     for (int i = 0; i < list.size(); i++) {
                         list.get(i).setSelect(true);
+                        mListKeys.add(list.get(i).getKey());
                     }
 
                 } else {
                     if (!unselectAllFactor) {
                         for (int i = 0; i < list.size(); i++) {
                             list.get(i).setSelect(false);
+                            mListKeys.clear();
                         }
                     }
                 }
@@ -183,12 +185,16 @@ public class SelectMedRec extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.share_tv:
                 // 发送病历
-                Intent share = new Intent(SelectMedRec.this, HealthyChat.class);
-                //Log.e("病历夹", ""+mListKeys.size());
-                share.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
-                share.putStringArrayListExtra("MdrKeyList", (ArrayList<String>) mListKeys);
-                setResult(RESULT_OK,share);//通知发送病历夹后更聊天界面的UI
-                finish();
+                if (mListKeys.size()>0) {
+                    Intent share = new Intent(SelectMedRec.this, HealthyChat.class);
+                    //Log.e("病历夹", "" + mListKeys.size());
+                    share.putExtra("BeanDoctorChatInfo", beanDoctorChatInfo);
+                    share.putStringArrayListExtra("MdrKeyList", (ArrayList<String>) mListKeys);
+                    setResult(RESULT_OK, share);//通知发送病历夹后更聊天界面的UI
+                    finish();
+                }else {
+                    Toast.makeText(this,"还没有选择病历",Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
