@@ -21,6 +21,7 @@ import com.healthyfish.healthyfish.POJO.BeanUserLoginReq;
 import com.healthyfish.healthyfish.POJO.BeanUserRetrPresReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.PrescriptionRvAdapter;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.MySharedPrefUtil;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
@@ -131,20 +132,17 @@ public class MyPrescription extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.med_rec, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.med_rec, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
-            case R.id.del:
-
                 break;
         }
         return true;
@@ -155,12 +153,23 @@ public class MyPrescription extends BaseActivity {
      * 从数据库加载
      */
     private void initDataFromDB() {
+        String key = getIntent().getStringExtra("key");
+        if (!key.equals(Constants.FOR_LIST)){
+            if ( !DataSupport.where("key = ? ", key).find(BeanPrescriptiom.class).isEmpty()){
+                list = DataSupport.where("key = ? ", key).find(BeanPrescriptiom.class);
+                LinearLayoutManager lmg = new LinearLayoutManager(this);
+                rvPrescription.setLayoutManager(lmg);
+                adapter = new PrescriptionRvAdapter(this, list, toolbar);
+                rvPrescription.setAdapter(adapter);
+            }
+        }else if (key.equals(Constants.FOR_LIST)){
             list = DataSupport.findAll(BeanPrescriptiom.class);
             Collections.reverse(list);
             LinearLayoutManager lmg = new LinearLayoutManager(this);
             rvPrescription.setLayoutManager(lmg);
             adapter = new PrescriptionRvAdapter(this, list, toolbar);
             rvPrescription.setAdapter(adapter);
+        }
     }
 
     /**

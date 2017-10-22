@@ -19,6 +19,7 @@ import com.healthyfish.healthyfish.POJO.BeanInspectionReport;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.InspectionReportAdapter;
+import com.healthyfish.healthyfish.constant.Constants;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -60,13 +61,24 @@ public class InspectionReport extends BaseActivity {
      */
     private void initFromDB() {
         mList.clear();
-        mList = DataSupport.findAll(BeanInspectionReport.class);
-        if (mList.size()>0) {
-            Collections.reverse(mList);//倒序
-            LinearLayoutManager lmg = new LinearLayoutManager(this);
-            recyclerview.setLayoutManager(lmg);
-            adapter = new InspectionReportAdapter(this, mList);
-            recyclerview.setAdapter(adapter);
+        String key = getIntent().getStringExtra("key");
+        if (!key.equals(Constants.FOR_LIST)) {//从聊天界面跳转过来的key是真正的key
+            if (!DataSupport.where("key = ? ", key).find(BeanInspectionReport.class).isEmpty()) {
+                mList = DataSupport.where("key = ? ", key).find(BeanInspectionReport.class);
+                LinearLayoutManager lmg = new LinearLayoutManager(this);
+                recyclerview.setLayoutManager(lmg);
+                adapter = new InspectionReportAdapter(this, mList);
+                recyclerview.setAdapter(adapter);
+            }
+        } else if (key.equals(Constants.FOR_LIST)){
+            mList = DataSupport.findAll(BeanInspectionReport.class);
+            if (mList.size() > 0) {
+                Collections.reverse(mList);//倒序
+                LinearLayoutManager lmg = new LinearLayoutManager(this);
+                recyclerview.setLayoutManager(lmg);
+                adapter = new InspectionReportAdapter(this, mList);
+                recyclerview.setAdapter(adapter);
+            }
         }
     }
 
@@ -135,6 +147,7 @@ public class InspectionReport extends BaseActivity {
                 break;
             case R.id.prescrption:
                 Intent intent = new Intent(this, MyPrescription.class);
+                intent.putExtra("key", Constants.FOR_LIST);
                 startActivity(intent);
                 break;
         }
