@@ -2,6 +2,7 @@ package com.healthyfish.healthyfish.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.POJO.BeanBaseResp;
+import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanMyAppointmentItem;
 import com.healthyfish.healthyfish.POJO.BeanUserRegCancelReq;
 import com.healthyfish.healthyfish.R;
+import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
 import com.healthyfish.healthyfish.utils.MyToast;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
@@ -83,14 +86,45 @@ public class MyAppointmentLvAdapter extends BaseAdapter {
         Glide.with(mContext).load(HttpHealthyFishyUrl + appointmentList.get(position).getImgUrl()).error(R.mipmap.error).into(holder.civDoctor);
         holder.tvDoctorName.setText(appointmentList.get(position).getDoctorName());
         holder.tvRoomAndDuties.setText("诊室：" + appointmentList.get(position).getConsultationRoom() + "  " + appointmentList.get(position).getDuties());
-        holder.tvHospital.setText(appointmentList.get(position).getHospital());
+        holder.tvHospital.setText(appointmentList.get(position).getHospital() + " " + appointmentList.get(position).getDepartment());
         holder.tvAppointmentTime.setText("预约时间：" + appointmentList.get(position).getAppointmentTime());
         holder.tvVisitingPerson.setText("就诊人：" + appointmentList.get(position).getVisitingPerson());
+
+        if (appointmentList.get(position).isPast()) {
+            holder.btCancelAppointment.setText("重新\n挂号");
+        } else {
+            holder.btCancelAppointment.setText("取消\n挂号");
+        }
 
         holder.btCancelAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCancelDialog(position);
+                if (appointmentList.get(position).isPast()) {
+                    //前往选择预约时间再次挂号
+                    BeanDoctorInfo beanDoctorInfo = new BeanDoctorInfo();
+                    beanDoctorInfo.setHosp(appointmentList.get(position).getHosp());
+                    beanDoctorInfo.setHospital(appointmentList.get(position).getHospital());
+                    beanDoctorInfo.setDept(appointmentList.get(position).getDept());
+                    beanDoctorInfo.setDepartment(appointmentList.get(position).getDepartment());
+                    beanDoctorInfo.setName(appointmentList.get(position).getDoctorName());
+                    beanDoctorInfo.setDOCTOR(appointmentList.get(position).getDOCTOR());
+                    beanDoctorInfo.setImgUrl(appointmentList.get(position).getImgUrl());
+                    beanDoctorInfo.setDuties(appointmentList.get(position).getDuties());
+                    beanDoctorInfo.setIntroduce(appointmentList.get(position).getIntroduce());
+                    beanDoctorInfo.setSchdList(appointmentList.get(position).getSchdList());
+                    beanDoctorInfo.setWORK_TYPE(appointmentList.get(position).getWORK_TYPE());
+                    beanDoctorInfo.setPrice(appointmentList.get(position).getPrice());
+                    beanDoctorInfo.setPRE_ALLOW(appointmentList.get(position).getPRE_ALLOW());
+                    beanDoctorInfo.setCLINIQUE_CODE(Integer.parseInt(appointmentList.get(position).getConsultationRoom()));
+                    beanDoctorInfo.setSTAFF_NO(appointmentList.get(position).getSTAFF_NO());
+
+                    Intent intent = new Intent(mContext, DoctorDetail.class);
+                    intent.putExtra("BeanDoctorInfo", beanDoctorInfo); //将医生信息传递到下一页面
+                    mContext.startActivity(intent);
+                } else {
+                    //取消挂号
+                    showCancelDialog(position);
+                }
             }
         });
         return convertView;

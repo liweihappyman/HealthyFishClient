@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.healthyfish.healthyfish.MyApplication;
 import com.healthyfish.healthyfish.POJO.BeanAppointmentDates;
@@ -29,10 +28,8 @@ import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
 import com.healthyfish.healthyfish.POJO.BeanHospDoctMoreSchdReq;
 import com.healthyfish.healthyfish.POJO.BeanKeyValue;
-import com.healthyfish.healthyfish.POJO.BeanListKeyValueResp;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanWeekAndDate;
-import com.healthyfish.healthyfish.POJO.Test;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
 import com.healthyfish.healthyfish.adapter.MoreSchedulingAdapter;
@@ -47,7 +44,6 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
-import com.nostra13.universalimageloader.utils.L;
 
 import org.litepal.crud.DataSupport;
 
@@ -274,11 +270,13 @@ public class DoctorDetail extends BaseActivity {
                 }
             }
         }
-
-        if (mList.isEmpty()) {
-            return;
+        String today = "";
+        if (!mList.isEmpty()) {
+            today = Utils1.getWeekFromStr(mList.get(0).getDate());
+        } else {
+            today = Utils1.getWeekFromStr(dateFormat.format(calendar.getTime()));//当没有排班时间的时候从当天开始全部显示不可预约
         }
-        String today = Utils1.getWeekFromStr(mList.get(0).getDate());
+
         //判断第一个数据是一周的哪一天，在前面补相应的空位
         //确定是具体的星期几之后：
         // 1.先补相应的空位；
