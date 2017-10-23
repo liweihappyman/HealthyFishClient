@@ -24,6 +24,8 @@ public class Constants {
     // 健康咨询chat界面
     public static int EMOTICON_CLICK_TEXT = 1;
     public static int EMOTICON_CLICK_BIGIMAGE = 2;
+    //处方和化验单跳转标志
+    public static String  FOR_LIST = "forList";
 
     // 系统消息
     public static int NUMBER_SYS_INFO = 0;

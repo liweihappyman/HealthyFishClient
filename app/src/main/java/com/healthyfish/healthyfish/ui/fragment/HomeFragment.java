@@ -515,6 +515,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.fm_fm_inspection_report:
                 Intent toInspectionReport = new Intent(getActivity(), InspectionReport.class);
+                toInspectionReport.putExtra("key",Constants.FOR_LIST);
                 startActivity(toInspectionReport);
                 break;
 
