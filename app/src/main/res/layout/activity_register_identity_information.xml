@@ -47,7 +47,7 @@
 
     </com.zhy.autolayout.AutoLinearLayout>
 
-    <RadioGroup
+    <com.healthyfish.healthyfish.ui.widget.AutoRadioGroup
         android:id="@+id/rgp_gender"
         android:layout_width="504px"
         android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             android:button="@null"
             android:background="@drawable/selector_rbtn_female"/>
 
-    </RadioGroup>
+    </com.healthyfish.healthyfish.ui.widget.AutoRadioGroup>
 
     <Button
         android:id="@+id/btn_next"
