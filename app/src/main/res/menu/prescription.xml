@@ -4,7 +4,7 @@
 
     <item android:id="@+id/prescrption"
         android:title="我的处方"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
 
 </menu>
