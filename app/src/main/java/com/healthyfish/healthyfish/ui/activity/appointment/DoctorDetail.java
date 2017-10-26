@@ -1,5 +1,6 @@
 package com.healthyfish.healthyfish.ui.activity.appointment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.MainVpAdapter;
 import com.healthyfish.healthyfish.adapter.MoreSchedulingAdapter;
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
+import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceService;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime2;
 import com.healthyfish.healthyfish.ui.fragment.AppointmentTime3;
@@ -44,6 +47,7 @@ import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 import com.healthyfish.healthyfish.utils.Utils1;
+import com.zhy.autolayout.AutoLinearLayout;
 
 import org.litepal.crud.DataSupport;
 
@@ -108,6 +112,16 @@ public class DoctorDetail extends BaseActivity {
     TextView doctorInfo;
     @BindView(R.id.lv_more_scheduling)
     ListView lvMoreScheduling;
+    @BindView(R.id.tv_online)
+    TextView tvOnline;
+    @BindView(R.id.btn_to_interrogation)
+    Button btnToInterrogation;
+    @BindView(R.id.textView3)
+    TextView textView3;
+    @BindView(R.id.cb_moreDoctorInfo)
+    CheckBox cbMoreDoctorInfo;
+    @BindView(R.id.line_moreDoctorInfo)
+    AutoLinearLayout lineMoreDoctorInfo;
 
     private int mPosition = 0;//记录选择预约时间页面的位置
     private FixedSpeedScroller mScroller;
@@ -128,6 +142,7 @@ public class DoctorDetail extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_detail);
         ButterKnife.bind(this);
+        tvOnline.setVisibility(View.GONE);//该页面不显示在线状态
         if (getIntent().getSerializableExtra("BeanDoctorInfo") != null) {
             beanDoctorInfo = (BeanDoctorInfo) getIntent().getSerializableExtra("BeanDoctorInfo");
         }
@@ -495,7 +510,7 @@ public class DoctorDetail extends BaseActivity {
         third.setBackgroundResource(R.drawable.white_point_stroke);
     }
 
-    @OnClick({R.id.left, R.id.right})
+    @OnClick({R.id.left, R.id.right,R.id.btn_to_interrogation})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.left:
@@ -514,6 +529,16 @@ public class DoctorDetail extends BaseActivity {
                     setDirectionIndicator();
                     //mScroller.setmDuration(4* 100);
 
+                }
+                break;
+            case R.id.btn_to_interrogation:
+                //跳转到在线咨询选择服务页面
+                if (!TextUtils.isEmpty(uid)) {
+                    Intent intent1 = new Intent(this, ChoiceService.class);
+                    intent1.putExtra("BeanDoctorInfo", beanDoctorInfo);
+                    startActivity(intent1);
+                } else {
+                    MyToast.showToast(this, "您还没有登录呦！请先登录");
                 }
                 break;
         }
@@ -783,7 +808,8 @@ public class DoctorDetail extends BaseActivity {
                         doctInfo.setDept(doctDeptList.get(0).getKey().split("_")[4]);
                         doctInfo.setDepartment(hospDept.split("_")[1]);
 
-                        doctInfo.setSTAFF_NO(Integer.parseInt(doctDeptList.get(0).getKey().split("_")[3]));
+                        //doctInfo.setSTAFF_NO(Integer.parseInt(doctDeptList.get(0).getKey().split("_")[3]));
+                        doctInfo.setSTAFF_NO(doctDeptList.get(0).getKey().split("_")[3]);
                         doctInfo.setName(beanHospDeptDoctListRespItem.getDOCTOR_NAME());
                         doctInfo.setDOCTOR(beanHospDeptDoctListRespItem.getDOCTOR());
                         doctInfo.setImgUrl(beanHospDeptDoctListRespItem.getZHAOPIAN());
@@ -811,6 +837,4 @@ public class DoctorDetail extends BaseActivity {
             }
         }
     }
-
-
 }

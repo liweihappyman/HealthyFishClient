@@ -24,7 +24,8 @@ public class BeanDoctorInfo extends DataSupport implements Serializable{
 
     private String hosp;//医院编号"lzzyy"
     private String dept;//部门编号
-    private int STAFF_NO; //员工编号
+    private String STAFF_NO; //员工编号
+    //private int STAFF_NO; //员工编号
     private int CLINIQUE_CODE; //诊室
     private int WORK_TYPE; //
     private String DOCTOR; //挂号用的医生标识
@@ -101,12 +102,20 @@ public class BeanDoctorInfo extends DataSupport implements Serializable{
         this.price = price;
     }
 
-    public int getSTAFF_NO() {
+//    public int getSTAFF_NO() {
+//        return STAFF_NO;
+//    }
+//
+//    public void setSTAFF_NO(int STAFF_NO) {
+//        this.STAFF_NO = STAFF_NO;
+//    }
+
+    public String getSTAFF_NO() {
         return STAFF_NO;
     }
 
-    public void setSTAFF_NO(int STAFF_NO) {
-        this.STAFF_NO = STAFF_NO;
+    public void setSTAFF_NO(String sTAFF_NO) {
+        STAFF_NO = sTAFF_NO;
     }
 
     public int getCLINIQUE_CODE() {

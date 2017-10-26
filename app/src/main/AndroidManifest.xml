@@ -211,6 +211,8 @@
         <activity android:name=".ui.activity.appointment.SearchDoctor" />
         <activity android:name=".ui.activity.interrogation.ShareReport" />
         <activity android:name=".ui.activity.interrogation.SharePrescription"></activity>
+        <!--首页搜索结果页面-->
+        <activity android:name=".ui.activity.HomeSearchResult"/>
     </application>
 
 </manifest>

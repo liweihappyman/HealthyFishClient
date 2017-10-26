@@ -108,6 +108,7 @@ public class ConfirmReservationInformation extends BaseActivity {
         AutoLogin.autoLogin();//还是默默登录一遍好啊！
         initToolBar(toolbar, toolbarTitle, "确认信息");
         iniData();
+        getVisitingPersonInfo();
     }
 
     /**
@@ -313,6 +314,19 @@ public class ConfirmReservationInformation extends BaseActivity {
                 etVisitingCardNumber.setText(visitingPerson.getVisitingCard());
                 etPhoneNumber.setText(visitingPerson.getPhoneNumber());
             }
+        }
+    }
+
+    /**
+     * 从数据库过去就诊人信息
+     */
+    private void getVisitingPersonInfo() {
+        List<BeanVisitingPerson> List = DataSupport.findAll(BeanVisitingPerson.class);
+        if (!List.isEmpty()) {
+            etVisitingPersonName.setText(List.get(0).getVisitingPerson());
+            etIDNumber.setText(List.get(0).getIDCard());
+            etVisitingCardNumber.setText(List.get(0).getVisitingCard());
+            etPhoneNumber.setText(List.get(0).getPhoneNumber());
         }
     }
 }

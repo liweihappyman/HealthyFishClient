@@ -36,9 +36,13 @@
             android:layout_height="75px"
             android:layout_marginLeft="70px"
             android:background="@null"
-            android:singleLine="true"
+            android:maxLines="1"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
             android:textColor="@color/color_general_and_title"
-            android:textSize="35px" />
+            android:textSize="35px"
+            android:hint="搜索医生、疾病、服务、药典" />
+
     </com.zhy.autolayout.AutoRelativeLayout>
 
     <com.zhy.autolayout.AutoRelativeLayout

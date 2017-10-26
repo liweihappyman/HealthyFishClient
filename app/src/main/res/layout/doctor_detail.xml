@@ -25,14 +25,33 @@
             android:layout_marginLeft="54px"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_name"
-                style="@style/textSize_66"
-                android:layout_width="wrap_content"
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48px"
-                android:text="非凡"
-                android:textColor="@color/color_general_and_title" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    style="@style/textSize_66"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="非凡"
+                    android:textColor="@color/color_general_and_title" />
+
+                <TextView
+                    android:id="@+id/tv_online"
+                    style="@style/textSize_42"
+                    android:layout_width="100px"
+                    android:layout_height="60px"
+                    android:layout_marginRight="50px"
+                    android:background="@drawable/gray_1dp_rounded_rectangle"
+                    android:gravity="center"
+                    android:text="离线"
+                    android:textColor="@color/color_auxiliary_info" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
 
             <TextView
                 android:id="@+id/tv_DepartmentAndTitle"
@@ -79,11 +98,23 @@
                     android:layout_width="180px"
                     android:layout_height="72px"
                     android:layout_marginBottom="24px"
-                    android:layout_marginLeft="60px"
+                    android:layout_marginLeft="50px"
                     android:layout_marginTop="33px"
                     android:background="@drawable/selector_2dp_btn_color_from_white_to_secondary"
                     android:text="送心意"
                     android:textColor="@color/selector_text_color_from_secondary_to_white" />
+
+                <Button
+                    android:id="@+id/btn_to_interrogation"
+                    style="@style/textSize_42"
+                    android:layout_width="180px"
+                    android:layout_height="72px"
+                    android:layout_marginBottom="24px"
+                    android:layout_marginLeft="50px"
+                    android:layout_marginTop="33px"
+                    android:background="@drawable/selector_2dp_select_status_btn_color_from_white_to_priamry"
+                    android:text="在线咨询"
+                    android:textColor="@color/selector_text_color_from_priamry_to_white" />
 
 
             </com.zhy.autolayout.AutoLinearLayout>

@@ -12,9 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +32,9 @@ import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideResp;
 import com.healthyfish.healthyfish.POJO.BeanHomeImgSlideRespItem;
 import com.healthyfish.healthyfish.POJO.BeanItemNewsAbstract;
 import com.healthyfish.healthyfish.POJO.BeanListReq;
+import com.healthyfish.healthyfish.POJO.BeanSearchReq;
+import com.healthyfish.healthyfish.POJO.BeanSearchResp;
+import com.healthyfish.healthyfish.POJO.BeanSearchRespItem;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdReq;
 import com.healthyfish.healthyfish.POJO.BeanSessionIdResp;
 import com.healthyfish.healthyfish.POJO.ImMsgBean;
@@ -42,8 +47,10 @@ import com.healthyfish.healthyfish.eventbus.NoticeMessage;
 import com.healthyfish.healthyfish.eventbus.RefresHomeMsg;
 import com.healthyfish.healthyfish.eventbus.WeChatReceiveSysMdrMsg;
 import com.healthyfish.healthyfish.ui.activity.HealthNews;
+import com.healthyfish.healthyfish.ui.activity.HomeSearchResult;
 import com.healthyfish.healthyfish.ui.activity.Inspection_report.InspectionReport;
 import com.healthyfish.healthyfish.ui.activity.MoreHealthNews;
+import com.healthyfish.healthyfish.ui.activity.SearchResult;
 import com.healthyfish.healthyfish.ui.activity.appointment.AppointmentHome;
 import com.healthyfish.healthyfish.ui.activity.healthy_management.MainIndexHealthyManagement;
 import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceDepartment;
@@ -147,6 +154,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             AutoLogin.autoLogin();
             initAll();
         }
+        topbarSearchEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Intent intent = new Intent(getActivity(), HomeSearchResult.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("SEARCH_KEY", topbarSearchEt.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                return true;
+            }
+        });
         return rootView;
 
     }
@@ -421,6 +441,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     String jsonNews = null;
                                     try {
                                         jsonNews = responseBody.string();
+                                        //Log.e("LYQ", "新闻资讯：" + jsonNews);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }

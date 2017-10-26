@@ -1,13 +1,21 @@
 package com.healthyfish.healthyfish.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
@@ -18,7 +26,7 @@ import com.healthyfish.healthyfish.POJO.BeanSearchResp;
 import com.healthyfish.healthyfish.POJO.BeanSearchRespItem;
 import com.healthyfish.healthyfish.R;
 import com.healthyfish.healthyfish.adapter.ChoiceDoctorLvAdapter;
-import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
+import com.healthyfish.healthyfish.ui.activity.interrogation.ChoiceService;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
 
@@ -28,6 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
@@ -48,6 +57,12 @@ public class SearchResult extends BaseActivity {
     Toolbar toolbar;
     @BindView(R.id.lv_search_result)
     ListView lvSearchResult;
+    @BindView(R.id.iv_search)
+    ImageView ivSearch;
+    @BindView(R.id.et_search)
+    EditText etSearch;
+    @BindView(R.id.btn_search)
+    Button btnSearch;
 
     private List<BeanDoctorInfo> mDoctorInfo = new ArrayList<>();
     private BeanDoctorInfo beanDoctorInfo;
@@ -61,13 +76,40 @@ public class SearchResult extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         ButterKnife.bind(this);
-        initToolBar(toolbar, toolbarTitle, "搜索结果");
+        initToolBar(toolbar, toolbarTitle, "搜索");
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             searchKey = bundle.get("SEARCH_KEY").toString();
+            initSearchResult(searchKey);
+            etSearch.setText(searchKey);
         }
-        initSearchResult(searchKey);
         initListView();
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchRespItemList.clear();//清除上次的搜索结果
+                    doctorList.clear();
+                    mDoctorInfo.clear();
+                    initSearchResult(etSearch.getText().toString().trim());//搜索
+                    etSearch.clearFocus();//取消输入框焦点
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);//关闭键盘
+                }
+                return true;
+            }
+        });
+    }
+
+    @OnClick(R.id.btn_search)
+    public void onViewClicked() {
+        searchRespItemList.clear();//清除上次的搜索结果
+        doctorList.clear();
+        mDoctorInfo.clear();
+        initSearchResult(etSearch.getText().toString().trim());
+        etSearch.clearFocus();//取消输入框焦点
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);//关闭键盘
     }
 
     /**
@@ -83,8 +125,11 @@ public class SearchResult extends BaseActivity {
                 .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanSearchReq), new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
-                        adapter.notifyDataSetChanged();
-                        getDoctorInfo();
+                        if (!searchRespItemList.isEmpty()) {
+                            getDoctorInfo();
+                        } else {
+                            Toast.makeText(SearchResult.this, "搜索结果为空", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -103,9 +148,7 @@ public class SearchResult extends BaseActivity {
                         Log.e("LYQ", "搜索医生结果：" + jsonStr);
                         BeanSearchResp searchResp = JSON.parseObject(jsonStr, BeanSearchResp.class);
                         for (BeanSearchRespItem searchRespItem : searchResp.getResultList()) {
-                            if (searchRespItem.getValue().substring(0, 13).equals("...CTOR_NAME=")) {
-                                searchRespItemList.add(searchRespItem);
-                            }
+                            searchRespItemList.add(searchRespItem);
                         }
                     }
                 });
@@ -129,19 +172,6 @@ public class SearchResult extends BaseActivity {
 
                 @Override
                 public void onCompleted() {
-                    BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(doctorInfoResp, BeanHospDeptDoctListRespItem.class);
-                    doctorList.add(beanHospDeptListRespItem); //用于传递数据到下一页面用的list
-                    BeanDoctorInfo data = new BeanDoctorInfo();
-                    data.setHosp(searchRespItemList.get(0).getKey().split("_")[1]);
-                    data.setHospital(searchRespItemList.get(0).getTitle().split("-")[0]);
-                    data.setDept(searchRespItemList.get(0).getKey().split("_")[2]);
-                    data.setDepartment(searchRespItemList.get(0).getTitle().split("-")[1]);
-                    data.setImgUrl(HttpHealthyFishyUrl + beanHospDeptListRespItem.getZHAOPIAN());
-                    data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
-                    data.setDuties(beanHospDeptListRespItem.getREISTER_NAME().substring(0, beanHospDeptListRespItem.getREISTER_NAME().length() - 1));
-                    data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
-                    data.setPrice(beanHospDeptListRespItem.getPRICE() + "元起");
-                    mDoctorInfo.add(data);///用于展示医生信息用的list
                     searchRespItemList.remove(0);
                     getDoctorInfo();
                     adapter.notifyDataSetChanged();
@@ -150,6 +180,9 @@ public class SearchResult extends BaseActivity {
                 @Override
                 public void onError(Throwable e) {
                     Log.e("LYQ", "搜索医生信息错误：" + e.toString());
+                    searchRespItemList.remove(0);
+                    getDoctorInfo();
+                    adapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -157,11 +190,26 @@ public class SearchResult extends BaseActivity {
                     try {
                         doctorInfoResp = responseBody.string();
                         Log.e("LYQ", "搜索医生信息结果：" + doctorInfoResp);
+                        BeanHospDeptDoctListRespItem beanHospDeptListRespItem = JSON.parseObject(doctorInfoResp, BeanHospDeptDoctListRespItem.class);
+                        doctorList.add(beanHospDeptListRespItem); //用于传递数据到下一页面用的list
+                        BeanDoctorInfo data = new BeanDoctorInfo();
+                        data.setHosp(searchRespItemList.get(0).getKey().split("_")[1]);
+                        data.setHospital(searchRespItemList.get(0).getTitle().split("-")[0]);
+                        data.setDept(searchRespItemList.get(0).getKey().split("_")[2]);
+                        data.setDepartment(searchRespItemList.get(0).getTitle().split("-")[1]);
+                        data.setImgUrl(HttpHealthyFishyUrl + beanHospDeptListRespItem.getZHAOPIAN());
+                        data.setName(beanHospDeptListRespItem.getDOCTOR_NAME());
+                        data.setDuties(beanHospDeptListRespItem.getREISTER_NAME().substring(0, beanHospDeptListRespItem.getREISTER_NAME().length() - 1));
+                        data.setIntroduce(beanHospDeptListRespItem.getWEB_INTRODUCE());
+                        data.setPrice(beanHospDeptListRespItem.getPRICE() + "元起");
+                        mDoctorInfo.add(data);///用于展示医生信息用的list
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             });
+        } else {
+            Toast.makeText(this, "搜索完毕", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,7 +240,7 @@ public class SearchResult extends BaseActivity {
                 beanDoctorInfo.setPrice(String.valueOf(doctorList.get(position).getPRICE()));
                 beanDoctorInfo.setSchdList(doctorList.get(position).getSchdList());
 
-                Intent intent = new Intent(SearchResult.this, DoctorDetail.class);
+                Intent intent = new Intent(SearchResult.this, ChoiceService.class);
                 intent.putExtra("BeanDoctorInfo", beanDoctorInfo); //将医生信息传递到下一页面
                 startActivity(intent);
             }

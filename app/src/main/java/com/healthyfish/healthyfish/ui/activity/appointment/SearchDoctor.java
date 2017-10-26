@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.healthyfish.healthyfish.POJO.BeanDoctorInfo;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctInfoReq;
 import com.healthyfish.healthyfish.POJO.BeanHospDeptDoctListRespItem;
@@ -235,7 +236,6 @@ public class SearchDoctor extends BaseActivity {
                 beanDoctorInfo.setPRE_ALLOW(doctorList.get(position).getPRE_ALLOW());
                 beanDoctorInfo.setPrice(String.valueOf(doctorList.get(position).getPRICE()));
                 beanDoctorInfo.setSchdList(doctorList.get(position).getSchdList());
-
                 Intent intent = new Intent(SearchDoctor.this, DoctorDetail.class);
                 intent.putExtra("BeanDoctorInfo", beanDoctorInfo); //将医生信息传递到下一页面
                 startActivity(intent);
