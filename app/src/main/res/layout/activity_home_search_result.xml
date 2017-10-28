@@ -38,7 +38,7 @@
                 android:imeOptions="actionSearch"
                 android:background="@null"
                 android:maxLines="1"
-                android:hint="搜索医生、疾病、服务"
+                android:hint="搜索医生、资讯、疾病、服务、药典"
                 android:textColorHint="@color/color_general_and_title"
                 android:textColor="@color/color_general_and_title"
                 style="@style/textSize_36"/>
@@ -49,7 +49,7 @@
             android:id="@+id/btn_search"
             android:layout_width="wrap_content"
             android:layout_height="96px"
-            android:layout_marginRight="12px"
+            android:layout_marginRight="10px"
             android:layout_marginLeft="10px"
             android:text="搜索"
             android:textColor="@color/white"
@@ -58,7 +58,7 @@
     </com.zhy.autolayout.AutoLinearLayout>
 
     <ListView
-        android:id="@+id/lv_search_result"
+        android:id="@+id/lv_home_search_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="40px"

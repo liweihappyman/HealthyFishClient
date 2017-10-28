@@ -183,12 +183,12 @@ public class SelectDepartments extends BaseActivity {
                                 String jsonString = object.toJSONString();
                                 BeanHospDeptListRespItem beanHospDeptListRespItem = JSON.parseObject(jsonString, BeanHospDeptListRespItem.class);
                                 HospDeptList.add(beanHospDeptListRespItem);
-                                //将医院科室信息保存到本地数据库
-                                BeanDepartmentInfo beanDepartmentInfo = new BeanDepartmentInfo();
-                                beanDepartmentInfo.setKey(hospID + "_" + beanHospDeptListRespItem.getDEPT_NAME());
-                                beanDepartmentInfo.setHospital(hospName);
-                                beanDepartmentInfo.setDepartmentName(beanHospDeptListRespItem.getDEPT_NAME());
-                                UpdateDepartmentInfoUtils.saveDepartmentInfo(beanDepartmentInfo);
+                                //将医院科室信息保存到本地数据库,不需在此保存，提前在挂号首页更新保存
+//                                BeanDepartmentInfo beanDepartmentInfo = new BeanDepartmentInfo();
+//                                beanDepartmentInfo.setKey(hospID + "_" + beanHospDeptListRespItem.getDEPT_NAME());
+//                                beanDepartmentInfo.setHospital(hospName);
+//                                beanDepartmentInfo.setDepartmentName(beanHospDeptListRespItem.getDEPT_NAME());
+//                                UpdateDepartmentInfoUtils.saveDepartmentInfo(beanDepartmentInfo);
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

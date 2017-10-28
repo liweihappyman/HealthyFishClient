@@ -34,6 +34,7 @@ import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.widget.AutoVerticalScrollTextView;
 import com.healthyfish.healthyfish.utils.OkHttpUtils;
 import com.healthyfish.healthyfish.utils.RetrofitManagerUtils;
+import com.healthyfish.healthyfish.utils.UpdateDepartmentInfoUtils;
 
 import java.io.IOException;
 import java.text.ParsePosition;
@@ -80,6 +81,7 @@ public class AppointmentHome extends BaseActivity {
         setContentView(R.layout.activity_appointment_home);
         ButterKnife.bind(this);
         initToolBar(toolbar, toolbarTitle, "挂号");
+        UpdateDepartmentInfoUtils.updateDepartmentInfoReq(getApplicationContext());
         initSrollText();
     }
 

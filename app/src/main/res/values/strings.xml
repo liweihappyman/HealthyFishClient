@@ -6,7 +6,7 @@
 
     <!--（1）MainActivtiy屏幕下方导航菜单-->
     <string name="home">首页</string>
-    <string name="interrogation">问诊</string>
+    <string name="interrogation">在线咨询</string>
     <string name="healthy_circle">健康圈</string>
     <string name="health_workshop">健康工坊</string>
     <string name="personal_center">个人中心</string>

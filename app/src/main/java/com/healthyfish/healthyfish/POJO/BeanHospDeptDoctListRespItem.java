@@ -23,8 +23,8 @@ import java.util.List;
 // "DOCTOR":"江铭/054"}]
 
 public class BeanHospDeptDoctListRespItem extends BeanBaseReq implements Serializable{
-
-	private int STAFF_NO; //员工编号
+	private String STAFF_NO; //员工编号
+	//private int STAFF_NO; //员工编号
 	private String REISTER_NAME; //职称
 	private int CLINIQUE_CODE; //诊室
 	private int PRICE; //挂号价格
@@ -40,13 +40,21 @@ public class BeanHospDeptDoctListRespItem extends BeanBaseReq implements Seriali
 
 	public BeanHospDeptDoctListRespItem(){super(BeanHospDeptDoctListRespItem.class.getSimpleName());}
 
-	public int getSTAFF_NO() {
+	public String getSTAFF_NO() {
 		return STAFF_NO;
 	}
 
-	public void setSTAFF_NO(int sTAFF_NO) {
+	public void setSTAFF_NO(String sTAFF_NO) {
 		STAFF_NO = sTAFF_NO;
 	}
+
+//	public int getSTAFF_NO() {
+//		return STAFF_NO;
+//	}
+//
+//	public void setSTAFF_NO(int sTAFF_NO) {
+//		STAFF_NO = sTAFF_NO;
+//	}
 
 	public String getREISTER_NAME() {
 		return REISTER_NAME;

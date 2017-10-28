@@ -30,8 +30,8 @@ import com.healthyfish.healthyfish.POJO.BeanInterrogationServiceDoctorList;
 import com.healthyfish.healthyfish.POJO.BeanServiceList;
 import com.healthyfish.healthyfish.POJO.BeanUserListReq;
 import com.healthyfish.healthyfish.POJO.BeanUserListValueReq;
+import com.healthyfish.healthyfish.POJO.BeanUserMqttStatusCheck;
 import com.healthyfish.healthyfish.R;
-
 import com.healthyfish.healthyfish.ui.activity.BaseActivity;
 import com.healthyfish.healthyfish.ui.activity.appointment.DoctorDetail;
 import com.healthyfish.healthyfish.ui.fragment.BuyServiceFragment;
@@ -122,6 +122,12 @@ public class ChoiceService extends BaseActivity {
     TextView btnMoreUserEvaluation;
     @BindView(R.id.layout_choiceService)
     AutoLinearLayout layoutChoiceService;
+    @BindView(R.id.tv_online)
+    TextView tvOnline;
+    @BindView(R.id.btn_to_interrogation)
+    Button btnToInterrogation;
+    @BindView(R.id.textView3)
+    TextView textView3;
 
     private Context mContext;//全局上下文
     private BeanDoctorInfo beanDoctorInfo = new BeanDoctorInfo();
@@ -150,6 +156,7 @@ public class ChoiceService extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice_service);
         ButterKnife.bind(this);
+        btnToInterrogation.setVisibility(View.GONE);//该按钮是挂号跳转到问诊，在问诊不用显示
         mContext = this;
         initToolBar(toolbar, tvTitle, "选择服务");
         uid = MyApplication.uid;
@@ -240,7 +247,7 @@ public class ChoiceService extends BaseActivity {
      */
     private void initMyConcern(String uid) {
         if (MyApplication.isFirstUpdateMyConcern) {
-            upDateMyConcern(uid);
+            //upDateMyConcern(uid);//等获取医生在线状态后再更新，避免同时发起多个请求
         } else {
             getMyConcernFromDB(uid);
         }
@@ -668,17 +675,32 @@ public class ChoiceService extends BaseActivity {
                             if (!TextUtils.isEmpty(beanBaseKeyGetResp.getValue())) {
                                 doctorPhone = beanBaseKeyGetResp.getValue();
                                 isOpenPictureConsulting = true;
+                                //获取在线状态
+                                getDoctorOnlineState("d" + doctorPhone);
                             } else {
                                 isOpenPictureConsulting = false;
+                                if (MyApplication.isFirstUpdateMyConcern) {
+                                    upDateMyConcern(uid);//获取医生在线状态后再更新，避免同时发起多个请求
+                                }
+                                tvOnline.setVisibility(View.GONE);
                             }
                         } else {
                             MyToast.showToast(ChoiceService.this, "获取开通服务情况失败");
+                            if (MyApplication.isFirstUpdateMyConcern) {
+                                upDateMyConcern(uid);//获取医生在线状态后再更新，避免同时发起多个请求
+                            }
                         }
                     } else {
                         MyToast.showToast(ChoiceService.this, "获取开通服务情况出错啦");
+                        if (MyApplication.isFirstUpdateMyConcern) {
+                            upDateMyConcern(uid);//获取医生在线状态后再更新，避免同时发起多个请求
+                        }
                     }
                 } else {
                     MyToast.showToast(ChoiceService.this, "获取开通服务情况出错");
+                    if (MyApplication.isFirstUpdateMyConcern) {
+                        upDateMyConcern(uid);//获取医生在线状态后再更新，避免同时发起多个请求
+                    }
                 }
             }
         });
@@ -701,29 +723,7 @@ public class ChoiceService extends BaseActivity {
 
                     @Override
                     public void onCompleted() {
-                        if (!TextUtils.isEmpty(jsonStr)) {
-                            if (jsonStr.substring(0, 1).equals("[")) {
-                                MyApplication.isFirstUpdateMyConcern = false;
-                                DataSupport.deleteAll(BeanConcernList.class);
-                                List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
-                                if (!concerns.isEmpty()) {
-                                    for (String str : concerns) {
-                                        BeanConcernList beanConcernList = new BeanConcernList();
-                                        beanConcernList.setKey(str);
-                                        boolean isSave = beanConcernList.save();
-                                        if (!isSave) {
-                                            beanConcernList.save();
-                                        }
-                                    }
-                                }
-                                getMyConcernFromDB(uid);
 
-                            } else {
-                                MyToast.showToast(ChoiceService.this, "更新关注信息出错啦");
-                            }
-                        } else {
-                            MyToast.showToast(ChoiceService.this, "更新关注信息出错");
-                        }
                     }
 
                     @Override
@@ -736,6 +736,29 @@ public class ChoiceService extends BaseActivity {
                         try {
                             jsonStr = responseBody.string();
                             Log.i("LYQ", "问诊关注列表响应：" + jsonStr);
+                            if (!TextUtils.isEmpty(jsonStr)) {
+                                if (jsonStr.substring(0, 1).equals("[")) {
+                                    MyApplication.isFirstUpdateMyConcern = false;
+                                    DataSupport.deleteAll(BeanConcernList.class);
+                                    List<String> concerns = JSONArray.parseObject(jsonStr, List.class);
+                                    if (!concerns.isEmpty()) {
+                                        for (String str : concerns) {
+                                            BeanConcernList beanConcernList = new BeanConcernList();
+                                            beanConcernList.setKey(str);
+                                            boolean isSave = beanConcernList.save();
+                                            if (!isSave) {
+                                                beanConcernList.save();
+                                            }
+                                        }
+                                    }
+                                    getMyConcernFromDB(uid);
+
+                                } else {
+                                    MyToast.showToast(ChoiceService.this, "更新关注信息出错啦");
+                                }
+                            } else {
+                                MyToast.showToast(ChoiceService.this, "更新关注信息出错");
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -800,5 +823,54 @@ public class ChoiceService extends BaseActivity {
 
     }
 
+    /**
+     * 获取医生的在线状态
+     * @param doctorTopic 医生用于聊天的主题
+     */
+    private void getDoctorOnlineState(String doctorTopic) {
+        List<String> userList = new ArrayList<>();
+        userList.add(doctorTopic);
+        BeanUserMqttStatusCheck beanUserMqttStatusCheck = new BeanUserMqttStatusCheck();
+        beanUserMqttStatusCheck.setUserList(userList);
+        RetrofitManagerUtils.getInstance(this, null)
+                .getHealthyInfoByRetrofit(OkHttpUtils.getRequestBody(beanUserMqttStatusCheck), new Subscriber<ResponseBody>() {
 
+                    String jsonStr = null;
+
+                    @Override
+                    public void onCompleted() {
+                        if (MyApplication.isFirstUpdateMyConcern) {
+                            upDateMyConcern(uid);//获取医生在线状态后再更新，避免同时发起多个请求
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (MyApplication.isFirstUpdateMyConcern) {
+                            upDateMyConcern(uid);//获取医生在线状态后再更新，避免同时发起多个请求
+                        }
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        try {
+                            jsonStr = responseBody.string();
+                            Log.i("LYQ", "获取医生在线状态响应：" + jsonStr);
+                            List<String> onlineUserList = JSONArray.parseArray(jsonStr, String.class);
+                            if (onlineUserList.isEmpty()) {
+                                tvOnline.setText("离线");
+                                tvOnline.setBackgroundResource(R.drawable.gray_1dp_rounded_rectangle);
+                                tvOnline.setTextColor(getResources().getColor(R.color.color_auxiliary_info));
+                            } else {
+                                tvOnline.setText("在线");
+                                tvOnline.setBackgroundResource(R.drawable.concern_not);
+                                tvOnline.setTextColor(getResources().getColor(R.color.color_primary));
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+    }
 }

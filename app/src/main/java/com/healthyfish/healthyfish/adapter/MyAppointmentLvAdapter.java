@@ -116,7 +116,8 @@ public class MyAppointmentLvAdapter extends BaseAdapter {
                     beanDoctorInfo.setPrice(appointmentList.get(position).getPrice());
                     beanDoctorInfo.setPRE_ALLOW(appointmentList.get(position).getPRE_ALLOW());
                     beanDoctorInfo.setCLINIQUE_CODE(Integer.parseInt(appointmentList.get(position).getConsultationRoom()));
-                    beanDoctorInfo.setSTAFF_NO(appointmentList.get(position).getSTAFF_NO());
+                    //beanDoctorInfo.setSTAFF_NO(appointmentList.get(position).getSTAFF_NO());
+                    beanDoctorInfo.setSTAFF_NO(String.valueOf(appointmentList.get(position).getSTAFF_NO()));
 
                     Intent intent = new Intent(mContext, DoctorDetail.class);
                     intent.putExtra("BeanDoctorInfo", beanDoctorInfo); //将医生信息传递到下一页面

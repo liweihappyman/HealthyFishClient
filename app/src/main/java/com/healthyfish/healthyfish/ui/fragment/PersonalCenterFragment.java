@@ -388,33 +388,6 @@ public class PersonalCenterFragment extends Fragment {
 
             @Override
             public void onCompleted() {
-                if (!TextUtils.isEmpty(resp)) {
-                    if (resp.toString().substring(0, 1).equals("{")) {
-                        BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
-                        if (beanBaseKeyGetResp.getCode() == 0) {
-                            String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
-                            if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
-                                if (strJsonBeanPersonalInformation.substring(0, 1).equals("{")) {
-                                    beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
-                                    boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
-                                    if (!isSave) {
-                                        MyToast.showToast(getActivity(), "保存个人信息失败");
-                                    }
-                                } else {
-                                    Toast.makeText(getActivity(), "个人信息有误,请更新您的个人信息", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                MyToast.showToast(getActivity(), "您还没有填写个人信息，请填写您的个人信息");
-                            }
-                        } else {
-                            MyToast.showToast(getActivity(), "获取个人信息失败");
-                        }
-                    } else {
-                        MyToast.showToast(getActivity(), "加载个人信息出错啦");
-                    }
-                } else {
-                    MyToast.showToast(getActivity(), "获取个人信息失败");
-                }
 
                 initWidget();
             }
@@ -433,6 +406,34 @@ public class PersonalCenterFragment extends Fragment {
                 try {
                     resp = responseBody.string();
                     Log.i("LYQ", "个人中心获取用户信息响应：" + resp);
+                    if (!TextUtils.isEmpty(resp)) {
+                        if (resp.toString().substring(0, 1).equals("{")) {
+                            BeanBaseKeyGetResp beanBaseKeyGetResp = JSON.parseObject(resp, BeanBaseKeyGetResp.class);
+                            if (beanBaseKeyGetResp.getCode() == 0) {
+                                String strJsonBeanPersonalInformation = beanBaseKeyGetResp.getValue();
+                                if (!TextUtils.isEmpty(strJsonBeanPersonalInformation)) {
+                                    if (strJsonBeanPersonalInformation.substring(0, 1).equals("{")) {
+                                        beanPersonalInformation = JSON.parseObject(strJsonBeanPersonalInformation, BeanPersonalInformation.class);
+                                        boolean isSave = beanPersonalInformation.saveOrUpdate("key = ?", key);
+                                        if (!isSave) {
+                                            MyToast.showToast(getActivity(), "保存个人信息失败");
+                                        }
+                                    } else {
+                                        Toast.makeText(getActivity(), "个人信息有误,请更新您的个人信息", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    MyToast.showToast(getActivity(), "您还没有填写个人信息，请填写您的个人信息");
+                                }
+                            } else {
+                                MyToast.showToast(getActivity(), "获取个人信息失败");
+                            }
+                        } else {
+                            MyToast.showToast(getActivity(), "加载个人信息出错啦");
+                        }
+                    } else {
+                        MyToast.showToast(getActivity(), "获取个人信息失败");
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -458,33 +459,7 @@ public class PersonalCenterFragment extends Fragment {
 
             @Override
             public void onCompleted() {
-                if (!TextUtils.isEmpty(strResp)) {
-                    if (strResp.toString().substring(0, 1).equals("[")) {
-                        MyApplication.isFirstUpdateUsrPhy = false;
-                        //DataSupport.deleteAll(BeanUserPhy.class);
-                        List<String> strList = JSONArray.parseObject(strResp, List.class);
-                        if (!strList.isEmpty()) {
-                            for (String str : strList) {
-                                BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(str, BeanUserPhyIdResp.class);
-                                if (beanUserPhyIdResp.getCode() == 0) {
-                                    MyApplication.isFirstUpdateUsrPhy = false;
-                                    isTestPhy = true;
-                                    tvConstitutionLogin.setText(beanUserPhyIdResp.getPhyList().get(0).getTitle() + "质");
-                                    BeanUserPhy beanuserPhy = new BeanUserPhy();
-                                    beanuserPhy.setUid(uid);
-                                    beanuserPhy.setJsonStrPhysicalList(str);
-                                    boolean isSave = beanuserPhy.saveOrUpdate("uid = ?", uid);
-                                    if (!isSave) {
-                                        beanuserPhy.saveOrUpdate("uid = ?", uid);
-                                    }
-                                }
-                            }
-                        }
-                        getUserPhyFromDB(uid);
-                    } else {
-                        MyToast.showToast(getActivity(), "加载个人体质信息出错");
-                    }
-                }
+
             }
 
             @Override
@@ -497,6 +472,33 @@ public class PersonalCenterFragment extends Fragment {
                 try {
                     strResp = responseBody.string();
                     Log.i("LYQ", "个人中心体质报告：" + strResp);
+                    if (!TextUtils.isEmpty(strResp)) {
+                        if (strResp.toString().substring(0, 1).equals("[")) {
+                            MyApplication.isFirstUpdateUsrPhy = false;
+                            //DataSupport.deleteAll(BeanUserPhy.class);
+                            List<String> strList = JSONArray.parseObject(strResp, List.class);
+                            if (!strList.isEmpty()) {
+                                for (String str : strList) {
+                                    BeanUserPhyIdResp beanUserPhyIdResp = JSON.parseObject(str, BeanUserPhyIdResp.class);
+                                    if (beanUserPhyIdResp.getCode() == 0) {
+                                        MyApplication.isFirstUpdateUsrPhy = false;
+                                        isTestPhy = true;
+                                        tvConstitutionLogin.setText(beanUserPhyIdResp.getPhyList().get(0).getTitle() + "质");
+                                        BeanUserPhy beanuserPhy = new BeanUserPhy();
+                                        beanuserPhy.setUid(uid);
+                                        beanuserPhy.setJsonStrPhysicalList(str);
+                                        boolean isSave = beanuserPhy.saveOrUpdate("uid = ?", uid);
+                                        if (!isSave) {
+                                            beanuserPhy.saveOrUpdate("uid = ?", uid);
+                                        }
+                                    }
+                                }
+                            }
+                            getUserPhyFromDB(uid);
+                        } else {
+                            MyToast.showToast(getActivity(), "加载个人体质信息出错");
+                        }
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

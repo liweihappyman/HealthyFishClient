@@ -30,7 +30,8 @@
             android:layout_height="73px"
             android:layout_marginRight="30px"
             android:layout_gravity="right"
-            android:src="@mipmap/ic_posting"/>
+            android:src="@mipmap/ic_posting"
+            android:visibility="gone"/>
         
     </android.support.v7.widget.Toolbar>
 

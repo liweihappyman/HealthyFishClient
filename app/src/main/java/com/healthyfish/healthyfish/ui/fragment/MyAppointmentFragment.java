@@ -399,7 +399,8 @@ public class MyAppointmentFragment extends Fragment {
                             beanMyAppointmentItem.setConsultationRoom(String.valueOf(beanHospDeptDoctListRespItem.getCLINIQUE_CODE()));
                             beanMyAppointmentItem.setDuties(beanHospDeptDoctListRespItem.getREISTER_NAME());
 
-                            beanMyAppointmentItem.setSTAFF_NO(beanHospDeptDoctListRespItem.getSTAFF_NO());
+                            //beanMyAppointmentItem.setSTAFF_NO(beanHospDeptDoctListRespItem.getSTAFF_NO());
+                            beanMyAppointmentItem.setSTAFF_NO(Integer.parseInt(beanHospDeptDoctListRespItem.getSTAFF_NO()));
                             beanMyAppointmentItem.setIntroduce(beanHospDeptDoctListRespItem.getWEB_INTRODUCE());
                             beanMyAppointmentItem.setSchdList(beanHospDeptDoctListRespItem.getSchdList());
                             beanMyAppointmentItem.setPRE_ALLOW(beanHospDeptDoctListRespItem.getPRE_ALLOW());
